@@ -50,7 +50,7 @@ table.dateconvert {
 	document.write (MilesianFrenchDisplay (today)); 
     </script>
 </p>
-<h1 class="dateconvert">Calendrier perpétuel milésien numérique V3</h1>
+<h1 class="dateconvert">Calendrier perpétuel milésien numérique V3.1</h1>
 <table class="dateconvert" align="center">
   <tbody>
     <tr><form class="dateconvert" method="post" action="Javascript:setDateToNow();" name="Today">
@@ -195,16 +195,15 @@ table.dateconvert {
 		<form name="isoweeks" class="dateconvert" method="post" action="JavaScript:calcISO();">
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year"> </td>
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="week"> </td>
-        <td><input type="text" class="dateconvert" size="1" maxlength="2" name="day"> </td>
 		<td> 
-        <select name="wday" size="1" class="dateconvert" disabled="disabled">
-        <option value="0">dimanche</option>
+        <select class="dateconvert" name="day" size="1">
 		<option value="1">lundi</option>
         <option value="2">mardi</option>
         <option value="3">mercredi</option>
         <option value="4">jeudi</option>
         <option value="5">vendredi</option>
         <option value="6">samedi</option>
+        <option value="7">dimanche</option>
         </select></td>
         <td><button class="dateconvert" name="Compute" value="isoweeks">Ok</button> </td>
 	  </form>

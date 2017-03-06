@@ -58,7 +58,7 @@ function setDisplay () { // Considering that targetDate time has been set to the
    
    //  Update ISO week calendar - this calendar does not use Date properties
 	let isocal = jd_to_iso (localJulianDay);
-    document.isoweeks.wday.selectedIndex = jwday(localJulianDay); // should update box.
+//    document.isoweeks.wday.selectedIndex = jwday(localJulianDay); // should update box.
 	document.isoweeks.year.value = isocal [0];
 	document.isoweeks.week.value = isocal [1];
 	document.isoweeks.day.value = isocal [2];
