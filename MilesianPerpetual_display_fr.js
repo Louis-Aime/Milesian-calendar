@@ -1,10 +1,10 @@
 /* Display routines of the Milesian perpetual digital calendar,
 // Character set of this file is ISO 8859-1 
 // Display in French works well if HTML page uses ANSI ISO 8859-1
-// Version M2017-02-09
+// Version M2017-04-14
 // 
 // to be used with the following .js files:
-//   MilesianCompose.js
+//   CalendarCycleComputationEngine.js (used by other .js files)
 //   CalendarConverter.js
 //   MilesianDateProperties.js
 // and with the suitable HTML page. 
@@ -42,7 +42,8 @@ function setDisplay () { // Considering that targetDate time has been set to the
 // For other calendar, a local Julian Day is computed, other calendar's dates shall be computed with this shifted Julian Day.
    var UnixTime = targetDate.getTime(), TimeZoneOffset = targetDate.getTimezoneOffset() // Originally arguments of the function.
    var LocalTime = UnixTime - TimeZoneOffset * Chronos.MINUTE_UNIT; // This time enables date computations as if the local time was UTC time.
-   var displayDate = new Date (LocalTime), localJulianDay = Math.round(displayDate.getJulianDay()); // compute dates as of local using Julian day
+   var displayDate = new Date (LocalTime); 
+   var localJulianDay = Math.round(displayDate.getJulianDay()); // compute dates as of local using Julian day
 
 // Set Julian Day, taken from targetDate   
    	document.daycounter.julianday.value = targetDate.getJulianDay().toLocaleString(undefined,{minimumFractionDigits:5}); // 
@@ -52,34 +53,31 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	document.time.mins.value = targetDate.getMinutes();
 	document.time.secs.value = targetDate.getSeconds(); 
 	document.UTCtime.time.value = 
-	  ((targetDate.getUTCHours() < 10) ? "0" : "") + targetDate.getUTCHours() 
-	  + ":" + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() 
-	  + ":" + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds();
+	  targetDate.getUTCHours() + "h "
+	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
+	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
    
-   //  Update ISO week calendar - this calendar does not use Date properties
-	let isocal = jd_to_iso (localJulianDay);
-//    document.isoweeks.wday.selectedIndex = jwday(localJulianDay); // should update box.
-	document.isoweeks.year.value = isocal [0];
-	document.isoweeks.week.value = isocal [1];
-	document.isoweeks.day.value = isocal [2];
+   //  Update ISO week calendar - using its Date properties
+   
+	document.isoweeks.year.value = targetDate.getIsoWeekCalDate().year;
+	document.isoweeks.week.value = targetDate.getIsoWeekCalDate().week;
+	document.isoweeks.day.value = targetDate.getIsoWeekCalDate().day;
 	
     //  Update Milesian Calendar - here we use Date properties
 
     document.milesian.year.value = targetDate.getMilesianDate().year; // uses the local variable - not UTC
     document.milesian.monthname.value = targetDate.getMilesianDate().month ; // Month value following JS habits: 0 to 11.
- //   document.milesian.monthname.selectedIndex = targetDate.getMilesianDate().month; // this works too.
     document.milesian.day.value = targetDate.getMilesianDate().date;
 
-    //  Update Julian Calendar - not using Date
+    //  Update Julian Calendar - using Date properties 
 
-    let julcal = jd_to_julian(localJulianDay); // transform J to get a locale result.
-    document.julian.year.value = julcal[0];
-    document.julian.monthname.value = julcal[1];
-    document.julian.day.value = julcal[2];
+    document.julian.year.value = targetDate.getJulianDate().year;
+    document.julian.monthname.value = targetDate.getJulianDate().month;
+    document.julian.day.value = targetDate.getJulianDate().date;
 
     //  Update Gregorian Calendar - using Date properties
 
-//    gregcal = jd_to_gregorian(localJulianDay);
+
     document.gregorian.year.value = targetDate.getFullYear();
     document.gregorian.monthname.value = targetDate.getMonth();
     document.gregorian.day.value = targetDate.getDate();		
@@ -95,26 +93,18 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	document.moon.moontime.value = targetDate.getLunarTime().hours + "h " 
 				+  ((targetDate.getLunarTime().minutes < 10) ? "0" : "") + targetDate.getLunarTime().minutes + "mn "
 				+  ((targetDate.getLunarTime().seconds < 10) ? "0" : "") + targetDate.getLunarTime().seconds + "s";
+	document.moon.height.value = targetDate.getDraconiticHeight().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
 	document.moon.CElunarmonth.value = 	++targetDate.getCEMoonDate().month
 	document.moon.CElunaryear.value = 	targetDate.getCEMoonDate().year
 	document.moon.hegirianmonth.value = ++targetDate.getHegirianMoonDate().month
 	document.moon.hegirianyear.value = 	targetDate.getHegirianMoonDate().year
 }
-/* The next function getLocalJulianDay is not used. Saved "in case". The localJulianDay (beginning of setDisplay) makes the job.
-function getLocalJulianDay (mydate, TimeZoneOffset = mydate.getTimezoneOffset()) { // Compute a "fake" integer Julian Day corresponding to the time zone.
-	return Math.round( mydate.getJulianDay() - TimeZoneOffset * Chronos.MINUTE_UNIT / Chronos.DAY_UNIT );
-}
-*/
+
 function setDateToNow(){ // Self explanatory
     targetDate = new Date(); // set new Date object.
 	setDisplay ();
 }
-function setJulianDay(jd, TimeZoneOffset = targetDate.getTimezoneOffset()) { // Set an integer Julian day, without changing local time.
-	jd = Math.round (jd) ; // case jd is not integer
-	let decomposeLocalTimeStamp = milesianDecompose ((targetDate.valueOf() - TimeZoneOffset * Chronos.MINUTE_UNIT), Day_milliseconds);
-    decomposeLocalTimeStamp.day_number = jd - Chronos.JULIAN_DAY_UTC0_EPOCH_OFFSET / Chronos.DAY_UNIT ; // Julian day computed with seconds ticks, not milliseconds.
-	targetDate.setTime (decomposeLocalTimeStamp.day_number * Chronos.DAY_UNIT + decomposeLocalTimeStamp.milliseconds_in_day + TimeZoneOffset * Chronos.MINUTE_UNIT);
-}	
+	
 function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
 	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
@@ -128,14 +118,13 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 }
 function calcISO() {
 	var day =  Math.round (document.isoweeks.day.value);
-	var week = document.isoweeks.week.value;
+	var week = Math.round (document.isoweeks.week.value);
 	var year =  Math.round (document.isoweeks.year.value);
 	if	( isNaN(day)  || isNaN (week) || isNaN (year))
-// Strict control is not performed, as it may be useful to have days number that are outside a month.		
 	{ 
 		alert ("Valeur non numérique dans cette date : " + document.isoweeks.year.value + " " + document.isoweeks.week.value + " " + document.isoweeks.day.value);
 	} else {
-		setJulianDay (iso_to_julian(year,week,day));
+		targetDate.setTimeFromIsoWeekCal (year,week,day);
 		setDisplay ();
 		}
 }
@@ -144,12 +133,10 @@ function calcMilesian() {
 	var month = document.milesian.monthname.value;
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
-// Strict control is not performed, as it may be useful to have days number that are outside a month.		
-//	|| ((month <=0) || (month > 12) || (day <=0) || (day >31)) || ((day == 31) && (month % 2 == 1)) || ((month == 12) && (day == 31) && !(long_milesian_year(year))) 
 	{ 
 		alert ("Valeur non numérique dans cette date : " + document.milesian.day.value + " " + document.milesian.monthname.value + "m " + document.milesian.year.value);
 	} else {		
-		targetDate.setTimeFromMilesian (year,month,day); // Set date object from milesian date indication, without changing time-in-the-day.
+		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
 		}
 }
@@ -161,7 +148,7 @@ function calcGregorian() {
 	{ 
 		alert ("Valeur non numérique dans cette date : " + document.gregorian.day.value + "/" + document.gregorian.monthname.value + "/" + document.gregorian.year.value);
 	} else {
-		targetDate.setFullYear(year); targetDate.setMonth(month); targetDate.setDate(day); // Set date object from gregorian date indication, without changing time-in-the-day.
+		targetDate.setFullYear(year, month, day); 	// Set date object from gregorian date indication, without changing time-in-the-day.
 		setDisplay ();
 		}
 }
@@ -173,7 +160,7 @@ function calcJulian(){
 	{ 
 		alert ("Valeur non numérique dans cette date : " + document.julian.day.value + "/" + document.julian.monthname.value + "/" + document.julian.year.value);
 	} else {
-			setJulianDay (julian_to_jd(year,month,day));
+			targetDate.setTimeFromJulianCalendar (year, month, day);
 			setDisplay ();
 			}
 }
@@ -187,10 +174,10 @@ function SetDayOffset () { // Choice here: the days are integer, all 24h, so loc
 	}
 }
 function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
-	var secs = Math.round (document.UTCtime.time_offset.value);
+	var secs = Math.round (document.UTCshift.time_offset.value);
 	if (isNaN(secs)) {alert ("Valeur non entière du délai: " + document.UTCtime.time_offset.value);
 	} else { 
-	document.UTCtime.time_offset.value = secs;
+	document.UTCshift.time_offset.value = secs;
 	targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
 	setDisplay();
 	}
@@ -200,12 +187,13 @@ function calcTime () { // Here the hours are deemed local hours
 	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) {
 		alert ("Valeur non numérique de l'heure: " + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
 	} else {
-		targetDate.setHours(hours); targetDate.setMinutes(mins); targetDate.setSeconds(secs); targetDate.setMilliseconds(0);
+		targetDate.setHours(hours, mins, secs, 0); 
+		// targetDate.setMinutes(mins); targetDate.setSeconds(secs); targetDate.setMilliseconds(0); Before Javascript 1.3
 		setDisplay();	
 	}
 }
 function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours sepcified.
 		if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
-		targetDate.setUTCHours(UTChours); targetDate.setUTCMinutes(0); targetDate.setSeconds(0); targetDate.setMilliseconds(0);
+		targetDate.setUTCHours(UTChours, 0, 0, 0); //targetDate.setUTCMinutes(0); targetDate.setSeconds(0); targetDate.setMilliseconds(0);
 		setDisplay();	
 }

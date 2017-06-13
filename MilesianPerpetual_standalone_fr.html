@@ -1,113 +1,59 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-  <title>Calendrier perpétuel milésien numérique</title>
-    <style type="text/css">
+  <title>Horloge milésienne</title>
+  
+  <style type="text/css">
 p.date {
-	text-align : right}
+	text-align : right
+}
 h1.dateconvert {
-  text-align: center;
-  font-size: 20pt;
+	text-align: center;
+}
+h2.dateconvert {
+	text-align: center;
+}
+h3.dateconvert {
+	text-align: center;
 }
 p.dateconvert {
   text-align: center;
-  font-size: 16pt;
 }
 form.dateconvert {
   text-align: center;
-  font-size: 16pt;
 }
 select.dateconvert {
 text-align: center;
-font-family: Serif;
-font-size: 16pt;
 }
 input.dateconvert {
   text-align: center;
-  font-family: Serif;
-  font-size: 16pt;
 }
 button.dateconvert {
-  font-family: Serif;
-  font-size: 16pt;
+  background: darkblue;
+  color: antiquewhite;
 }
 table.dateconvert {
-  font-size: 16pt;
 }
 </style>
-
-  <script type="text/javascript" language="JavaScript" src="MilesianCompose.js"></script>
-  <script type="text/javascript" language="JavaScript" src="CalendarConverter.js"></script>
+ 
+  <script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
+  <script type="text/javascript" language="JavaScript" src="IsoWeekCalendarDateProperties.js"></script>
+  <script type="text/javascript" language="JavaScript" src="JulianDateProperties.js"></script>
+  <script type="text/javascript" language="JavaScript" src="LunarDateProperties.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianPerpetual_display_fr.js"></script>
   
-
 </head>
 <body>
-<p class="dateconvert">
+<h1 class="dateconvert">Horloge milésienne</h1>
+<!-- <h3 class="dateconvert">
     <script type="text/javascript"> 
 	today = new Date();
 	document.write (MilesianFrenchDisplay (today)); 
     </script>
-</p>
-<h1 class="dateconvert">Calendrier perpétuel milésien numérique V3.1</h1>
-<table class="dateconvert" align="center">
-  <tbody>
-    <tr><form class="dateconvert" method="post" action="Javascript:setDateToNow();" name="Today">
-      <td><button class="dateconvert" value="Now" name="Compute" >Maintenant</button></td>
-      <td> +/- jours</td>
-	  </form>
-	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset (document.control.dir.value);">
-	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
-      <td><button class="dateconvert"  name="Compute" value="shift">Ok</button></td>
-    </form></tr>
-   </tbody>
-</table>
-<table class="dateconvert" align="center">
-  <tbody>
-    <form class="dateconvert" method="post" action="JavaScript:calcJulianDay();" name="daycounter">
-	<tr><td>Jour julien: </td><td></td>
-		<td><input class="dateconvert" maxlength="18" size="18" name="julianday" value="1"></td>
-		<td><button class="dateconvert" value="julianday" name="setday">Ok</button></td>
-	</tr>
-	</form>
-  </tbody>
-</table>
-<table class="dateconvert" align="center"> <tbody>
-  <tr>
-  	<th colspan=4>Heure locale</th>
-  <tr> 
-	<form name="time" class="dateconvert" method="post" action="JavaScript:calcTime();">
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="hours">h </td>
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="mins">m </td>
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="secs">s </td>
-	 <td><button class="dateconvert" name="Compute" value="time_of_day">Ok</button></td>	
-	</form>
-  </tr>
-  </tbody></table>
- <table class="dateconvert" align="center"> <tbody>
-  <tr>
- 	<th>UTC</th>
-	<th>
-		<form name="UTCset12" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(12);"> 
-		<button class="dateconvert"  name="Compute" value="12">12h</button>
-		</form>
-	</th>
-	<th>
-		<form name="UTCset0" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(0);"> 
-		<button class="dateconvert"  name="Compute" value="0">0h</button>
-		</form>
-	</th>
-	<th colspan=2>+/- secondes</th>
-  </tr>
-  <tr> 
-	 <form name="UTCtime" class="dateconvert" method="post" action="JavaScript:addTime();">
-	 <td colspan=3 ><input type="text" class="dateconvert" size="12" disabled="disabled" name="time" value=""> </td>
-	 <td><input type="text" class="dateconvert" size="2" maxlength="6" name="time_offset" value="1"></td>
-	 <td><button class="dateconvert" name="Compute" value="time_offset">Ok</button></td>	
-	</form>
-  </tr>
-  </tbody></table>
+</h3>
+-->
+
   <table class="dateconvert" align="center">
    <tbody>
       <tr>
@@ -167,18 +113,18 @@ table.dateconvert {
         <td>Julien </td>
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"> </td>
         <td><select class="dateconvert" name="monthname" size="1">
-        <option value="1">janvier</option>
-        <option value="2">février</option>
-        <option value="3">mars</option>
-        <option value="4">avril</option>
-        <option value="5">mai</option>
-        <option value="6">juin</option>
-        <option value="7">juillet</option>
-        <option value="8">août</option>
-        <option value="9">septembre</option>
-        <option value="10">octobre</option>
-        <option value="11">novembre</option>
-        <option value="12">décembre</option>
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
         </select></td>
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year"> </td>
         <td><button class="dateconvert" name="Compute" value="julian">Ok</button> </td>
@@ -210,20 +156,85 @@ table.dateconvert {
 	</tr>
    </tbody>
  </table>
+<table class="dateconvert" align="center">
+  <tbody>
+    <form class="dateconvert" method="post" action="JavaScript:calcJulianDay();" name="daycounter">
+	<tr><th>Jour julien: </th><td></td>
+		<td><input class="dateconvert" maxlength="18" size="18" name="julianday" value="1"></td>
+		<td><button class="dateconvert" value="julianday" name="setday">Ok</button></td>
+	</tr>
+	</form>
+  </tbody>
+</table>
+<table class="dateconvert" align="center">
+  <tbody>
+    <tr><form class="dateconvert" method="post" action="Javascript:setDateToNow();" name="Today">
+      <td><button class="dateconvert" value="Now" name="Compute" >Maintenant</button></td>
+      <td> +/- jours</td>
+	  </form>
+	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset (document.control.dir.value);">
+	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
+      <td><button class="dateconvert"  name="Compute" value="shift">Ok</button></td>
+    </form></tr>
+   </tbody>
+</table>
+<br>
+<table class="dateconvert" align="center"> <tbody>
+  <tr>
+  	<th colspan=5>Heure locale (directive 2000/84/CE)</th>
+  <tr> 
+	<form name="time" class="dateconvert" method="post" action="JavaScript:calcTime();">
+	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="hours">h</td>
+	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="mins">mn</td>
+	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="secs">s</td>
+	 <td><button class="dateconvert" name="Compute" value="time_of_day">Ok</button></td>	
+	</form>
+  </tr>
+  </tbody></table>
+ <table class="dateconvert" align="center"> <tbody>
+  <tr>
+ 	<th>Heure UTC</th>
+	 <form name="UTCtime" class="dateconvert" method="post" action="JavaScript:void();">
+	 <th colspan=3 ><input type="text" class="dateconvert" size="12" disabled="disabled" name="time" value=""> </th>
+	 </form>
+  </tr>
+  </tbody></table>
+ <table class="dateconvert" align="center"> <tbody>
+  <tr>
+	<td>
+		<form name="UTCset12" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(12);"> 
+		<button class="dateconvert"  name="Compute" value="12">12h</button>
+		</form>
+	</td>
+	<td>
+		<form name="UTCset0" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(0);"> 
+		<button class="dateconvert"  name="Compute" value="0">0h</button>
+		</form>
+	</td>
+	<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+	 <td>+/- secondes</td>
+	 <td><input type="text" class="dateconvert" size="2" maxlength="6" name="time_offset" value="1"></td>
+	 <td><button class="dateconvert" name="Compute" value="time_offset">Ok</button></td>	
+	</form>
+  </tr>
+  </tbody></table>
+<br>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
   <tbody>
- 	<tr><th colspan="3">Lune moyenne corrigée</th></tr>
+ 	<tr><th colspan="4">Lune moyenne corrigée</th></tr>
      <tr>
-		<th>Âge lunaire</th>	<th>Reliquat</th>   <th>Heure lunaire</th>
+		<th>Âge lunaire</th>	<th>Reliquat</th>   <th>Heure lunaire</th>   <th>Hauteur</th>  
 	 </tr>
 	 <tr>
 		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="age" value=""> </td>
 		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="residue" value=""> </td>
-		<td><input type="text" class="dateconvert" size="11" disabled="disabled" name="moontime" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="11" name="moontime" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="height" value=""> </td>
 	</tr>
   </tbody>
  </table>
+ <br>
  <table class="dateconvert" align="center">
    <tbody>
     <tr>
@@ -240,6 +251,7 @@ table.dateconvert {
   </tbody>
  </table> 
 </form>
+<br>
 <table class="dateconvert" align="center">
   <tbody>
  	<tr><th colspan="2">Estimation de Delta T (UTC = TT - Delta T)</th></tr>
@@ -251,7 +263,7 @@ table.dateconvert {
 	</tr>
   </tbody>
 </table>
-<p class="dateconvert">Référence : <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+<h3 class="dateconvert">© 2017-06 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <script type="text/javascript" language="JavaScript">
 <!--
     //  Preset the fields in the request form to today's date.

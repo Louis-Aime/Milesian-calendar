@@ -1,13 +1,21 @@
-/* Milesian Compose and decompose routines.
+/* The Calendar Cycle Computation Engine (CCCE)
+// (Formerly Milesian Compose and Decompose routines).
 // Character set is UTF-8
 //
-// The function of this package performs decompositions suitable to calendar computations.
+// The functions of this package performs intercalation computations for calendars
+// that set intercalation elements following regular cycles.
 // The Milesian calendar, given its regulars month, is able to use totally this principle.
 // For other calendars, including Gregorian and Julian, this routines may be used to compute
 // the rank of a day within a year, and then hours, minutes, seconds and milliseconds.
 // Computations on months require more specific algorithms.
 // The principles of these routines are explained in "L'heure milésienne",
 // a book by Louis-Aimé de Fouquières.
+//
+// Version 2 : M2017-06-21
+// Version 2: 
+//	Changed the names of the functions
+//	The parameters are now in each package. Only very common parameters and variables are defined here.
+//
 *//////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -30,12 +38,18 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
+var Chronos = { // Set of chronological constants generally used when handling Unix dates.
+  DAY_UNIT : 86400000, // One day in Unix time units
+  HOUR_UNIT : 3600000,
+  MINUTE_UNIT : 60000,
+  SECOND_UNIT : 1000
+}
 /* Parameter object structure. Replace # with numbers or literals.
-const decomposeParameterExample = {
+var decomposeParameterExample = {
 	timeepoch : #, origin time in milliseconds (or in the suitable unit) to be used for the decomposition, with respect to 1/1/1970 00:00 UTC.
 	coeff : [ // This array holds the coefficient used to decompose a time stamp into time cycles like eras, quadrisaeculae, centuries etc.
 		{cyclelength : #, //length of the cycle, expressed in milliseconds.
-		ceiling : #, // Infinity, or the maximum number of cycles of this size in the upper cycle; the last cycle may hold an intercalary unit.
+		ceiling : #, // Infinity, or the maximum number of cycles of this size minus one in the upper cycle; the last cycle may hold an intercalary unit.
 		multiplier : #, // multiplies the number of cycle of this level to convert into target units.
 		targer : #, // the unit (e.g. "year") of the decomposition element at this level. 
 		} ,
@@ -48,9 +62,13 @@ const decomposeParameterExample = {
 		} // End of array element (only two properties)
 	] // End of second array
 }	// End of object.
+// Constraints: 
+//	1. 	The cycles and the canvas elements shall be definined from the larger to the smaller 
+//		e.g. quadrisaeculum, then century, then quadriannum, then year, etc.
+//	2. 	The same names shall bu used for the "coeff" and the "canvas" properties, elsewise applications may return "NaN".
+//		
 */
-var // A selection of composition objects
-// Former Unix_Day_Time_Coeff
+var
 Day_milliseconds = { 	// To convert a time or a duration to and from days + milliseconds in day.
 	timeepoch : 0, 
 	coeff : [ // to be used with a Unix timestamp in ms. Decompose into days and milliseconds in day.
@@ -61,93 +79,20 @@ Day_milliseconds = { 	// To convert a time or a duration to and from days + mill
 		{name : "day_number", init : 0},
 		{name : "milliseconds_in_day", init : 0},
 	]
-} ,
-Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompose into Milesian years, months, date, hours, minutes, seconds, ms
-	timeepoch : -188395804800000, // Unix timestamp of 1 1m -4000 00h00 UTC in ms
-	coeff : [ 
-	  {cyclelength : 100982160000000, ceiling : Infinity, multiplier : 3200, target : "year"},
-	  {cyclelength : 12622780800000, ceiling : Infinity, multiplier : 400, target : "year"},
-	  {cyclelength : 3155673600000, ceiling :  3, multiplier : 100, target : "year"},
-	  {cyclelength : 126230400000, ceiling : Infinity, multiplier : 4, target : "year"},
-	  {cyclelength : 31536000000, ceiling : 3, multiplier : 1, target : "year"},
-	  {cyclelength : 5270400000, ceiling : Infinity, multiplier : 2, target : "month"},
-	  {cyclelength : 2592000000, ceiling : 1, multiplier : 1, target : "month"}, 
-	  {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "date"},
-	  {cyclelength : 3600000, ceiling : Infinity, multiplier : 1, target : "hours"},
-	  {cyclelength : 60000, ceiling : Infinity, multiplier : 1, target : "minutes"},
-	  {cyclelength : 1000, ceiling : Infinity, multiplier : 1, target : "seconds"},
-	  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds"}
-	],
-	canvas : [ 
-		{name : "year", init : -4000},
-		{name : "month", init : 0},
-		{name : "date", init : 1},
-		{name : "hours", init : 0},
-		{name : "minutes", init : 0},
-		{name : "seconds", init : 0},
-		{name : "milliseconds", init : 0},
-	]
-} ,
-//
-// Former Milesian_date_coeff and canvas
-//
-Milesian_date_JD_params = {  // To be used with a timestamp in integer days. Decomposes into year, month, date.
-	timeepoch : 260081, // 1 1m -4000 in Julian Day
-	coeff : [
-		  {cyclelength : 1168775, ceiling : Infinity, multiplier : 3200, target : "year"},
-		  {cyclelength : 146097, ceiling : Infinity, multiplier : 400, target : "year"},
-		  {cyclelength : 36524, ceiling :  3, multiplier : 100, target : "year"},
-		  {cyclelength : 1461, ceiling : Infinity, multiplier : 4, target : "year"},
-		  {cyclelength : 365, ceiling : 3, multiplier : 1, target : "year"},
-		  {cyclelength : 61, ceiling : Infinity, multiplier : 2, target : "month"},
-		  {cyclelength : 30, ceiling : 1, multiplier : 1, target : "month"}, 
-		  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "date"}
-	],
-	canvas : [ // Timestamp is 0 on 1 1m -4000, month is in the JS way (0 to 11), date starts at 1.
-		{name : "year", init : -4000},
-		{name : "month", init : 0},
-		{name : "date", init : 1}
-	]
-} ,
-CE_Moon_params = { // to be used with a Unix timestamp in ms. Decompose into moon years, moon months and moon age.
-	timeepoch : -62167873955000, // from the mean new moon of 3 1m 0 at 10:07:25 Terrestrial Time.
-	coeff : [ 
-		 {cyclelength : 30617314500, ceiling : Infinity, multiplier : 1, target : "year"}, // this cycle length is 12 mean lunar months
-		 {cyclelength : 2551442875, ceiling : Infinity, multiplier : 1, target : "month"}, // this cycle length is one mean lunar month
-		 {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "age"},
-		 {cyclelength : 1, ceiling : Infinity, multiplier : 1.157407407E-8, target : "age"}
-	], 
-	canvas : [
-		{name : "year", init : 0},
-		{name : "month", init : 0},
-		{name : "age", init : 0}
-	]
-} ,
-Lunar_Year_Month_Params = { // to be used in order to change lunar calendar epoch, without changing lunar age.
-// Usage of this parameter set: change between Common Era and Hegirian moon calendar, 7688 lunar month offset.
-	timeepoch : 0, // put the timeepoch in the parameter call.
-	coeff : [
-		{cyclelength : 12, ceiling : Infinity, multiplier : 1, target : "year"},
-		{cyclelength : 1,  ceiling : Infinity, multiplier : 1, target : "month"}
-	],
-	canvas : [
-		{name : "year", init :0},
-		{name : "month", init : 0}		
-	]
 }
 /////////////////////////////////////////////
-// milesianDecompose : from time serie figure to decomposition
+// ccceDecompose : from time serie figure to decomposition
 ///////////////////////////////////////////// 
-function milesianDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by cparams.
+function ccceDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by cparams.
   quantity -= params.timeepoch; // set quantity to decompose into cycles to the right value.
   var result = new Object(); // Construct intitial result 
-  for (let i = 0; i < params.canvas.length; i++) {
+  for (let i = 0; i < params.canvas.length; i++) {	// Define property of result object (a date or date-time)
     Object.defineProperty (result, params.canvas[i].name, {enumerable : true, writable : true, value : params.canvas[i].init});
   }
-  for (let i = 0; i < params.coeff.length; ++i) {
-    let r = 0; // r is computed quotient for this level of decomposition
+  for (let i = 0; i < params.coeff.length; ++i) {	// Perform decomposition by dividing by the successive cycle length
+    let r = 0; // r is the computed quotient for this level of decomposition
     if (params.coeff[i].cyclelength == 1) r = quantity; // avoid performing a trivial divison by 1.
-    else {
+    else {		// at each level, search at the same time the quotient (r) and the modulus (quantity)
       while (quantity < 0) {
         --r; 
         quantity += params.coeff[i].cyclelength;
@@ -162,9 +107,9 @@ function milesianDecompose (quantity, params) { // from a chronological number, 
   return result;
 }
 ////////////////////////////////////////////
-// milesianCompose: from compound object to time serie figure.
+// ccceCompose: from compound object to time serie figure.
 ////////////////////////////////////////////
-function milesianCompose (cells, params) { // from an object structured as params.canvas, compute the chronological number
+function ccceCompose (cells, params) { // from an object structured as params.canvas, compute the chronological number
 	var quantity = params.timeepoch ; // initialise quantity
 	for (let i = 0; i < params.canvas.length; i++) { // cells value shifted as to have all 0 if at epoch
 		cells[params.canvas[i].name] -= params.canvas[i].init
@@ -177,4 +122,4 @@ function milesianCompose (cells, params) { // from an object structured as param
 		quantity += Math.floor(cells[params.coeff[i].target] / params.coeff[i].multiplier) * factor;
 	}
 	return quantity ;	
-}
+} 
