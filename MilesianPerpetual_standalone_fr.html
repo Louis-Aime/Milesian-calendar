@@ -49,7 +49,7 @@ table.dateconvert {
 <!-- <h3 class="dateconvert">
     <script type="text/javascript"> 
 	today = new Date();
-	document.write (MilesianFrenchDisplay (today)); 
+	document.write (today.toMilesianLocaleDateString("fr-FR", {weekday: "long", day:"numeric", month:"long",year:"numeric"}));
     </script>
 </h3>
 -->
