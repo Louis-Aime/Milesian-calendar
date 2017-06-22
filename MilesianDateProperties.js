@@ -1,7 +1,7 @@
 /* Milesian properties added to Date
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the Milesian calendar.
-// Version M2017-06-29
+// Version M2017-07-02
 // Package CalendarCycleComputationEngine is used.
 // File MilesianMonthNames.xml is used
 //	getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
@@ -116,46 +116,61 @@ Date.prototype.toUTCIntlMilesianDateString = function () {
 // It just show that these layouts are possible.
 //////////////////////////////////////////////////////
 Date.prototype.toMilesianLocaleDateString = function (locales = undefined, options = undefined) {
-	// var dateElements = ccceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params ); 
-	var str = ""; 	// the final string for this date;
-	var sep = "";	// separator of date elements, / or space.
+	let str = ""; 	// the final string for this date;
+	let wstr = "", dstr = "", mstr = "", ystr = "", tstr = "", tzstr = ""; // components of date string
+	let wsep = "", msep = "", ysep = "";	// separators of date elements, "/", ", " or " ".
 	if (options == undefined) var askedOptions = new Intl.DateTimeFormat (locales)	// require locale and option from present implementation;
 	else var askedOptions = new Intl.DateTimeFormat (locales, options);
 	var usedOptions = askedOptions.resolvedOptions(); // the options used after negotiation: 
 	// example of standard usedOptions: { locale: "fr-FR", calendar: "gregory", numberingSystem: "latn", timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" }
 	// while specifiying option, you may suppress year, month or day.
-	var lang = usedOptions.locale[0] + usedOptions.locale[1], country = usedOptions.locale[3] + usedOptions.locale[4];
-	let wstr = "", dstr = "", mstr = "", ystr = "", tstr = "", tzstr = ""; // components of date string
-	let Xpath1 = "", node = undefined;
-	// let weekday = (Math.floor((this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT)) / Chronos.DAY_UNIT)-3) % 7;
+	let lang = usedOptions.locale[0] + usedOptions.locale[1], country = usedOptions.locale[3] + usedOptions.locale[4];
+	let Xpath1 = "", node = undefined;	// will be used for searching the month's names in the Locale data registry
+	// Compute weekday if desired
 	if (usedOptions.weekday !== undefined) wstr = this.toLocaleDateString (usedOptions.locale, {weekday : usedOptions.weekday}); // construct weekday using existing data;
-	switch (usedOptions.year) {
+	// Compute year
+	switch (usedOptions.year) {	// Compute year string
 		case "numeric": ystr = this.getMilesianDate().year; break;
 		case "2-digit": ystr = this.getMilesianDate().year % 100; break;
 		default : break; }
-	switch (usedOptions.month) {
+	if (ystr !== "") switch (lang) {	// Language dependent year separator, in month is not numeric
+		case "en" : ysep = ", "; break;
+		case "es" : ysep = " de "; break;
+		default : ysep = " "; break};
+	switch (usedOptions.month) {	// Compute separator between month and day
+		case "numeric": case "2-digit" : msep = "/"; break;
+		case "narrow": case "short" : case "long" : 
+			switch (lang) { 
+				case "es" : msep = " de "; break; 
+				default : msep = " "; break; } 
+			break;
+		default : break; }
+	if (msep == "/" && ysep !== "") ysep = "/"; // If there is a year element, and month element is numeric, year separator shall always be "/"
+	switch (usedOptions.month) {	// Compute month part of string 
 		case "numeric": mstr = this.getMilesianDate().month+1; break;
 		case "2-digit": mstr = pad (this.getMilesianDate().month+1); break;
-		case "narrow":
-			Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='narrow']/month[@type=this.getMilesianDate().month+1]";
+		case "narrow":	// Only the international (Latin) value can be used in this case
+			Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='narrow']/month[@type="
+				+ (this.getMilesianDate().month+1) + "]";
 			node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
 			mstr = node.stringValue;
 			break;
-		case "short":
+		case "short":	// Only the international "xm" format, where x is 1 to 12, is used in this case.
 			Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='abbreviated']/month[@type="
 				+ (this.getMilesianDate().month+1) + "]";
 			node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
 			mstr = node.stringValue;
 			break;
-		case "long":
+		case "long":	// By default, take the Latin name;
 			Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='wide']/month[@type="
 				+ (this.getMilesianDate().month+1) + "]";
 			node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
 			mstr = node.stringValue;
+			// Search if a national ("Locale") name exists
 			Xpath1 = "/pldr/ldml/identity/language[@type=" + "'"+lang+"'"+ "]/../calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='wide']/month[@type="
 				+ (this.getMilesianDate().month+1) + "]";
 			node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-			if (node.stringValue !== "") mstr = node.stringValue;
+			if (node.stringValue !== "") mstr = node.stringValue; // If found, replace Latin name with language-dependant.
 			break;
 		default : break; }
 	switch (usedOptions.day) {
@@ -164,21 +179,17 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 		default : break; }	
 	if (usedOptions.hour !== undefined || usedOptions.minute !== undefined || usedOptions.hour !== undefined) 
 		tstr = new Intl.DateTimeFormat (usedOptions.locale, {hour : usedOptions.hour, minute : usedOptions.minute, second : usedOptions.second}).format(this);
-	switch (usedOptions.month) {
-		case "numeric": case "2-digit" : sep = "/"; break;
-		case "narrow": case "short" : case "long" : sep = " "; break;
-		default : break; }
-	if (wstr !== "") str +=wstr + " ";
+	if (wstr !== "" && dstr !== "") switch (lang) {	//Compute weekday separator, which depends on language
+		case "en" : wsep = ", "; break;
+		case "de" : wsep = " den "; break;
+		default : wsep = " "; break;	} 
+	// Begin forming the complete string
+	str += wstr + wsep;
 	if (country == "US") { 
-		if (mstr !== "") str += mstr;  
-		if (dstr !== "" && str !== "") str += sep + dstr ;
-		if (ystr !== "" && str !== "") str += sep + ystr ;
-		if (tstr !== "") str += " " + tstr ;
+		if (mstr !== "") {str += mstr + ((dstr !=="") ? msep + dstr : "")} else str += dstr;
 	} else {
-		if (dstr !== "") str += dstr ;
-		if (mstr !== "" && str !== "") str += sep + mstr;  
-		if (ystr !== "" && str !== "") str += sep + ystr ;
-		if (tstr !== "") str += " " + tstr ;
-	}
+		if (mstr !== "") {str += ((dstr !=="") ? dstr + msep : "" ) + mstr} else str += dstr;
+	};
+	str += ysep + ystr + ((tstr !== "") ? " " + tstr : "");
 	return str; 
 }
