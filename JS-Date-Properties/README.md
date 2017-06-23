@@ -1,14 +1,13 @@
-These modules give new methods to the JS object Date, which enables you to easily handle calendars or cycles 
-that are not (yet) available from the LCDR project.
+# Date properties in JavaScript
 
- 	CalendarCycleComputationEngine.js : four time units in milliseconds, for other computations,
-  and two functions. 
-    ccceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date
-    following a decomposition canvas.
-    ccceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
-    This function is used in all other packages of this repository.
+These modules give new methods to the JS object Date, which enables you to easily handle calendars or cycles that are not (yet) available from the LCDR project.
+
+## CalendarCycleComputationEngine.js : four time units in milliseconds, for other computations, and two functions. 
+ccceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date following a decomposition canvas.
+ccceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
+This function is used in all other packages of this repository.
   
-  MilesianDateProperties.js: methods for the Milesian calendar.
+## MilesianDateProperties.js: methods for the Milesian calendar.
    getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
    getMilesianUTCDate : same as above, in UTC time.
    setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
@@ -17,7 +16,7 @@ that are not (yet) available from the LCDR project.
    toUTCIntlMilesianDateString : same as above, in UTC time zone.
    toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
 
-  LunarDateProperties.js: get information about mean lunar cycle
+## LunarDateProperties.js: get information about mean lunar cycle
    Package CalendarCycleComputationEngine is used.
    getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
       TT is Terrestrial Time, a uniform time scale defined with a second defined independantly from Earth movements.
@@ -33,7 +32,7 @@ that are not (yet) available from the LCDR project.
       When height is around 0 at new or full moon, eclipse is possible.
   There is no setter function in this package.
   
-  JulianDateProperties.js: Julian calendar and Julian Day properties added to Date object
+## JulianDateProperties.js: Julian calendar and Julian Day properties added to Date object
     getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
     getJulianCalendarUTCDate : same as above, in UTC time.
     getJulianDay : the decimal Julian Day, from the UTC time.
