@@ -3,8 +3,8 @@
 // This code, to be manually imported, set properties to object Date for the Milesian calendar.
 // Version M2017-07-02
 // Package CalendarCycleComputationEngine is used.
-// File MilesianMonthNames.xml is used
-//	getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+// File MilesianMonthNames.xml is not used in this version, the file has been stringified as "pldr".
+//  getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getMilesianUTCDate : same as above, in UTC time.
 //  setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
 //  setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
