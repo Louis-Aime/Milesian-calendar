@@ -1,7 +1,7 @@
 /* Lunar Date properties
 // Character set is UTF-8
 // This code, to be manually imported, set properties representing lunar phases to object Date
-// Version M2016-06-22
+// Version M2017-06-22
 // Package CalendarCycleComputationEngine is used.
 /  getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
 //		TT is Terrestrial Time, a uniform time scale defined with a second defined independantly from Earth movements.
