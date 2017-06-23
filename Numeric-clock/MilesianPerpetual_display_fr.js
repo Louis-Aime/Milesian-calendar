@@ -1,19 +1,18 @@
 /* Display routines of the Milesian perpetual digital calendar,
-// Character set of this file is ISO 8859-1 
+// Character set of this file is UTF-8 (done at commit, verified)
 // Display in French works well if HTML page uses ANSI ISO 8859-1
-// Version M2017-06-29
+// Version M2017-07-02
 // 
 // to be used with the following .js files:
 //   CalendarCycleComputationEngine.js (used by other .js files)
 //   MilesianDateProperties.js
-//	 	MilesianMonthNames.xml
 //	 LunarDateProperties.js
 //	 IsoWeekCalendarDateProperties.js
 //	 JulianDateProperties.js
 // and with the suitable HTML page.
 // This version is for French end users.
 */
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2017 - Louis A. de FouquiÃ¨res
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -107,7 +106,7 @@ function setDateToNow(){ // Self explanatory
 function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
 	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
-	if (isNaN (j)) {alert ("Valeur non numérique du jour julien : " + document.daycounter.julianday.value)}
+	if (isNaN (j)) {alert ("Valeur non numÃ©rique du jour julien : " + document.daycounter.julianday.value)}
 	else {
 		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
 		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
@@ -121,7 +120,7 @@ function calcISO() {
 	var year =  Math.round (document.isoweeks.year.value);
 	if	( isNaN(day)  || isNaN (week) || isNaN (year))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.isoweeks.year.value + " " + document.isoweeks.week.value + " " + document.isoweeks.day.value);
+		alert ("Valeur non numÃ©rique dans cette date : " + document.isoweeks.year.value + " " + document.isoweeks.week.value + " " + document.isoweeks.day.value);
 	} else {
 		targetDate.setTimeFromIsoWeekCal (year,week,day);
 		setDisplay ();
@@ -133,7 +132,7 @@ function calcMilesian() {
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.milesian.day.value + " " + document.milesian.monthname.value + "m " + document.milesian.year.value);
+		alert ("Valeur non numÃ©rique dans cette date : " + document.milesian.day.value + " " + document.milesian.monthname.value + "m " + document.milesian.year.value);
 	} else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
@@ -145,7 +144,7 @@ function calcGregorian() {
 	var year =  Math.round (document.gregorian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.gregorian.day.value + "/" + document.gregorian.monthname.value + "/" + document.gregorian.year.value);
+		alert ("Valeur non numÃ©rique dans cette date : " + document.gregorian.day.value + "/" + document.gregorian.monthname.value + "/" + document.gregorian.year.value);
 	} else {
 		targetDate.setFullYear(year, month, day); 	// Set date object from gregorian date indication, without changing time-in-the-day.
 		setDisplay ();
@@ -157,7 +156,7 @@ function calcJulian(){
 	var year =  Math.round(document.julian.year.value);
 	if	( isNaN(day)  || isNaN (year))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.julian.day.value + "/" + document.julian.monthname.value + "/" + document.julian.year.value);
+		alert ("Valeur non numÃ©rique dans cette date : " + document.julian.day.value + "/" + document.julian.monthname.value + "/" + document.julian.year.value);
 	} else {
 			targetDate.setTimeFromJulianCalendar (year, month, day);
 			setDisplay ();
@@ -165,7 +164,7 @@ function calcJulian(){
 }
 function SetDayOffset () { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert ("Valeur non entière du délai: " + document.control.shift.value);
+	if (isNaN(days)) {alert ("Valeur non entiÃ¨re du dÃ©lai: " + document.control.shift.value);
 	} else { 
 	document.control.shift.value = days;
 	targetDate.setUTCDate (targetDate.getUTCDate()+days);
@@ -174,7 +173,7 @@ function SetDayOffset () { // Choice here: the days are integer, all 24h, so loc
 }
 function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
 	var secs = Math.round (document.UTCshift.time_offset.value);
-	if (isNaN(secs)) {alert ("Valeur non entière du délai: " + document.UTCtime.time_offset.value);
+	if (isNaN(secs)) {alert ("Valeur non entiÃ¨re du dÃ©lai: " + document.UTCtime.time_offset.value);
 	} else { 
 	document.UTCshift.time_offset.value = secs;
 	targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
@@ -184,7 +183,7 @@ function addTime () { // A number of seconds is added (minus also possible) to t
 function calcTime () { // Here the hours are deemed local hours
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
 	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) {
-		alert ("Valeur non numérique de l'heure: " + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
+		alert ("Valeur non numÃ©rique de l'heure: " + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
 	} else {
 		targetDate.setHours(hours, mins, secs, 0); 
 		// targetDate.setMinutes(mins); targetDate.setSeconds(secs); targetDate.setMilliseconds(0); Before Javascript 1.3
