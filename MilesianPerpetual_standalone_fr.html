@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-  <title>Horloge milésienne</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Horloge milÃ©sienne</title>
   
   <style type="text/css">
 p.date {
@@ -45,11 +45,11 @@ table.dateconvert {
   
 </head>
 <body>
-<h1 class="dateconvert">Horloge milésienne</h1>
+<h1 class="dateconvert">Horloge milÃ©sienne</h1>
 <!-- <h3 class="dateconvert">
     <script type="text/javascript"> 
 	today = new Date();
-	document.write (MilesianFrenchDisplay (today)); 
+	document.write (today.toMilesianLocaleDateString("fr-FR", {weekday: "long", day:"numeric", month:"long",year:"numeric"}));
     </script>
 </h3>
 -->
@@ -60,27 +60,27 @@ table.dateconvert {
         <th>Calendrier</th>
         <th>Jour</th>
         <th>Mois</th>
-        <th>Année</th>
+        <th>AnnÃ©e</th>
         <th></th>
       </tr>
       <tr>
 	    <form name="milesian" class="dateconvert" method="post" action="JavaScript:calcMilesian();">
-        <td>Milésien</td>
+        <td>MilÃ©sien</td>
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"> </td>
         <td>
         <select name="monthname" size="1" class="dateconvert">
-		<option value="0">unème</option>
-        <option value="1">secondème</option>
-        <option value="2">tertème</option>
-        <option value="3">quartème</option>
-        <option value="4">quintème</option>
-        <option value="5">sextème</option>
-        <option value="6">septème</option>
-        <option value="7">octème</option>
-        <option value="8">novème</option>
-        <option value="9">décème</option>
-        <option value="10">onzème</option>
-        <option value="11">douzème</option>
+		<option value="0">unÃ¨me</option>
+        <option value="1">secondÃ¨me</option>
+        <option value="2">tertÃ¨me</option>
+        <option value="3">quartÃ¨me</option>
+        <option value="4">quintÃ¨me</option>
+        <option value="5">sextÃ¨me</option>
+        <option value="6">septÃ¨me</option>
+        <option value="7">octÃ¨me</option>
+        <option value="8">novÃ¨me</option>
+        <option value="9">dÃ©cÃ¨me</option>
+        <option value="10">onzÃ¨me</option>
+        <option value="11">douzÃ¨me</option>
 		</select> </td>
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year" value="" type="text"> </td>
         <td><button class="dateconvert" name="Compute" value="milesian">Ok</button></td>
@@ -88,21 +88,21 @@ table.dateconvert {
       </tr>
       <tr>
 		<form name="gregorian" class="dateconvert" method="post" action="JavaScript:calcGregorian();">
-        <td>Grégorien </td>
+        <td>GrÃ©gorien </td>
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"> </td>
         <td><select class="dateconvert" name="monthname" size="1">
         <option value="0">janvier</option>
-        <option value="1">février</option>
+        <option value="1">fÃ©vrier</option>
         <option value="2">mars</option>
         <option value="3">avril</option>
         <option value="4">mai</option>
         <option value="5">juin</option>
         <option value="6">juillet</option>
-        <option value="7">août</option>
+        <option value="7">aoÃ»t</option>
         <option value="8">septembre</option>
         <option value="9">octobre</option>
         <option value="10">novembre</option>
-        <option value="11">décembre</option>
+        <option value="11">dÃ©cembre</option>
         </select></td>
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year"> </td>
         <td><button class="dateconvert" name="Compute" value="gregorian">Ok</button></td>
@@ -114,17 +114,17 @@ table.dateconvert {
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"> </td>
         <td><select class="dateconvert" name="monthname" size="1">
         <option value="0">janvier</option>
-        <option value="1">février</option>
+        <option value="1">fÃ©vrier</option>
         <option value="2">mars</option>
         <option value="3">avril</option>
         <option value="4">mai</option>
         <option value="5">juin</option>
         <option value="6">juillet</option>
-        <option value="7">août</option>
+        <option value="7">aoÃ»t</option>
         <option value="8">septembre</option>
         <option value="9">octobre</option>
         <option value="10">novembre</option>
-        <option value="11">décembre</option>
+        <option value="11">dÃ©cembre</option>
         </select></td>
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year"> </td>
         <td><button class="dateconvert" name="Compute" value="julian">Ok</button> </td>
@@ -135,7 +135,7 @@ table.dateconvert {
   <table class="dateconvert" align="center">
    <tbody>
 	<tr>
-		<th colspan="5">Calendrier ISO (année, semaine, jour)</th>
+		<th colspan="5">Calendrier ISO (annÃ©e, semaine, jour)</th>
 	</tr>
 	<tr>
 		<form name="isoweeks" class="dateconvert" method="post" action="JavaScript:calcISO();">
@@ -222,9 +222,9 @@ table.dateconvert {
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
   <tbody>
- 	<tr><th colspan="4">Lune moyenne corrigée</th></tr>
+ 	<tr><th colspan="4">Lune moyenne corrigÃ©e</th></tr>
      <tr>
-		<th>Âge lunaire</th>	<th>Reliquat</th>   <th>Heure lunaire</th>   <th>Hauteur</th>  
+		<th>Ã‚ge lunaire</th>	<th>Reliquat</th>   <th>Heure lunaire</th>   <th>Hauteur</th>  
 	 </tr>
 	 <tr>
 		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="age" value=""> </td>
@@ -238,13 +238,13 @@ table.dateconvert {
  <table class="dateconvert" align="center">
    <tbody>
     <tr>
-	 <th colspan=6>Mois et année lunaires</th>
+	 <th colspan=6>Mois et annÃ©e lunaires</th>
 	</tr>
 	<tr>
 	 <td>An 0:</td>
 	 <td><input type="text" class="dateconvert" disabled="disabled" size="2" name="CElunarmonth" value=""></td>
 	 <td><input type="text" class="dateconvert" disabled="disabled" size="6" name="CElunaryear" value=""></td>
-	 <td> Hégire:</td>
+	 <td> HÃ©gire:</td>
 	 <td><input type="text" class="dateconvert" disabled="disabled" size="2" name="hegirianmonth" value=""></td>
 	 <td><input type="text" class="dateconvert" disabled="disabled" size="6" name="hegirianyear" value=""></td>
 	</tr>
@@ -263,7 +263,7 @@ table.dateconvert {
 	</tr>
   </tbody>
 </table>
-<h3 class="dateconvert">© 2017-06 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<h3 class="dateconvert">Â© 2017-06 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <script type="text/javascript" language="JavaScript">
 <!--
     //  Preset the fields in the request form to today's date.

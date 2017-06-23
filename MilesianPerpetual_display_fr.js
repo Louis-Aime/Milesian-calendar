@@ -1,13 +1,16 @@
 /* Display routines of the Milesian perpetual digital calendar,
 // Character set of this file is ISO 8859-1 
 // Display in French works well if HTML page uses ANSI ISO 8859-1
-// Version M2017-04-14
+// Version M2017-06-29
 // 
 // to be used with the following .js files:
 //   CalendarCycleComputationEngine.js (used by other .js files)
-//   CalendarConverter.js
 //   MilesianDateProperties.js
-// and with the suitable HTML page. 
+//	 	MilesianMonthNames.xml
+//	 LunarDateProperties.js
+//	 IsoWeekCalendarDateProperties.js
+//	 JulianDateProperties.js
+// and with the suitable HTML page.
 // This version is for French end users.
 */
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
@@ -32,11 +35,7 @@
 // Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
 var targetDate = new Date() ; // target date will be used to update everything
-function MilesianFrenchDisplay (mydate) {
-const FRENCHWEEKDAYS = new Array ("Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi");
-const FRENCHMILESIANMONTHS = new Array ("unème", "secondème", "tertème", "quartème", "quintème", "sextème", "septème", "octème", "novème", "décème", "onzème", "douzème");	
-	return FRENCHWEEKDAYS[mydate.getDay()]+" "+mydate.getMilesianDate().date+" "+FRENCHMILESIANMONTHS[mydate.getMilesianDate().month]+" "+mydate.getMilesianDate().year;
-}
+
 function setDisplay () { // Considering that targetDate time has been set to the desired date, this routines updates all form fields.
 // Gregorian and Milesian calendar use the standard JS routines to display local values of date. 
 // For other calendar, a local Julian Day is computed, other calendar's dates shall be computed with this shifted Julian Day.
