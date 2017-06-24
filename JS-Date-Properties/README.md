@@ -3,18 +3,23 @@
 These modules give new methods to the JS object Date, which enables you to easily handle calendars or cycles that are not (yet) available from the LCDR project.
 
 ## CalendarCycleComputationEngine.js : four time units in milliseconds, for other computations, and two functions. 
-ccceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date following a decomposition canvas.
-ccceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
+* ccceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date following a decomposition canvas.
+* ccceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
+* Chronos is a passive object with four usefull values for calendar computations:
+    * DAY_UNIT : one day in Unix time units (milliseconds),
+    * HOUR_UNIT : one hour in Unix time units,
+    * MINUTE_UNIT : one minute,
+    * SECOND_UNIT : one second. 
 This function is used in all other packages of this repository.
   
 ## MilesianDateProperties.js: methods for the Milesian calendar.
-   getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
-   getMilesianUTCDate : same as above, in UTC time.
-   setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
-   setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-   toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
-   toUTCIntlMilesianDateString : same as above, in UTC time zone.
-   toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
+* getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+* getMilesianUTCDate : same as above, in UTC time.
+* setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
+* setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+* toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
+* toUTCIntlMilesianDateString : same as above, in UTC time zone.
+* toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
 
 ## LunarDateProperties.js: get information about mean lunar cycle
    Package CalendarCycleComputationEngine is used.
