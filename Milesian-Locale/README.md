@@ -1,5 +1,7 @@
 # Milesian Locale: compute Milesian date string following CLDR project model.
-The content are experimental, and shall be refined until integration to CLDR is possible.
+The content are experimental, and shall be refined until integration to Common Locale Data Repository (CLDR) is possible.
+
+First objective: set the months names for a set of languages as defined [here](http://www.calendriermilesien.org/mois.html).
 ## MilesianMonthNames.xml : the database of Milesian month names in different languages
 Structure is as recommended by CDLR.
 ## toMilesianString.js ([Locale,[Options]]) : a method for the Date object
