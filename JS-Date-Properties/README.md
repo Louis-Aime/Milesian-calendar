@@ -21,7 +21,6 @@ Package CalendarCycleComputationEngine is used.
 * setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 * toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
 * toUTCIntlMilesianDateString : same as above, in UTC time zone.
-* toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
 
 ## LunarDateProperties.js: get information about mean lunar cycle
 Package CalendarCycleComputationEngine is used.
