@@ -1,13 +1,13 @@
-/* ISO week calendar properties added to Date object
+/* ISO 8601 week calendar properties added to Date object
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the ISO week calendar, which is the calendar implied by ISO 8601.
 // Version M2017-06-22
 // Package CalendarCycleComputationEngine is used.
 // Package MilesianDateProperties is used (in order to compute quickly year of date to be converted into ISO week calendar)
-//	getIsoWeekCalDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+//  getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 //  getIsoWeekCalUTCDate : same as above, in UTC time.
-//  setTimeFromIsoWeekCal (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
-//  setUTCTimeFromIsoWeekCal (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+//  setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
+//  setUTCTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 //  toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-Www-dd
 //  toUTCIsoWeekCalDateString : same as above, in UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
