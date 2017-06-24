@@ -44,3 +44,4 @@ Package CalendarCycleComputationEngine is used.
 * setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
 * setUTCTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 * setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day
+* setJulianDay (julianDay[, timeZoneOffset]) : Set date frome an integer (if not, rounded) julian day, wihtout changing time of day. Considered from the local time zone, or from the time zone offset specified in minutes.
