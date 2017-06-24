@@ -46,8 +46,8 @@ Package CalendarCycleComputationEngine is used.
 * setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day
 * setJulianDay (julianDay[, timeZoneOffset]) : Set date frome an integer (if not, rounded) julian day, wihtout changing time of day. Considered from the local time zone, or from the time zone offset specified in minutes.
 
-## ISOWeekDateProperties.js: computations on ISO 8601 week calendar.
-
+## ISOWeekCalendarDateProperties.js: computations on ISO 8601 week calendar
+Package CalendarCycleComputationEngine and MilesianDateProperties are used.
 * getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 * getIsoWeekCalUTCDate : same as above, in UTC time.
 * setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
