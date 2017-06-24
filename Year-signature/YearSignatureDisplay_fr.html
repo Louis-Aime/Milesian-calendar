@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-  <title>Epacte, semaine et Pâques par année</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Epacte, semaine et PÃ¢ques par annÃ©e</title>
     <style type="text/css">
 p.date {
 	text-align : right
@@ -43,18 +43,18 @@ table.dateconvert {
  
 </head>
 <body>
-<h1 class="dateconvert">Chiffres clés de l'année</h1>
+<h1 class="dateconvert">Chiffres clÃ©s de l'annÃ©e</h1>
 <table class="dateconvert" align="center">
   <tbody>
     <tr><form name="year" class="dateconvert" method="post" action="Javascript:setYear(document.year.year.value);" >
-	  <th>Année:</th>
+	  <th>AnnÃ©e:</th>
 	  <td><input class="dateconvert"  maxlength="5" size="5" name="year" value="2000"></td>	
       <td><button class="dateconvert" name="Compute">Ok</button></td>
 	</form>
 	</tr>
 	<tr>
 	  <form name="control" class="dateconvert" method="post" action="Javascript:setYearOffset(document.control.shift.value);">
-      <th> +/- années:</th>
+      <th> +/- annÃ©es:</th>
 	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
       <td><button class="dateconvert" name="Compute" >Ok</button></td>
     </form></tr>
@@ -63,7 +63,7 @@ table.dateconvert {
 <table class="dateconvert" align="center">
   <tbody>
     <tr><form name="milesianyearfigures" class="dateconvert" method="post">
-	  <th>Dies illa</th><th>Epacte milésienne</th><th>Reliquat annuel</th>
+	  <th>Dies illa</th><th>Epacte milÃ©sienne</th><th>Reliquat annuel</th>
 	</tr>
 	<tr>
 	  <td> 
@@ -81,7 +81,7 @@ table.dateconvert {
 	</tr></form>
   </tbody>
 </table>
-<h2 class="dateconvert">Pâques</h2>
+<h2 class="dateconvert">PÃ¢ques</h2>
 <table class="dateconvert" align="center">
   <tbody>	
 	<tr><form name="yearglobal" class="dateconvert" method="post">
@@ -93,9 +93,9 @@ table.dateconvert {
 <table class="dateconvert" align="center">
   <tbody>
 	<tr><th>Comput</th><th>Dies illa</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
-	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>Romaine</th><th>Milésienne</th></tr>
+	<tr><th></th>      <th></th>          <th>ecclÃ©s.</th><th>pascal</th><th>pascal</th><th>Romaine</th><th>MilÃ©sienne</th></tr>
 	<tr>
-		<td>"Milésien"</td><form name="milesian" class="dateconvert" method="post" action="Javascript:void();">
+		<td>"MilÃ©sien"</td><form name="milesian" class="dateconvert" method="post" action="Javascript:void();">
 		<td> 
         <select class="dateconvert" disabled="disabled" name="day" size="1">
         <option value="0">dimanche</option>
@@ -113,7 +113,7 @@ table.dateconvert {
 		<td><input class="dateconvert" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
 	</form></tr>
 	<tr>
-		<td>Grégorien</td><form name="gregorian" class="dateconvert" method="post" action="Javascript:void();">
+		<td>GrÃ©gorien</td><form name="gregorian" class="dateconvert" method="post" action="Javascript:void();">
 		<td> 
         <select class="dateconvert" disabled="disabled" name="day" size="1">
         <option value="0">dimanche</option>
@@ -150,7 +150,7 @@ table.dateconvert {
 	</form></tr>
    </tbody>
 </table>
-<h3 class="dateconvert">Version 1.2 - Référence : <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<h3 class="dateconvert">Version 1.3 - RÃ©fÃ©rence : <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <script type="text/javascript" language="JavaScript">
 <!--
     //  Preset the fields in the request form to today's date.
