@@ -83,7 +83,7 @@ In reality, [it was 27 days later in the tropical year.](http://www.calendriermi
 
 ## Why Milesian ?
 This name was chosen as a tribute to Thales of Miletus. 
-Herodote writes that Thales was the first scientist who said that a tropic year held 365 ¼ days, instead of exactly 365.
+Herodote writes that Thales was the first scientist who said that a tropical year held 365 ¼ days, instead of exactly 365.
 
 ## Introducing the Milesian calendar to today's world
 Our belief is that the Milesian calendar should be introduced as a possible alternative to the Gregorian calendar. 
