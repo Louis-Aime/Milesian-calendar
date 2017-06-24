@@ -3,12 +3,13 @@
 // This code, to be manually imported, set properties to object Date for the Milesian calendar.
 // Version M2017-06-22
 // Package CalendarCycleComputationEngine is used.
-//	getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+//  getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getJulianCalendarUTCDate : same as above, in UTC time.
 //  getJulianDay : the decimal Julian Day, from the UTC time.
-//  setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
+//  setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
 //  setUTCTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-//	setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day
+//  setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day.
+//  setJulianDay (julianDay[, timeZoneOffset]) : set date as specified by integer (or rounded) Julian day, without changing local time.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -110,7 +111,7 @@ Date.prototype.setTimeFromJulianCalendar = function(year, month, date, //: set T
 }
  Date.prototype.setUTCTimeFromJulianCalendar = function(year, month, date, // same but from UTC time zone.
                                                 hours = this.getUTCHours(), minutes = this.getUTCMinutes(), seconds = this.getUTCSeconds(),
-												milliseconds = this.getMilliseconds()) {
+						milliseconds = this.getMilliseconds()) {
  	let shift = romanCompose ({'month': month, 'date': date});
 	this.setTime (ccceCompose({
 		'year' : year + shift.yearshift, 'dayinyear' : shift.daysinyear, 
@@ -122,10 +123,10 @@ Date.prototype.setTimeFromJulianDay = function (julianDay) { // Set time from a 
 	this.setTime (Math.round(julianDay*Chronos.DAY_UNIT) - JULIAN_DAY_UTC0_EPOCH_OFFSET + 12 * Chronos.HOUR_UNIT);
   return this.valueOf()
 }
-Date.prototype.setJulianDay = function(jd, TimeZoneOffset = this.getTimezoneOffset()) { // Set an integer Julian day, without changing local time.
-	jd = Math.round (jd) ; // case jd is not integer
-	let decomposeLocalTimeStamp = ccceDecompose ((this.valueOf() - TimeZoneOffset * Chronos.MINUTE_UNIT), Day_milliseconds); // Separate day from hour in day.
-    decomposeLocalTimeStamp.day_number = jd - JULIAN_DAY_UTC0_EPOCH_OFFSET / Chronos.DAY_UNIT ; // Compute Unix day number
-	this.setTime (decomposeLocalTimeStamp.day_number * Chronos.DAY_UNIT + decomposeLocalTimeStamp.milliseconds_in_day + TimeZoneOffset * Chronos.MINUTE_UNIT);
+Date.prototype.setJulianDay = function(julianDay, timeZoneOffset = this.getTimezoneOffset()) { // Set an integer Julian day, without changing local time.
+	julianDay = Math.round (julianDay) ; // force julianDay to an integer value
+	let decomposeLocalTimeStamp = ccceDecompose ((this.valueOf() - timeZoneOffset * Chronos.MINUTE_UNIT), Day_milliseconds); // Separate day from hour in day.
+    decomposeLocalTimeStamp.day_number = julianDay - JULIAN_DAY_UTC0_EPOCH_OFFSET / Chronos.DAY_UNIT ; // Compute Unix day number
+	this.setTime (decomposeLocalTimeStamp.day_number * Chronos.DAY_UNIT + decomposeLocalTimeStamp.milliseconds_in_day + timeZoneOffset * Chronos.MINUTE_UNIT);
 	return this.valueOf()
 }
