@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Epacte, semaine et Pâques par année</title>
+    <style type="text/css">
+p.date {
+	text-align : right
+}
+h1.dateconvert {
+  text-align: center;
+}
+h2.dateconvert {
+  text-align: center;
+}
+h3.dateconvert {
+	text-align: center;
+}
+p.dateconvert {
+  text-align: center;
+}
+form.dateconvert {
+  text-align: center;
+}
+select.dateconvert {
+text-align: center;
+}
+input.dateconvert {
+  text-align: center;
+}
+button.dateconvert {
+  background: darkblue;
+  color: antiquewhite;
+}
+table.dateconvert {
+}
+</style>
+
+  <script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
+  <script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
+  <script type="text/javascript" language="JavaScript" src="LunarDateProperties.js"></script>
+  <script type="text/javascript" language="JavaScript" src="MilesianYearSignature.js"></script>
+  <script type="text/javascript" language="JavaScript" src="MilesianYearSignatureDisplay.js"></script>
+ 
+</head>
+<body>
+<h1 class="dateconvert">Chiffres clés de l'année</h1>
+<table class="dateconvert" align="center">
+  <tbody>
+    <tr><form name="year" class="dateconvert" method="post" action="Javascript:setYear(document.year.year.value);" >
+	  <th>Année:</th>
+	  <td><input class="dateconvert"  maxlength="5" size="5" name="year" value="2000"></td>	
+      <td><button class="dateconvert" name="Compute">Ok</button></td>
+	</form>
+	</tr>
+	<tr>
+	  <form name="control" class="dateconvert" method="post" action="Javascript:setYearOffset(document.control.shift.value);">
+      <th> +/- années:</th>
+	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
+      <td><button class="dateconvert" name="Compute" >Ok</button></td>
+    </form></tr>
+  </tbody>
+</table>
+<table class="dateconvert" align="center">
+  <tbody>
+    <tr><form name="milesianyearfigures" class="dateconvert" method="post">
+	  <th>Dies illa</th><th>Epacte milésienne</th><th>Reliquat annuel</th>
+	</tr>
+	<tr>
+	  <td> 
+        <select class="dateconvert" disabled="disabled" name="doomsday" size="1">
+        <option value="0">dimanche</option>
+		<option value="1">lundi</option>
+        <option value="2">mardi</option>
+        <option value="3">mercredi</option>
+        <option value="4">jeudi</option>
+        <option value="5">vendredi</option>
+        <option value="6">samedi</option>
+      </select></td>
+	  <td><input class="dateconvert" disabled="disabled" size="16" name="epact" value="0"></td>
+	  <td><input class="dateconvert" disabled="disabled" size="16" name="residue" value="0"></td>
+	</tr></form>
+  </tbody>
+</table>
+<h2 class="dateconvert">Pâques</h2>
+<table class="dateconvert" align="center">
+  <tbody>	
+	<tr><form name="yearglobal" class="dateconvert" method="post">
+ 	  <th>Nombre d'or moins 1 : </th>
+	  <th><input class="dateconvert" disabled="disabled" size="2" name="gold" value="0"></th>
+	</form></tr>
+  </tbody>
+</table>
+<table class="dateconvert" align="center">
+  <tbody>
+	<tr><th>Comput</th><th>Dies illa</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
+	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>Romaine</th><th>Milésienne</th></tr>
+	<tr>
+		<td>"Milésien"</td><form name="milesian" class="dateconvert" method="post" action="Javascript:void();">
+		<td> 
+        <select class="dateconvert" disabled="disabled" name="day" size="1">
+        <option value="0">dimanche</option>
+		<option value="1">lundi</option>
+        <option value="2">mardi</option>
+        <option value="3">mercredi</option>
+        <option value="4">jeudi</option>
+        <option value="5">vendredi</option>
+        <option value="6">samedi</option>
+        </select></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="epact" value="--"></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="residue" value="0"></td>
+        <td><input class="dateconvert" disabled="disabled" size="5" name="daynumber" value="0"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="romandate" value="22/03"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
+	</form></tr>
+	<tr>
+		<td>Grégorien</td><form name="gregorian" class="dateconvert" method="post" action="Javascript:void();">
+		<td> 
+        <select class="dateconvert" disabled="disabled" name="day" size="1">
+        <option value="0">dimanche</option>
+		<option value="1">lundi</option>
+        <option value="2">mardi</option>
+        <option value="3">mercredi</option>
+        <option value="4">jeudi</option>
+        <option value="5">vendredi</option>
+        <option value="6">samedi</option>
+        </select></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="epact" value="0"></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="residue" value="0"></td>
+        <td><input class="dateconvert" disabled="disabled" size="5" name="daynumber" value="0"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="romandate" value="22/03"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
+	</form></tr>
+	<tr>
+		<td>Julien</td><form name="julian" class="dateconvert" method="post" action="Javascript:void();">
+		<td> 
+        <select class="dateconvert" disabled="disabled" name="day" size="1">
+        <option value="0">dimanche</option>
+		<option value="1">lundi</option>
+        <option value="2">mardi</option>
+        <option value="3">mercredi</option>
+        <option value="4">jeudi</option>
+        <option value="5">vendredi</option>
+        <option value="6">samedi</option>
+        </select></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="epact" value="0"></td>
+		<td><input class="dateconvert" disabled="disabled" size="5" name="residue" value="0"></td>
+        <td><input class="dateconvert" disabled="disabled" size="5" name="daynumber" value="0"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="romandate" value="22/03"></td>
+		<td><input class="dateconvert" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
+	</form></tr>
+   </tbody>
+</table>
+<h3 class="dateconvert">Version 1.2 - Référence : <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<script type="text/javascript" language="JavaScript">
+<!--
+    //  Preset the fields in the request form to today's date.
+    setYearToNow();
+// -->
+</script>		
+</body>
