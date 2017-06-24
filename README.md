@@ -27,11 +27,13 @@ Getters of coordinates of a mean moon, and of an estimate of the "Delta Time" us
 Enables to anticipate possible eclipses in a similar way to the Antikythera mechanism [https://en.wikipedia.org/wiki/Antikythera_mechanism]
 
 ## Milesian Locale: compute Milesian date string following CLDR project model
-Requires CalendarCycleComputationEngine.js and MilesianDateProperties.js
+Requires CalendarCycleComputationEngine.js and MilesianDateProperties.js.
+
 Generate Milesian Date strings in different languages, as specified in the Common Locale Data Repository (CDLR) project.
 
 ## Year-signature
-Requires CalendarCycleComputationEngine.js, MilesianDateProperties.js, LunarDateProperties.js
+Requires CalendarCycleComputationEngine.js, MilesianDateProperties.js, LunarDateProperties.js.
+
 Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
 An HTML desmonstrator is provided.
 
