@@ -1,6 +1,11 @@
 # Milesian-calendar
 Computations and conversion routines demonstrating the Milesian calendar.
 
+Objective: demonstrate that the Milesian calendar as defined in *L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)
+[http://www.calendriermilesien.org/l-heure-milesienne.html] can be handled by simple addition to JS date objects.
+
+Learn more about the advantages of the Milesian calendar in the herefore mentionned book and on [http://www.calendriermilesien.org].
+
 The routines are grouped in subfolders by "project", even if GitHub projects are not always specified. Each subfloder holds a README files describing the contents.
 
 ## JS-Date-Properties
