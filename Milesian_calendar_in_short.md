@@ -4,7 +4,7 @@ It enables you to understand and take control of the Earth’s time.
 
 The next picture represents the Milesian calendar with the *mean* solstices and equinoxes.
 
-![The Milesian calendar] (/img/Milesian calendar image w-backgd.png)
+![The Milesian calendar](/img/Milesian_calendar_image_w-backgd.png)
 
 ### Leap days
 The leap day is the last day of Twelfthem, it is 31 12m or 12m 31 (whether you use British or American English). 
@@ -33,6 +33,21 @@ Moreover, in leap years 1 January (1/1 for British) falls also on 11 1m, but 1 F
 And in common years you have to shift by one in January and February: 12 1m and 13 2m for 1 Jan and A Feb.
 
 ## Advantages
-### Regular month interval
+### Suitability to daylight period length estimation
+At 48° N, the length of the daylight period in a day changes from 8 h 30 mn at Winter solstice to 16 h at Summer solstice. 
+Using the Milesian months, you can estimate the daylight period length month by month.
+### Suitability to climate studies
+In average, solstices and equinoxes fall when a Milesian month begins or finishes. 
+The Milesian calendar represents the seasons' cycle in an ideal way. 
+www.calendriermilesian.org shows example where seasons dependent phenomenons are better displayed on a Milesian layout,
+in particular for the cycle of the Arctic Sea Ice, and for the cycle of the cycle of the Sea Surface Temperature (SST).
+### Regular month intervals
 Each bimester within a year is exactly 61 days. This facilitate many mental computations. 
-You can compute week of days within a year almost
+* You can compute week of days within a year almost as easiy as within a month, because 7 weeks is 63 days, 2 bimester + 2 days.
+* You can anticipate the moon phases, because two mean moon months is 59 days, 2 bimester - 2 days.
+* As you can anticipate the moon phases, you can also anticipate the sea tides.
+### Unambiguous dates
+Historians use a 
+### Understanding long term changes
+
+
