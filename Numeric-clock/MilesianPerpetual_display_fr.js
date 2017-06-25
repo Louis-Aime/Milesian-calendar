@@ -36,8 +36,7 @@
 var targetDate = new Date() ; // target date will be used to update everything
 
 function setDisplay () { // Considering that targetDate time has been set to the desired date, this routines updates all form fields.
-// Gregorian and Milesian calendar use the standard JS routines to display local values of date. 
-// For other calendar, a local Julian Day is computed, other calendar's dates shall be computed with this shifted Julian Day.
+// All calendars use the standard JS routines or the routine of JS-Date-Properties. 
    var UnixTime = targetDate.getTime(), TimeZoneOffset = targetDate.getTimezoneOffset() // Originally arguments of the function.
    var LocalTime = UnixTime - TimeZoneOffset * Chronos.MINUTE_UNIT; // This time enables date computations as if the local time was UTC time.
    var displayDate = new Date (LocalTime); 
