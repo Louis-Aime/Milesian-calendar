@@ -6,19 +6,16 @@ It's people like you that make possible to change the world in depth.
 ### 1. What is all this about ?
 
 May be you should first understand the Milesian calendar proposal. 
-You can read [the Milesian calendar in short](/The Milesian calendar in short.pdf )
+You can read [The Milesian calendar in short.pdf](The Milesian calendar in short)
 or, if you can read French, visit [http://www.calendriermilesien.org].
 
 ### 2. Where do I go from here?
 
 The software pieces are aimed at working with a simple modern Internet browser,
 locally or on a public site.
-Try them by downloading one of the "demonstrators" together with the library packages needed:
-* [Numeric Clock](Numeric-clock): use all JS-Date-properties and Milesian-Locale,
-make calendar conversions, follow moon, anticipate possible eclipses. 
-* [Year signature](Year-signature): get key yearly figures for weeks, moon, Easter date.
-* [Milesian clock](Milesian dial clock): the milesian date of a year displayed like an hour in a day. 
-Note that the Milesian clock does not work with MS Edge, due to a discrepancy in DOM support with Edge.
+Try them by downloading the latest version,
+putting all files in the same directory, 
+them launching any HTML file (see README files for latest details).
 
 ### 3. Bugs, comments and suggestions
 
