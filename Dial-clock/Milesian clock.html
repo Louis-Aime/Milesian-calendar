@@ -77,7 +77,8 @@ table.dateconvert {
 <p class="dateconvert">
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle at x=157, y = 150 -->
-<svg width="314" height="300" xml:lang="fr" viewBox="-157 -150 314 300" preserveAspectRatio="xMidYMid meet">
+<svg width="314" height="300" xml:lang="fr" onload="JavaScript:setDateToNow();"
+viewBox="-157 -150 314 300" preserveAspectRatio="xMidYMid meet">
 <!-- the dial -->
 <image xlink:href="Cadran_milesien_600.png" x="-157" y ="-150" width="314" height="300"/>
 <!-- the month hand -->
@@ -95,8 +96,4 @@ table.dateconvert {
 </svg>
 </p>
 <h3 class="dateconvert">© 2017-07 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
-<script type="text/javascript" language="JavaScript">
-<!-- Preset the fields in the request form to today's date -->
-    setDateToNow();
-</script>
 </body></html>
