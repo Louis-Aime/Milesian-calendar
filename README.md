@@ -38,19 +38,31 @@ Requires CalendarCycleComputationEngine.js and MilesianDateProperties.js.
 Generate Milesian Date strings in different languages, as specified in the Common Locale Data Repository (CDLR) project.
 
 ## Year-signature
-Requires CalendarCycleComputationEngine.js, MilesianDateProperties.js, LunarDateProperties.js.
+Requires: 
+* JS-Date-Properties: CalendarCycleComputationEngine.js, MilesianDateProperties.js, LunarDateProperties.js.
 
 Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
 An HTML desmonstrator is provided.
 
 ## Numeric-clock
-Requires all JS-Date-Properties and all Milesian Locale. 
+Requires 
+* JS-Date-Properties (complete) 
+* Milesian Locale (complete)
 
-This is a "Milesian clock", demonstrating how to convert dates to/from gregorian, julian and Milesian calendars, 
+This is a "Milesian numeric perpetual calendar", demonstrating how to convert dates to/from gregorian, julian and Milesian calendars, 
 and giving moon and Delta T coordinates.
 
 ## Write-Milesian-Date
-Requires CalendarCycleComputationEngine.js, MilesianDateProperties.js, and all Milesian Locale.
+Requires 
+* JS-Date-Properties (CalendarCycleComputationEngine.js, MilesianDateProperties.js) 
+* Milesian Locale.
 
 Demonstrate the "computation" of a string expressing a Milesian date following locales and options 
 as specified by Common Locales Data Repository (CLDR).
+
+## Dial-clock 
+Requires 
+* JS-Date-Properties (CalendarCycleComputationEngine.js, MilesianDateProperties.js)
+
+Demonstrate a dial Milesian clock.
+
