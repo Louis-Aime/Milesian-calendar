@@ -42,7 +42,6 @@ table.dateconvert {
 </head>
 <body>
 <h1 class="dateconvert">Horloge milésienne</h1>
-<p class="dateconvert">CERTUM MONSTRAT DIEM</p>
  <table class="dateconvert" align="center">
    <tbody>
 	 <form name="milesian" class="dateconvert" method="post" action="JavaScript:setClock();">
@@ -77,19 +76,23 @@ table.dateconvert {
 <p class="dateconvert">
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle at x=157, y = 150 -->
-<svg width="314" height="300" xml:lang="fr" onload="JavaScript:setDateToNow();"
-viewBox="-157 -150 314 300" preserveAspectRatio="xMidYMid meet">
+<svg width="300" height="100%" xml:lang="fr" onload="JavaScript:setDateToNow()"
+viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- the dial -->
-<image xlink:href="Cadran_milesien_600.png" x="-157" y ="-150" width="314" height="300"/>
+<image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<!-- the motto on the dial -->
+<text x="0" y="36" style="text-anchor:middle;font:'Times New Roman';font-size:12">CERTUM MONSTRAT DIEM</text>
 <!-- the month hand -->
   <g class="clockhand" id="monthhand" transform="rotate(0)"
-  style="fill:orange;stroke:darkgoldenrod;stroke-width:2px;">										
-	<polygon points="0,0 10,-30 0,-90 -10,-30" />
+  style="fill:orange;stroke:darkgoldenrod;stroke-width:4px;">										
+	<polygon points="0,0 20,-60 0,-165 -20,-60" />
   </g>
 <!-- the day hand -->
   <g class="clockhand" id="dayhand" transform="rotate(0)"
   style="fill:darkgoldenrod;stroke:darkgoldenrod;stroke-width:4px;stroke-linecap:round">									
-	<line x1="0" x2="0" y1="0" y2="-105" />
+	<line x1="0" x2="0" y1="0" y2="-200" />
   </g>
 <!-- finish with a center circle -->
 <circle r="7" style="fill:darkgoldenrod;"/>
