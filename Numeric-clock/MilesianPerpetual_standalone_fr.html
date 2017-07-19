@@ -1,40 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <link href="milesian.css" rel="stylesheet"/>
   <title>Calendrier perpétuel numérique</title>
-  
-  <style type="text/css">
-p.date {
-	text-align : right
-}
-h1.dateconvert {
-	text-align: center;
-}
-h2.dateconvert {
-	text-align: center;
-}
-h3.dateconvert {
-	text-align: center;
-}
-p.dateconvert {
-  text-align: center;
-}
-form.dateconvert {
-  text-align: center;
-}
-select.dateconvert {
-text-align: center;
-}
-input.dateconvert {
-  text-align: center;
-}
-button.dateconvert {
-  background: darkblue;
-  color: antiquewhite;
-}
-table.dateconvert {
-}
-</style>
  
   <script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
@@ -53,7 +21,7 @@ table.dateconvert {
     </script>
 </h3>
 -->
-
+<div class="dateconvert autoscroll">
   <table class="dateconvert" align="center">
    <tbody>
       <tr>
@@ -132,6 +100,7 @@ table.dateconvert {
      </tr>
   </tbody>
 </table>
+</div>
   <table class="dateconvert" align="center">
    <tbody>
 	<tr>
@@ -263,7 +232,7 @@ table.dateconvert {
 	</tr>
   </tbody>
 </table>
-<h3 class="dateconvert">© 2017-06 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<h3 class="dateconvert">© 2017-07 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <script type="text/javascript" language="JavaScript">
 <!-- //  Preset the fields in the request form to today's date. // -->
     setDateToNow();
