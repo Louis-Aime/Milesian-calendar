@@ -1,39 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <link href="milesian.css" rel="stylesheet"/>
   <title>Epacte, semaine et Pâques par année</title>
-    <style type="text/css">
-p.date {
-	text-align : right
-}
-h1.dateconvert {
-  text-align: center;
-}
-h2.dateconvert {
-  text-align: center;
-}
-h3.dateconvert {
-	text-align: center;
-}
-p.dateconvert {
-  text-align: center;
-}
-form.dateconvert {
-  text-align: center;
-}
-select.dateconvert {
-text-align: center;
-}
-input.dateconvert {
-  text-align: center;
-}
-button.dateconvert {
-  background: darkblue;
-  color: antiquewhite;
-}
-table.dateconvert {
-}
-</style>
 
   <script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
@@ -43,7 +12,7 @@ table.dateconvert {
  
 </head>
 <body>
-<h1 class="dateconvert">Chiffres clés de l'année</h1>
+<h1 class="dateconvert">Epacte, semaine et Pâques</h1>
 <table class="dateconvert" align="center">
   <tbody>
     <tr><form name="year" class="dateconvert" method="post" action="Javascript:setYear(document.year.year.value);" >
@@ -90,7 +59,8 @@ table.dateconvert {
 	</form></tr>
   </tbody>
 </table>
-<table class="dateconvert" align="center">
+<div class="dateconvert autoscroll">
+<table align="center">
   <tbody>
 	<tr><th>Comput</th><th>Dies illa</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
 	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>Romaine</th><th>Milésienne</th></tr>
@@ -150,11 +120,11 @@ table.dateconvert {
 	</form></tr>
    </tbody>
 </table>
-<h3 class="dateconvert">Version 1.3 - Référence : <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+</div>
+<h3 class="dateconvert">© 2017-07 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<!-- //Preset the fields in the request form to today's date  -->
 <script type="text/javascript" language="JavaScript">
-<!--
-    //  Preset the fields in the request form to today's date.
     setYearToNow();
-// -->
 </script>		
 </body>
+</html>
