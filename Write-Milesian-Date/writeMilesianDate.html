@@ -1,82 +1,49 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>Test écriture dépendant de locale</title>
-  
-  <style type="text/css">
-p.date {
-	text-align : right
-}
-h1.dateconvert {
-	text-align: center;
-}
-h2.dateconvert {
-	text-align: center;
-}
-h3.dateconvert {
-	text-align: center;
-}
-p.dateconvert {
-  text-align: center;
-}
-form.dateconvert {
-  text-align: center;
-}
-select.dateconvert {
-text-align: center;
-}
-input.dateconvert {
-  text-align: center;
-}
-button.dateconvert {
-  background: darkblue;
-  color: antiquewhite;
-}
-table.dateconvert {
-}
-</style>
-  
-	<script type="text/javascript" language="JavaScript" src="toMilesianString.js"></script>
-	<script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
-	<script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
-	<script type="text/javascript" language="JavaScript" src="writeMilesianDate.js"></script>
+  <link href="milesian.css" rel="stylesheet"/>
+  <title>Date milésienne internationale</title>
+	<script type="text/javascript" src="CalendarCycleComputationEngine.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+ 	<script type="text/javascript" src="toMilesianString.js"></script>
+	<script type="text/javascript" src="writeMilesianDate.js"></script>
 
 </head>
 <body>
-<h1 class="dateconvert">Test écriture dépendant de locale</h1>
-<h3 class="dateconvert">
-    <script type="text/javascript"> 
-	today = new Date();
-	document.write (today.toMilesianLocaleDateString("fr-FR", {weekday: "long", day:"numeric", month:"long",year:"numeric"}));
-    </script>
-</h3>
+<h1 class="dateconvert">Date milésienne internationale</h1>
+<p class="dateconvert">"Locale": code langue et pays au format "ll-PP",<br>
+par exemple "en-US": l'anglais aux Etats-Unis.<br> 
+Options: représentation de chaque composant de date<br>
+avec "long", "numeric", "2-digit", "short" ou "narrow".<br>
+Si les noms de mois d'une langue ne sont pas définis,<br>
+leur version longue est affichée en latin.</p>
   <table class="dateconvert" align="center">
    <tbody>
       <tr>
-        <th>Calendrier</th>
         <th>Jour</th>
+        <th>Quant.</th>
         <th>Mois</th>
         <th>Année</th>
         <th></th>
       </tr>
       <tr>
 	    <form name="milesian" class="dateconvert" method="post" action="JavaScript:calcMilesian();">
-        <td>Milésien</td>
+        <td><input type="text" class="dateconvert" size="8" disabled="disabled" name="dayofweek"/> </td>
         <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"> </td>
         <td>
         <select name="monthname" size="1" class="dateconvert">
-		<option value="0">unème</option>
-        <option value="1">secondème</option>
-        <option value="2">tertème</option>
-        <option value="3">quartème</option>
-        <option value="4">quintème</option>
-        <option value="5">sextème</option>
-        <option value="6">septème</option>
-        <option value="7">octème</option>
-        <option value="8">novème</option>
-        <option value="9">décème</option>
-        <option value="10">onzème</option>
-        <option value="11">douzème</option>
+		<option value="0">1m</option>
+        <option value="1">2m</option>
+        <option value="2">3m</option>
+        <option value="3">4m</option>
+        <option value="4">5m</option>
+        <option value="5">6m</option>
+        <option value="6">7m</option>
+        <option value="7">8m</option>
+        <option value="8">9m</option>
+        <option value="9">10m</option>
+        <option value="10">11m</option>
+        <option value="11">12m</option>
 		</select> </td>
         <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year" value="" type="text"> </td>
         <td><button class="dateconvert" name="Compute" value="milesian">Ok</button></td>
@@ -86,81 +53,44 @@ table.dateconvert {
    </table>
 <table class="dateconvert" align="center">
   <tbody>
-    <tr><form class="dateconvert" method="post" action="Javascript:setDateToNow();" name="Today">
+    <tr><form name="Today" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
       <td><button class="dateconvert" value="Now" name="Compute" >Maintenant</button></td>
       <td> +/- jours</td>
 	  </form>
-	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset (document.control.dir.value);">
+	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
 	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
       <td><button class="dateconvert"  name="Compute" value="shift">Ok</button></td>
     </form></tr>
    </tbody>
 </table>
-<br>
-<table class="dateconvert" align="center"> <tbody>
-  <tr>
-  	<th colspan=5>Heure locale (directive 2000/84/CE)</th>
-  <tr> 
-	<form name="time" class="dateconvert" method="post" action="JavaScript:calcTime();">
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="hours">h</td>
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="mins">mn</td>
-	 <td><input type="text" class="dateconvert" size="1" maxlength="3" name="secs">s</td>
-	 <td><button class="dateconvert" name="Compute" value="time_of_day">Ok</button></td>	
-	</form>
-  </tr>
-  </tbody></table>
- <table class="dateconvert" align="center"> <tbody>
-  <tr>
- 	<th>Heure UTC</th>
-	 <form name="UTCtime" class="dateconvert" method="post" action="JavaScript:void();">
-	 <th colspan=3 ><input type="text" class="dateconvert" size="12" disabled="disabled" name="time" value=""> </th>
-	 </form>
-  </tr>
-  </tbody></table>
- <table class="dateconvert" align="center"> <tbody>
-  <tr>
-	<td>
-		<form name="UTCset12" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(12);"> 
-		<button class="dateconvert"  name="Compute" value="12">12h</button>
-		</form>
-	</td>
-	<td>
-		<form name="UTCset0" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed(0);"> 
-		<button class="dateconvert"  name="Compute" value="0">0h</button>
-		</form>
-	</td>
-	<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
-	 <td>+/- secondes</td>
-	 <td><input type="text" class="dateconvert" size="2" maxlength="6" name="time_offset" value="1"></td>
-	 <td><button class="dateconvert" name="Compute" value="time_offset">Ok</button></td>	
-	</form>
-  </tr>
-  </tbody>
- </table>
 <!-- Input Locale and Options, output String -->
+<div class="dateconvert autoscroll">
 	<table class="dateconvert" align="center"> <tbody>
 	 <form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
 	   <tr>
 		<th>Locale: </th>
 		<td><input type="text" class="dateconvert" size="5" name="Locale" value=""> </td>
-		<th>Options: </th>
+		<th colspan="2">Options: </th>
+		<td colspan="2"><button class="dateconvert" type="reset">tous sauf ère</button></td>
 	   </tr>
 	   <tr>
-		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th>
+		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
 	   </tr>
 	   <tr>
-		<td><input type="text" class="dateconvert" size="5" name="Weekday" value=""> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Day" value=""> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Month" value=""> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Year" value=""> </td>
-		<td><button class="dateconvert" name="Compute" value="Options">Ok</button></td>	
+		<td><input type="text" class="dateconvert" size="5" name="Weekday" value="long"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Day" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Month" value="long"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Year" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Era" value=""></td>
+		<td><button class="dateconvert" >Ok</button></td>	
 	   </tr>
-	   <tr><td>Mil.:  </td><td colspan=4><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
-	   <tr><td>Grég.: </td><td colspan=4><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
+	   <tr><td>Mil.:  </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
+	   <tr><td>Grég.: </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
 	 </form> 
 	</tbody></table>
- <script type="text/javascript"> 
-	setDateToNow();
- </script>
+</div>	
+ <h3 class="dateconvert">© 2017-07 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
+ <script type="text/javascript" >setDateToNow();</script>
 </body>
 </html>
