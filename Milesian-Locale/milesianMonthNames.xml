@@ -35,8 +35,7 @@
             <month type="11" draft="unconfirmed">11m</month>
             <month type="12" draft="unconfirmed">12m</month>
         </monthWidth>
-<!-- one numeric type is given here, and yields 1m etc.  -->	
-        <monthWidth type="numeric"> 
+       <monthWidth type="narrow"> <!-- Try to force to this minimal value. Else a letter coding system shall be necessary. -->
             <month type="1" draft="unconfirmed">1m</month>
             <month type="2" draft="unconfirmed">2m</month>
             <month type="3" draft="unconfirmed">3m</month>
@@ -50,20 +49,19 @@
             <month type="11" draft="unconfirmed">11m</month>
             <month type="12" draft="unconfirmed">12m</month>
         </monthWidth>
-
-	<monthWidth type="narrow">
-            <month type="1" draft="unconfirmed">U</month>
-            <month type="2" draft="unconfirmed">S</month>
-            <month type="3" draft="unconfirmed">T</month>
-            <month type="4" draft="unconfirmed">Q</month>
-            <month type="5" draft="unconfirmed">Q</month>
-            <month type="6" draft="unconfirmed">S</month>
-            <month type="7" draft="unconfirmed">S</month>
-            <month type="8" draft="unconfirmed">O</month>
-            <month type="9" draft="unconfirmed">N</month>
-            <month type="10" draft="unconfirmed">D</month>
-            <month type="11" draft="unconfirmed">U</month>
-            <month type="12" draft="unconfirmed">D</month>
+        <monthWidth type="numeric"> 	<!-- one numeric type is given here, and yields 1m etc.  -->	
+            <month type="1" draft="unconfirmed">1m</month>
+            <month type="2" draft="unconfirmed">2m</month>
+            <month type="3" draft="unconfirmed">3m</month>
+            <month type="4" draft="unconfirmed">4m</month>
+            <month type="5" draft="unconfirmed">5m</month>
+            <month type="6" draft="unconfirmed">6m</month>
+            <month type="7" draft="unconfirmed">7m</month>
+            <month type="8" draft="unconfirmed">8m</month>
+            <month type="9" draft="unconfirmed">9m</month>
+            <month type="10" draft="unconfirmed">10m</month>
+            <month type="11" draft="unconfirmed">11m</month>
+            <month type="12" draft="unconfirmed">12m</month>
         </monthWidth>
 	</monthContext>
        <monthContext type="stand-alone">
@@ -96,19 +94,19 @@
             <month type="11" draft="unconfirmed">11m</month>
             <month type="12" draft="unconfirmed">12m</month>
         </monthWidth>
-        <monthWidth type="narrow">
-            <month type="1" draft="unconfirmed">U</month>
-            <month type="2" draft="unconfirmed">S</month>
-            <month type="3" draft="unconfirmed">T</month>
-            <month type="4" draft="unconfirmed">Q</month>
-            <month type="5" draft="unconfirmed">Q</month>
-            <month type="6" draft="unconfirmed">S</month>
-            <month type="7" draft="unconfirmed">S</month>
-            <month type="8" draft="unconfirmed">O</month>
-            <month type="9" draft="unconfirmed">N</month>
-            <month type="10" draft="unconfirmed">D</month>
-            <month type="11" draft="unconfirmed">U</month>
-            <month type="12" draft="unconfirmed">D</month>
+       <monthWidth type="narrow"> <!-- Try to force to this minimal value. Else a letter coding system shall be necessary. -->
+            <month type="1" draft="unconfirmed">1m</month>
+            <month type="2" draft="unconfirmed">2m</month>
+            <month type="3" draft="unconfirmed">3m</month>
+            <month type="4" draft="unconfirmed">4m</month>
+            <month type="5" draft="unconfirmed">5m</month>
+            <month type="6" draft="unconfirmed">6m</month>
+            <month type="7" draft="unconfirmed">7m</month>
+            <month type="8" draft="unconfirmed">8m</month>
+            <month type="9" draft="unconfirmed">9m</month>
+            <month type="10" draft="unconfirmed">10m</month>
+            <month type="11" draft="unconfirmed">11m</month>
+            <month type="12" draft="unconfirmed">12m</month>
         </monthWidth>
        </monthContext>
     </months>
@@ -144,6 +142,7 @@
     </quarters>
   </calendar>
  </ldmlBCP47>
+ <!-- Here starts the ldml part - language-specific -->
  <ldml>
 	<identity>
 		<language type="fr"/>
@@ -227,5 +226,128 @@
 			</months>
 		</calendar>
 	</identity>
+	<identity>
+		<language type="de"/>
+		<calendar type="milesian">
+			<months>
+			  <monthContext type="format">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Erstme</month>
+				   <month type="2" draft="unconfirmed">Zweitme</month>
+				   <month type="3" draft="unconfirmed">Drittme</month>
+				   <month type="4" draft="unconfirmed">Viertme</month>
+				   <month type="5" draft="unconfirmed">Fünftme</month>
+				   <month type="6" draft="unconfirmed">Sechstme</month>
+				   <month type="7" draft="unconfirmed">Siebentme</month>
+				   <month type="8" draft="unconfirmed">Achtme</month>
+				   <month type="9" draft="unconfirmed">Neuntme</month>
+				   <month type="10" draft="unconfirmed">Zehntme</month>
+				   <month type="11" draft="unconfirmed">Elftme</month>
+				   <month type="12" draft="unconfirmed">Zwölftme</month>
+				</monthWidth>
+			  </monthContext>
+			  <monthContext type="stand-alone">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Erstme</month>
+				   <month type="2" draft="unconfirmed">Zweitme</month>
+				   <month type="3" draft="unconfirmed">Drittme</month>
+				   <month type="4" draft="unconfirmed">Viertme</month>
+				   <month type="5" draft="unconfirmed">Fünftme</month>
+				   <month type="6" draft="unconfirmed">Sechstme</month>
+				   <month type="7" draft="unconfirmed">Siebentme</month>
+				   <month type="8" draft="unconfirmed">Achtme</month>
+				   <month type="9" draft="unconfirmed">Neuntme</month>
+				   <month type="10" draft="unconfirmed">Zehntme</month>
+				   <month type="11" draft="unconfirmed">Elftme</month>
+				   <month type="12" draft="unconfirmed">Zwölftme</month>
+				</monthWidth>
+			  </monthContext>
+			</months>
+		</calendar>
+	</identity>
+	<identity>
+		<language type="es"/>
+		<calendar type="milesian">
+			<months>
+			  <monthContext type="format">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Primerem</month>
+				   <month type="2" draft="unconfirmed">Segondem</month>
+				   <month type="3" draft="unconfirmed">Tercerem</month>
+				   <month type="4" draft="unconfirmed">Cuartem</month>
+				   <month type="5" draft="unconfirmed">Quintem</month>
+				   <month type="6" draft="unconfirmed">Sextem</month>
+				   <month type="7" draft="unconfirmed">Séptimem</month>
+				   <month type="8" draft="unconfirmed">Octavem</month>
+				   <month type="9" draft="unconfirmed">Novenem</month>
+				   <month type="10" draft="unconfirmed">Décimem</month>
+				   <month type="11" draft="unconfirmed">Undécimem</month>
+				   <month type="12" draft="unconfirmed">Duodécimem</month>
+				</monthWidth>
+			  </monthContext>
+			  <monthContext type="stand-alone">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Primerem</month>
+				   <month type="2" draft="unconfirmed">Segondem</month>
+				   <month type="3" draft="unconfirmed">Tercerem</month>
+				   <month type="4" draft="unconfirmed">Cuartem</month>
+				   <month type="5" draft="unconfirmed">Quintem</month>
+				   <month type="6" draft="unconfirmed">Sextem</month>
+				   <month type="7" draft="unconfirmed">Séptimem</month>
+				   <month type="8" draft="unconfirmed">Octavem</month>
+				   <month type="9" draft="unconfirmed">Novenem</month>
+				   <month type="10" draft="unconfirmed">Décimem</month>
+				   <month type="11" draft="unconfirmed">Undécimem</month>
+				   <month type="12" draft="unconfirmed">Duodécimem</month>
+				</monthWidth>
+			  </monthContext>
+			</months>
+		</calendar>
+	</identity>
+	<identity>
+		<language type="pt"/>
+		<calendar type="milesian">
+			<months>
+			  <monthContext type="format">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Primeirem</month>
+				   <month type="2" draft="unconfirmed">Segundem</month>
+				   <month type="3" draft="unconfirmed">Terceirem</month>
+				   <month type="4" draft="unconfirmed">Quartem</month>
+				   <month type="5" draft="unconfirmed">Quintem</month>
+				   <month type="6" draft="unconfirmed">Sextem</month>
+				   <month type="7" draft="unconfirmed">Sétimem</month>
+				   <month type="8" draft="unconfirmed">Oitavem</month>
+				   <month type="9" draft="unconfirmed">Nonem</month>
+				   <month type="10" draft="unconfirmed">Décimem</month>
+				   <month type="11" draft="unconfirmed">Undécimem</month>
+				   <month type="12" draft="unconfirmed">Duodécimem</month>
+				</monthWidth>
+			  </monthContext>
+			  <monthContext type="stand-alone">
+			   <default type="abbreviated"/> <!-- Is it necessary ? -->
+				<monthWidth type="wide">
+				   <month type="1" draft="unconfirmed">Primeirem</month>
+				   <month type="2" draft="unconfirmed">Segundem</month>
+				   <month type="3" draft="unconfirmed">Terceirem</month>
+				   <month type="4" draft="unconfirmed">Quartem</month>
+				   <month type="5" draft="unconfirmed">Quintem</month>
+				   <month type="6" draft="unconfirmed">Sextem</month>
+				   <month type="7" draft="unconfirmed">Sétimem</month>
+				   <month type="8" draft="unconfirmed">Oitavem</month>
+				   <month type="9" draft="unconfirmed">Nonem</month>
+				   <month type="10" draft="unconfirmed">Décimem</month>
+				   <month type="11" draft="unconfirmed">Undécimem</month>
+				   <month type="12" draft="unconfirmed">Duodécimem</month>
+				</monthWidth>
+			  </monthContext>
+			</months>
+		</calendar>
+	</identity>	
   </ldml>
 </pldr>
