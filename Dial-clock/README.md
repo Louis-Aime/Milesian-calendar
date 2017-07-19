@@ -7,9 +7,9 @@ except that the two hands display the month and the date, instead of the hour an
 1. Extract MilesianDateProperties and CalendarCycleComputationEngine from JS-Date-properties into a directory of your computer. 
 You may extract all, it does not matter. 
 1. Extract all .js and .html files of Dial-clock into the same directory. 
-1. Launch "Light milesian clock" in our browser. 
-This file is svg file (if necessary you may change the postfix) that shows today's Milesian date. 
-1. Launch "Milesian clock" in our browser. It shows today's Milesian date on the dial, and you may change the date. 
+1. Launch "LightMilesianClock" in our browser. 
+This file is .svg file (if necessary you may change the postfix) that shows today's Milesian date. 
+1. Launch "MilesianClock" in our browser. It shows today's Milesian date on the dial, and you may change the date.
 
 ## Notices
   * MS Internet Explorer does not work at all
