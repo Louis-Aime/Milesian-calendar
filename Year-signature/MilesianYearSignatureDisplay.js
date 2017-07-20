@@ -2,7 +2,7 @@
 // Character set is UTF-8
 // This package displays annual figures, in relation with YearSignatureDisplay.html
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017 - Louis A. de Fouquières
+/* Copyright Miletus 2017 - Louis A. de FouquiÃ¨res
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -74,7 +74,7 @@ function computeSignature(year) {
 }
 function setYear(year) {
 //	var year = Math.floor(document.year.year.value);
-	if (isNaN (year)) alert ("Valeur non numérique de l'année : " + year)
+	if (isNaN (year)) alert ("Valeur non numÃ©rique de l'annÃ©e : " + year)
 		else {
 			document.year.year.value = +year;
 			computeSignature (+year);
@@ -83,7 +83,7 @@ function setYear(year) {
 function setYearOffset(shift) {
 //	var shift = Math.floor(document.control.shift.value);
 	var year = Math.round(document.year.year.value) + Math.round(shift);
-	if (isNaN (year)) alert ("Paramètre non numérique : "+ shift)
+	if (isNaN (year)) alert ("ParamÃ¨tre non numÃ©rique : "+ shift)
 		else { 
 			document.year.year.value = year;
 			computeSignature (year);
