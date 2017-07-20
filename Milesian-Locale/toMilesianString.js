@@ -60,6 +60,7 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 	// example of standard usedOptions: { locale: "fr-FR", calendar: "gregory", numberingSystem: "latn", timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" }
 	// while specifiying option, you may suppress year, month or day.
 	let lang = usedOptions.locale[0] + usedOptions.locale[1], country = usedOptions.locale[3] + usedOptions.locale[4]; // Decompose Locales string.
+	let monthDay = false;	// true for languages and countries where month comes before day.
 	let Xpath1 = "", node = undefined;	// will be used for searching the month's names in the Locale data registry
 	// Compute weekday if desired
 	if (usedOptions.weekday !== undefined) wstr = this.toLocaleDateString (usedOptions.locale, {weekday : usedOptions.weekday}); // construct weekday using existing data;
@@ -70,7 +71,7 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 		default : break; }
 	if (ystr !== "") switch (lang) {	// Language dependent year separator, if month is not numeric
 		case "en" : switch (country) { 	// Depending on English-speaking countries, a comma may be necessary
-			case "US" : case "CA" : ysep = ", "; break;
+			case "US" : case "CA" : ysep = ", "; monthDay = true; break;
 			default : ysep = " "; break
 			}; break;		
 		case "es" : case "pt" : ysep = " de "; break;
@@ -126,12 +127,10 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 		default : wsep = " "; break;	} 
 	// Begin forming the complete string
 	str += wstr + wsep;		// Weekday element
-	switch (country) { // Depending on English-speaking countries, the order is changed
-			case "US" : case "CA" : 
-				if (mstr !== "") {str += mstr + ((dstr !=="") ? msep + dstr : "")} else str += dstr; break;
-			default : 
-				if (mstr !== "") {str += ((dstr !=="") ? dstr + msep : "" ) + mstr} else str += dstr; break
-			}		
+	if (monthDay)   // Construct day and month in order specified
+			{ if (mstr !== "") {str += mstr + ((dstr !=="") ? msep + dstr : "")} else str += dstr }
+			else  
+			{ if (mstr !== "") {str += ((dstr !=="") ? dstr + msep : "" ) + mstr} else str += dstr}	;	
 	str += ysep + ystr ;
 	return str; 
 }
