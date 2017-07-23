@@ -30,7 +30,8 @@
 var targetDate = new Date() ; // target date will be used to update everything
 
 function setDisplay () {	// Disseminate targetDate on all display
-	setSolarYearClockHands (targetDate.getMilesianDate().month, targetDate.getMilesianDate().date);
+	let clock = document.querySelector("#clock2");
+	setSolarYearClockHands (clock,targetDate.getMilesianDate().month, targetDate.getMilesianDate().date);
     document.milesian.dayofweek.value = targetDate.toLocaleDateString(undefined,{weekday:"long"});
 	document.milesian.year.value = targetDate.getMilesianDate().year; // uses the local variable - not UTC
     document.milesian.monthname.value = targetDate.getMilesianDate().month ; // Month value following JS habits: 0 to 11.

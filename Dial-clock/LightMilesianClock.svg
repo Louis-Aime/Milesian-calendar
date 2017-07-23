@@ -5,7 +5,7 @@
 
 <!-- Solar Year Milesian Clock -->
 <!-- Scalable viewbox, centered in the middle -->
-<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setDateToNow()"
+<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setToNow()"
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,30 +15,29 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <script type="text/javascript" language="JavaScript" xlink:href="MilesianDateProperties.js"></script>
 <script type="text/javascript" language="JavaScript" xlink:href="MilesianClockOperations.js"></script>
 <script type="text/javascript" language="JavaScript">
-var targetDate = new Date() ; // target date will be used to update everything
-function setDisplay () {	// Display as indicated in targetDate
-	setSolarYearClockHands (targetDate.getMilesianDate().month, targetDate.getMilesianDate().date); // Use Milesian component of date
+function setToNow() {	// performed when svg is loaded
+    let targetDate = new Date(); // set new Date object.
+	setSolarYearClockHands (document.querySelector("#clock1"),targetDate.getMilesianDate().month, targetDate.getMilesianDate().date); // set hands as of today
 }
-function setDateToNow(){ // Self explanatory
-    targetDate = new Date(); // set new Date object.
-	setDisplay();
-} 
 </script>
+
+<g id="clock1">
 <!-- the dial -->
 <image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
 <!-- style="text-anchor:middle;font:Serif;font-size:18" -->
 <!-- the month hand -->
-  <g class="clockhand" id="monthhand" transform="rotate(0)"
+  <g class="clockhand monthhand" transform="rotate(0)"
   opacity="0.8">										
 	<polygon points="0,0 20,-60 0,-165 -20,-60" />
   </g>
 <!-- the day hand -->
-  <g class="clockhand" id="dayhand" transform="rotate(0)"
+  <g class="clockhand dayhand" transform="rotate(0)"
   opacity="0.8">									
 	<line x1="0" x2="0" y1="0" y2="-200" />
   </g>
 <!-- finish with a center circle -->
 <circle class="clockhand" r="9" />
+</g>
 </svg>
