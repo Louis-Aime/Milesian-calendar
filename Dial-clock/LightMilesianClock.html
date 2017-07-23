@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html><head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+	<link href="milesian.css" rel="stylesheet"/>
+	<title>Horloge milésienne</title>
+	<script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
+	<script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" language="JavaScript" src="MilesianClockOperations.js"></script>
+</head>
+<body>
+<div class="dateconvert">	
+<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setToNow()"
+viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<script type="text/javascript" language="JavaScript">
+function setToNow() {	// performed when svg is loaded
+    let targetDate = new Date(); // set new Date object.
+	setSolarYearClockHands (document.querySelector("#clock1"),targetDate.getMilesianDate().month, targetDate.getMilesianDate().date); // set hands as of today
+}
+</script>
+
+<g id="clock1">
+<!-- the dial -->
+<image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<!-- the motto on the dial -->
+<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- style="text-anchor:middle;font:Serif;font-size:18" -->
+<!-- the month hand -->
+  <g class="clockhand monthhand" transform="rotate(0)"
+  opacity="0.8">										
+	<polygon points="0,0 20,-60 0,-165 -20,-60" />
+  </g>
+<!-- the day hand -->
+  <g class="clockhand dayhand" transform="rotate(0)"
+  opacity="0.8">									
+	<line x1="0" x2="0" y1="0" y2="-200" />
+  </g>
+<!-- finish with a center circle -->
+<circle class="clockhand" r="9" />
+</g>
+</svg>
+</div>
+</body></html>
