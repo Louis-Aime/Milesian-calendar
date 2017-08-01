@@ -9,7 +9,8 @@
   <script type="text/javascript" language="JavaScript" src="LunarDateProperties.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianYearSignature.js"></script>
   <script type="text/javascript" language="JavaScript" src="MilesianYearSignatureDisplay.js"></script>
- 
+  <script type="text/javascript" language="JavaScript" src="MilesianAlertMsg.js"></script>
+
 </head>
 <body>
 <h1 class="dateconvert">Epacte, semaine et Pâques</h1>
@@ -32,7 +33,9 @@
 <table class="dateconvert" align="center">
   <tbody>
     <tr><form name="milesianyearfigures" class="dateconvert" method="post">
-	  <th>Dies illa</th><th>Epacte milésienne</th><th>Reliquat annuel</th>
+	  <th>Dies illa</th><th>Epacte</th><th>Reliquat</th>
+	</tr><tr>
+	  <th>(jour clé)</th><th>milésienne</th><th>annuel</th>	  
 	</tr>
 	<tr>
 	  <td> 
@@ -45,8 +48,8 @@
         <option value="5">vendredi</option>
         <option value="6">samedi</option>
       </select></td>
-	  <td><input class="dateconvert" disabled="disabled" size="16" name="epact" value="0"></td>
-	  <td><input class="dateconvert" disabled="disabled" size="16" name="residue" value="0"></td>
+	  <td><input class="dateconvert" disabled="disabled" size="5" name="epact" value="0"></td>
+	  <td><input class="dateconvert" disabled="disabled" size="5" name="residue" value="0"></td>
 	</tr></form>
   </tbody>
 </table>
@@ -63,7 +66,7 @@
 <table align="center">
   <tbody>
 	<tr><th>Comput</th><th>Dies illa</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
-	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>Romaine</th><th>Milésienne</th></tr>
+	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>romaine</th><th>milésienne</th></tr>
 	<tr>
 		<td>"Milésien"</td><form name="milesian" class="dateconvert" method="post" action="Javascript:void();">
 		<td> 
