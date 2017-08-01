@@ -1,6 +1,6 @@
-/* Display routines of the Milesian perpetual digital calendar,
-// Character set of this file is UTF-8 (done at commit, verified)
-// Display in French works well if HTML page uses ANSI ISO 8859-1
+/* MilseianPerpetualDisplay - Display routines of the Milesian perpetual digital calendar.
+// Character set of this file is UTF-8 
+// Error messages in another file fo coding compatbility
 // Version M2017-07-02
 // 
 // to be used with the following .js files:
@@ -105,7 +105,7 @@ function setDateToNow(){ // Self explanatory
 function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
 	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
-	if (isNaN (j)) {alert ("Valeur non numérique du jour julien : " + document.daycounter.julianday.value)}
+	if (isNaN (j)) {alert (MilesianAlertMsg.nonNumeric + document.daycounter.julianday.value)}
 	else {
 		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
 		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
@@ -119,7 +119,7 @@ function calcISO() {
 	var year =  Math.round (document.isoweeks.year.value);
 	if	( isNaN(day)  || isNaN (week) || isNaN (year))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.isoweeks.year.value + " " + document.isoweeks.week.value + " " + document.isoweeks.day.value);
+		alert (MilesianAlertMsg.nonInteger + document.isoweeks.year.value + " // " + document.isoweeks.week.value + " // " + document.isoweeks.day.value);
 	} else {
 		targetDate.setTimeFromIsoWeekCal (year,week,day);
 		setDisplay ();
@@ -131,7 +131,7 @@ function calcMilesian() {
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.milesian.day.value + " " + document.milesian.monthname.value + "m " + document.milesian.year.value);
+		alert (MilesianAlertMsg.nonInteger + document.milesian.day.value + " // " + document.milesian.year.value);
 	} else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
@@ -143,7 +143,7 @@ function calcGregorian() {
 	var year =  Math.round (document.gregorian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.gregorian.day.value + "/" + document.gregorian.monthname.value + "/" + document.gregorian.year.value);
+		alert (MilesianAlertMsg.nonInteger + document.gregorian.day.value + " // " + document.gregorian.year.value);
 	} else {
 		targetDate.setFullYear(year, month, day); 	// Set date object from gregorian date indication, without changing time-in-the-day.
 		setDisplay ();
@@ -155,7 +155,7 @@ function calcJulian(){
 	var year =  Math.round(document.julian.year.value);
 	if	( isNaN(day)  || isNaN (year))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.julian.day.value + "/" + document.julian.monthname.value + "/" + document.julian.year.value);
+		alert (MilesianAlertMsg.nonInteger + document.julian.day.value + " // " + document.julian.year.value);
 	} else {
 			targetDate.setTimeFromJulianCalendar (year, month, day);
 			setDisplay ();
@@ -163,7 +163,7 @@ function calcJulian(){
 }
 function SetDayOffset () { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert ("Valeur non entière du délai: " + document.control.shift.value);
+	if (isNaN(days)) {alert (MilesianAlertMsg.nonInteger + document.control.shift.value);
 	} else { 
 	document.control.shift.value = days;
 	targetDate.setUTCDate (targetDate.getUTCDate()+days);
@@ -172,7 +172,7 @@ function SetDayOffset () { // Choice here: the days are integer, all 24h, so loc
 }
 function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
 	var secs = Math.round (document.UTCshift.time_offset.value);
-	if (isNaN(secs)) {alert ("Valeur non entière du délai: " + document.UTCtime.time_offset.value);
+	if (isNaN(secs)) {alert (MilesianAlertMsg.nonInteger + document.UTCshift.time_offset.value);
 	} else { 
 	document.UTCshift.time_offset.value = secs;
 	targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
@@ -182,7 +182,7 @@ function addTime () { // A number of seconds is added (minus also possible) to t
 function calcTime () { // Here the hours are deemed local hours
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
 	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) {
-		alert ("Valeur non numérique de l'heure: " + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
+		alert (MilesianAlertMsg.nonInteger + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
 	} else {
 		targetDate.setHours(hours, mins, secs, 0); 
 		// targetDate.setMinutes(mins); targetDate.setSeconds(secs); targetDate.setMilliseconds(0); Before Javascript 1.3

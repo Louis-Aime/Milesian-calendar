@@ -1,7 +1,7 @@
 // Write Milesian - makeup
 // UTF-8
 // Copyright www.calendriermilesien.org
-// Import CalendarCycleComputationEngine, MilesianDateProperties, toMilesianString
+// Import CalendarCycleComputationEngine, MilesianDateProperties, toMilesianString, MilesianAlertMsg
 //
 var targetDate = new Date();
 // Access to month names of the Milesian calendar. To be enhanced. Leave open.
@@ -24,7 +24,7 @@ function calcMilesian() {	// on OK on Milesian date
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 	{ 
-		alert ("Valeur non numérique dans cette date : " + document.milesian.day.value + " " + document.milesian.monthname.value + "m " + document.milesian.year.value);
+		alert (MilesianAlertMsg.nonInteger  + document.milesian.day.value + " // " + document.milesian.year.value);
 	} else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
@@ -32,7 +32,7 @@ function calcMilesian() {	// on OK on Milesian date
 }
 function SetDayOffset () { // the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert ("Valeur non entière du délai: " + document.control.shift.value);
+	if (isNaN(days)) {alert (MilesianAlertMsg.nonInteger + document.control.shift.value);
 	} else { 
 	document.control.shift.value = days;
 	targetDate.setUTCDate (targetDate.getUTCDate()+days);

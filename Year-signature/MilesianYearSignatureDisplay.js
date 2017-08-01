@@ -74,7 +74,7 @@ function computeSignature(year) {
 }
 function setYear(year) {
 //	var year = Math.floor(document.year.year.value);
-	if (isNaN (year)) alert ("Valeur non numérique de l'année : " + year)
+	if (isNaN (year)) alert (MilesianAlertMsg.nonInteger + year)
 		else {
 			document.year.year.value = +year;
 			computeSignature (+year);
@@ -83,7 +83,7 @@ function setYear(year) {
 function setYearOffset(shift) {
 //	var shift = Math.floor(document.control.shift.value);
 	var year = Math.round(document.year.year.value) + Math.round(shift);
-	if (isNaN (year)) alert ("Paramètre non numérique : "+ shift)
+	if (isNaN (year)) alert (MilesianAlertMsg.nonInteger + shift)
 		else { 
 			document.year.year.value = year;
 			computeSignature (year);

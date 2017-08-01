@@ -9,18 +9,13 @@
   <script type="text/javascript" language="JavaScript" src="IsoWeekCalendarDateProperties.js"></script>
   <script type="text/javascript" language="JavaScript" src="JulianDateProperties.js"></script>
   <script type="text/javascript" language="JavaScript" src="LunarDateProperties.js"></script>
-  <script type="text/javascript" language="JavaScript" src="MilesianPerpetual_display_fr.js"></script>
-  
+  <script type="text/javascript" language="JavaScript" src="MilesianPerpetualdisplay.js"></script>
+  <script type="text/javascript" language="JavaScript" src="MilesianAlertMsg.js"></script>
+
 </head>
 <body>
 <h1 class="dateconvert">Calendrier perpétuel numérique</h1>
-<!-- <h3 class="dateconvert">
-    <script type="text/javascript"> 
-	today = new Date();
-	document.write (today.toMilesianLocaleDateString("fr-FR", {weekday: "long", day:"numeric", month:"long",year:"numeric"}));
-    </script>
-</h3>
--->
+
 <div class="dateconvert autoscroll">
   <table class="dateconvert" align="center">
    <tbody>
@@ -142,7 +137,7 @@
       <td> +/- jours</td>
 	  </form>
 	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset (document.control.dir.value);">
-	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
+	  <td><input class="dateconvert"  maxlength="8" size="7" name="shift" value="1"></td> 
       <td><button class="dateconvert"  name="Compute" value="shift">Ok</button></td>
     </form></tr>
    </tbody>
@@ -182,7 +177,7 @@
 	</td>
 	<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
 	 <td>+/- secondes</td>
-	 <td><input type="text" class="dateconvert" size="2" maxlength="6" name="time_offset" value="1"></td>
+	 <td><input type="text" class="dateconvert" maxlength="6" size="5" name="time_offset" value="1"></td>
 	 <td><button class="dateconvert" name="Compute" value="time_offset">Ok</button></td>	
 	</form>
   </tr>
@@ -196,10 +191,10 @@
 		<th>Âge lunaire</th>	<th>Reliquat</th>   <th>Heure lunaire</th>   <th>Hauteur</th>  
 	 </tr>
 	 <tr>
-		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="age" value=""> </td>
-		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="residue" value=""> </td>
-		<td><input type="text" class="dateconvert" disabled="disabled" size="11" name="moontime" value=""> </td>
-		<td><input type="text" class="dateconvert" disabled="disabled" size="3" name="height" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="5" name="age" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="5" name="residue" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="12" name="moontime" value=""> </td>
+		<td><input type="text" class="dateconvert" disabled="disabled" size="5" name="height" value=""> </td>
 	</tr>
   </tbody>
  </table>
