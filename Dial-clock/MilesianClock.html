@@ -4,14 +4,16 @@
 <html><head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
-	<title>Horloge milésienne</title>
+	<title>Horloge milésienne à cadrans multiples</title>
 	<script type="text/javascript" language="JavaScript" src="CalendarCycleComputationEngine.js"></script>
 	<script type="text/javascript" language="JavaScript" src="MilesianDateProperties.js"></script>
 	<script type="text/javascript" language="JavaScript" src="MilesianClockOperations.js"></script>
 	<script type="text/javascript" language="JavaScript" src="MilesianClockDisplay.js"></script>
+    <script type="text/javascript" language="JavaScript" src="MilesianAlertMsg.js"></script>
+
 </head>
 <body>
-<h1 class="dateconvert">Horloge milésienne</h1>
+<h1 class="dateconvert">Horloge milésienne à cadrans multiples</h1>
  <table class="dateconvert" align="center">
    <tbody>
 	 <form name="milesian" class="dateconvert" method="post" action="JavaScript:setClock();">
@@ -43,6 +45,35 @@
 	</form>
   </tbody>
 </table>
+<table class="dateconvert" align="center"> <tbody>
+  <tr>
+  	<th colspan=2>Heure</th>
+	<td colspan=2><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+    <button class="dateconvert" value="Now" name="Compute" >Maintenant</button></form></td>
+  </tr>
+  <tr> 
+	<form name="time" class="dateconvert" method="post" action="JavaScript:setClock();">
+	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="hours">h</td>
+	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="mins">mn</td>
+	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="secs">s</td>
+	 <td><button class="dateconvert" name="Compute" value="time_of_day">Ok</button></td>	
+	</form>
+  </tr>
+</tbody></table>
+<table class="dateconvert" align="center"> <tbody>
+  <tr>
+    <form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+    <td><button class="dateconvert"  name="Compute" value="shift">+/- jours</button></td>
+	<td><input class="dateconvert"  maxlength="8" size="7" name="shift" value="1"></td> 
+    </form>
+  </tr>
+  <tr>
+	 <form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+	 <td><button class="dateconvert" name="Compute" value="time_offset">+/- secondes</button></td>
+	 <td><input type="text" class="dateconvert" maxlength="7" size="7" name="time_offset" value="1"></td>
+	</form>
+  </tr>
+</tbody></table>
 <div class="dateconvert">
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
@@ -55,17 +86,42 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+<rect class="center month day" x="0" y="0" width="0" height="0"/>
+<!-- set the secondary time dial which sould appear under the month-day hands -->
+  <circle cx="0" cy="-80" r="60" fill="none" stroke="black" />
+  <rect class="center hour minute second" x="0" y="-80" width="0" height="0"/> <!-- center of the time dial -->
+  <g id="hourStroke">
+	<line x1="0" x2="0" y1="-133" y2="-140" stroke="black" stroke-width="6px"/>
+  </g>
+  <use xlink:href="#hourStroke" transform="rotate(30,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(60,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(90,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(120,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(150,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(180,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(210,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(240,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(270,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(300,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(330,0,-80)"/>
+  <g class="clockhand hour" transform="rotate(0)">
+    <line x1="0" x2="0" y1="-80" y2="-120" />
+  </g>
+  <g class="clockhand minute" transform="rotate(0)">
+    <line x1="0" x2="0" y1="-80" y2="-135" />
+  </g>
 <!-- the month hand -->
-  <g class="clockhand monthhand" transform="rotate(0)"
+  <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
 	<polygon points="0,0 20,-60 0,-165 -20,-60" />
   </g>
 <!-- the day hand -->
-  <g class="clockhand dayhand" transform="rotate(0)"
-  opacity="0.8">									
-	<line x1="0" x2="0" y1="0" y2="-200" />
+  <g class="clockhand day" transform="rotate(0)"
+  opacity="0.8" >									
+	<line x1="0" x2="0" y1="0" y2="-200" stroke-width="8px"/>
   </g>
-<!-- finish with a center circle -->
+<!-- center circle -->
 <circle class="clockhand" r="9" />
 </g>
 </svg>

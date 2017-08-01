@@ -10,16 +10,24 @@
 	<script type="text/javascript" language="JavaScript" src="MilesianClockOperations.js"></script>
 </head>
 <body>
+
 <div class="dateconvert">	
-<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setToNow()"
+<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setLightClockTicks()"
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <script type="text/javascript" language="JavaScript">
-function setToNow() {	// performed when svg is loaded
-    let targetDate = new Date(); // set new Date object.
-	setSolarYearClockHands (document.querySelector("#clock1"),targetDate.getMilesianDate().month, targetDate.getMilesianDate().date); // set hands as of today
+var timeOutId1;					// Tick generator identifier
+function setLightClockToNow() {	// Set clock to present date and time
+    let targetDate = new Date(); // targeDate is today and now.
+	let theClock = window.document.querySelector("#clock1"); 	// This object is the clock below. Do not call before clock loaded.
+	setSolarYearClockHands (theClock, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
+		targetDate.getHours(), targetDate.getMinutes(), targetDate.getSeconds() ); 
+}
+function setLightClockTicks() { // To be inserted on load of light clock
+	setLightClockToNow();		// Initial setting
+	timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
 }
 </script>
 
@@ -28,18 +36,42 @@ function setToNow() {	// performed when svg is loaded
 <image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
-<!-- style="text-anchor:middle;font:Serif;font-size:18" -->
+<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+<rect class="center month day" x="0" y="0" width="0" height="0"/>
+<!-- set the secondary time dial which sould appear under the month-day hands -->
+  <circle cx="0" cy="-80" r="60" fill="none" stroke="black" />
+  <rect class="center hour minute second" x="0" y="-80" width="0" height="0"/> <!-- center of the time dial -->
+  <g id="hourStroke">
+	<line x1="0" x2="0" y1="-133" y2="-140" stroke="black" stroke-width="6px"/>
+  </g>
+  <use xlink:href="#hourStroke" transform="rotate(30,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(60,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(90,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(120,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(150,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(180,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(210,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(240,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(270,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(300,0,-80)"/>
+  <use xlink:href="#hourStroke" transform="rotate(330,0,-80)"/>
+  <g class="clockhand hour" transform="rotate(0)">
+    <line x1="0" x2="0" y1="-80" y2="-120" />
+  </g>
+  <g class="clockhand minute" transform="rotate(0)">
+    <line x1="0" x2="0" y1="-80" y2="-135" />
+  </g>
 <!-- the month hand -->
-  <g class="clockhand monthhand" transform="rotate(0)"
+  <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
 	<polygon points="0,0 20,-60 0,-165 -20,-60" />
   </g>
 <!-- the day hand -->
-  <g class="clockhand dayhand" transform="rotate(0)"
-  opacity="0.8">									
-	<line x1="0" x2="0" y1="0" y2="-200" />
+  <g class="clockhand day" transform="rotate(0)"
+  opacity="0.8" >									
+	<line x1="0" x2="0" y1="0" y2="-200" stroke-width="8px"/>
   </g>
-<!-- finish with a center circle -->
+<!-- center circle -->
 <circle class="clockhand" r="9" />
 </g>
 </svg>

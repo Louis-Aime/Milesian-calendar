@@ -1,6 +1,7 @@
 /* Milesian Solar Year Clock Handler
 // Character set is UTF-8
-// Operations on Milesian solar year clock
+// Operations on Milesian solar year clock - set clock hands to right angle
+// may handle month, day, hour, minute and second hands. All hands do not need to exist.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,24 +24,27 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 */
-function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minutes = 0, seconds = 0) { 
+var timeUnits = ["month", "day", "hour", "minute", "second"] ; // the time units enumerated.
+function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
 //	On "clock" object, set all available hands (month, day, hour, minutes, seconds)
-//  If no time in the day given, set hands at end of day.
+//  Unless "continuous" is specified as true, set month and day hands at end of day.
 //  If no date given, set to 1 1m.
-	let halfDays = 60*month + 2*Math.floor(month/2) + 2*(day-1) + (hour + minutes/60 + seconds/3600)/12;	
-	// Number of half-days since beginning of year, at beginning of day i.e. at THE END of that day
-	let	monthAngle = halfDays * 360 / 732, 			// Angle of month hand with respect to vertical upright
-		dayAngle = 	 halfDays * 360 * 12 / 732,		// Angle of day hand with respect to vertical upright
-		hourAngle = hour*30, minuteAngle = minutes*6, secondAngle = seconds*6;
-	let theHand = clock.querySelector(".monthhand");
-	if (theHand !== null) theHand.transform.baseVal[0].setRotate(monthAngle,0,0);	// Use SVG interfaces to set angles
-	theHand = clock.querySelector(".dayhand");
-	if (theHand !== null) theHand.transform.baseVal[0].setRotate(dayAngle,0,0);
-	theHand = clock.querySelector(".hourhand");
-	if (theHand !== null) theHand.transform.baseVal[0].setRotate(hourAngle,0,0);
-	theHand = clock.querySelector(".minutehand");
-	if (theHand !== null) theHand.transform.baseVal[0].setRotate(minteAngle,0,0);
-	theHand = clock.querySelector(".hourhand");
-	if (theHand !== null) theHand.transform.baseVal[0].setRotate(secondAngle,0,0);
+	let 
+		theHand, theCenter, 			// multipurpose variables
+		halfDays = 60*month + 2*Math.floor(month/2) 
+			+ (continuous ? 2*(day-1) + (hour + minute/60 + second/3600)/12 : 2*day);	
+	// Number of half-days since beginning of year, at beginning of day i.e. at THE END of that day if no hour specified.
+	let	angle =	{				// set of angle values
+		"month" : halfDays * 360 / 732, 			// Angle of month hand with respect to vertical upright
+		"day"	: halfDays * 360 * 12 / 732,		// Angle of day hand with respect to vertical upright
+		"hour"	: hour*30 + minute/2, "minute" : minute*6+second/10, "second" : second*6
+	};
+	// Use SVG interfaces to set angles. Forced to use "getItem" instead of a simple [] array call, because of MS Edge (and probably Safari)
+	for ( i in timeUnits ) {	// for all time units...
+		theHand = clock.querySelector(".clockhand."+timeUnits[i]);		// Find hand for this unit in this clock
+		theCenter = clock.querySelector(".center."+timeUnits[i]);		// Find the center of the hand
+		if (theHand !== null) 
+			theHand.transform.baseVal.getItem(0).setRotate(angle[timeUnits[i]],theCenter.x.baseVal.value,theCenter.y.baseVal.value);
+	}
 	return halfDays;	// control the computation parameters with the return value
 }
