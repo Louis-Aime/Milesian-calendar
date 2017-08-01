@@ -1,6 +1,8 @@
 # Basic Common
 
 These modules define additional methods to the JS object Date, which enables you to easily handle the Milesian calendar.
+## milesian.css
+A light css for all modules, in particular for the clock.
 
 ## CalendarCycleComputationEngine.js : basic tools for calendar computations
 The Compose and Decompose computation principle is explained in *l'Heure Milésienne* (Edilivre) by Louis-Aimé de Fouquières, p. 94 [http://www.calendriermilesien.org/l-heure-milesienne.html].
