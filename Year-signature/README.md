@@ -1,5 +1,5 @@
 # Key figures of a year
-Demonstrates computations of key figures for a year:
+Demonstrates computations of "key figures" for a year:
 * doomsday: the weekday that is common to fixed key days in the Milesian and Gregorian calendars;
 * gold number: used for Easter computations;
 * Milesian epact: mean moon age the day before (Milesian) new year; 
@@ -8,7 +8,6 @@ Demonstrates computations of key figures for a year:
 
 See http://www.calendriermilesien.org/calculateur-donnees-annuelles.html for further explanations (in French).
 ## Installation
-1. Extract CalendarCycleComputationEngine.js and MilesianDateProperties.js from JS-Date-Properties
-into a directory of your computer
+1. Extract .js files from Basic_Common into a directory of your computer.
 1. Extract all .js and .html files of Year-signature into the same directory.
 1. Launch YearSignatureDisplay_fr.html with any web browser except MS Internet Explorer.
