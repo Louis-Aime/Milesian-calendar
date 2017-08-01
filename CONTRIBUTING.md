@@ -6,7 +6,7 @@ It's people like you that make possible to change the world in depth.
 ### 1. What is all this about ?
 
 May be you should first understand the Milesian calendar proposal. 
-You can read [The Milesian calendar in short](https://github.com/Louis-Aime/Milesian-calendar/The Milesian calendar in short.pdf)
+You can read [The Milesian calendar in short.pdf] in this repository
 or, if you can read French or use a web site translator, visit [http://www.calendriermilesien.org].
 
 ### 2. Where do I go from here?
