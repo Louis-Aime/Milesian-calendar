@@ -1,7 +1,7 @@
 /* Lunar Date properties
 // Character set is UTF-8
 // This code, to be manually imported, set properties representing lunar phases to object Date
-// Version M2017-06-22
+// Version M2017-08-10
 // Package CalendarCycleComputationEngine is used.
 /  getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
 //		TT is Terrestrial Time, a uniform time scale defined with a second defined independantly from Earth movements.
@@ -13,7 +13,7 @@
 //  getHegirianMoonDate : same as above, with Hergiian epoch i.e. 6 8m 621 14h 7 mn 48s, so that first evening of first moon month of year 1 is 26 7m 622.
 //  getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (H, m, s). 
 //		At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
-//  function draconitic_height (value of date object): an estimate of th height of the moon (-5° to +5°). 
+//  getDraconiticHeight : a very rough estimate of the height of the moon (-5° to +5°). 
 // 		When height is around 0 at new or full moon, eclipse is possible.
 // There is no setter function in this package.
 */////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,15 +68,17 @@ Lunar_Year_Month_Params = { // to be used in order to change lunar calendar epoc
 	]
 }, 
 Draconitic_Params = { // to estimate the heighth of the moon. Around 0 at New Moon or Full Moon means possibility of eclipse
-	timeepoch : 993094200000, // approximate date of the moon at 0, rising on its draconitic cycle (2001-06-21T03:30Z)
+	timeepoch : 993094200000, // An approximate date of mean moon at 0, rising on its draconitic cycle 
+			// Proposition #1 : 993094200000 (2001-06-21T03:30Z) after a paper of Patrick Rocher (IMCCE 2005). This value is estimated form a plot.
+			// Proposition #2 : (tbc)
 	coeff : [
-		{cyclelength : 2351135835, ceiling : Infinity, multiplier : 1, target : "cycle"},
-		 {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "phase"},		
-	],
+		{cyclelength : 2351135835, ceiling : Infinity, multiplier : 1, target : "cycle"}, // the length of the draconitic cycle
+		{cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "phase"},		
+		],
 	canvas : [
 		{name : "cycle", init :0},
 		{name : "phase", init : 0}		
-	]
+		]
 }
 //
 // 2. Properties added to Date object
