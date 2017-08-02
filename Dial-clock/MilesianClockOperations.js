@@ -24,11 +24,11 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 */
-var timeUnits = ["month", "day", "hour", "minute", "second"] ; // the time units enumerated.
 function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
 //	On "clock" object, set all available hands (month, day, hour, minutes, seconds)
 //  Unless "continuous" is specified as true, set month and day hands at end of day.
 //  If no date given, set to 1 1m.
+	var timeUnits = ["month", "day", "hour", "minute", "second"] ; // the time units enumerated.
 	let 
 		theHand, theCenter, 			// multipurpose variables
 		halfDays = 60*month + 2*Math.floor(month/2) 
@@ -40,7 +40,7 @@ function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0
 		"hour"	: hour*30 + minute/2, "minute" : minute*6+second/10, "second" : second*6
 	};
 	// Use SVG interfaces to set angles. Forced to use "getItem" instead of a simple [] array call, because of MS Edge (and probably Safari)
-	for ( i in timeUnits ) {	// for all time units...
+	for ( let i = 0; i < timeUnits.length; i++ ) {	// for all time units...
 		theHand = clock.querySelector(".clockhand."+timeUnits[i]);		// Find hand for this unit in this clock
 		theCenter = clock.querySelector(".center."+timeUnits[i]);		// Find the center of the hand
 		if (theHand !== null) 
