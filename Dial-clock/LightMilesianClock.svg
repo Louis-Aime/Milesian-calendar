@@ -11,10 +11,10 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <title>Horloge milésienne</title>
-<script type="text/javascript" language="JavaScript" xlink:href="CalendarCycleComputationEngine.js"></script>
-<script type="text/javascript" language="JavaScript" xlink:href="MilesianDateProperties.js"></script>
-<script type="text/javascript" language="JavaScript" xlink:href="MilesianClockOperations.js"></script>
-<script type="text/javascript" language="JavaScript">
+<script type="text/javascript" xlink:href="CalendarCycleComputationEngine.js"></script>
+<script type="text/javascript" xlink:href="MilesianDateProperties.js"></script>
+<script type="text/javascript" xlink:href="MilesianClockOperations.js"></script>
+<script type="text/javascript">
 var timeOutId1;					// Tick generator identifier
 function setLightClockToNow() {	// Set clock to present date and time
     let targetDate = new Date(); // targeDate is today and now.
