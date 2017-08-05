@@ -1,7 +1,7 @@
 /* MilseianPerpetualDisplay - Display routines of the Milesian perpetual digital calendar.
 // Character set of this file is UTF-8 
 // Error messages in another file fo coding compatbility
-// Version M2017-07-02
+// Version M2017-08-15
 // 
 // to be used with the following .js files:
 //   CalendarCycleComputationEngine.js (used by other .js files)
@@ -105,7 +105,7 @@ function setDateToNow(){ // Self explanatory
 function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
 	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
-	if (isNaN (j)) {alert (MilesianAlertMsg.nonNumeric + document.daycounter.julianday.value)}
+	if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
 	else {
 		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
 		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
@@ -118,9 +118,8 @@ function calcISO() {
 	var week = Math.round (document.isoweeks.week.value);
 	var year =  Math.round (document.isoweeks.year.value);
 	if	( isNaN(day)  || isNaN (week) || isNaN (year))
-	{ 
-		alert (MilesianAlertMsg.nonInteger + document.isoweeks.year.value + " // " + document.isoweeks.week.value + " // " + document.isoweeks.day.value);
-	} else {
+		alert (milesianAlertMsg("invalidDate") + '"' + document.isoweeks.year.value + '" "' + document.isoweeks.week.value + '"')
+	else {
 		targetDate.setTimeFromIsoWeekCal (year,week,day);
 		setDisplay ();
 		}
@@ -130,9 +129,8 @@ function calcMilesian() {
 	var month = document.milesian.monthname.value;
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
-	{ 
-		alert (MilesianAlertMsg.nonInteger + document.milesian.day.value + " // " + document.milesian.year.value);
-	} else {		
+		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+	else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
 		}
@@ -142,9 +140,8 @@ function calcGregorian() {
 	var month = (document.gregorian.monthname.value);
 	var year =  Math.round (document.gregorian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
-	{ 
-		alert (MilesianAlertMsg.nonInteger + document.gregorian.day.value + " // " + document.gregorian.year.value);
-	} else {
+		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
+	else {
 		targetDate.setFullYear(year, month, day); 	// Set date object from gregorian date indication, without changing time-in-the-day.
 		setDisplay ();
 		}
@@ -154,36 +151,35 @@ function calcJulian(){
 	var month = new Number(document.julian.monthname.value); // month has to be a number.
 	var year =  Math.round(document.julian.year.value);
 	if	( isNaN(day)  || isNaN (year))
-	{ 
-		alert (MilesianAlertMsg.nonInteger + document.julian.day.value + " // " + document.julian.year.value);
-	} else {
-			targetDate.setTimeFromJulianCalendar (year, month, day);
-			setDisplay ();
-			}
+		alert (milesianAlertMsg("invalidDate") + '"' + document.julian.day.value + '" "' + document.julian.year.value + '"')
+	else {
+		targetDate.setTimeFromJulianCalendar (year, month, day);
+		setDisplay ();
+		}
 }
 function SetDayOffset () { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert (MilesianAlertMsg.nonInteger + document.control.shift.value);
-	} else { 
-	document.control.shift.value = days;
-	targetDate.setUTCDate (targetDate.getUTCDate()+days);
-	setDisplay();
+	if (isNaN(days)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '"')
+	else { 
+		document.control.shift.value = days;
+		targetDate.setUTCDate (targetDate.getUTCDate()+days);
+		setDisplay();
 	}
 }
 function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
 	var secs = Math.round (document.UTCshift.time_offset.value);
-	if (isNaN(secs)) {alert (MilesianAlertMsg.nonInteger + document.UTCshift.time_offset.value);
-	} else { 
-	document.UTCshift.time_offset.value = secs;
-	targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
-	setDisplay();
+	if (isNaN(secs)) alert (milesianAlertMsg("invalidDate") + '"' + document.UTCshift.time_offset.value + '"')
+	else { 
+		document.UTCshift.time_offset.value = secs;
+		targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
+		setDisplay();
 	}
 }
 function calcTime () { // Here the hours are deemed local hours
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
-	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) {
-		alert (MilesianAlertMsg.nonInteger + document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
-	} else {
+	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) 
+		alert (milesianAlertMsg("invalidDate") + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
+	 else {
 		targetDate.setHours(hours, mins, secs, 0); 
 		// targetDate.setMinutes(mins); targetDate.setSeconds(secs); targetDate.setMilliseconds(0); Before Javascript 1.3
 		setDisplay();	

@@ -73,23 +73,23 @@ function computeSignature(year) {
 	document.milesian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);	
 }
 function setYear(year) {
-//	var year = Math.floor(document.year.year.value);
-	if (isNaN (year)) alert (MilesianAlertMsg.nonInteger + year)
-		else {
-			document.year.year.value = +year;
-			computeSignature (+year);
+	year = Math.round(year);	// Force to integer value
+	if (isNaN (year)) alert (milesianAlertMsg("nonInteger") + '"' + document.year.year.value + '"')
+	else {
+		document.year.year.value = +year;
+		computeSignature (+year);
 		}
 }	
 function setYearOffset(shift) {
-//	var shift = Math.floor(document.control.shift.value);
-	var year = Math.round(document.year.year.value) + Math.round(shift);
-	if (isNaN (year)) alert (MilesianAlertMsg.nonInteger + shift)
-		else { 
-			document.year.year.value = year;
-			computeSignature (year);
+	shift = Math.round(shift);	// Force to integer value
+	let year = Math.round(document.year.year.value) + Math.round(shift);
+	if (isNaN (year)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '" "' + document.year.year.value + '"')
+	else { 
+		document.year.year.value = year;
+		computeSignature (year);
 		}
 }
 function setYearToNow(){ // Self explanatory
-    var targetDate = new Date(); // set new Date object.
+    let targetDate = new Date(); // set new Date object.
 	setYear(targetDate.getMilesianDate().year);
 }

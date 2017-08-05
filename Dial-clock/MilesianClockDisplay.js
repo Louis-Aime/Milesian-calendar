@@ -52,11 +52,10 @@ function setClock() {			// Extract day and month from display, then compute cloc
 		minute = Math.round (document.time.mins.value),
 		second = Math.round (document.time.secs.value);
 	if	( isNaN (year ) || isNaN(day) || isNaN(hour) || isNaN(minute) || isNaN(second))
-	{ 
-		alert (MilesianAlertMsg.nonInteger 
-		+ document.milesian.day.value + " // " + document.milesian.year.value + " "
-		+ document.time.hours.value + ":" + document.time.mins.value + ":" + document.time.secs.value);
-	} else {		
+		alert (milesianAlertMsg("invalidDate") + '"'  
+		+ document.milesian.day.value + '" "' + document.milesian.year.value + '" "'
+		+ document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
+	else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		targetDate.setHours (hour, minute, second); // Set time in date object from given time.
 		setDisplay();
@@ -68,19 +67,19 @@ function setDateToNow(){ // Self explanatory
 }
 function SetDayOffset () { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert (MilesianAlertMsg.nonInteger + document.control.shift.value);
-	} else { 
-	document.control.shift.value = days;
-	targetDate.setUTCDate (targetDate.getUTCDate()+days);
-	setDisplay();
+	if (isNaN(days)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '"')
+	else { 
+		document.control.shift.value = days;
+		targetDate.setUTCDate (targetDate.getUTCDate()+days);
+		setDisplay();
 	}
 }
 function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
 	var secs = Math.round (document.UTCshift.time_offset.value);
-	if (isNaN(secs)) {alert (MilesianAlertMsg.nonInteger + document.UTCshift.time_offset.value);
-	} else { 
-	document.UTCshift.time_offset.value = secs;
-	targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
-	setDisplay();
+	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.time_offset.value + '"')
+	else { 
+		document.UTCshift.time_offset.value = secs;
+		targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
+		setDisplay();
 	}
 }
