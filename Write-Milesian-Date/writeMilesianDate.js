@@ -23,17 +23,16 @@ function calcMilesian() {	// on OK on Milesian date
 	var month = document.milesian.monthname.value;
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
-	{ 
-		alert (MilesianAlertMsg.nonInteger  + document.milesian.day.value + " // " + document.milesian.year.value);
-	} else {		
+		alert (milesianAlertMsg("invalidDate") + '"'  + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+	else {		
 		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 		setDisplay ();
 		}
 }
 function SetDayOffset () { // the days are integer, all 24h, so local time may change making this operation
 	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) {alert (MilesianAlertMsg.nonInteger + document.control.shift.value);
-	} else { 
+	if (isNaN(days)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '"')
+	else { 
 	document.control.shift.value = days;
 	targetDate.setUTCDate (targetDate.getUTCDate()+days);
 	setDisplay();

@@ -50,6 +50,7 @@ function pad(number) {	// utility function, pad 2-digit integer numbers. No cont
 // It just show that these layouts are possible.
 //////////////////////////////////////////////////////
 Date.prototype.toMilesianLocaleDateString = function (locales = undefined, options = undefined) {
+	if (milesianNames == undefined) return ""; else {	// if milesianNames not yet established, or not loaded, then skip
 	let str = ""; 	// the final string for this date;
 	let wstr = "", dstr = "", mstr = "", ystr = "" ; // components of date string
 //	let tstr = "", tzstr = ""; 	// components of time string. Not used.	
@@ -132,5 +133,5 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 			else  
 			{ if (mstr !== "") {str += ((dstr !=="") ? dstr + msep : "" ) + mstr} else str += dstr}	;	
 	str += ysep + ystr ;
-	return str; 
+	return str; }
 }
