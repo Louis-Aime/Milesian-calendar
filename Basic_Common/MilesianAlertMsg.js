@@ -24,7 +24,39 @@
 // Inquiries: www.calendriermilesien.org
 */
 var
-	MilesianAlertMsg = {
+	MilesianAlertMsg = {						// for compatibility until all display routines corrected.
 		nonNumeric : "Entrée non numérique : ",
 		nonInteger : "Entrée non entière : "
 	}
+function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
+	var	languages = [ "en", "fr", "de", "es", "pt" ];
+	var errorMsg = {
+		"nonNumeric" : { 
+			en	: "Non numeric entry: ",
+			fr	: "Entrée non numérique: ",
+			de	: "Nich digitale Einführung: ",
+			es	: "Entrada no digital: ",
+			pt	: "Entrada não-digital:"
+			},
+		"nonInteger" : {
+			en	: "Non integer entry: ",
+			fr	: "Entrée non entière: ",
+			de	: "Nicht integer Nummer: ",
+			es	: "Entrada no entera: ",
+			pt	: "Entrada não-inteira:"
+			},
+		"invalidDate" : {
+			en	: "Invalid date or time: ",
+			fr	: "Date ou heure invalide: ",
+			de	: "Ungültiges Datum: ",
+			es	: "Fecha no válida: ",
+			pt	: "Data inválida: "
+			}
+		};
+	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
+	let lang = usedOptions.locale[0] + usedOptions.locale[1];
+	let usedLang = "en";
+	for (let i = 0; i < languages.length; i++) if (lang == languages[i]) usedLang = lang; // Set usedLang to one of our languages, else to "en".
+	let message = errorMsg[inputError][usedLang];
+	return message;
+}
