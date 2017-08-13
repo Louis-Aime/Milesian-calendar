@@ -1,7 +1,7 @@
 // MilesianAlertMsg
 // Language dependant messages to be used with Milesian demonstrator routines
 // This version UTF-8 to be recoded as necessary
-// M2017-08-10
+// M2017-08-15
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
