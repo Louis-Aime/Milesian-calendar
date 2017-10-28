@@ -13,10 +13,10 @@ In this version, Delta T is computed from a fractional value of the time.
 The result is rounded to the nearest second, and may change within a year.
 * getCEMoonDate : the date expressed in mean Moon coordinates, i.e. lunar year, lunar month, decimal moon day, lunar hour shift. 
 The "Common Era" (CE) mean moon origin, i.e. year 0, month 0, age 0 is : year 0 month 1m day 3 at 10h 07 mn 25 s. 
-* getHegirianMoonDate : same as above, with Hergiian epoch i.e. 6 8m 621 14h 7 mn 48s, 
+* getHegirianMoonDate : same as above, with Hegirian epoch i.e. 6 8m 621 14h 7 mn 48s, 
 so that first evening of first moon month of year 1 is 26 7m 622, (julian 14 July 622).
 Thus day one is 27 7m 622, julian 15 July 622, proleptic gregorian 18 July 622.
-* getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (H, m, s). 
+* getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (h, m, s). 
 At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
 * draconiticHeight : an estimate of th height of the moon (-5° to +5°). When height is around 0 at new or full moon, eclipse is possible.
 
@@ -29,8 +29,8 @@ Package CalendarCycleComputationEngine is used.
 * getJulianDay : the decimal Julian Day, from the UTC time.
 * setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
 * setUTCTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-* setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day
-* setJulianDay (julianDay[, timeZoneOffset]) : Set date frome an integer (if not, rounded) julian day, wihtout changing time of day. Considered from the local time zone, or from the time zone offset specified in minutes.
+* setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day.
+* setJulianDay (julianDay[, timeZoneOffset]) : Set date from an integer (if not, rounded) Julian day, wihtout changing time of day. Considered from the local time zone, or from the time zone offset specified in minutes.
 
 ## ISOWeekCalendarDateProperties.js: computations on ISO 8601 week calendar
 Package CalendarCycleComputationEngine and MilesianDateProperties are used.
@@ -38,5 +38,5 @@ Package CalendarCycleComputationEngine and MilesianDateProperties are used.
 * getIsoWeekCalUTCDate : same as above, in UTC time.
 * setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
 * setUTCTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-* toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-Www-dd
+* toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-www-dd
 * toUTCIsoWeekCalDateString : same as above, in UTC time zone.
