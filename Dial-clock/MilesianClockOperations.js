@@ -3,6 +3,7 @@
 // Operations on Milesian solar year clock - set clock hands to right angle
 // may handle month, day, hour, minute and second hands. All hands do not need to exist.
 */////////////////////////////////////////////////////////////////////////////////////////////
+// Version 2, M2017-11-07: added an "am/pm" indicator
 /* Copyright Miletus 2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,10 +29,8 @@ function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0
 //	On "clock" object, set all available hands (month, day, hour, minutes, seconds)
 //  Unless "continuous" is specified as true, set month and day hands at end of day.
 //  If no date given, set to 1 1m.
-	var timeUnits = ["month", "day", "hour", "minute", "second"] ; // the time units enumerated.
-	let 
-		theHand, theCenter, 			// multipurpose variables
-		halfDays = 60*month + 2*Math.floor(month/2) 
+	var timeUnits = ["month", "day", "hour", "minute", "second"] ;	// the time units enumerated.
+	let 	halfDays = 60*month + 2*Math.floor(month/2) 
 			+ (continuous ? 2*(day-1) + (hour + minute/60 + second/3600)/12 : 2*day);	
 	// Number of half-days since beginning of year, at beginning of day i.e. at THE END of that day if no hour specified.
 	let	angle =	{				// set of angle values
@@ -41,10 +40,12 @@ function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0
 	};
 	// Use SVG interfaces to set angles. Forced to use "getItem" instead of a simple [] array call, because of MS Edge (and probably Safari)
 	for ( let i = 0; i < timeUnits.length; i++ ) {	// for all time units...
-		theHand = clock.querySelector(".clockhand."+timeUnits[i]);		// Find hand for this unit in this clock
-		theCenter = clock.querySelector(".center."+timeUnits[i]);		// Find the center of the hand
+		let theHand = clock.querySelector(".clockhand."+timeUnits[i]);		// Find hand for this unit in this clock
+		let theCenter = clock.querySelector(".center."+timeUnits[i]);		// Find the center of the hand
 		if (theHand !== null) 
 			theHand.transform.baseVal.getItem(0).setRotate(angle[timeUnits[i]],theCenter.x.baseVal.value,theCenter.y.baseVal.value);
 	}
+	let theAmPm = clock.querySelector(".ampm");			// Select the am/pm indicator, check whether existing.
+	if (theAmPm !== null) theAmPm.innerHTML = (hour > 11 ? "pm" : "am");	// hour is 0 to 23. "am" from 0 to 11, "pm" from 12 to 23.
 	return halfDays;	// control the computation parameters with the return value
 }
