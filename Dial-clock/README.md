@@ -17,6 +17,7 @@ A small dial displays hour and minute. It is updated every 20 seconds.
   * MS Internet Explorer does not work at all (does not handle default parameter values)
   * Tested on Firefox, Chrome, Edge and Safari.
   * It it possible to use several clocks independently.
-  * The clocks may handle not only month and days, but also time of day: hours, minutes, and seconds. Authors may omit any hand.
+  * The clocks may handle not only month and days, but also time of day: hours, minutes, seconds, and an am/pm indicator. 
+  Authors may omit any hand.
 
 How it looks like, and inquiries: http://www.calendriermilesien.org/horloge-milesienne.html
