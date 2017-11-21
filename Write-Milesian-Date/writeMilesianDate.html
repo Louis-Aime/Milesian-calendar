@@ -2,7 +2,7 @@
 <html><head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <link href="milesian.css" rel="stylesheet"/>
-  <title>Date milésienne internationale</title>
+  <title>Date milésienne et calendriers internationaux</title>
 	<script type="text/javascript" src="CalendarCycleComputationEngine.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
  	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
@@ -12,13 +12,14 @@
 	
 </head>
 <body>
-<h1 class="dateconvert">Date milésienne internationale</h1>
+<h1 class="dateconvert">Date milésienne<br>et calendriers internationaux</h1>
 <p class="dateconvert">"Locale": code langue et pays au format "ll-PP",<br>
-par exemple "en-US": l'anglais aux Etats-Unis.<br> 
-Options: représentation de chaque composant de date<br>
+par exemple "en-US": l'anglais aux Etats-Unis.<br>
+"Calendrier": l'un des calendriers défini par Unicode.<br>
+"Options": représentation de chaque composant de date<br>
 avec "long", "numeric", "2-digit", "short" ou "narrow".<br>
-Si les noms de mois d'une langue ne sont pas définis,<br>
-leur version longue est affichée en latin.</p>
+Noms de mois milésiens non définis dans une langue:<br>
+la version longue est affichée en latin.</p>
   <table class="dateconvert" align="center">
    <tbody>
       <tr>
@@ -70,13 +71,38 @@ leur version longue est affichée en latin.</p>
 	<table class="dateconvert" align="center"> <tbody>
 	 <form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
 	   <tr>
-		<th>Locale: </th>
-		<td><input type="text" class="dateconvert" size="5" name="Locale" value=""> </td>
-		<th colspan="2">Options: </th>
-		<td colspan="2"><button class="dateconvert" type="reset">tous sauf ère</button></td>
+		<th colspan="2">Locale: </th>
+		<td colspan="1"><input type="text" class="dateconvert" size="5" name="Locale" value=""> </td>
+	   </tr>
+	   <tr>
+		<th colspan="2">Calendrier: </th>
+		<td colspan="4">
+			<select name="Calendar" size="1" class="dateconvert">
+			<option value="">par défaut</option>
+			<option value="buddhist">bouddhiste Thaï</option>
+			<option value="chinese">chinois traditionnel</option>
+			<option value="coptic">copte</option>
+			<option value="dangi">coréen traditionnel</option>
+			<option value="ethioaa">éthiopien Amete Alem (5493 A.C.) </option>
+			<option value="ethiopic">éthiopien Amete Mihret (8 A.D.)</option>
+			<option value="gregory">grégorien (proleptique)</option>
+			<option value="hebrew">hébraïque</option>
+			<option value="indian">indien moderne</option>
+			<option value="islamic">islamique standard</option>
+			<option value="islamic-umalqura">islamique Umm al-Qura</option>
+			<option value="islamic-tbla">islamique tabulaire astronomique</option>
+			<option value="islamic-civil">islamique tabulaire civil</option>
+			<option value="islamic-rgsa">islamique, Arabie saoudite</option>
+			<option value="iso8601">grégorien avec règles ISO 8601</option>
+			<option value="japanese">japonais impérial</option>
+			<option value="persian">persan</option>
+			<option value="roc">chinois de république populaire</option>
+			</select> 
+		</td>
 	   </tr>
 	   <tr>
 		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
+		<td><button class="dateconvert" type="reset">Réinit</button></td>
 	   </tr>
 	   <tr>
 		<td><input type="text" class="dateconvert" size="5" name="Weekday" value="long"> </td>
@@ -87,11 +113,11 @@ leur version longue est affichée en latin.</p>
 		<td><button class="dateconvert" >Ok</button></td>	
 	   </tr>
 	   <tr><td>Mil.:  </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
-	   <tr><td>Grég.: </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
+	   <tr><td>CLDR: </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
 	 </form> 
 	</tbody></table>
 </div>	
- <h3 class="dateconvert">© 2017-07 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+ <h3 class="dateconvert">© 2017-12m <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
  <script type="text/javascript" >setDateToNow();</script>
 </body>

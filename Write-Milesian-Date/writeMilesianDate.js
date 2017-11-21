@@ -38,9 +38,15 @@ function SetDayOffset () { // the days are integer, all 24h, so local time may c
 	setDisplay();
 	}
 }
-function putStringOnOptions() { // get Locale and Options given on page, print String; No control.
+function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control.
 	let Locale = document.LocaleOptions.Locale.value;
-	if (Locale == "") Locale = undefined;
+	let Calendar = document.LocaleOptions.Calendar.value;
+	if (Locale == ""){ 
+		if (Calendar !== "") {
+			let askedOptions = new Intl.DateTimeFormat ();
+			let usedOptions = askedOptions.resolvedOptions();
+			Locale = usedOptions.locale.slice(0,5) + "-u-ca-" + Calendar}
+		else Locale = undefined};
 	let Options = {	// No control !
 		weekday : (document.LocaleOptions.Weekday.value == "") ? undefined : document.LocaleOptions.Weekday.value,
 		day 	: (document.LocaleOptions.Day.value == "") ? undefined : document.LocaleOptions.Day.value,
