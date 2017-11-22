@@ -48,9 +48,12 @@ In principle, Common Locale Data Repository (CLDR) provide ways to make such com
 Getters of coordinates of a mean moon, and of an estimate of the "Delta Time" used by astronomers. 
 Enables to anticipate possible eclipses in a similar way to the [Antikythera mechanism](https://en.wikipedia.org/wiki/Antikythera_mechanism)
 
-## Milesian Locale: compute Milesian date string following CLDR project model
-Requires Basic_Common files.
+## Milesian Locale: compute Milesian date string and other languages and calendar date string following CLDR project model
+Requires 
+* Basic_Common files.
+
 Generate Milesian Date strings in different languages, as specified in the Common Locale Data Repository (CDLR) project.
+
 
 ## Year-signature
 Requires: 
@@ -75,6 +78,10 @@ Requires
 
 Demonstrate the "computation" of a string expressing a Milesian date following locales and options 
 as specified by Common Locales Data Repository (CLDR).
+
+Generate also a date string with the standard CDLR routines in any Unicode-supported language and calendar.
+Thus, this package may be used as a converter from Milesian into any Unicode-registred calendar.
+Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
 
 ## Dial-clock 
 Requires 
