@@ -46,7 +46,8 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 			let askedOptions = new Intl.DateTimeFormat ();
 			let usedOptions = askedOptions.resolvedOptions();
 			Locale = usedOptions.locale.slice(0,5) + "-u-ca-" + Calendar}
-		else Locale = undefined};
+		else Locale = undefined}
+	else if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar;
 	let Options = {	// No control !
 		weekday : (document.LocaleOptions.Weekday.value == "") ? undefined : document.LocaleOptions.Weekday.value,
 		day 	: (document.LocaleOptions.Day.value == "") ? undefined : document.LocaleOptions.Day.value,
