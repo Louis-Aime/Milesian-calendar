@@ -15,6 +15,7 @@
 // Version 2: 
 //	Changed the names of the functions
 //	The parameters are now in each package. Only very common parameters and variables are defined here.
+// Version 2.1 : M2017-12-14 (typos in commments)
 //
 *//////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
@@ -51,7 +52,7 @@ var decomposeParameterExample = {
 		{cyclelength : #, //length of the cycle, expressed in milliseconds.
 		ceiling : #, // Infinity, or the maximum number of cycles of this size minus one in the upper cycle; the last cycle may hold an intercalary unit.
 		multiplier : #, // multiplies the number of cycle of this level to convert into target units.
-		targer : #, // the unit (e.g. "year") of the decomposition element at this level. 
+		target : #, // the unit (e.g. "year") of the decomposition element at this level. 
 		} ,
 		{ // similar elements at the lower cycle level 
 		} // end of array element
@@ -109,7 +110,7 @@ function ccceDecompose (quantity, params) { // from a chronological number, buil
 ////////////////////////////////////////////
 // ccceCompose: from compound object to time serie figure.
 ////////////////////////////////////////////
-function ccceCompose (cells, params) { // from an object structured as params.canvas, compute the chronological number
+function ccceCompose (cells, params) { // from an object 'cells' structured as params.canvas, compute the chronological number
 	var quantity = params.timeepoch ; // initialise quantity
 	for (let i = 0; i < params.canvas.length; i++) { // cells value shifted as to have all 0 if at epoch
 		cells[params.canvas[i].name] -= params.canvas[i].init
