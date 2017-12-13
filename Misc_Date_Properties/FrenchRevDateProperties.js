@@ -1,8 +1,8 @@
 /* French revolutionary calendar properties added to Date object
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the French Revolutionary calendar.
-// Version M2017-12-12
-// Package CalendarCycleComputationEngine is used.
+// Version M2017-12-23
+// Package CalendarShiftCycleComputationEngine is used.
 //  getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getFrenchRevUTCDate : same as above, in UTC time.
 //  setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
@@ -31,19 +31,24 @@
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-/*// Import CalendarCycleComputationEngine, or make visible. */
-var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompose into Milesian years, months, date, hours, minutes, seconds, ms
-	timeepoch : -6004454400000, // Unix timestamp of 3 10m 1779 00h00 UTC in ms
+// Import CalendarShiftCycleComputationEngine, or make visible.
+var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompose into years, months, date, hours, minutes, seconds, ms
+	timeepoch : -6004454400000, // Unix timestamp of 3 10m 1779 00h00 UTC in ms, the origin for the algorithm
 	coeff : [ 
-	  {cyclelength : 1041379200000, ceiling : Infinity, multiplier : 33, target : "year"}, // The 33 years main cycle. Last franciade is 5 years.
-	  {cyclelength : 126230400000, ceiling : 7, multiplier : 4, target : "year"}, 	//The ordinary "Franciade" (4 years)
-	  {cyclelength : 31536000000, ceiling : 3, multiplier : 1, target : "year"},	//The ordinary year within the Franciade
-	  {cyclelength : 2592000000, ceiling : Infinity, multiplier : 1, target : "month"}, 
-	  {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "date"},
-	  {cyclelength : 3600000, ceiling : Infinity, multiplier : 1, target : "hours"},
-	  {cyclelength : 60000, ceiling : Infinity, multiplier : 1, target : "minutes"},
-	  {cyclelength : 1000, ceiling : Infinity, multiplier : 1, target : "seconds"},
-	  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds"}
+	  {cyclelength : 4039286400000, ceiling : Infinity, subCycleShift : 0, multiplier : 128, target : "year"}, // 128 (julian) years minus 1 day.
+	  {cyclelength : 1041379200000, ceiling : 3, subCycleShift : -1, multiplier : 33, target : "year"}, // 33 years cycle. Last franciade is 5 years.
+		// The 33-years cycle contains 7 4-years franciades, and one 5-years. 
+		// subCycleShift set to -1 means: if the 33-years is the last one of the 128-years cycle, i.e. number 3 starting from 0,
+		// then it turns into a 7 franciades cycle, the first 6 being 4-years, the 7th (instead of the 8th) is 5-years.
+	  {cyclelength : 126230400000, ceiling : 7, subCycleShift : +1, multiplier : 4, target : "year"}, 	//The ordinary "Franciade" (4 years)
+		// Same principle as above: if franciade is the last one (#7 or #6 starting form #0) of upper cycle, then it is 5 years long instead of 4 years.
+	  {cyclelength : 31536000000, ceiling : 3, subCycleShift : 0, multiplier : 1, target : "year"},	//The ordinary year within the franciade
+	  {cyclelength : 2592000000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "month"}, 
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "date"},
+	  {cyclelength : 3600000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "hours"},
+	  {cyclelength : 60000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "minutes"},
+	  {cyclelength : 1000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "seconds"},
+	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds"}
 	],
 	canvas : [ 
 		{name : "year", init : -12},
