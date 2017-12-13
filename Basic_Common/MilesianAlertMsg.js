@@ -1,7 +1,10 @@
 // MilesianAlertMsg
 // Language dependant messages to be used with Milesian demonstrator routines
 // This version UTF-8 to be recoded as necessary
-// M2017-08-15
+// M2017-12-23
+//  Changes from M2017-08:
+//		Delete MilesianAlertMsg object (not used anymore)
+//		Suppress ":" at end of messages, but leave " " (blank character)
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,34 +26,29 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 */
-var
-	MilesianAlertMsg = {						// for compatibility until all display routines corrected.
-		nonNumeric : "Entrée non numérique : ",
-		nonInteger : "Entrée non entière : "
-	}
 function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
 	var	languages = [ "en", "fr", "de", "es", "pt" ];
 	var errorMsg = {
 		"nonNumeric" : { 
-			en	: "Non numeric entry: ",
-			fr	: "Entrée non numérique: ",
-			de	: "Nich digitale Einführung: ",
-			es	: "Entrada no digital: ",
-			pt	: "Entrada não-digital:"
+			en	: "Non numeric entry ",
+			fr	: "Entrée non numérique ",
+			de	: "Nich digitale Einführung ",
+			es	: "Entrada no digital ",
+			pt	: "Entrada não-digital "
 			},
 		"nonInteger" : {
-			en	: "Non integer entry: ",
-			fr	: "Entrée non entière: ",
-			de	: "Nicht integer Nummer: ",
-			es	: "Entrada no entera: ",
-			pt	: "Entrada não-inteira:"
+			en	: "Non integer entry ",
+			fr	: "Entrée non entière ",
+			de	: "Nicht integer Nummer ",
+			es	: "Entrada no entera ",
+			pt	: "Entrada não-inteira "
 			},
 		"invalidDate" : {
-			en	: "Invalid date or time: ",
-			fr	: "Date ou heure invalide: ",
-			de	: "Ungültiges Datum: ",
-			es	: "Fecha no válida: ",
-			pt	: "Data inválida: "
+			en	: "Invalid date or time ",
+			fr	: "Date ou heure invalide ",
+			de	: "Ungültiges Datum ",
+			es	: "Fecha no válida ",
+			pt	: "Data inválida "
 			}
 		};
 	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
