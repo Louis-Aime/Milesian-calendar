@@ -33,7 +33,7 @@
       <tr>
 	    <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntMilesian();">
         <td>M. </td>
-        <td><input name="day" type="text" class="dateconvert" size="2" maxlength="3"> </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
         <td><select name="monthname" class="dateconvert" size="1">
 			<option value="0">1m</option>
 			<option value="1">2m</option>
@@ -48,14 +48,14 @@
 			<option value="10">11m</option>
 			<option value="11">12m</option>
 		</select></td>
-        <td><input name="year" type="text" class="dateconvert" size="5" maxlength="6" value=""> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button name="Compute" class="dateconvert" value="milesian">Ok</button></td>
 		</form>
       </tr>
       <tr>
 		<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntGregorian();">
         <td>G. </td>
-        <td><input name="day" type="text" class="dateconvert" size="2" maxlength="3"> </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">janvier</option>
         <option value="1">février</option>
@@ -70,14 +70,14 @@
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="text" class="dateconvert" size="5" maxlength="6"> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="gregorian" class="dateconvert">Ok</button></td>
  		</form>
      </tr>	  
       <tr>
 		<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntJulian();">
         <td>J. </td>
-        <td><input name="day" type="text" class="dateconvert" size="2" maxlength="3"> </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">janvier</option>
         <option value="1">février</option>
@@ -92,14 +92,14 @@
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="text" class="dateconvert" size="5" maxlength="6"> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="julian" class="dateconvert">Ok</button> </td>
  		</form>
      </tr>
       <tr>
 		<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntFrenchRev();">
         <td>R. </td>
-        <td><input name="day" type="text" class="dateconvert" size="2" maxlength="3"> </td>
+        <td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">Vendémiaire</option>
         <option value="1">Brumaire</option>
@@ -113,9 +113,9 @@
         <option value="9">Messidor</option>
         <option value="10">Thermidor</option>
         <option value="11">Fructidor</option>
-        <option value="12">Complémentaire</option>
+        <option value="12">Complément.</option>
         </select></td>
-        <td><input name="year" type="text" class="dateconvert" size="5" maxlength="6"> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="republican" class="dateconvert">Ok</button> </td>
  		</form>
      </tr>
@@ -132,7 +132,7 @@
         <th></th>
       </tr>
 	<tr>
-		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcISO();">
+		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntISO();">
 		<td>S. </td>
 		<td> 
         <select name="day" class="dateconvert" size="1">
@@ -144,8 +144,8 @@
         <option value="6">samedi</option>
         <option value="7">dimanche</option>
         </select></td>
-        <td><input name="week" type="text" class="dateconvert" size="2" maxlength="3"> </td>
-        <td><input name="year" type="text" class="dateconvert" size="5" maxlength="6"> </td>
+        <td><input name="week" type="number" class="dateconvert daynum"  min="1" max="53"> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="isoweeks" class="dateconvert">Ok</button> </td>
 	  </form>
 	</tr>
@@ -155,7 +155,7 @@
   <tbody>
     <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntJulianDay();">
 	<tr><th>Jour julien : </th><td></td>
-		<td><input name="julianday" value="1" class="dateconvert" maxlength="12" size="12"></td>
+		<td><input name="julianday" type="number" value="1" class="dateconvert juliandaynum" maxlength="9" size="9"></td>
 		<td><button name="setday" value="julianday" class="dateconvert">Ok</button></td>
 	</tr>
 	</form>

@@ -71,8 +71,6 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		case "islamic":
 		case "islamic-rgsa": valid = (convertDate.getJulianDay() > 1948438); break; // Computations are false before Haegirian epoch
 		}
-	//	Re-write Julian Day, which depends on the Locale variable.
-	document.daycounter.julianday.value = convertDate.getJulianDay().toLocaleString(Locale);
 
 	//	Write date string. Catch error if navigator fails.
 
@@ -80,12 +78,12 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	try {
 		myDisplay.innerHTML = convertDate.toMilesianLocaleDateString(Locale,Options);	
 		myDisplay = document.getElementById("UnicodeString");
-		myDisplay.innerHTML = (valid ? convertDate.toLocaleDateString(Locale,Options) : "Calcul Unicode en erreur");
+		myDisplay.innerHTML = (valid ? convertDate.toLocaleDateString(Locale,Options) : milesianAlertMsg("invalidDate"));
 		}
 	catch (e) {	// If attempt to write Milesian string failed: this is caused by out-of-range
-		myDisplay.innerHTML = "Calcul navigateur en erreur";
+		myDisplay.innerHTML = milesianAlertMsg("invalidDate");
 		myDisplay = document.getElementById("UnicodeString");
-		myDisplay.innerHTML = "Calcul navigateur en erreur";
+		myDisplay.innerHTML = milesianAlertMsg("invalidDate");
 		}
 	finally { return }
 }
@@ -125,14 +123,13 @@ function setDateDisplay () { // Considering that convertDate time has been set t
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
 
+	// Compute Locale, Options, and Unicode string
+		putStringOnOptions();
+
 	// Set Julian Day, taken from convertDate
 	let myLocale = document.LocaleOptions.Locale.value;
 	if (myLocale == "") myLocale = undefined;
-   	document.daycounter.julianday.value = convertDate.getJulianDay().toLocaleString(myLocale); // 
-	
-	// Compute Locale, Options, and Unicode string
-	
-	putStringOnOptions();
+   	document.daycounter.julianday.value = convertDate.getJulianDay();
 	
 	// Set Milesian clock
 	let clock = document.querySelector("#clock3");
@@ -148,7 +145,7 @@ function setDateToToday(){ // Self explanatory
 	
 function calcIntJulianDay(){ // here, Julian Day is specified as an integer number. Insert with the suitable Date setter.
 	let j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
-	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);	// Replace blank and decimal comma, then try to build number
+	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number.parseInt (j,10);	// Extract integer of base 10
 	if (! Number.isInteger(j)) alert (milesianAlertMsg("nonInteger") + '"' + document.daycounter.julianday.value + '"')
 		else {
 		convertDate.setTimeFromJulianDay (j);	// Convert into JulianDay, considering Time Zone is UTC (offset = 0) 
@@ -213,7 +210,7 @@ function calcIntFrenchRev(){
 function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
 	let days = Math.round (document.control.shift.value); // number of days to add or substract is in control panel
-		if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
+	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
 	else { 
 		convertDate.setUTCDate (convertDate.getUTCDate()+ sign*days);
 		setDateDisplay();
