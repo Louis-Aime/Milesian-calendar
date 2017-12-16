@@ -65,21 +65,21 @@ function setDateToNow(){ // Self explanatory
     targetDate = new Date(); // set new Date object.
 	setDisplay();
 }
-function SetDayOffset () { // Choice here: the days are integer, all 24h, so local time may change making this operation
-	var days = Math.round (document.control.shift.value);
-	if (isNaN(days)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '"')
+function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so local time may change making this operation
+	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
+	let days = Math.round (document.control.shift.value);
+	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
 	else { 
-		document.control.shift.value = days;
-		targetDate.setUTCDate (targetDate.getUTCDate()+days);
+		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
 		setDisplay();
 	}
 }
-function addTime () { // A number of seconds is added (minus also possible) to the Timestamp.
-	var secs = Math.round (document.UTCshift.time_offset.value);
-	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.time_offset.value + '"')
+function addTime (sign) { // A number of seconds is added or substracted to or from the Timestamp.
+	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
+	let secs = Math.round (document.UTCshift.shift.value);
+	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.shift.value + '"')
 	else { 
-		document.UTCshift.time_offset.value = secs;
-		targetDate.setTime (targetDate.getTime()+secs*Chronos.SECOND_UNIT);
+		targetDate.setTime (targetDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
 		setDisplay();
 	}
 }

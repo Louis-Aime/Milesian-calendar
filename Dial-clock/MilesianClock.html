@@ -18,8 +18,8 @@
    <tbody>
 	 <form name="milesian" class="dateconvert" method="post" action="JavaScript:setClock();">
       <tr>
-        <td><input type="text" class="dateconvert" size="8" disabled="disabled" name="dayofweek"/> </td>
-        <td><input type="text" class="dateconvert" size="2" maxlength="3" name="day"/> </td>
+        <td><input name="dayofweek" type="text" class="dateconvert" size="8" disabled="disabled"/> </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
         <td>
         <select name="monthname" size="1" class="dateconvert">
 		<option value="0">1m</option>
@@ -35,7 +35,7 @@
         <option value="10">11m</option>
         <option value="11">12m</option>
 		</select> </td>
-        <td><input type="text" class="dateconvert" size="5" maxlength="6" name="year" value="" type="text"/></td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button class="dateconvert" name="Compute" value="milesian">Ok</button></td>
       </tr>
 	  <tr><td colspan="5" class="dateconvert">en grégorien proleptique (non julien):</td></tr>
@@ -46,31 +46,34 @@
   </tbody>
 </table>
 <table class="dateconvert" align="center"> <tbody>
-  <tr>
-  	<th colspan=2>Heure</th>
-	<td colspan=2><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-    <button class="dateconvert" value="Now" name="Compute" >Maintenant</button></form></td>
-  </tr>
   <tr> 
 	<form name="time" class="dateconvert" method="post" action="JavaScript:setClock();">
-	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="hours">h</td>
-	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="mins">mn</td>
-	 <td><input type="text" class="dateconvert" size="2" maxlength="3" name="secs">s</td>
+	 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
+	 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
+	 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
 	 <td><button class="dateconvert" name="Compute" value="time_of_day">Ok</button></td>	
 	</form>
   </tr>
 </tbody></table>
 <table class="dateconvert" align="center"> <tbody>
   <tr>
+	<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+    <button name="Compute" class="dateconvert" value="Now">Maintenant</button></form></td>
+  </tr>
+  <tr>
     <form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
-    <td><button class="dateconvert"  name="Compute" value="shift">+/- jours</button></td>
-	<td><input class="dateconvert"  maxlength="8" size="7" name="shift" value="1"></td> 
+    <td>+/- jours</td>
+	<td><button name="to" value="-1" class="dateconvert" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
+	<td><button name="to" value="+1" class="dateconvert" formaction="Javascript:SetDayOffset(1);">+</button></td>
     </form>
   </tr>
   <tr>
-	 <form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
-	 <td><button class="dateconvert" name="Compute" value="time_offset">+/- secondes</button></td>
-	 <td><input type="text" class="dateconvert" maxlength="7" size="7" name="time_offset" value="1"></td>
+	<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+	<td>+/- secondes</td>
+	<td><button name="to" value="-1" class="dateconvert" formaction="Javascript:addTime(-1);" >-</button></td>
+	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td>
+	<td><button name="to" value="+1" class="dateconvert" formaction="Javascript:addTime(1);">+</button></td>
 	</form>
   </tr>
 </tbody></table>
