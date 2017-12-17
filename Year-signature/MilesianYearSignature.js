@@ -1,7 +1,7 @@
 /* Milesian Year Signature
 // Character set is UTF-8
 // This set of functions, to be manually imported, computes year key figures.
-// Package CalendarCycleComputationEngine is used.
+// Package CBCCE is used.
 // Each function returns a compound value with the yearly key figures for one calendar:
 //  julianSignature: for the Julian calendar,
 //  gregorianSignature: for the Gregorian calendar,
@@ -12,7 +12,9 @@
 //  eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 //  epact: Julian / Gregorian computus epact, Milesian mean moon epact.
 //  annualResidue: 29.5 minus epact (Milesian only).
-//  
+// Version 1: M2017-06-04
+// Version 2: M2017-12-26
+//	Use CBCCE 
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,9 +36,10 @@
 // tort or otherwise, arising from, out of or in connection with the software
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
-*////////////////////////////////////////////////////////////////////////////////
-/*// Import CalendarCycleComputationEngine, or make visible.
-*///////////////////////////////////////////////////////////////////////////////
+*/
+///////////////////////////////////////////////////////////////////////////////
+// Import CBCCE, or make visible.
+///////////////////////////////////////////////////////////////////////////////
 function positiveModulo (dividend, divisor) {	// Positive modulo, with only positive divisor
 	if (divisor <= 0) return ;	// Stop execution and return "Undefined"
 	while (dividend < 0) dividend += divisor;
@@ -49,8 +52,8 @@ function julianSignature (year) {
 		yearParams = { 	// Decompose a Julian year figure
 			timeepoch : 0, 
 			coeff : [
-			  {cyclelength : 4, ceiling : Infinity, multiplier : 1, target : "quadriannum"}, 
-			  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "annum"}
+			  {cyclelength : 4, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadriannum"}, 
+			  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "annum"}
 			],
 			canvas : [
 				{name : "quadriannum", init : 0},
@@ -63,7 +66,7 @@ function julianSignature (year) {
 			easterResidue : 0, 	// Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0, 	// Number of days from 21st March to Easter Sunday.
 		},
-		yearCoeff = ccceDecompose (year, yearParams),
+		yearCoeff = cbcceDecompose (year, yearParams),
 		gold = positiveModulo (year, 19);
 	signature.doomsday = positiveModulo(-2*yearCoeff.quadriannum + yearCoeff.annum, 7);
 	signature.easterResidue = positiveModulo (15 + 19*gold, 30);
@@ -76,10 +79,10 @@ function gregorianSignature (year) {
 		yearParams = { 	// Decompose a Gregorian year figure
 			timeepoch : 0, 
 			coeff : [
-			  {cyclelength : 400, ceiling : Infinity, multiplier : 1, target : "quadrisaeculum"}, 
-			  {cyclelength : 100, ceiling : Infinity, multiplier : 1, target : "saeculum"},
-			  {cyclelength : 4, ceiling : Infinity, multiplier : 1, target : "quadriannum"}, 
-			  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "annum"}
+			  {cyclelength : 400, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadrisaeculum"}, 
+			  {cyclelength : 100, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "saeculum"},
+			  {cyclelength : 4, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadriannum"}, 
+			  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "annum"}
 			],
 			canvas : [
 				{name : "quadrisaeculum", init : 0},
@@ -94,7 +97,7 @@ function gregorianSignature (year) {
 			easterResidue : 0,	 // Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0,	 // Number of days from 21st March to Easter Sunday.
 		},
-		yearCoeff = ccceDecompose (year, yearParams),
+		yearCoeff = cbcceDecompose (year, yearParams),
 		gold = positiveModulo (year, 19);
 	signature.doomsday = positiveModulo(2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7);
 	signature.easterResidue = positiveModulo (15 + 19*gold 	// Julian element
@@ -111,11 +114,11 @@ function milesianSignature (year) {
 		yearParams = { 	// Decompose a Milesian year figure for doomsday and Easter computus.
 			timeepoch : -800, 
 			coeff : [
-			  {cyclelength : 3200, ceiling : Infinity, multiplier : 1, target : "era"},
-			  {cyclelength : 400, ceiling : Infinity, multiplier : 1, target : "quadrisaeculum"}, 
-			  {cyclelength : 100, ceiling : Infinity, multiplier : 1, target : "saeculum"},
-			  {cyclelength : 4, ceiling : Infinity, multiplier : 1, target : "quadriannum"}, 
-			  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "annum"}
+			  {cyclelength : 3200, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "era"},
+			  {cyclelength : 400, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadrisaeculum"}, 
+			  {cyclelength : 100, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "saeculum"},
+			  {cyclelength : 4, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadriannum"}, 
+			  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "annum"}
 			],
 			canvas : [
 				{name : "era", init : 0},
@@ -132,7 +135,7 @@ function milesianSignature (year) {
 			easterResidue : 0, // Number of days from 30 3m to (milesian modified) computus 14th moon day.
 			easterOffset : 0, // Number of days from 30 3m to Easter Sunday.
 			},
-			yearCoeff = ccceDecompose (year, yearParams),
+			yearCoeff = cbcceDecompose (year, yearParams),
 			gold = positiveModulo (year, 19),
 			doomhour = new Date (0);
 		doomhour.setUTCHours (7); doomhour.setUTCMinutes (30); doomhour.setTimeFromMilesian (year, 0, 0); 
