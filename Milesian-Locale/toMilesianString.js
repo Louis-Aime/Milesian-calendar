@@ -1,12 +1,11 @@
 /* Milesian properties added to Date in order to generate date strings
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the Milesian calendar, especially to generate date strings
-// Version M2017-07-04
+// Version M2017-12-26 formal update of M2017-07-04 concerning dependent files
 //  toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
 // Necessary files:
-//	MilesianMonthNames.xml: fetched source of month names
-//	MilesianDateProperties.js
-//	CalendarCycleComputationEngine.js
+//	MilesianMonthNames.xml: fetched source of month names - may be provided by milesianMonthNamesString
+//	MilesianDateProperties.js (and dependent files)
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -63,8 +62,16 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 	let lang = usedOptions.locale[0] + usedOptions.locale[1], country = usedOptions.locale[3] + usedOptions.locale[4]; // Decompose Locales string.
 	let monthDay = false;	// true for languages and countries where month comes before day.
 	let Xpath1 = "", node = undefined;	// will be used for searching the month's names in the Locale data registry
-	// Compute weekday if desired
-	if (usedOptions.weekday !== undefined) wstr = this.toLocaleDateString (usedOptions.locale, {weekday : usedOptions.weekday}); // construct weekday using existing data;
+
+	// Compute weekday if desired. Computation does not trust toLocaleDateString, as TimezoneOffset may be lost.
+	if (usedOptions.weekday !== undefined) {
+		// toLocaleDateString takes a different timeZone into account that plain JS. So we build an UTC date corresponding to the timeZone date.
+		let LocalTime = new Date(); 
+		LocalTime.setTime(this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT); // This time enables date computations as if the local time was UTC time.
+		wstr = LocalTime.toLocaleDateString ((lang+"-u-ca-gregory"), {timeZone : "UTC", weekday : usedOptions.weekday}); 
+			// construct weekday with asked language, but gregorian calendar
+		}
+
 	// Compute year
 	switch (usedOptions.year) {	// Compute year string
 		case "numeric": ystr = this.getMilesianDate().year; break;
