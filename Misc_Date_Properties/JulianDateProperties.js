@@ -1,8 +1,8 @@
 /* Julian calendar and Julian Day properties added to Date object
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the Milesian calendar.
-// Version M2017-06-22
-// Package CalendarCycleComputationEngine is used.
+// Version M2017-12-26 : replace CalendarCycleComputationEngine with CBCCE
+// Package CBCCE is used.
 //  getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getJulianCalendarUTCDate : same as above, in UTC time.
 //  getJulianDay : the decimal Julian Day, from the UTC time.
@@ -41,13 +41,13 @@ var
 //	Decompose in years, days in year, hours, minutes, seconds, ms.
 	timeepoch : -62162208000000, // 1 March of year 0, Julian calendar
 	coeff : [
-	  {cyclelength : 126230400000, ceiling : Infinity, multiplier : 4, target : "year"},
-	  {cyclelength : 31536000000, ceiling : 3, multiplier : 1, target : "year"},
-	  {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "dayinyear"}, // Day in year is 1 (1 March) to 366 (29 February)
-	  {cyclelength : 3600000, ceiling : Infinity, multiplier : 1, target : "hours"},
-	  {cyclelength : 60000, ceiling : Infinity, multiplier : 1, target : "minutes"},
-	  {cyclelength : 1000, ceiling : Infinity, multiplier : 1, target : "seconds"},
-	  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds"}
+	  {cyclelength : 126230400000, ceiling : Infinity, subCycleShift : 0, multiplier : 4, target : "year"},
+	  {cyclelength : 31536000000, ceiling : 3, subCycleShift : 0, multiplier : 1, target : "year"},
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "dayinyear"}, // Day in year is 1 (1 March) to 366 (29 February)
+	  {cyclelength : 3600000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "hours"},
+	  {cyclelength : 60000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "minutes"},
+	  {cyclelength : 1000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "seconds"},
+	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds"}
 	],
 	canvas : [ 
 		{name : "year", init : 0},
@@ -85,13 +85,13 @@ function romanCompose (romanDate) { // from a Roman date, returns the offset day
 // 2. Properties added to Date object
 //
 Date.prototype.getJulianDate = function () {
-	let shiftedDate = ccceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Julian_calendar_params);
+	let shiftedDate = cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Julian_calendar_params);
 	let romanDate = romanDecompose (shiftedDate.dayinyear);
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}
 }
 Date.prototype.getJulianUTCDate = function () {
-	let shiftedDate = ccceDecompose (this.getTime(), Julian_calendar_params);
+	let shiftedDate = cbcceDecompose (this.getTime(), Julian_calendar_params);
 	let romanDate = romanDecompose (shiftedDate.dayinyear);
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}	
@@ -103,17 +103,17 @@ Date.prototype.setTimeFromJulianCalendar = function(year, month, date, //: set T
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),
                                                milliseconds = this.getMilliseconds()) {
 	let shift = romanCompose ({'month': month, 'date': date});
-	this.setTime (ccceCompose({
+	this.setTime (cbcceCompose({
 		'year' : year + shift.yearshift, 'dayinyear' : shift.daysinyear, 
 		'hours' : 0, 'minutes' : 0, 'seconds' : 0, 'milliseconds' : 0}, Julian_calendar_params ));	// First, set date à 0:00 UTC
 	this.setHours (hours, minutes, seconds, milliseconds);							// Then set hour of the day
   return this.valueOf();
 }
- Date.prototype.setUTCTimeFromJulianCalendar = function(year, month, date, // same but from UTC time zone.
+Date.prototype.setUTCTimeFromJulianCalendar = function(year, month, date, // same but from UTC time zone.
                                                 hours = this.getUTCHours(), minutes = this.getUTCMinutes(), seconds = this.getUTCSeconds(),
 						milliseconds = this.getMilliseconds()) {
  	let shift = romanCompose ({'month': month, 'date': date});
-	this.setTime (ccceCompose({
+	this.setTime (cbcceCompose({
 		'year' : year + shift.yearshift, 'dayinyear' : shift.daysinyear, 
 		'hours' : hours, 'minutes' : minutes, 'seconds' : seconds, 'milliseconds' : milliseconds
 	}, Julian_calendar_params ));
@@ -125,7 +125,7 @@ Date.prototype.setTimeFromJulianDay = function (julianDay) { // Set time from a 
 }
 Date.prototype.setJulianDay = function(julianDay, timeZoneOffset = this.getTimezoneOffset()) { // Set an integer Julian day, without changing local time.
 	julianDay = Math.round (julianDay) ; // force julianDay to an integer value
-	let decomposeLocalTimeStamp = ccceDecompose ((this.valueOf() - timeZoneOffset * Chronos.MINUTE_UNIT), Day_milliseconds); // Separate day from hour in day.
+	let decomposeLocalTimeStamp = cbcceDecompose ((this.valueOf() - timeZoneOffset * Chronos.MINUTE_UNIT), Day_milliseconds); // Separate day from hour in day.
     decomposeLocalTimeStamp.day_number = julianDay - JULIAN_DAY_UTC0_EPOCH_OFFSET / Chronos.DAY_UNIT ; // Compute Unix day number
 	this.setTime (decomposeLocalTimeStamp.day_number * Chronos.DAY_UNIT + decomposeLocalTimeStamp.milliseconds_in_day + timeZoneOffset * Chronos.MINUTE_UNIT);
 	return this.valueOf()

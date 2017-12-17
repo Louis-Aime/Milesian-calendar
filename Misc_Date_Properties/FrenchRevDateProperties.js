@@ -1,8 +1,8 @@
 /* French revolutionary calendar properties added to Date object
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the French Revolutionary calendar.
-// Version M2017-12-23
-// Package CalendarShiftCycleComputationEngine is used.
+// Version M2017-12-26
+// Package CBCCE is used.
 //  getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getFrenchRevUTCDate : same as above, in UTC time.
 //  setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
@@ -31,7 +31,7 @@
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-// Import CalendarShiftCycleComputationEngine, or make visible.
+// Import CBCCE, or make visible.
 var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompose into years, months, date, hours, minutes, seconds, ms
 	timeepoch : -6004454400000, // Unix timestamp of 3 10m 1779 00h00 UTC in ms, the origin for the algorithm
 	coeff : [ 
@@ -64,15 +64,15 @@ var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompo
 // 2. Methods added to Date object for French Revolutionary dates
 //
 Date.prototype.getFrenchRevDate = function () {
-  return csceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params);
+  return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params);
 }
 Date.prototype.getFrenchRevUTCDate = function () {
-  return csceDecompose (this.getTime(), FrenchRev_time_params);
+  return cbcceDecompose (this.getTime(), FrenchRev_time_params);
 }
 Date.prototype.setTimeFromFrenchRev = function (year, month, date, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),
                                                milliseconds = this.getMilliseconds()) {
-  this.setTime(csceCompose({
+  this.setTime(cbcceCompose({
 	  'year' : year, 'month' : month, 'date' : date, 'hours' : 0, 'minutes' : 0, 'seconds' : 0, 'milliseconds' : 0
 	  }, FrenchRev_time_params));			// Date is first specified at midnight UTC.
   this.setHours (hours, minutes, seconds, milliseconds); // Then hour part is specified
@@ -81,17 +81,17 @@ Date.prototype.setTimeFromFrenchRev = function (year, month, date,
 Date.prototype.setUTCTimeFromFrenchRev = function (year, month = 0, date = 1,
                                                hours = this.getUTCHours(), minutes = this.getUTCMinutes(), seconds = this.getUTCSeconds(),
                                                milliseconds = this.getUTCMilliseconds()) {
-  this.setTime(csceCompose({
+  this.setTime(cbcceCompose({
 	  'year' : year, 'month' : month, 'date' : date, 'hours' : hours, 'minutes' : minutes, 'seconds' : seconds,
 	  'milliseconds' : milliseconds
 	  }, FrenchRev_time_params));
    return this.valueOf();
 }
 Date.prototype.toIntlFrenchRevDateString = function () {
-	var dateElements = csceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params );
+	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params );
 	return dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
 }
 Date.prototype.toUTCIntlFrenchRevDateString = function () {
-	var dateElements = csceDecompose (this.getTime(), FrenchRev_time_params );
+	var dateElements = cbcceDecompose (this.getTime(), FrenchRev_time_params );
 	return dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
 }
