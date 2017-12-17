@@ -1,10 +1,9 @@
 /* MilseianPerpetualDisplay - Display routines of the Milesian perpetual digital calendar.
 // Character set of this file is UTF-8 
 // Error messages in another file fo coding compatbility
-// Version M2017-08-15
+// Version M2017-12-26 formal update of M2017-08-15 (dependent files)
 // 
-// to be used with the following .js files:
-//   CalendarCycleComputationEngine.js (used by other .js files)
+// directly refers to the following .js files:
 //   MilesianDateProperties.js
 //	 LunarDateProperties.js
 //	 IsoWeekCalendarDateProperties.js
