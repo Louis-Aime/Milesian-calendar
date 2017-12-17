@@ -30,3 +30,14 @@ button.dateconvert {
 	font-size:18px;
 	text-anchor:middle;
 }
+.clock {
+	font-family	: Sans-Serif;
+	text-anchor	: middle;
+}
+.ampm {
+	font-family	: Sans-Serif;
+	font-size	: 24px;
+}
+.yeardisplay {
+	font-size	: 42px;
+}
