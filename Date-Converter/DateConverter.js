@@ -1,11 +1,9 @@
 /* DateConverter - Display routines of the Milesian date converter.
 // Character set of this file is UTF-8 
 // Error messages in another file fo coding compatbility
-// Version M2017-12-21
+// Version M2017-12-26 : no reference to dependent files, adapt to Clock operation
 // 
 // to be used with the following .js files:
-//   CalendarCycleComputationEngine.js (used by other .js files)
-//   CalendarShiftCycleComputationEngine.js (used by other .js files)
 //	 MilesianAlertMsg.js (Error messages)
 //   MilesianDateProperties.js
 //	 IsoWeekCalendarDateProperties.js
@@ -133,7 +131,7 @@ function setDateDisplay () { // Considering that convertDate time has been set t
 	
 	// Set Milesian clock
 	let clock = document.querySelector("#clock3");
-	setSolarYearClockHands (clock, convertDate.getMilesianUTCDate().month, convertDate.getMilesianUTCDate().date);
+	setSolarYearClockHands (clock, convertDate.getMilesianDate().year, convertDate.getMilesianUTCDate().month, convertDate.getMilesianUTCDate().date);
 
 }
 
