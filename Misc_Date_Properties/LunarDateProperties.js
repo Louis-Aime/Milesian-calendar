@@ -12,9 +12,11 @@
 //  	Common Era Moon date year 0, month 0, age 0 is : 3 1m 0 at 10h 07 mn 25 s. 
 //  getHegirianMoonDate : same as above, with Hergiian epoch i.e. 6 8m 621 14h 7 mn 48s, so that first evening of first moon month of year 1 is 26 7m 622.
 //  getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (H, m, s). 
-//		At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
+//	At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
+//  getLunarDateTime (timezone offset in mins, the caller's by default) : gives lunar date and time.
+//	Time is as above, date reflects the moon's position on the ecliptic, the same as the sun's at this (solar) date.
 //  getDraconiticHeight : a very rough estimate of the height of the moon (-5° to +5°). 
-// 		When height is around 0 at new or full moon, eclipse is possible.
+// 	When height is around 0 at new or full moon, eclipse is possible.
 // There is no setter function in this package.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
