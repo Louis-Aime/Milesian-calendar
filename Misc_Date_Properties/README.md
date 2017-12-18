@@ -18,6 +18,8 @@ so that first evening of first moon month of year 1 is 26 7m 622, (julian 14 Jul
 Thus day one is 27 7m 622, julian 15 July 622, proleptic gregorian 18 July 622.
 * getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (h, m, s). 
 At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
+* getLunarDateTime (timezone offset in mins, the caller's by default) : gives lunar date and time.
+Time is as above, date reflects the moon's position on the ecliptic, the same as the sun's at this (solar) date.
 * draconiticHeight : an estimate of th height of the moon (-5° to +5°). When height is around 0 at new or full moon, eclipse is possible.
 
 There is no setter function in this package.
