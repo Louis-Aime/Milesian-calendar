@@ -11,7 +11,7 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <title>Horloge milésienne</title>
-<script type="text/javascript" xlink:href="CalendarCycleComputationEngine.js"></script>
+<script type="text/javascript" xlink:href="CBCCE.js"></script>
 <script type="text/javascript" xlink:href="MilesianDateProperties.js"></script>
 <script type="text/javascript" xlink:href="MilesianClockOperations.js"></script>
 <script type="text/javascript">
@@ -19,7 +19,7 @@ var timeOutId1;					// Tick generator identifier
 function setLightClockToNow() {	// Set clock to present date and time
     let targetDate = new Date(); // targeDate is today and now.
 	let theClock = window.document.querySelector("#clock1"); 	// This object is the clock below. Do not call before clock loaded.
-	setSolarYearClockHands (theClock, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
+	setSolarYearClockHands (theClock, targetDate.getMilesianDate().year, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
 		targetDate.getHours(), targetDate.getMinutes(), targetDate.getSeconds() ); 
 }
 function setLightClockTicks() { // To be inserted on load of light clock
@@ -53,10 +53,7 @@ function setLightClockTicks() { // To be inserted on load of light clock
   <use xlink:href="#hourStroke" transform="rotate(300,0,-80)"/>
   <use xlink:href="#hourStroke" transform="rotate(330,0,-80)"/>
 <!-- am/pm indicator -->
-  <text class="ampm" style="
-	font-family	: Sans-Serif;
-	font-size	: 24px;
-	text-anchor	: middle;" 
+  <text class="clock ampm" 
 	x="0" y="-50">am</text>
 <!-- hours and minutes hands -->
   <g class="clockhand hour" transform="rotate(0)">
@@ -75,6 +72,9 @@ function setLightClockTicks() { // To be inserted on load of light clock
   opacity="0.8" >									
 	<line x1="0" x2="0" y1="0" y2="-200" stroke-width="8px"/>
   </g>
+<!-- the year field -->
+  <text class="clock yeardisplay"
+	x="0" y="+100"></text>
 <!-- center circle -->
 <circle class="clockhand" r="9" />
 </g>

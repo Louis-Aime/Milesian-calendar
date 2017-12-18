@@ -4,6 +4,7 @@
 // may handle month, day, hour, minute and second hands. All hands do not need to exist.
 */////////////////////////////////////////////////////////////////////////////////////////////
 // Version 2, M2017-11-07: added an "am/pm" indicator
+// Version 3, M2017-12-26: added year indication, and changed params list
 /* Copyright Miletus 2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +26,7 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 */
-function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
+function setSolarYearClockHands(clock, year = undefined, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
 //	On "clock" object, set all available hands (month, day, hour, minutes, seconds)
 //  Unless "continuous" is specified as true, set month and day hands at end of day.
 //  If no date given, set to 1 1m.
@@ -47,5 +48,7 @@ function setSolarYearClockHands(clock, month = 0, day = 1, hour = 24, minute = 0
 	}
 	let theAmPm = clock.querySelector(".ampm");			// Select the am/pm indicator, check whether existing.
 	if (theAmPm !== null) theAmPm.innerHTML = (hour > 11 ? "pm" : "am");	// hour is 0 to 23. "am" from 0 to 11, "pm" from 12 to 23.
+	let theYear = clock.querySelector(".yeardisplay");		// Select the year field, check whether existing.
+	if (theYear !== null) theYear.innerHTML = Number.isInteger(year) ? year : "" ;
 	return halfDays;	// control the computation parameters with the return value
 }

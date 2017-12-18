@@ -5,6 +5,15 @@ p.date {
 .dateconvert {
 	text-align: center;
 }
+.daynum {
+	width: 3em;
+}
+.yearnum {
+	width: 4em;
+}
+.juliandaynum {
+	width : 7em;
+}
 button.dateconvert {
   background: darkblue;
   color: antiquewhite;
@@ -20,4 +29,15 @@ button.dateconvert {
 	font-family:Serif;
 	font-size:18px;
 	text-anchor:middle;
+}
+.clock {
+	font-family	: Sans-Serif;
+	text-anchor	: middle;
+}
+.ampm {
+	font-family	: Sans-Serif;
+	font-size	: 24px;
+}
+.yeardisplay {
+	font-size	: 42px;
 }

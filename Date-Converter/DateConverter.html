@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+	<link href="milesian.css" rel="stylesheet"/>
+	<title>Convertisseur de dates</title>
+ 
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+	<script type="text/javascript" src="CBCCE.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
+	<script type="text/javascript" src="JulianDateProperties.js"></script>
+	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="toMilesianString.js"></script>
+	<script type="text/javascript" src="DateConverter.js"></script>
+
+</head>
+<body>
+<h1 class="dateconvert">Convertisseur de dates</h1>
+<p class="dateconvert">Convertissez une date dans une langue et un calendrier référencés par Unicode. Restrictions d'usage: voir infra.</p>
+<div class="dateconvert autoscroll">
+  <table class="dateconvert" align="center">
+   <tbody>
+      <tr>
+        <th>Cal.</th>
+        <th>Jour</th>
+        <th>Mois</th>
+        <th>Année</th>
+        <th></th>
+      </tr>
+      <tr>
+	    <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntMilesian();">
+        <td>M. </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
+        <td><select name="monthname" class="dateconvert" size="1">
+			<option value="0">1m</option>
+			<option value="1">2m</option>
+			<option value="2">3m</option>
+			<option value="3">4m</option>
+			<option value="4">5m</option>
+			<option value="5">6m</option>
+			<option value="6">7m</option>
+			<option value="7">8m</option>
+			<option value="8">9m</option>
+			<option value="9">10m</option>
+			<option value="10">11m</option>
+			<option value="11">12m</option>
+		</select></td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><button name="Compute" class="dateconvert" value="milesian">Ok</button></td>
+		</form>
+      </tr>
+      <tr>
+		<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntGregorian();">
+        <td>G. </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
+        <td><select name="monthname" class="dateconvert" size="1">
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
+        </select></td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><button name="Compute" value="gregorian" class="dateconvert">Ok</button></td>
+ 		</form>
+     </tr>	  
+      <tr>
+		<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntJulian();">
+        <td>J. </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
+        <td><select name="monthname" class="dateconvert" size="1">
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
+        </select></td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><button name="Compute" value="julian" class="dateconvert">Ok</button> </td>
+ 		</form>
+     </tr>
+      <tr>
+		<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntFrenchRev();">
+        <td>R. </td>
+        <td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
+        <td><select name="monthname" class="dateconvert" size="1">
+        <option value="0">Vendémiaire</option>
+        <option value="1">Brumaire</option>
+        <option value="2">Frimaire</option>
+        <option value="3">Nivôse</option>
+        <option value="4">Pluviôse</option>
+        <option value="5">Ventôse</option>
+        <option value="6">Germinal</option>
+        <option value="7">Floréal</option>
+        <option value="8">Prairial</option>
+        <option value="9">Messidor</option>
+        <option value="10">Thermidor</option>
+        <option value="11">Fructidor</option>
+        <option value="12">Complément.</option>
+        </select></td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><button name="Compute" value="republican" class="dateconvert">Ok</button> </td>
+ 		</form>
+     </tr>
+   </tbody>
+</table>
+
+  <table class="dateconvert" align="center">
+   <tbody>
+     <tr>
+        <th></th>
+        <th>Jour</th>
+        <th>Semaine</th>
+        <th>Année</th>
+        <th></th>
+      </tr>
+	<tr>
+		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntISO();">
+		<td>S. </td>
+		<td> 
+        <select name="day" class="dateconvert" size="1">
+		<option value="1">lundi</option>
+        <option value="2">mardi</option>
+        <option value="3">mercredi</option>
+        <option value="4">jeudi</option>
+        <option value="5">vendredi</option>
+        <option value="6">samedi</option>
+        <option value="7">dimanche</option>
+        </select></td>
+        <td><input name="week" type="number" class="dateconvert daynum"  min="1" max="53"> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><button name="Compute" value="isoweeks" class="dateconvert">Ok</button> </td>
+	  </form>
+	</tr>
+   </tbody>
+ </table>
+<table class="dateconvert" align="center">
+  <tbody>
+    <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcIntJulianDay();">
+	<tr><th>Jour julien : </th><td></td>
+		<td><input name="julianday" type="number" value="1" class="dateconvert juliandaynum" maxlength="9" size="9"></td>
+		<td><button name="setday" value="julianday" class="dateconvert">Ok</button></td>
+	</tr>
+	</form>
+  </tbody>
+</table>
+</div>
+<div>
+<table class="dateconvert" align="center">
+  <tbody>
+    <tr><form name="Today" class="dateconvert" method="post" action="Javascript:setDateToToday();">
+      <td><button name="Compute" value="Now" class="dateconvert" >Ce jour</button></td>
+  	  </form>
+	  <td> jours+/-</td>
+	<form name="control" class="dateconvert" autocomplete="off" method="post" action="Javascript:SetDayOffset();">
+	<td><button name="to" value="-1" class="dateconvert" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+	  <td><input name="shift" value="1" class="dateconvert"  maxlength="8" size="7"></td> 
+      <td><button name="to" value="+1" class="dateconvert" formaction="Javascript:SetDayOffset(1);">+</button></td>
+    </form></tr>
+   </tbody>
+</table>
+</div>
+<br>
+<div class="dateconvert">
+	<table class="dateconvert" align="center"> <tbody>
+	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
+		<tr>
+			<th> Langue </th><th > Format </th>
+		</tr>
+		<tr>
+			<td><input name="Locale" type="text" autocomplete="language" class="dateconvert" size="5"> </td>
+			<td>
+			<select name="Presentation" class="dateconvert" size="1">
+				<option value="long">long</option>
+				<option value="textCumWeek" selected>texte avec semaine</option>
+				<option value="textSineWeek">texte sans semaine</option>
+				<option value="short">abrégé</option>
+				<option value="numeric">numérique</option>
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2"> Calendrier </th>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<select name="Calendar" size="1" class="dateconvert">
+				<option value="">par défaut</option>
+				<option value="buddhist">bouddhiste Thaï</option>
+				<option value="chinese">chinois traditionnel</option>
+				<option value="coptic">copte</option>
+				<option value="dangi">coréen traditionnel</option>
+				<option value="ethioaa">éthiopien Amete Alem (5493 A.C.) </option>
+				<option value="ethiopic">éthiopien Amete Mihret (8 A.D.)</option>
+				<option value="gregory">grégorien (proleptique)</option>
+				<option value="hebrew">hébraïque</option>
+				<option value="indian">indien moderne</option>
+				<option value="islamic">islamique standard</option>
+				<option value="islamic-umalqura">islamique Umm al-Qura</option>
+				<option value="islamic-tbla">islamique tabulaire astronomique</option>
+				<option value="islamic-civil">islamique tabulaire civil</option>
+				<option value="islamic-rgsa">islamique, Arabie saoudite</option>
+				<option value="iso8601">grégorien avec règles ISO 8601</option>
+				<option value="japanese">japonais impérial</option>
+				<option value="persian">persan</option>
+				<option value="roc">chinois de république populaire</option>
+			</select> 
+			</td>
+			<td><button name="Compute" value="options" class="dateconvert">Ok</button></td>	
+	   </tr>
+   	</form></tbody></table>
+</div>
+<h2 class="dateconvert">Date Unicode</h2>
+<h3 id="UnicodeString" class="dateconvert"></h3>
+<div class="dateconvert">
+<h2 class="dateconvert">Date milésienne</h2>
+<h3 id="milesianDisplay" class="dateconvert"></h3>
+<!-- put svg code inline -->
+<!-- Scalable viewbox, centered in the middle -->
+<svg width="300" height="100%" xml:lang="fr" 
+viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="clock3">
+<!-- the dial -->
+<image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<!-- the motto on the dial -->
+<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+<rect class="center month day" x="0" y="0" width="0" height="0"/>
+<!-- the month hand -->
+  <g class="clockhand month" transform="rotate(0)"
+  opacity="0.8">										
+	<polygon points="0,0 20,-60 0,-165 -20,-60" />
+  </g>
+<!-- the day hand -->
+  <g class="clockhand day" transform="rotate(0)"
+  opacity="0.8" >									
+	<line x1="0" x2="0" y1="0" y2="-200" stroke-width="8px"/>
+  </g>
+<!-- center circle -->
+<circle class="clockhand" r="9" />
+</g>
+</svg>
+</div>	
+ <h3 class="dateconvert">© 2017-12m <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
+ <script type="text/javascript" >setDateToToday();</script>
+</script>
+</body></html>

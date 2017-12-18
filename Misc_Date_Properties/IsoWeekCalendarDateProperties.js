@@ -1,8 +1,8 @@
 /* ISO 8601 week calendar properties added to Date object
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the ISO week calendar, which is the calendar implied by ISO 8601.
-// Version M2017-06-22
-// Package CalendarCycleComputationEngine is used.
+// Version M2017-12-26 eplace CalendarCycleComputationEngine with CBCCE
+// Package CBCCE is used.
 // Package MilesianDateProperties is used (in order to compute quickly year of date to be converted into ISO week calendar)
 //  getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 //  getIsoWeekCalUTCDate : same as above, in UTC time.
@@ -40,12 +40,12 @@ var
 isoWeekCalendar_params = { // To be used with a Unix timestamp in ms. Decompose a delay within a year in week number and day.
 	timeepoch : 0, // 
 	coeff : [ 
-		{cyclelength : 604800000, ceiling : Infinity, multiplier : 1, target : "week"},
-		{cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "day"},
-		{cyclelength : 3600000, ceiling : Infinity, multiplier : 1, target : "hours"},
-		{cyclelength : 60000, ceiling : Infinity, multiplier : 1, target : "minutes"},
-		{cyclelength : 1000, ceiling : Infinity, multiplier : 1, target : "seconds"},
-		{cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds"}
+		{cyclelength : 604800000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "week"},
+		{cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "day"},
+		{cyclelength : 3600000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "hours"},
+		{cyclelength : 60000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "minutes"},
+		{cyclelength : 1000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "seconds"},
+		{cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds"}
 	],
 		canvas : [ 
 		{name : "week", init : 1},
@@ -68,7 +68,7 @@ Date.prototype.getIsoWeekCalDate = function () {
 	let year = this.getMilesianDate().year; 	// Milesian year begins always before ISO week year, therefore ISO week calendar year is either Milesian year, either - 1.
 	let base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
 	if (base.valueOf() > this.valueOf()-(this.getTimezoneOffset() * Chronos.MINUTE_UNIT)) base.setTime (isoWeekCalendarBase(--year)); 
-	let compoundDate = ccceDecompose (this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT - base.valueOf(), isoWeekCalendar_params);
+	let compoundDate = cbcceDecompose (this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT - base.valueOf(), isoWeekCalendar_params);
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year});
 	return compoundDate;
 }
@@ -76,14 +76,14 @@ Date.prototype.getIsoWeekCalUTCDate = function () {
 	let year = this.getMilesianUTCDate().year; 	// Milesian year begins always before ISO week year, therefore ISO week calendar year is either Milesian year, either - 1.
 	let base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
 	if (base.valueOf() > this.valueOf()) base.setTime (isoWeekCalendarBase(--year));
-	let compoundDate = ccceDecompose (this.valueOf() - base.valueOf(), isoWeekCalendar_params);
+	let compoundDate = cbcceDecompose (this.valueOf() - base.valueOf(), isoWeekCalendar_params);
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year});
 	return compoundDate;
 }
 Date.prototype.setTimeFromIsoWeekCal = function (year, week, day, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),
                                                milliseconds = this.getMilliseconds()) { // set time from date expressed in ISO week calendar
-    this.setTime(isoWeekCalendarBase(year) + ccceCompose({		// Set ISO week calendar date at 00:00 UTC. The year begins at isoWeekCalendarBase.
+    this.setTime(isoWeekCalendarBase(year) + cbcceCompose({		// Set ISO week calendar date at 00:00 UTC. The year begins at isoWeekCalendarBase.
 	  'week' : week, 'day' : day, 'hours' : 0, 'minutes' : 0, 'seconds' : 0, 'milliseconds' : 0 }, isoWeekCalendar_params));
 	this.setHours (hours, minutes, seconds, milliseconds);							// Then set hour of the day
 	return this.valueOf();
@@ -91,7 +91,7 @@ Date.prototype.setTimeFromIsoWeekCal = function (year, week, day,
 Date.prototype.setUTCTimeFromIsoWeekCal = function (year, week, day, 
                                                hours = this.getUTCHours(), minutes = this.getUTCMinutes(), seconds = this.getUTCSeconds(),
                                                milliseconds = this.getUTCMilliseconds()) { // set time from date expressed in ISO week calendar
-    this.setTime(isoWeekCalendarBase (year) + ccceCompose({
+    this.setTime(isoWeekCalendarBase (year) + cbcceCompose({
 	  'week' : week, 'day' : day, 'hours' : hours, 'minutes' : minutes, 'seconds' : seconds,
 	  'milliseconds' : milliseconds
 	  }, isoWeekCalendar_params));

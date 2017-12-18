@@ -1,21 +1,21 @@
-/* The Calendar Cycle Computation Engine (CCCE)
-// (Formerly Milesian Compose and Decompose routines).
+/* The Cycle-based Calendar Computation Engine/ CBCCE
+//
 // Character set is UTF-8
 //
 // The functions of this package performs intercalation computations for calendars
 // that set intercalation elements following regular cycles.
-// The Milesian calendar, given its regulars month, is able to use totally this principle.
+// This applies to the Milesian calendar, that adds or substracts intercalary days only at end of cycles, including months.
+// This applies also to calendars that shift the long year by one at cyclic periods 
+// e.g. the long year comes after 5 years instead of 4 years in certain circumstances.
+// A possible algorithmic implementation of the French Revolutionary "Franciade" uses such cycles.
 // For other calendars, including Gregorian and Julian, this routines may be used to compute
 // the rank of a day within a year, and then hours, minutes, seconds and milliseconds.
 // Computations on months require more specific algorithms.
-// The principles of these routines are explained in "L'heure milésienne",
+// The principles of these routines are explained in "L'heure milésienne" (for the first version)
 // a book by Louis-Aimé de Fouquières.
 //
-// Version 2 : M2017-06-21
-// Version 2: 
-//	Changed the names of the functions
-//	The parameters are now in each package. Only very common parameters and variables are defined here.
-// Version 2.1 : M2017-12-14 (typos in commments)
+// Version 1 : M2017-06-26
+// This version is an extension of the original "Calendar Cycle Computation Engine" and replaces it.
 //
 *//////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
@@ -51,6 +51,7 @@ var decomposeParameterExample = {
 	coeff : [ // This array holds the coefficient used to decompose a time stamp into time cycles like eras, quadrisaeculae, centuries etc.
 		{cyclelength : #, //length of the cycle, expressed in milliseconds.
 		ceiling : #, // Infinity, or the maximum number of cycles of this size minus one in the upper cycle; the last cycle may hold an intercalary unit.
+		subCycleShift : #, number (-1, 0 or +1) to add to the ceiling of the cycle of the next level when the ceiling is reached at this level.
 		multiplier : #, // multiplies the number of cycle of this level to convert into target units.
 		target : #, // the unit (e.g. "year") of the decomposition element at this level. 
 		} ,
@@ -73,8 +74,8 @@ var
 Day_milliseconds = { 	// To convert a time or a duration to and from days + milliseconds in day.
 	timeepoch : 0, 
 	coeff : [ // to be used with a Unix timestamp in ms. Decompose into days and milliseconds in day.
-	  {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "day_number"}, 
-	  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds_in_day"}
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "day_number"}, 
+	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds_in_day"}
 	],
 	canvas : [
 		{name : "day_number", init : 0},
@@ -82,14 +83,15 @@ Day_milliseconds = { 	// To convert a time or a duration to and from days + mill
 	]
 }
 /////////////////////////////////////////////
-// ccceDecompose : from time serie figure to decomposition
+// cbcceDecompose : from time serie figure to decomposition
 ///////////////////////////////////////////// 
-function ccceDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by cparams.
-  quantity -= params.timeepoch; // set quantity to decompose into cycles to the right value.
-  var result = new Object(); // Construct intitial result 
+function cbcceDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by cparams.
+  quantity -= params.timeepoch; // set at initial value the quantity to decompose into cycles.
+  var result = new Object(); // Construct intitial compound result 
   for (let i = 0; i < params.canvas.length; i++) {	// Define property of result object (a date or date-time)
     Object.defineProperty (result, params.canvas[i].name, {enumerable : true, writable : true, value : params.canvas[i].init});
   }
+  let addCycle = 0; 	// flag that upper cycle has one element more or less (i.e. a 5 years franciade or 13 months luni-solar year)
   for (let i = 0; i < params.coeff.length; ++i) {	// Perform decomposition by dividing by the successive cycle length
     let r = 0; // r is the computed quotient for this level of decomposition
     if (params.coeff[i].cyclelength == 1) r = quantity; // avoid performing a trivial divison by 1.
@@ -98,29 +100,45 @@ function ccceDecompose (quantity, params) { // from a chronological number, buil
         --r; 
         quantity += params.coeff[i].cyclelength;
       }
-      while ((quantity >= params.coeff[i].cyclelength) && (r < params.coeff[i].ceiling)) {
+	  let ceiling = params.coeff[i].ceiling + addCycle;
+      while ((quantity >= params.coeff[i].cyclelength) && (r < ceiling)) {
         ++r; 
         quantity -= params.coeff[i].cyclelength;
       }
+	  addCycle = (r == ceiling) ? params.coeff[i].subCycleShift : 0; // if at last section of this cycle, add or substract 1 to the ceiling of next cycle
     }
     result[params.coeff[i].target] += r*params.coeff[i].multiplier; // add result to suitable part of result array	
   }	
   return result;
 }
 ////////////////////////////////////////////
-// ccceCompose: from compound object to time serie figure.
+// cbcceCompose: from compound object to time serie figure.
 ////////////////////////////////////////////
-function ccceCompose (cells, params) { // from an object 'cells' structured as params.canvas, compute the chronological number
-	var quantity = params.timeepoch ; // initialise quantity
+function cbcceCompose (cells, params) { // from an object cells structured as params.canvas, compute the chronological number
+	var quantity = params.timeepoch ; // initialise Unix quantity to computation epoch
 	for (let i = 0; i < params.canvas.length; i++) { // cells value shifted as to have all 0 if at epoch
 		cells[params.canvas[i].name] -= params.canvas[i].init
 	}
-	for (let i = params.coeff.length-1; i >= 0; --i) { // consolidate from small to large
-		let factor = (params.coeff[i].multiplier == 1 ? params.coeff[i].cyclelength :
-		params.coeff[i].cyclelength - 
-									(params.coeff[i+1].cyclelength * params.coeff[i].multiplier / params.coeff[i+1].multiplier )
-									);
-		quantity += Math.floor(cells[params.coeff[i].target] / params.coeff[i].multiplier) * factor;
+	let currentTarget = params.coeff[0].target; 	// Set to uppermost unit used for date (year, most often)
+	let currentCounter = cells[params.coeff[0].target];	// This counter shall hold the successive remainders
+	let addCycle = 0; 	// This flag says whether there is an additionnal period at end of cycle, e.g. a 5th year in the Franciade or a 13th month
+	for (let i = 0; i < params.coeff.length; i++) {
+		let f = 0;				// Number of "target" values (number of years, to begin with)
+		if (currentTarget != params.coeff[i].target) {	// If we go to the next level (e.g. year to month), reset variables
+			currentTarget = params.coeff[i].target;
+			currentCounter = cells[currentTarget];
+		}
+		let ceiling = params.coeff[i].ceiling + addCycle;
+		while (currentCounter < 0) {
+			--f;
+			currentCounter += params.coeff[i].multiplier;
+		}
+		while ((currentCounter >= params.coeff[i].multiplier) && (f < ceiling)) {
+			++f;
+			currentCounter -= params.coeff[i].multiplier;
+		}
+		addCycle = (f == ceiling) ? params.coeff[i].subCycleShift : 0;
+		quantity += f * params.coeff[i].cyclelength;
 	}
 	return quantity ;	
-} 
+}

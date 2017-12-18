@@ -1,8 +1,8 @@
 /* Milesian properties added to Date
 // Character set is UTF-8
 // This code, to be manually imported, set properties to object Date for the Milesian calendar.
-// Version M2017-07-03
-// Package CalendarCycleComputationEngine is used.
+// Version M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
+// Package CBCCE is used.
 // File MilesianMonthNames.xml is not used in this version, the file has been stringified as "pldr".
 //  getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 //  getMilesianUTCDate : same as above, in UTC time.
@@ -40,18 +40,18 @@
 var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompose into Milesian years, months, date, hours, minutes, seconds, ms
 	timeepoch : -188395804800000, // Unix timestamp of 1 1m -4000 00h00 UTC in ms
 	coeff : [ 
-	  {cyclelength : 100982160000000, ceiling : Infinity, multiplier : 3200, target : "year"},
-	  {cyclelength : 12622780800000, ceiling : Infinity, multiplier : 400, target : "year"},
-	  {cyclelength : 3155673600000, ceiling :  3, multiplier : 100, target : "year"},
-	  {cyclelength : 126230400000, ceiling : Infinity, multiplier : 4, target : "year"},
-	  {cyclelength : 31536000000, ceiling : 3, multiplier : 1, target : "year"},
-	  {cyclelength : 5270400000, ceiling : Infinity, multiplier : 2, target : "month"},
-	  {cyclelength : 2592000000, ceiling : 1, multiplier : 1, target : "month"}, 
-	  {cyclelength : 86400000, ceiling : Infinity, multiplier : 1, target : "date"},
-	  {cyclelength : 3600000, ceiling : Infinity, multiplier : 1, target : "hours"},
-	  {cyclelength : 60000, ceiling : Infinity, multiplier : 1, target : "minutes"},
-	  {cyclelength : 1000, ceiling : Infinity, multiplier : 1, target : "seconds"},
-	  {cyclelength : 1, ceiling : Infinity, multiplier : 1, target : "milliseconds"}
+	  {cyclelength : 100982160000000, ceiling : Infinity, subCycleShift : 0, multiplier : 3200, target : "year"},
+	  {cyclelength : 12622780800000, ceiling : Infinity, subCycleShift : 0, multiplier : 400, target : "year"},
+	  {cyclelength : 3155673600000, ceiling :  3, subCycleShift : 0, multiplier : 100, target : "year"},
+	  {cyclelength : 126230400000, ceiling : Infinity, subCycleShift : 0, multiplier : 4, target : "year"},
+	  {cyclelength : 31536000000, ceiling : 3, subCycleShift : 0, multiplier : 1, target : "year"},
+	  {cyclelength : 5270400000, ceiling : Infinity, subCycleShift : 0, multiplier : 2, target : "month"},
+	  {cyclelength : 2592000000, ceiling : 1, subCycleShift : 0, multiplier : 1, target : "month"}, 
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "date"},
+	  {cyclelength : 3600000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "hours"},
+	  {cyclelength : 60000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "minutes"},
+	  {cyclelength : 1000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "seconds"},
+	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds"}
 	],
 	canvas : [ 
 		{name : "year", init : -4000},
@@ -67,15 +67,15 @@ var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompos
 // 2. Methods added to Date object for Milesian dates
 //
 Date.prototype.getMilesianDate = function () {
-  return ccceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params);
+  return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params);
 }
 Date.prototype.getMilesianUTCDate = function () {
-  return ccceDecompose (this.getTime(), Milesian_time_params);
+  return cbcceDecompose (this.getTime(), Milesian_time_params);
 }
 Date.prototype.setTimeFromMilesian = function (year, month, date, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),
                                                milliseconds = this.getMilliseconds()) {
-  this.setTime(ccceCompose({
+  this.setTime(cbcceCompose({
 	  'year' : year, 'month' : month, 'date' : date, 'hours' : 0, 'minutes' : 0, 'seconds' : 0, 'milliseconds' : 0
 	  }, Milesian_time_params));			// Date is first specified at midnight UTC.
   this.setHours (hours, minutes, seconds, milliseconds); // Then hour part is specified
@@ -84,17 +84,17 @@ Date.prototype.setTimeFromMilesian = function (year, month, date,
 Date.prototype.setUTCTimeFromMilesian = function (year, month = 0, date = 1,
                                                hours = this.getUTCHours(), minutes = this.getUTCMinutes(), seconds = this.getUTCSeconds(),
                                                milliseconds = this.getUTCMilliseconds()) {
-  this.setTime(ccceCompose({
+  this.setTime(cbcceCompose({
 	  'year' : year, 'month' : month, 'date' : date, 'hours' : hours, 'minutes' : minutes, 'seconds' : seconds,
 	  'milliseconds' : milliseconds
 	  }, Milesian_time_params));
    return this.valueOf();
 }
 Date.prototype.toIntlMilesianDateString = function () {
-	var dateElements = ccceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params );
+	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params );
 	return dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
 }
 Date.prototype.toUTCIntlMilesianDateString = function () {
-	var dateElements = ccceDecompose (this.getTime(), Milesian_time_params );
+	var dateElements = cbcceDecompose (this.getTime(), Milesian_time_params );
 	return dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
 }

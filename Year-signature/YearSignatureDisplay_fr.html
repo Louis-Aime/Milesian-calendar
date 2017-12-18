@@ -4,7 +4,7 @@
   <link href="milesian.css" rel="stylesheet"/>
   <title>Epacte, semaine et Pâques par année</title>
 
-  <script type="text/javascript" src="CalendarCycleComputationEngine.js"></script>
+  <script type="text/javascript" src="CBCCE.js"></script>
   <script type="text/javascript" src="MilesianDateProperties.js"></script>
   <script type="text/javascript" src="LunarDateProperties.js"></script>
   <script type="text/javascript" src="MilesianYearSignature.js"></script>
@@ -16,17 +16,22 @@
 <h1 class="dateconvert">Epacte, semaine et Pâques</h1>
 <table class="dateconvert" align="center">
   <tbody>
-    <tr><form name="year" class="dateconvert" method="post" action="Javascript:setYear(document.year.year.value);" >
+    <tr><form name="year" class="dateconvert" method="post" autocomplete="off" action="Javascript:setYear(document.year.year.value);" >
 	  <th>Année:</th>
-	  <td><input class="dateconvert"  maxlength="5" size="5" name="year" value="2000"></td>	
-      <td><button class="dateconvert" name="Compute">Ok</button></td>
+	  <td><input name="year" type="number" value="2000" class="dateconvert yearnum"></td>	
+      <td><button name="Compute" class="dateconvert">Ok</button></td>
 	</form>
 	</tr>
+  </tbody>
+</table>
+<table class="dateconvert" align="center">
+  <tbody>
 	<tr>
-	  <form name="control" class="dateconvert" method="post" action="Javascript:setYearOffset(document.control.shift.value);">
+	  <form name="control" class="dateconvert" method="post" autocomplete="off" action="Javascript:setYearOffset(document.control.dir.value*document.control.shift.value);">
       <th> +/- années:</th>
-	  <td><input class="dateconvert"  maxlength="5" size="5" name="shift" value="1"></td> 
-      <td><button class="dateconvert" name="Compute" >Ok</button></td>
+	  <td><button name="minus" value="-1" class="dateconvert" formaction="Javascript:setYearOffset(-document.control.shift.value)">-</button></td>
+	  <td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
+      <td><button name="plus" value="+1" class="dateconvert" formaction="Javascript:setYearOffset(document.control.shift.value)">+</button></td>
     </form></tr>
   </tbody>
 </table>
