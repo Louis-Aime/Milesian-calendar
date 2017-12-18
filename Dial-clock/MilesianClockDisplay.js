@@ -30,7 +30,7 @@
 var 
 	targetDate = new Date(); // target date will be used to update everything
 
-function setDisplay () {	// Disseminate targetDate and time on all display
+function setDisplay () {	// Disseminate targetDate and time on all display fields
 
 	let dateComponent;	// Local result of date decomposition process, used several times
 
@@ -43,33 +43,31 @@ function setDisplay () {	// Disseminate targetDate and time on all display
 /*	let Locale = document.LocaleOptions.Locale.value; 
 	if (Locale == "") Locale = undefined; 
 */
-
-	// Display Gregorian date in non-editable part
-	myElement = document.gregoriandate;
-	myElement.year.value = targetDate.getFullYear();
-	myElement.monthname.value = targetDate.getMonth();
-	myElement.day.value = targetDate.getDate();
-		
-	// Display UTC time
-	myElement = document.querySelector(".UTCtime");
-	myElement.innerHTML = 
-	  targetDate.getUTCHours() + "h "
-	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
-	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
-	// This variant makes a bug with MS Edge, if outside the range of handled values :
-	/*	targetDate.toLocaleTimeString
-		(Locale,{timeZone: "UTC", hour12: false}); */
-	
-	// Update local time fields - using	Date properties
-	document.time.hours.value = targetDate.getHours();
-	document.time.mins.value = targetDate.getMinutes();
-	document.time.secs.value = targetDate.getSeconds();
+	// Main frame fields
 
 	// Update milesian field selector - using Date properties
 	dateComponent = targetDate.getMilesianDate();		// Get date-time component in local time
 	document.milesian.year.value = dateComponent.year;
     document.milesian.monthname.value = dateComponent.month;
     document.milesian.day.value = dateComponent.date;
+	
+	// Update local time fields - using	Date properties
+	document.time.hours.value = targetDate.getHours();
+	document.time.mins.value = targetDate.getMinutes();
+	document.time.secs.value = targetDate.getSeconds();
+	
+	// Set Milesian date string
+	myElement = document.getElementById("milesiandate");
+	myElement.innerHTML = targetDate.toMilesianLocaleDateString
+		(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+	// Display Gregorian date in non-editable part
+	myElement = document.gregoriandate;
+	myElement.year.value = targetDate.getFullYear();
+	myElement.monthname.value = targetDate.getMonth();
+	myElement.day.value = targetDate.getDate();
+
+	// Date conversion frame
 	
     //  Update Gregorian Calendar - using Date properties
     document.gregorian.year.value = targetDate.getFullYear();
@@ -94,8 +92,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
 
-	// Set Julian Day, taken from targetDate
+	// Set Julian Day 
    	document.daycounter.julianday.value = targetDate.getJulianDay();
+	
+	// Chronological fields frame
 	
 	// Display chronological counts
 	myElement = document.querySelector("#unixCountDisplay");
@@ -110,6 +110,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display
 	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
+	
+	// Lunar data frame
 
 	// Update lunar parameters - using targetDate
 	dateComponent = targetDate.getCEMoonDate();
@@ -130,19 +132,33 @@ function setDisplay () {	// Disseminate targetDate and time on all display
 	document.moon.hegirianyear.value = 	dateComponent.year
 	
 	// Update Delta T (seconds)
-	document.deltat.delta.value = (targetDate.getDeltaT()/Chronos.SECOND_UNIT); // 
+	document.deltat.delta.value = (targetDate.getDeltaT()/Chronos.SECOND_UNIT);
+	
+	// Navigation frame
+
+	// Display UTC time
+	myElement = document.getElementById("UTCtime");
+	myElement.innerHTML = 
+	  targetDate.getUTCHours() + "h "
+	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
+	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
+	// This variant makes a bug with MS Edge, if outside the range of handled values :
+	/*	targetDate.toLocaleTimeString
+		(Locale,{timeZone: "UTC", hour12: false}); */
+	
+	// Unicode frame - this frame is handled with putStringOnOptions
 
 	// Display date string, following options
 	putStringOnOptions();				
 
 }
-function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control.
+function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; Minimum control.
 	let valid = true; 	// by default, computations under Unicode are expected valid. Certains cases are known false.
 
 	// Negotiate effective Locale from specified language code and calendar
 	let Locale = document.LocaleOptions.Locale.value;
 	let Calendar = document.LocaleOptions.Calendar.value;
-	let Options; 		// to be computed later;
+	let myDisplay, Options; 		// to be computed later;
 	
 	if (Locale == ""){ 	// no language code specified; in case a specific calendar is specified, construct an effectice Locale.
 		if (Calendar !== "") {
@@ -170,8 +186,8 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 			Options = {weekday : undefined, day : "numeric", month : "numeric", year : "numeric", era : "narrow"};
 		}
 	
-	
-	switch (Calendar) {	// Certain calendars do not give a proper result;
+	// Certain calendars do not give a proper result: set the flag.
+	switch (Calendar) {	
 		case "hebrew": valid = (targetDate.valueOf()-targetDate.getTimezoneOffset() * Chronos.MINUTE_UNIT 
 			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
 		case "indian": valid = (targetDate.valueOf()-targetDate.getTimezoneOffset() * Chronos.MINUTE_UNIT 
@@ -181,26 +197,18 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
 		}
 
-	//	Write date string. Catch error if navigator fails.
+	// Write Milesian string. No specific error shoud occur here.
+	myDisplay = document.getElementById("milesianDisplay");
+	myDisplay.innerHTML = targetDate.toMilesianLocaleDateString(Locale,Options);	
 
-	let myDisplay = document.getElementById("milesiandate");	// First write error message under the main clock, then write date if no problem.
-	myDisplay.innerHTML = milesianAlertMsg("invalidDate");	
-	
+	//	Write date string. Catch error if navigator fails to handle toLocaleTimeString (MS Edge)
 	try {
-		myDisplay = document.getElementById("milesianDisplay");
-		myDisplay.innerHTML = targetDate.toMilesianLocaleDateString(Locale,Options);	
-		myDisplay = document.getElementById("milesiandate");
-		myDisplay.innerHTML = targetDate.toMilesianLocaleDateString
-			(Locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 		myDisplay = document.getElementById("UnicodeString");
 		myDisplay.innerHTML = (valid ? targetDate.toLocaleTimeString(Locale,Options) : milesianAlertMsg("invalidDate"));
 		}
 	catch (e) {	// If attempt to write Milesian string failed: this is caused by out-of-range
 		myDisplay.innerHTML = milesianAlertMsg("invalidDate");
-		myDisplay = document.getElementById("UnicodeString");
-		myDisplay.innerHTML = milesianAlertMsg("invalidDate");
 		}
-	finally { return }
 }
 function setDateToNow(){ // Self explanatory
     targetDate = new Date(); // set new Date object.
