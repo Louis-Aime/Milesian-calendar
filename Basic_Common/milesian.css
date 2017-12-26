@@ -14,6 +14,15 @@ p.date {
 .juliandaynum {
 	width : 7em;
 }
+input[disabled], select[disabled] {
+	background: white;
+	color: black;
+	border-style: none;
+}
+.outbounds {
+	color : antiquewhite;
+	background : firebrick;
+}
 button.dateconvert {
   background: darkblue;
   color: antiquewhite;

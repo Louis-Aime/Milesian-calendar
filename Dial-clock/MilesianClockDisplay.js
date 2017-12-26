@@ -1,8 +1,16 @@
 /* Milesian Solar Year Clock Hands
 // Character set is UTF-8
-// This package computes the month hand and day hand of the Milesian solar year clock.
-*/////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017 - Louis A. de Fouquières
+// These functions compute the month hand and day hand of the Milesian solar year clock.
+// Associated with: MilesianClock.html
+// Other js necessary
+//	MilesianClockOperations
+//	MilesianDateProperties
+//
+*/
+// Version M2018-01-04 :
+//	Display julio-gregorian date 
+//	Red background when displayed date is outside validity
+/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -23,14 +31,15 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 */
-// Other js necessary
-//	MilesianClockOperations
-//	MilesianDateProperties
-//
 var 
-	targetDate = new Date(); // target date will be used to update everything
+	targetDate = new Date(),	// target date will be used to update everything
+	gregorianSwitch = { 		// Settings: date where the Gregorian calendar was enforced (may change from one country to the other) 
+		year : 1582, month : 11, date : 30 }, // Values for France, on initialisation. In principle, should be fetched from Unicode.
+	lowerRepublicanDate = new Date (1792, 8, 22, 0, 0, 0, 0),	// Origin date for the French Republican calendar
+	upperRepublicanDate = new Date (1806, 0, 0, 0, 0, 0, 0); // Upper limit of the Republican calendar
+		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
 
-function setDisplay () {	// Disseminate targetDate and time on all display fields
+	function setDisplay () {	// Disseminate targetDate and time on all display fields
 
 	let dateComponent;	// Local result of date decomposition process, used several times
 
@@ -43,6 +52,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 /*	let Locale = document.LocaleOptions.Locale.value; 
 	if (Locale == "") Locale = undefined; 
 */
+
 	// Main frame fields
 
 	// Update milesian field selector - using Date properties
@@ -61,11 +71,28 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.toMilesianLocaleDateString
 		(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 
-	// Display Gregorian date in non-editable part
-	myElement = document.gregoriandate;
-	myElement.year.value = targetDate.getFullYear();
-	myElement.monthname.value = targetDate.getMonth();
-	myElement.day.value = targetDate.getDate();
+	// Display standard date in non-editable part
+	// Translate to julian if before date of switch to Gregorian calendar
+	let bufferDate = new Date; 
+	bufferDate.setTimeFromMilesian (gregorianSwitch.year, gregorianSwitch.month, gregorianSwitch.date, 0, 0, 0, 0); 
+		// bufferDate is date where gregorian calendar was enforced. Julian calendar was used before this date.
+	if (targetDate.valueOf() < bufferDate.valueOf()) 	// If target date is before gregorian calendar was enforced 
+		dateComponent = targetDate.getJulianDate()		// dateComponent object set to Julian date-time
+	else { 												// else, dateComponent set to (standard) Gregorian coordinates
+		dateComponent.year  = targetDate.getFullYear();
+		dateComponent.month = targetDate.getMonth();
+		dateComponent.date	= targetDate.getDate();
+		};
+	myElement = document.juliogregdate;
+	myElement.year.value = dateComponent.year;
+	myElement.monthname.value = dateComponent.month;
+	myElement.day.value = dateComponent.date;
+
+	// Update settings
+	document.gregorianswitch.year.value = gregorianSwitch.year;
+	document.gregorianswitch.monthname.value = gregorianSwitch.month;
+	document.gregorianswitch.day.value = gregorianSwitch.date;
+	
 
 	// Date conversion frame
 	
@@ -73,6 +100,11 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.gregorian.year.value = targetDate.getFullYear();
     document.gregorian.monthname.value = targetDate.getMonth();
     document.gregorian.day.value = targetDate.getDate();		
+	myElement = document.querySelector("#gregorianline");
+	if (targetDate.valueOf() < bufferDate.valueOf()) 	// If target date is before gregorian calendar was enforced 
+		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
+	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
+	
 
     //  Update Julian Calendar - using Date properties 
 	dateComponent = targetDate.getJulianDate();
@@ -85,12 +117,21 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.republican.year.value = dateComponent.year;
     document.republican.monthname.value = dateComponent.month;
     document.republican.day.value = dateComponent.date;	
+	myElement = document.querySelector("#republicanline");
+	if (targetDate.valueOf() >= upperRepublicanDate.valueOf()
+		|| targetDate.valueOf() < lowerRepublicanDate.valueOf()) 	// If target date is outside period where Republican calendar was enforced 
+		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
+	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
 	//  Update ISO week calendar - using its Date properties
 	dateComponent = targetDate.getIsoWeekCalDate();
 	document.isoweeks.year.value = dateComponent.year;
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
+	myElement = document.querySelector("#isoweeksline");
+	if (targetDate.valueOf() < bufferDate.valueOf()) 	// If target date is before gregorian calendar was enforced 
+		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
+	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
 	// Set Julian Day 
    	document.daycounter.julianday.value = targetDate.getJulianDay();
@@ -99,7 +140,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Display chronological counts
 	myElement = document.querySelector("#unixCountDisplay");
-	myElement.innerHTML = targetDate.valueOf();
+	myElement.innerHTML = targetDate.valueOf().toLocaleString();
 	myElement = document.querySelector("#jdDisplay");
 	myElement.innerHTML = targetDate.getCount("julianDay").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#mjdDisplay");
@@ -124,12 +165,12 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.moon.moondate.value = targetDate.getLunarDateTime().date + " " 
 				+  (++targetDate.getLunarDateTime().month) + "m";
 	document.moon.CElunardate.value = 	Math.ceil(dateComponent.age);
-	document.moon.CElunarmonth.value = 	++dateComponent.month
-	document.moon.CElunaryear.value = 	dateComponent.year
+	document.moon.CElunarmonth.value = 	++dateComponent.month;
+	document.moon.CElunaryear.value = 	dateComponent.year;
 	dateComponent = targetDate.getHegirianMoonDate();	
 	document.moon.hegiriandate.value = 	Math.ceil(dateComponent.age);
-	document.moon.hegirianmonth.value = ++dateComponent.month
-	document.moon.hegirianyear.value = 	dateComponent.year
+	document.moon.hegirianmonth.value = ++dateComponent.month;
+	document.moon.hegirianyear.value = 	dateComponent.year;
 	
 	// Update Delta T (seconds)
 	document.deltat.delta.value = (targetDate.getDeltaT()/Chronos.SECOND_UNIT);
@@ -213,6 +254,24 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 function setDateToNow(){ // Self explanatory
     targetDate = new Date(); // set new Date object.
 	setDisplay();
+}
+function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
+	var day =  Math.round (document.gregorianswitch.day.value);
+	var month = document.gregorianswitch.monthname.value;
+	var year =  Math.round (document.gregorianswitch.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorianswitch.day.value + '" "' + document.gregorianswitch.year.value + '"')
+	else {		
+		if (year * 372 + month * 31 + day < 588808) {	// If specified date is prior to 25 10m 1582, reject change and keep current
+			month++ ;
+			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + 'm ' + year + '"')
+			}
+		else {
+		gregorianSwitch.year = year ; gregorianSwitch.month = month ; gregorianSwitch.date = day;
+		setDisplay ();
+			}
+		}	
+	setDisplay();	
 }
 function setLocalePresentationCalendar() {	// What happens when Locale-presentation-calendar option button hit
 	setDisplay();	// set all, as Locale may change the way the first Milesian string is written
