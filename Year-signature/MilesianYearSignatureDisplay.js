@@ -1,6 +1,7 @@
 /* Milesian Year Signature Display
 // Character set is UTF-8
 // This package displays annual figures, in relation with YearSignatureDisplay.html
+// M2017-01-09 : Display Gold number 1 to 19, not 0 to 18.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,7 +24,7 @@
 // or the use or other dealings in the software.
 // Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
-/*// Import CalendarCycleComputationEngine, MilesianDateProperties, and MilesianYearSignature,	 or make visible.
+/*// Import CBCCE, MilesianDateProperties, and MilesianYearSignature, or make visible.
 *///////////////////////////////////////////////////////////////////////////////
 function romanDateFrom21March (offset) {
 	return (offset <= 10) ? (21+offset)+"/03" : (offset - 10)+"/04";
@@ -44,7 +45,7 @@ function milesianDateFrom30_3m (offset) {
 function computeSignature(year) {
 	var signature = julianSignature (year);
 	// Set gold number
-	document.yearglobal.gold.value = positiveModulo (year, 19);
+	document.yearglobal.gold.value = positiveModulo (year, 19) + 1;
 	// Julian figures
 	document.julian.day.value = signature.doomsday;
 	document.julian.epact.value = signature.epact;
