@@ -36,11 +36,21 @@
   </tbody>
 </table>
 <table class="dateconvert" align="center">
+	<form name="yeartype" class="dateconvert" method="post">
+	<tr><th>Année : </th>
+	<td> <select name="type" class="dateconvert" disabled="disabled"  size="1">
+        <option value="0">cave (et commune)</option>
+		<option value="1">longue (et commune)</option>
+        <option value="2">bissextile (et cave)</option>
+		</select></td></tr>
+	</form>	
+</table>
+<table class="dateconvert" align="center">
   <tbody>
     <tr><form name="milesianyearfigures" class="dateconvert" method="post">
-	  <th>Dies illa</th><th>Epacte</th><th>Reliquat</th>
+	  <th>Clavedi</th><th>Epacte</th><th>Reliquat</th>
 	</tr><tr>
-	  <th>(jour clé)</th><th>milésienne</th><th>annuel</th>	  
+	  <th>(dies illa)</th><th>milésienne</th><th>annuel</th>	  
 	</tr>
 	<tr>
 	  <td> 

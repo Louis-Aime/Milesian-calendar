@@ -26,6 +26,7 @@
 *////////////////////////////////////////////////////////////////////////////////
 /*// Import CBCCE, MilesianDateProperties, and MilesianYearSignature, or make visible.
 *///////////////////////////////////////////////////////////////////////////////
+
 function romanDateFrom21March (offset) {
 	return (offset <= 10) ? (21+offset)+"/03" : (offset - 10)+"/04";
 }
@@ -64,6 +65,9 @@ function computeSignature(year) {
 	document.gregorian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset+Math.floor((year+800)/3200));
 	// Milesian rule + Gregorian modified comput
 	signature = milesianSignature (year);
+	// Set year type
+	let type = (signature.isLeap ? 2 : 0) + (signature.isLong ? 1 : 0) ;
+	document.yeartype.type.value = type ;
 	document.milesianyearfigures.doomsday.value = signature.doomsday;
 	document.milesianyearfigures.epact.value = signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
 	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});

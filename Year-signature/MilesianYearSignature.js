@@ -65,6 +65,7 @@ function julianSignature (year) {
 			epact : 0, 		// Julian computus moon age one day before 1st January.
 			easterResidue : 0, 	// Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0, 	// Number of days from 21st March to Easter Sunday.
+			isLong : false	// whether this year is 366 days long
 		},
 		yearCoeff = cbcceDecompose (year, yearParams),
 		gold = positiveModulo (year, 19);
@@ -72,6 +73,7 @@ function julianSignature (year) {
 	signature.easterResidue = positiveModulo (15 + 19*gold, 30);
 	signature.epact = positiveModulo (23 - signature.easterResidue, 30);
 	signature.easterOffset = 1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.isLong = yearCoeff.annum == 0;	// Year is long if annum part in decomposition is 0
 	return signature;
 }
 function gregorianSignature (year) {
@@ -96,6 +98,7 @@ function gregorianSignature (year) {
 			epact : 0, 		// Gregorian computus moon age one day before 1st January.
 			easterResidue : 0,	 // Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0,	 // Number of days from 21st March to Easter Sunday.
+			isLong : false	// whether this year is 366 days long
 		},
 		yearCoeff = cbcceDecompose (year, yearParams),
 		gold = positiveModulo (year, 19);
@@ -107,6 +110,8 @@ function gregorianSignature (year) {
 	signature.epact = positiveModulo (23 - signature.easterResidue, 30);
 	signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );
 	signature.easterOffset = 1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || yearCoeff.saeculum == 0) ;
+		// Long if year part in decomposition is 0, and it is not a secular year except a multiple of 400.
 	return signature;
 }
 function milesianSignature (year) {
@@ -134,6 +139,8 @@ function milesianSignature (year) {
 			annualResidue : 0,	// 29.5 minus Milesian epact
 			easterResidue : 0, // Number of days from 30 3m to (milesian modified) computus 14th moon day.
 			easterOffset : 0, // Number of days from 30 3m to Easter Sunday.
+			isLong : false,	// whether this year is 366 days long
+			isLeap : false	// whether this year follows a 366 days long year
 			},
 			yearCoeff = cbcceDecompose (year, yearParams),
 			gold = positiveModulo (year, 19),
@@ -148,5 +155,9 @@ function milesianSignature (year) {
 		, 30);
 		signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );
 		signature.easterOffset =  1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
+		signature.isLeap = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum !== 0));
+		// To check whether milesian year is long, test next year
+		yearCoeff = cbcceDecompose (++year, yearParams);
+		signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum !== 0));
 	return signature;
 }
