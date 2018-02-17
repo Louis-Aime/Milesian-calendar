@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC
     "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
     "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
-<html><head>
+<html>
+<head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
 	<title>Horloge milésienne</title>
@@ -122,6 +123,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
 			<td>mn</td>
 			<td><button class="dateconvert">Ok</button></td>
+		</tr>
 	</form>
 </table>
 <table class="dateconvert" align="center">
@@ -148,7 +150,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       </tr>
 	</form>
 </table>
-<table class="dateconvert" align="center"> <tbody>
+<table class="dateconvert" align="center">
   <tr> 
 	<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
 	 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
@@ -193,7 +195,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </div>
 <div class="dateconvert">
 <h1>Navigation</h1>
- <table class="dateconvert" align="center"> <tbody> <tr>
+ <table class="dateconvert" align="center"> <tr>
  	<th>UTC :</th>
 	 <td id="UTCdate"></td>
 	 <td id="UTCtime"></td>
@@ -337,14 +339,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
    </tbody>
  </table>
 <table class="dateconvert" align="center">
-  <tbody>
     <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien : </th><td></td>
 		<td><input name="julianday" type="text" value="1" class="dateconvert"></td>
 		<td><button name="setday" value="julianday" class="dateconvert">Ok</button></td>
 	</tr>
 	</form>
-  </tbody>
 </table>
 </div>
 <div class="dateconvert">
@@ -493,4 +493,5 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </table>
 </div>
 <h3 class="dateconvert">© 2018-02 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
-</body></html>
+</body>
+</html>
