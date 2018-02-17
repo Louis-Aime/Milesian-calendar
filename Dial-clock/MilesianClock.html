@@ -8,15 +8,15 @@
 	
 <!-- ligne à retirer si lecture de milesianMonthNames.xml --><script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="CBCCE.js"></script>
+    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
 	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
 	<script type="text/javascript" src="JulianDateProperties.js"></script>
 	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="LunarDateProperties.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
-    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
-    <script type="text/javascript" src="toMilesianString.js"></script>
-    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
+    <script type="text/javascript" src="UnicodeMilesian.js"></script>
 	
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
 
@@ -85,6 +85,45 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     <tr>	<th id="milesiandate" colspan="6"></th>	  </tr>
 </table>
 <table class="dateconvert" align="center">
+<!--	<tr><td colspan="3">Date julio-grégorienne équivalente</td></tr> -->
+	<tr>
+<!--	<td class="gregoriandate"></td> ici on mettait un clone Unicode, à éviter en raison de la gestion de l'heure locale -->
+		<form name="juliogregdate" class="dateconvert" autocomplete="off" method="post" action="JavaScript:void();">
+        <td><input name="day" type="text" disabled="disabled" class="dateconvert" size="2" maxlength="3"> </td>
+        <td><select name="monthname" disabled="disabled" class="dateconvert" size="1">
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
+        </select></td>
+        <td><input name="year" type="text" disabled="disabled" class="dateconvert" size="5" maxlength="6"> </td>
+  		</form>
+	</tr>
+</table>
+<table class="dateconvert" align="center">
+	 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
+		<tr><th>Mode</th>
+			<td>
+				<select name="TZcontrol" size="1" class="dateconvert">
+				<option value="UTC">UTC</option>
+				<option value="TZ" selected>Fuseau système</option>
+				<option value="Fixed">Décalage fixe</option>
+				</select></td>
+			<th>Décalage</th> 
+			<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
+			<td>mn</td>
+			<td><button class="dateconvert">Ok</button></td>
+	</form>
+</table>
+<table class="dateconvert" align="center">
 	 <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
 	 <tr>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
@@ -117,30 +156,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	 <td><button class="dateconvert">Ok</button></td>	
 	</form>
   </tr>
-</table>
-<table class="dateconvert" align="center">
-	<tr><td colspan="3">Date julio-grégorienne équivalente</td></tr>
-	<tr>
-<!--	<td class="gregoriandate"></td> ici on mettait un clone Unicode, à éviter en raison de la gestion de l'heure locale -->
-		<form name="juliogregdate" class="dateconvert" autocomplete="off" method="post" action="JavaScript:void();">
-        <td><input name="day" type="text" disabled="disabled" class="dateconvert" size="2" maxlength="3"> </td>
-        <td><select name="monthname" disabled="disabled" class="dateconvert" size="1">
-        <option value="0">janvier</option>
-        <option value="1">février</option>
-        <option value="2">mars</option>
-        <option value="3">avril</option>
-        <option value="4">mai</option>
-        <option value="5">juin</option>
-        <option value="6">juillet</option>
-        <option value="7">août</option>
-        <option value="8">septembre</option>
-        <option value="9">octobre</option>
-        <option value="10">novembre</option>
-        <option value="11">décembre</option>
-        </select></td>
-        <td><input name="year" type="text" disabled="disabled" class="dateconvert" size="5" maxlength="6"> </td>
-  		</form>
-	</tr>
 </table>
 </div>
 <div class="dateconvert">
@@ -178,7 +193,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <div class="dateconvert">
 <h1>Navigation</h1>
  <table class="dateconvert" align="center"> <tbody> <tr>
- 	<th>Heure UTC</th>
+ 	<th>UTC :</th>
+	 <td id="UTCdate"></td>
 	 <td id="UTCtime"></td>
   </tr> </table>
 <table class="dateconvert" align="center">
@@ -373,6 +389,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 				<option value="textSineWeek">texte sans semaine</option>
 				<option value="short">abrégé</option>
 				<option value="numeric">numérique</option>
+				<option value="2-digit">2 chiffres</option>
+				<option value="year-2-digit">année 2 chiffres</option>
 			</select>
 			</td>
 		</tr>
@@ -404,15 +422,16 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</select> 
 			</td>
 		</tr>
+		<tr><th colspan="2">Zone horaire</th></tr>
+		<tr><td colspan="2"><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td></tr>
 		<tr>
 			<td colspan="2"><button name="Compute" value="options" class="dateconvert">Ok</button></td>	
 	   </tr>
    	</form></tbody></table>
 	<table class="dateconvert" align="center">
 		<tr><th>Date et heure Unicode</th></tr>
-		<tr><th>(Aberrant avant l'origine de certains calendriers)</th></tr>
 		<tr><td id="UnicodeString"></td></tr>
-		<tr><th>Date milésienne</th></tr>
+		<tr><th>Date et heure milésiennes</th></tr>
 		<tr><td id="milesianDisplay"></td></tr>
 	</table>
 </div>
@@ -472,5 +491,5 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   </tbody>
 </table>
 </div>
-<h3 class="dateconvert">© 2017-12 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<h3 class="dateconvert">© 2018-02 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </body></html>
