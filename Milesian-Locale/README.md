@@ -17,7 +17,8 @@ a method for the Date object.
 
 MilesianDateProperties.js is used.
 
-toMilesianDateString ([Locale,[Options]]) is a Date method that generates the string as specified with Locale and Options 
-(see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] for details).
+toMilesianDateString ([Locale,[Options]]) is a Date method that generates the string of a Milesian date
+as specified with Locale and Options, following Unicode format codes. 
+see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] for details.
 
 The code of this function is not optimal. The only idea is to show a demonstrator on a few languages.
