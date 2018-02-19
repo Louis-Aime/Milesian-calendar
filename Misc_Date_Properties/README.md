@@ -4,7 +4,7 @@ which enables you to easily handle calendars or cycles that are not (yet) availa
 They all use packages of Basic_Commmon.
 
 ## LunarDateProperties.js: get information about mean lunar cycle
-Package CalendarCycleComputationEngine is used.
+Package CBCCE is used.
 * getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
 TT is Terrestrial Time, a uniform time scale defined with a second defined independantly from Earth movements.
 DeltaT is erratic and difficult to compute, however, the general trend of DeltaT is due to the braking  of the Earth's daily revolution.
@@ -25,7 +25,7 @@ Time is as above, date reflects the moon's position on the ecliptic, the same as
 There is no setter function in this package.
   
 ## JulianDateProperties.js: Julian calendar and Julian Day properties added to Date object
-Package CalendarCycleComputationEngine is used.
+Package CBCCE is used.
 * getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 * getJulianCalendarUTCDate : same as above, in UTC time.
 * getJulianDay : the decimal Julian Day, from the UTC time.
@@ -35,10 +35,33 @@ Package CalendarCycleComputationEngine is used.
 * setJulianDay (julianDay[, timeZoneOffset]) : Set date from an integer (if not, rounded) Julian day, wihtout changing time of day. Considered from the local time zone, or from the time zone offset specified in minutes.
 
 ## ISOWeekCalendarDateProperties.js: computations on ISO 8601 week calendar
-Package CalendarCycleComputationEngine and MilesianDateProperties are used.
+Package CBCCE and MilesianDateProperties are used.
 * getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 * getIsoWeekCalUTCDate : same as above, in UTC time.
 * setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
 * setUTCTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 * toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-www-dd
 * toUTCIsoWeekCalDateString : same as above, in UTC time zone.
+
+## FrenchRevDateProperties.js: date properties for the French revolutionary calendar
+Package CBCCE is used.
+* getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 12. Conversion is in local time.
+Month 12 is for the Complementary days.
+* getFrenchRevUTCDate :  same as above, in UTC time.
+* setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from rev. calendar date + local hour.
+* setUTCTimeFromFrenchRev : (year, month, date, hours, minutes, seconds, milliseconds) : same as above, from UTC
+* toIntlFrenchRevDateString : return a string with the date elements in Revolutionary
+* toUTCIntlFrenchRevDateString : same as above, in UTC.
+
+## ChronologicalCountConversion.js : date prototype for chronological counts
+Package CBCCE is used.
+* getCount (countType) : the chronological count of a date, deemed UTC date.
+
+Values for countType:
+* "julianDay": the Julian Day, value 0 on 1 Jan. 4713 B.C. at 12:00 noon UTC.
+* "modifiedJulianDay" : 2 400 000.5 days later (integer values à 00:00).
+* "nasaDay" : 40 000 days after modified Julian Day.
+* "windowsCount" : 0 on 30 Dec. 1899 at 00:00
+* "masOSCount" : 0 on 1 Jan. 1904 at 00:00
+
+
