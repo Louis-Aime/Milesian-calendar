@@ -61,7 +61,7 @@ Values for countType:
 * "julianDay": the Julian Day, value 0 on 1 Jan. 4713 B.C. at 12:00 noon UTC.
 * "modifiedJulianDay" : 2 400 000.5 days later (integer values à 00:00).
 * "nasaDay" : 40 000 days after modified Julian Day.
-* "windowsCount" : 0 on 30 Dec. 1899 at 00:00
-* "masOSCount" : 0 on 1 Jan. 1904 at 00:00
+* "windowsCount" : 0 on 30 Dec. 1899 at 00:00.
+* "masOSCount" : 0 on 1 Jan. 1904 at 00:00.
 
 
