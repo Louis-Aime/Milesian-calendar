@@ -27,6 +27,9 @@ button.dateconvert {
   background: darkblue;
   color: antiquewhite;
 }
+button.symbol {
+  width: 3em;
+}
 .autoscroll {	overflow: auto; }
 .clockhand {
 	fill:orange; 
