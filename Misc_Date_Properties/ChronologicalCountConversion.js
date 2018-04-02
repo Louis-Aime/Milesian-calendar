@@ -6,6 +6,7 @@
 // A single method added to Date object
 //	getCount (serie), where serie is one of the following chronological series
 //		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
+//		"julianDayAtNight" :  on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
 //		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
 //		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
 //		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
@@ -40,6 +41,7 @@ Date.prototype.getCount = function (countType) {
 	let convertMs = JULIAN_DAY_UTC12_EPOCH_OFFSET;	// initiate with Julian day expressed in ms
 	switch (countType) {
 		case "julianDay" : break;
+		case "julianDayAtNight" : convertMs += HALF_DAY_UNIT; break;
 		case "modifiedJulianDay" : convertMs -= 2400000 * DAY_UNIT + HALF_DAY_UNIT; break;
 		case "nasaDay" : convertMs -= 2440000 * DAY_UNIT + HALF_DAY_UNIT; break;
 		case "windowsCount" : convertMs -= 2415018 * DAY_UNIT + HALF_DAY_UNIT; break;
