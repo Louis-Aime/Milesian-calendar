@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+	<link href="milesian.css" rel="stylesheet"/>
+	<title>Convertisseur de calendriers</title>
+<!--
+Calendar converter page, by Louis A. de FOUQUIERES
+Use Milesian calendar functions and Unicode tools.
+Copyright Miletus 2017-2018 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sub-license, or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+
+Inquiries: www.calendriermilesien.org
+-->
+	
+<!-- Month names - until they are in .XML files -->
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+	<script type="text/javascript" src="RomanMonthNames.js"></script>
+
+<!-- General packages -->
+	<script type="text/javascript" src="CBCCE.js"></script>
+    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
+	<script type="text/javascript" src="JulianDateProperties.js"></script>
+	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
+	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+    <script type="text/javascript" src="UnicodeMilesian.js"></script>
+
+<!-- Scripts spécifiques à cette page -->
+    <script type="text/javascript" src="Converter.js"></script>
+ <!--   <script type="text/javascript" src="ConverterSet.js"></script> -->
+
+</head>
+<body>
+<!-- script division 
+<script type="text/javascript">
+</script>	
+-->
+<div class="dateconvert">
+<h2 class="dateconvert">Convertisseur de dates</h2>
+
+<!-- put svg code inline -->
+<!-- Scalable viewbox, centered in the middle -->
+<!-- Avoid onload if section is on a separate part of page (in certain CMS) -->
+<svg width="300" height="100%" xml:lang="fr" onload="JavaScript:setDisplay()"
+viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="clock3">
+<!-- the dial -->
+<image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<!-- the motto on the dial -->
+<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+<rect class="center month day" x="0" y="0" width="0" height="0"/>
+
+<!-- the month hand -->
+  <g class="clockhand month" transform="rotate(0)"
+  opacity="0.8">										
+	<polygon points="0,0 12,-40 9,-120 0,-165 -9,-120 -12,-40" />
+  </g>
+<!-- the day hand -->
+  <g class="clockhand day" transform="rotate(0)"
+  opacity="0.8" >									
+	<polygon points="0,0 12,-40 9,-145 0,-200 -9,-145 -12,-40" />
+  </g>
+<!-- the year field -->
+  <text class="clock yeardisplay"
+	x="0" y="+100"></text>
+<!-- center circle -->
+<circle class="clockhand" r="9" />
+</g>
+</svg>
+<table class="dateconvert" align="center">
+    <tr><th class="milesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
+	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
+</table>
+</div>
+
+<div class="dateconvert autoscroll">
+<h2>Calendriers pivots et navigation</h2>
+
+<script type="text/javascript">
+function setDateToToday() { // Self explanatory
+	let justNow = new Date();
+	targetDate = new Date(Date.UTC(justNow.getFullYear(),justNow.getMonth(),justNow.getDate(),0,0,0,0));	// target date will be used to update everything
+	setDisplay();
+}
+function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so local time may change making this operation
+	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
+	let days = Math.round (document.control.shift.value);
+	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
+	else { 
+		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
+		setDisplay();
+	}
+}
+</script>	
+<table class="dateconvert" align="center">
+  <tr>
+	<td><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToToday();">
+    <button class="dateconvert" >Aujourd'hui</button></form></td>
+    <form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+    <td> +/- jours</td>
+	<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
+	<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+    </form>
+  </tr>
+</table>
+
+<table class="dateconvert" align="center">
+  <tr>
+	<th>Calendrier</th>
+	<th>Jour</th>
+	<th>Mois</th>
+	<th>Année</th>
+	<th></th>
+  </tr>
+
+
+  <script type="text/javascript">
+	function calcMilesian() {
+		var day =  Math.round (document.milesian.day.value);
+		var month = document.milesian.monthname.value;
+		var year =  Math.round (document.milesian.year.value);
+		if	( isNaN(day)  || isNaN (year ))
+			alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+		else { 
+			targetDate.setUTCTimeFromMilesian (year, month, day);
+			setDisplay ();
+		}
+	}
+  </script>  
+  <tr>
+	<form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
+	<td>Milésien </td>
+	<td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
+	<td>
+	<select name="monthname" size="1" class="dateconvert">
+	<option value="0">1m</option>
+	<option value="1">2m</option>
+	<option value="2">3m</option>
+	<option value="3">4m</option>
+	<option value="4">5m</option>
+	<option value="5">6m</option>
+	<option value="6">7m</option>
+	<option value="7">8m</option>
+	<option value="8">9m</option>
+	<option value="9">10m</option>
+	<option value="10">11m</option>
+	<option value="11">12m</option>
+	</select> </td>
+	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><button class="dateconvert">Ok</button></td>
+	</form>	  
+  </tr>
+
+  <script type="text/javascript">
+	function calcGregorian() {
+		var day =  Math.round (document.gregorian.day.value);
+		var month = (document.gregorian.monthname.value);
+		var year =  Math.round (document.gregorian.year.value);
+		if	( isNaN(day)  || isNaN (year ))
+			alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
+		else {
+			targetDate.setUTCFullYear(year, month, day);
+			setDisplay ();
+		}
+	}
+  </script>
+  <tr id="gregorianline">
+	<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
+	<td>Grégorien </td>
+	<td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
+	<td><select name="monthname" class="dateconvert" size="1">
+	<option value="0">janvier</option>
+	<option value="1">février</option>
+	<option value="2">mars</option>
+	<option value="3">avril</option>
+	<option value="4">mai</option>
+	<option value="5">juin</option>
+	<option value="6">juillet</option>
+	<option value="7">août</option>
+	<option value="8">septembre</option>
+	<option value="9">octobre</option>
+	<option value="10">novembre</option>
+	<option value="11">décembre</option>
+	</select></td>
+	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><button class="dateconvert">Ok</button></td>
+	</form>
+  </tr>	  
+
+  <script type="text/javascript">
+	function calcJulian(){
+		var day =  Math.round(document.julian.day.value);
+		var month = new Number(document.julian.monthname.value); // month has to be a number.
+		var year =  Math.round(document.julian.year.value);
+		if	( isNaN(day)  || isNaN (year))
+			alert (milesianAlertMsg("invalidDate") + '"' + document.julian.day.value + '" "' + document.julian.year.value + '"')
+		else {
+			targetDate.setUTCTimeFromJulianCalendar(year, month, day); 
+			setDisplay ();
+		}
+	}
+  </script>  
+  <tr>
+	<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulian();">
+	<td>Julien </td>
+	<td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
+	<td><select name="monthname" class="dateconvert" size="1">
+	<option value="0">janvier</option>
+	<option value="1">février</option>
+	<option value="2">mars</option>
+	<option value="3">avril</option>
+	<option value="4">mai</option>
+	<option value="5">juin</option>
+	<option value="6">juillet</option>
+	<option value="7">août</option>
+	<option value="8">septembre</option>
+	<option value="9">octobre</option>
+	<option value="10">novembre</option>
+	<option value="11">décembre</option>
+	</select></td>
+	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><button class="dateconvert">Ok</button> </td>
+	</form>
+  </tr>
+
+  <script type="text/javascript">
+	  function calcFrenchRev(){
+		let day =  Math.round(document.republican.day.value);
+		let month = new Number(document.republican.monthname.value); // month has to be a number.
+		let year =  Math.round(document.republican.year.value);
+		if	( isNaN(day)  || isNaN (year))
+			alert (milesianAlertMsg("invalidDate") + '"' + document.republican.day.value + '" "' + document.republican.year.value + '"')
+		else { 
+			targetDate.setUTCTimeFromFrenchRev(year, month, day);
+			setDisplay ();
+		}
+	  }
+  </script>
+  <tr id="republicanline">
+	<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
+	<td>Républicain </td>
+	<td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
+	<td><select name="monthname" class="dateconvert" size="1">
+	<option value="0">Vendémiaire</option>
+	<option value="1">Brumaire</option>
+	<option value="2">Frimaire</option>
+	<option value="3">Nivôse</option>
+	<option value="4">Pluviôse</option>
+	<option value="5">Ventôse</option>
+	<option value="6">Germinal</option>
+	<option value="7">Floréal</option>
+	<option value="8">Prairial</option>
+	<option value="9">Messidor</option>
+	<option value="10">Thermidor</option>
+	<option value="11">Fructidor</option>
+	<option value="12">Complément.</option>
+	</select></td>
+	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><button class="dateconvert">Ok</button> </td>
+	</form>
+  </tr>
+</table>
+
+<table class="dateconvert" align="center">
+  <script type="text/javascript">
+	  function calcISO() {
+		var day =  Math.round (document.isoweeks.day.value);
+		var week = Math.round (document.isoweeks.week.value);
+		var year =  Math.round (document.isoweeks.year.value);
+		if	( isNaN(day)  || isNaN (week) || isNaN (year))
+			alert (milesianAlertMsg("invalidDate") + '"' + document.isoweeks.year.value + '" "' + document.isoweeks.week.value + '"')
+		else { 
+			targetDate.setUTCTimeFromIsoWeekCal(year, week, day);
+			setDisplay ();
+			}
+	  }
+  </script>
+	<tr>
+		<th></th>
+		<th>Jour</th>
+		<th>Semaine</th>
+		<th>Année</th>
+		<th></th>
+	  </tr>
+	<tr id="isoweeksline">
+		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcISO();">
+		<td>Par semaines </td>
+		<td> 
+		<select name="day" class="dateconvert" size="1">
+		<option value="1">lundi</option>
+		<option value="2">mardi</option>
+		<option value="3">mercredi</option>
+		<option value="4">jeudi</option>
+		<option value="5">vendredi</option>
+		<option value="6">samedi</option>
+		<option value="7">dimanche</option>
+		</select></td>
+		<td><input name="week" type="number" class="dateconvert daynum"  min="1" max="53"> </td>
+		<td><input name="year" type="number" class="dateconvert yearnum"></td>
+		<td><button class="dateconvert">Ok</button> </td>
+	  </form>
+	</tr>
+</table>
+
+<table class="dateconvert" align="center">
+  <script type="text/javascript">
+	  function calcJulianDay(){ // here, Julian Day is specified as an integer number. Insert with the suitable Date setter.
+		var j = Math.round(document.daycounter.julianday.value); // extract Julian Day, integer value expected.
+		if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
+		else {
+			targetDate.setTimeFromJulianDay (j-0.5); 
+			setDisplay ();
+		}
+	  }
+  </script>
+    <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
+	<tr><th>Jour julien à 12h UTC : </th><td></td>
+		<td><input name="julianday" type="number" class="dateconvert" "juliandaynum"></td>
+		<td><button class="dateconvert">Ok</button></td>
+	</tr>
+	</form>
+</table>
+</div>
+<div class="dateconvert">
+<h2>Séries chronologiques à 0h UTC</h2>
+
+	<table class="dateconvert" align="center">
+		<tr>
+			<th>Jour julien (12h UTC) : </th>
+			<td id="jdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour julien modifié : </th>
+			<td id="mjdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour julien NASA : </th>
+			<td id="nasajdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour Windows : </th>
+			<td id="windowsCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour MacOS : </th>
+			<td id="MacOSCountDisplay"></td>
+		</tr>
+	</table>
+</div>	
+<div class="dateconvert">
+<h2>Calendriers Unicode</h2>
+	<table class="dateconvert" align="center">
+	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
+		<tr><th>Format</th>
+			<td>
+			<select name="Presentation" class="dateconvert" size="1">
+				<option value="long" selected>Complet (adapté sur ordinateur)</option>
+				<option value="numeric">En chiffres (adapté sur mobile)</option>
+			</select>
+			</td>
+			<td><button class="dateconvert">Ok</button></td>			
+		</tr>
+	</form></table>
+
+<h3>Grégorien et dérivés</h3>
+  <table class="dateconvert" align="center">
+	<tr><th>Grégorien : </th><td class="unicodedate" id="gregory"></td></tr>
+	<tr><th>Thaï : </th><td class="unicodedate" id="buddhist"></td></tr>
+	<tr><th>Japonais : </th><td class="unicodedate" id="japanese"></td></tr>
+	<tr><th>Chinois moderne : </th><td class="unicodedate" id="roc"></td></tr>
+  </table>
+<h3>Solaires modernes</h3>
+  <table class="dateconvert" align="center">
+	<tr><th>Milésien :</th><td class="milesiandate"></td></tr>
+   	<tr><th>Persan : </th><td class="unicodedate" id="persian"></td></tr>
+	<tr><th>Indien moderne : </th><td class="unicodedate" id="indian"></td></tr>
+  </table>
+<h3>Copte et éthiopiens</h3>
+  <table class="dateconvert" align="center">
+ 	<tr><th>Copte : </th><td class="unicodedate" id="coptic"></td></tr>
+	<tr><th>Ethiopien antique : </th><td class="unicodedate" id="ethioaa"></td></tr>
+	<tr><th>Ethiopien chrétien : </th><td class="unicodedate" id="ethiopic"></td></tr>
+   </table>
+<h3>Luni-solaires</h3>
+  <table class="dateconvert" align="center">
+   	<tr><th>Hébraïque : </th><td class="unicodedate" id="hebrew"></td></tr>
+	<tr><th>Chinois traditionnel : </th><td class="unicodedate" id="chinese"></td></tr>
+	<tr><th>Coréen traditionnel : </th><td class="unicodedate" id="dangi"></td></tr>
+  </table>
+<h3>Lunaires musulmans</h3>
+  <table class="dateconvert" align="center">
+   	<tr><th>Standard : </th><td class="unicodedate" id="islamic"></td></tr>
+	<tr><th>Umm al-Qura : </th><td class="unicodedate" id="islamic-umalqura"></td></tr>
+	<tr><th>Tabulaire astronomique : </th><td class="unicodedate" id="islamic-tbla"></td></tr>
+	<tr><th>Tabulaire civil : </th><td class="unicodedate" id="islamic-civil"></td></tr>
+	<tr><th>Arabie saoudite : </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
+  </table>
+
+</div>
+<h3 class="dateconvert">© 2018-04 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+</body>
+</html>
