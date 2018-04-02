@@ -113,13 +113,13 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorianswitch.day.value + '" "' + document.gregorianswitch.year.value + '"')
 	else {		
-		if (year * 372 + month * 31 + day < 588808) {	// If specified date is prior to 25 10m 1582, reject change and keep current
+		let A = new Date (Date.UTC(year, month, day, 0, 0, 0, 0));
+		if (A.valueOf() < Date.UTC(1582,9,15,0,0,0,0)) {	// If specified date is prior to 15 October 1582, reject change and keep current
 			month++ ;
-			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + 'm ' + year + '"')
+			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + ' ' + year + '"')
 			}
 		else {
-		gregorianSwitch.year = year ; gregorianSwitch.month = month ; gregorianSwitch.date = day;
-		setDisplay ();
+		gregorianSwitch = new Date (A.valueOf());
 			}
 		}	
 	setDisplay();	

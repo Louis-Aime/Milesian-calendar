@@ -7,7 +7,11 @@
 	<link href="milesian.css" rel="stylesheet"/>
 	<title>Horloge milésienne</title>
 	
-<!-- ligne à retirer si lecture de milesianMonthNames.xml --><script type="text/javascript" src="milesianMonthNamesString.js"></script>
+<!-- Month names - if not through .XML  -->
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+	<script type="text/javascript" src="RomanMonthNames.js"></script>
+	
+<!-- General packages -->
 	<script type="text/javascript" src="CBCCE.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
@@ -19,6 +23,7 @@
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
     <script type="text/javascript" src="UnicodeMilesian.js"></script>
 	
+<!-- Specific for this page -->
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
 	<script type="text/javascript" src="MilesianClockDisplay_P2.js"></script>
 
@@ -83,52 +88,96 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <circle class="clockhand" r="9" />
 </g>
 </svg>
+
 <table class="dateconvert" align="center">
-    <tr>	<th id="milesiandate" colspan="6"></th>	  </tr>
+    <tr><th class="milesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
+	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
-<table class="dateconvert" align="center">
-<!--	<tr><td colspan="3">Date julio-grégorienne équivalente</td></tr> -->
-	<tr>
-<!--	<td class="gregoriandate"></td> ici on mettait un clone Unicode, à éviter en raison de la gestion de l'heure locale -->
-		<form name="juliogregdate" class="dateconvert" autocomplete="off" method="post" action="JavaScript:void();">
-        <td><input name="day" type="text" disabled="disabled" class="dateconvert" size="2" maxlength="3"> </td>
-        <td><select name="monthname" disabled="disabled" class="dateconvert" size="1">
-        <option value="0">janvier</option>
-        <option value="1">février</option>
-        <option value="2">mars</option>
-        <option value="3">avril</option>
-        <option value="4">mai</option>
-        <option value="5">juin</option>
-        <option value="6">juillet</option>
-        <option value="7">août</option>
-        <option value="8">septembre</option>
-        <option value="9">octobre</option>
-        <option value="10">novembre</option>
-        <option value="11">décembre</option>
-        </select></td>
-        <td><input name="year" type="text" disabled="disabled" class="dateconvert" size="5" maxlength="6"> </td>
-  		</form>
-	</tr>
-</table>
-<table class="dateconvert" align="center">
-	 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
-		<tr><th>Mode</th>
-			<td>
-				<select name="TZcontrol" size="1" class="dateconvert">
-				<option value="UTC">UTC</option>
-				<option value="TZ" selected>Fuseau système</option>
-				<option value="Fixed">Décalage fixe</option>
-				</select></td>
-			<th>Décalage</th> 
-			<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
-			<td>mn</td>
-			<td><button class="dateconvert">Ok</button></td>
-		</tr>
-	</form>
-</table>
-<table class="dateconvert" align="center">
-	 <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
+
+<div class="dateconvert">
+<h1>Heure et fuseau horaire</h1>
+	<table class="dateconvert" align="center">
+		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
+			<tr><th>Mode</th>
+				<td>
+					<select name="TZcontrol" size="1" class="dateconvert">
+					<option value="UTC">UTC</option>
+					<option value="TZ" selected>Fuseau système</option>
+					<option value="Fixed">Décalage fixe</option>
+					</select></td>
+				<th>Décalage</th> 
+				<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
+				<td>mn</td>
+				<td><button class="dateconvert">Ok</button></td>
+			</tr>
+		</form>
+	</table>
+	 <table class="dateconvert" align="center"> <tr>
+		<th>UTC :</th>
+		 <td id="UTCdate"></td>
+		 <td id="UTCtime"></td>
+	  </tr> </table>
+
+	<table class="dateconvert" align="center">
+	  <tr> 
+		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		 <td>Heure locale : </td>
+		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
+		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
+		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
+		 <td><button class="dateconvert">Ok</button></td>	
+		</form>
+	  </tr>
+	</table>
+
+	<table class="dateconvert" align="center">
+	  <tr>
+		<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
+		<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		</form>
+		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+		<button class="dateconvert" >Maintenant</button></form></td>
+	  </tr>
+	 </table>
+	 
+	<table class="dateconvert" align="center"> 
+	  <tr>
+		<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+		<td>+/- secondes</td>
+		<td><button class="dateconvert symbol" formaction="Javascript:addTime(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="60" class="dateconvert yearnum"></td>
+		<td><button class="dateconvert symbol" formaction="Javascript:addTime(1);">+</button></td>
+		</form>
+	  </tr>
+	</table>
+</div>
+<div class="dateconvert autoscroll">
+<h1>Conversion de dates</h1>
+
+	<table class="dateconvert" align="center">
+	  <tr>
+		<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+		<td>+/- jours</td>
+		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
+		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+		</form>
+	  </tr>
+	</table>
+
+  <table class="dateconvert" align="center">
+      <tr>
+        <th>Calendrier</th>
+        <th>Jour</th>
+        <th>Mois</th>
+        <th>Année</th>
+        <th></th>
+      </tr>
+
 	 <tr>
+	 <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
+		<td>Milésien : </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
         <td>
         <select name="monthname" size="1" class="dateconvert">
@@ -147,102 +196,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</select> </td>
         <td><input name="year" type="number" class="dateconvert yearnum"></td>
         <td><button class="dateconvert">Ok</button></td>
+		</form>
       </tr>
-	</form>
-</table>
-<table class="dateconvert" align="center">
-  <tr> 
-	<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
-	 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
-	 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
-	 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
-	 <td><button class="dateconvert">Ok</button></td>	
-	</form>
-  </tr>
-</table>
-</div>
-<div class="dateconvert">
-<h1>Réglages</h1>
-<!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
-<table class="dateconvert" align="center">
-	 <tr><th>Date de passage au calendrier grégorien</th></tr>
-	 <tr><th>(au plus tôt: 25 10m 1582)</th></tr>
-</table>
-<table class="dateconvert" align="center">
-	 <form name="gregorianswitch" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
-	  <tr>
-		<td><input name="day" type="number" value="25" min="1" max="31" class="dateconvert daynum"></td>
-        <td>
-        <select name="monthname" size="1" class="dateconvert">
-		<option value="0">1m</option>
-        <option value="1">2m</option>
-        <option value="2">3m</option>
-        <option value="3">4m</option>
-        <option value="4">5m</option>
-        <option value="5">6m</option>
-        <option value="6">7m</option>
-        <option value="7">8m</option>
-        <option value="8">9m</option>
-        <option value="9" selected>10m</option>
-        <option value="10">11m</option>
-        <option value="11">12m</option>
-		</select> </td>
-        <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
-        <td><button class="dateconvert">Ok</button></td>
-      </tr>
-	</form>
-</table>
-</div>
-<div class="dateconvert">
-<h1>Navigation</h1>
- <table class="dateconvert" align="center"> <tr>
- 	<th>UTC :</th>
-	 <td id="UTCdate"></td>
-	 <td id="UTCtime"></td>
-  </tr> </table>
-<table class="dateconvert" align="center">
-  <tr>
-	<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
-	<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-	<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
-	</form>
-	<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-    <button class="dateconvert" >Maintenant</button></form></td>
-  </tr>
-  </table>
-<table class="dateconvert" align="center">
-  <tr>
-    <form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
-    <td>+/- jours</td>
-	<td><button name="to" value="-1" class="dateconvert" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
-	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-	<td><button name="to" value="+1" class="dateconvert" formaction="Javascript:SetDayOffset(1);">+</button></td>
-    </form>
-  </tr>
-  <tr>
-	<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
-	<td>+/- secondes</td>
-	<td><button name="to" value="-1" class="dateconvert" formaction="Javascript:addTime(-1);" >-</button></td>
-	<td><input name="shift" type="number" value="60" class="dateconvert yearnum"></td>
-	<td><button name="to" value="+1" class="dateconvert" formaction="Javascript:addTime(1);">+</button></td>
-	</form>
-  </tr>
-</table>
-</div>
-<div class="dateconvert autoscroll">
-<h1>Conversion de dates</h1>
-  <table class="dateconvert" align="center">
-   <tbody>
-      <tr>
-        <th>Cal.</th>
-        <th>Jour</th>
-        <th>Mois</th>
-        <th>Année</th>
-        <th></th>
-      </tr>
+
       <tr id="gregorianline">
 		<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
-        <td>G. </td>
+        <td>Grégorien : </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">janvier</option>
@@ -264,7 +223,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
      </tr>	  
       <tr>
 		<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulian();">
-        <td>J. </td>
+        <td>Julien : </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">janvier</option>
@@ -286,7 +245,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
      </tr>
       <tr id="republicanline">
 		<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
-        <td>R. </td>
+        <td>Républicain : </td>
         <td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
         <td><select name="monthname" class="dateconvert" size="1">
         <option value="0">Vendémiaire</option>
@@ -307,10 +266,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <td><button name="Compute" value="republican" class="dateconvert">Ok</button> </td>
  		</form>
      </tr>
-   </tbody>
 </table>
   <table class="dateconvert" align="center">
-   <tbody>
      <tr>
         <th></th>
         <th>Jour</th>
@@ -320,7 +277,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       </tr>
 	<tr id="isoweeksline">
 		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcISO();">
-		<td>S. </td>
+		<td>Semaines ISO : </td>
 		<td> 
         <select name="day" class="dateconvert" size="1">
 		<option value="1">lundi</option>
@@ -336,7 +293,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <td><button name="Compute" value="isoweeks" class="dateconvert">Ok</button> </td>
 	  </form>
 	</tr>
-   </tbody>
  </table>
 <table class="dateconvert" align="center">
     <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
@@ -356,11 +312,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</tr>
 		<tr>
 			<th>Jour julien modifié : </th>
-			<td id="mjdDisplay"><td>
+			<td id="mjdDisplay"></td>
 		</tr>
 		<tr>
 			<th>Jour julien NASA : </th>
-			<td id="nasajdDisplay"><td>
+			<td id="nasajdDisplay"></td>
 		</tr>
 		<tr>
 			<th>Jour Windows : </th>
@@ -378,7 +334,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </div>	
 <div class="dateconvert">
 <h1>Langues et calendriers Unicode</h1>
-	<table class="dateconvert" align="center"> <tbody>
+	<table class="dateconvert" align="center"> 
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setLocalePresentationCalendar();">
 		<tr><th> Langue </th><th> Format </th></tr>
 		<tr>
@@ -428,7 +384,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		<tr>
 			<td colspan="2"><button name="Compute" value="options" class="dateconvert">Ok</button></td>	
 	   </tr>
-   	</form></tbody></table>
+   	</form></table>
 	<table class="dateconvert" align="center">
 		<tr><th>Date et heure Unicode</th></tr>
 		<tr><td id="UnicodeString"></td></tr>
@@ -451,7 +407,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	</tr>
  </table>
  <table class="dateconvert" align="center">
-	<tr><th>Heure lunaire (cycle des marées)</th><tr>
+	<tr><th>Heure lunaire (cycle des marées)</th></tr>
 	<tr>
 		<td><input name="moontime" value="" type="text" class="dateconvert" disabled="disabled" size="12"> </td>
 	</tr>
@@ -461,7 +417,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	</tr>
  </table>
  <table class="dateconvert" align="center">
-   <tbody>
     <tr>
 	 <th colspan="4">Calendrier lunaire virtuel</th>
 	</tr>
@@ -470,18 +425,17 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	 <td><input name="CElunardate" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
 	 <td><input name="CElunarmonth" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
 	 <td><input name="CElunaryear" value="" type="text" class="dateconvert" disabled="disabled" size="6"></td>
-	</tr><tr>
+	</tr>
+	<tr>
 	 <td> Hégire:</td>
 	 <td><input name="hegiriandate" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
 	 <td><input name="hegirianmonth" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
 	 <td><input name="hegirianyear" value="" type="text" class="dateconvert" disabled="disabled" size="6"></td>
 	</tr>
-  </tbody>
  </table> 
 </form>
 <br>
 <table class="dateconvert" align="center">
-  <tbody>
  	<tr><th colspan="2">Estimation de Delta T (UTC = TT - Delta T)</th></tr>
      <tr>
 		<form name="deltat" class="dateconvert" method="post" action="JavaScript:void(0);">
@@ -489,7 +443,38 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		<td><input type="text" class="dateconvert" disabled="disabled" size="15" name="delta"> </td>
 		</form>
 	</tr>
-  </tbody>
+</table>
+</div>
+<div class="dateconvert">
+<h1>Réglages</h1>
+<!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
+<table class="dateconvert" align="center">
+	 <tr><th>Date de passage au calendrier grégorien</th></tr>
+	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>
+</table>
+<table class="dateconvert" align="center">
+	 <form name="gregorianswitch" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
+	  <tr>
+		<td><input name="day" type="number" value="15" min="1" max="31" class="dateconvert daynum"></td>
+        <td>
+        <select name="monthname" size="1" class="dateconvert">
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
+		</select> </td>
+        <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
+        <td><button class="dateconvert">Ok</button></td>
+      </tr>
+	</form>
 </table>
 </div>
 <h3 class="dateconvert">© 2018-02 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>

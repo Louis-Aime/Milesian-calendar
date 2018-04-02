@@ -57,8 +57,8 @@ Inquiries: www.calendriermilesien.org
 */
 var 
 	targetDate = new Date(),	// target date will be used to update everything
-	gregorianSwitch = { 		// Settings: date where the Gregorian calendar was enforced (may change from one country to the other) 
-		year : 1582, month : 11, date : 30 }, // Values for France, on initialisation. In principle, should be fetched from Unicode.
+	gregorianSwitch =  		// Settings: date where the Gregorian calendar was enforced (may change from one country to the other) 
+		new Date (Date.UTC(1582, 11, 20, 0, 0, 0, 0)), // Values for France, on initialisation. In principle, should be fetched from Unicode.
 	lowerRepublicanDate = new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
 	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)); // Upper limit of the Republican calendar
 		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
@@ -97,34 +97,37 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.time.mins.value = dateComponent.minutes;
 	document.time.secs.value = dateComponent.seconds;
 	
-	// Set Milesian date string (just under clock dial)
-	myElement = document.getElementById("milesiandate");
-	myElement.innerHTML = shiftDate.toMilesianLocaleDateString
-		(undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	// Set Milesian date strings
 
-	// Display standard date in non-editable part
-	// Translate to julian if before (local) date of switch to Gregorian calendar
-	let gregSwitchDate = new Date; 
-	gregSwitchDate.setUTCTimeFromMilesian (gregorianSwitch.year, gregorianSwitch.month, gregorianSwitch.date, 0, 0, 0, 0); 
-		// gregSwitchDate is date where Gregorian calendar was enforced, in displayed value. Julian calendar was used before this date.
-	if (shiftDate.valueOf() < gregSwitchDate.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		dateComponent = shiftDate.getJulianUTCDate()		// dateComponent object set to Julian date-time
+	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
+	for (let i = 0; i < myElements.length; i++) {
+	myElements[i].innerHTML = shiftDate.toMilesianLocaleDateString
+		(undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	}
+
+	// Display standard date 
+	// Translate to Julian if before date of switch to Gregorian calendar
+
+	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
+		dateComponent = shiftDate.getJulianUTCDate()		// dateComponent object set to Julian date
 	else { 												// else, dateComponent set to (standard) Gregorian coordinates
 		dateComponent.year  = shiftDate.getUTCFullYear();
 		dateComponent.month = shiftDate.getUTCMonth();
 		dateComponent.date	= shiftDate.getUTCDate();
 		};
-	myElement = document.juliogregdate;
-	myElement.year.value = dateComponent.year;
-	myElement.monthname.value = dateComponent.month;
-	myElement.day.value = dateComponent.date;
+	myElement = document.getElementById("juliogregdate");
+	myElement.innerHTML = 
+		shiftDate.toMilesianLocaleDateString(undefined,{timeZone:"UTC",weekday:"long"}) // weekday in a safe manner, even on MS Edge
+		+ " "
+		+ (dateComponent.date) + " "	// Date in the month
+		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
+		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + " av. J.-C."));
 
 	// Update settings
-	document.gregorianswitch.year.value = gregorianSwitch.year;
-	document.gregorianswitch.monthname.value = gregorianSwitch.month;
-	document.gregorianswitch.day.value = gregorianSwitch.date;
+	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
+	document.gregorianswitch.monthname.value = gregorianSwitch.getUTCMonth();
+	document.gregorianswitch.day.value = gregorianSwitch.getUTCDate();
 	
-
 	// Date conversion frame
 	
     //  Update Gregorian Calendar - using Date properties
@@ -132,7 +135,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.gregorian.monthname.value = shiftDate.getUTCMonth();
     document.gregorian.day.value = shiftDate.getUTCDate();		
 	myElement = document.querySelector("#gregorianline");
-	if (shiftDate.valueOf() < gregSwitchDate.valueOf()) 	// If target date is before Gregorian calendar was enforced 
+	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
 		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 	
@@ -160,7 +163,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
 	myElement = document.querySelector("#isoweeksline");
-	if (shiftDate.valueOf() < gregSwitchDate.valueOf() ) 	// If target date is before gregorian calendar was enforced 
+	if (shiftDate.valueOf() < gregorianSwitch.valueOf() ) 	// If target date is before gregorian calendar was enforced 
 		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
