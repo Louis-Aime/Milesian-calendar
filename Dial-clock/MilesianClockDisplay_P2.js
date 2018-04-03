@@ -44,15 +44,15 @@ Inquiries: www.calendriermilesien.org
 	switch (document.LocaleOptions.Presentation.value) {
 		case "long":
 			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long",
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
 		case "textCumWeek":
 			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
 		case "textSineWeek":
 			Options = {weekday : undefined, day : "numeric", month: "long", year : "numeric", era : "short",
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
 		case "short":
 			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "narrow",
@@ -85,18 +85,16 @@ Inquiries: www.calendriermilesien.org
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
 		}
 
-	// Write Milesian string. No specific error shoud occur here.
-	myDisplay = document.getElementById("milesianDisplay");
-	myDisplay.innerHTML = targetDate.toMilesianLocaleDateString(Locale,Options);	
+	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
+	myDisplay = document.getElementById("UnicodeString");
+	try { myDisplay.innerHTML = (valid ? targetDate.toLocaleTimeString(Locale,Options) : milesianAlertMsg("invalidDate")); }
+	catch (e) { myDisplay.innerHTML = milesianAlertMsg("invalidDate"); }
 
-	//	Write date string. Catch error if navigator fails to handle toLocaleTimeString (MS Edge)
-	try {
-		myDisplay = document.getElementById("UnicodeString");
-		myDisplay.innerHTML = (valid ? targetDate.toLocaleTimeString(Locale,Options) : milesianAlertMsg("invalidDate"));
-		}
-	catch (e) {	// If attempt to write Milesian string failed: this is caused by out-of-range
-		myDisplay.innerHTML = milesianAlertMsg("invalidDate");
-		}
+	//	Write Milesian date string. Catch error if navigator fails, then write without time part.
+	myDisplay = document.getElementById("milesianDisplay");
+	try	{ myDisplay.innerHTML = targetDate.toMilesianLocaleDateString(Locale,Options); }
+	catch (e) { myDisplay.innerHTML = targetDate.toMilesianLocaleDateString(Locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"}); }
+
 }
 
 function setDateToNow(){ // Self explanatory
