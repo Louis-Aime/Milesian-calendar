@@ -32,6 +32,8 @@ Version M2018-02-29
 *	New modes (UTC, time zone or special offset) to manage date and time.
 *	Specify time zone for Unicode part, giving access to numerous "local" times.
 *	Enhance control of calendar validity.
+Version M2018-05-15
+*	Put Unicode and Milesian strings computation in setDisplay. 
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -60,16 +62,37 @@ var
 	gregorianSwitch =  		// Settings: date where the Gregorian calendar was enforced (may change from one country to the other) 
 		new Date (Date.UTC(1582, 11, 20, 0, 0, 0, 0)), // Values for France, on initialisation. In principle, should be fetched from Unicode.
 	lowerRepublicanDate = new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
-	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)); // Upper limit of the Republican calendar
+	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)), // Upper limit of the Republican calendar
 		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
-	TZSettings = {mode : "TZ", offset : 0, msoffset : 0};	// initialisation to be superseded
+	TZSettings = {mode : "TZ", offset : 0, msoffset : 0},	// initialisation to be superseded
+	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
+					hour : "numeric", minute : "numeric", second : "numeric"}; 	// Initial presentation options.
+	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	// Formatting options initialisation
+	userOptions = askedOptions.resolvedOptions(); // Initialisation of explicit display options
 
+function putStringOnOptions() { // print Unicode string, following already computed options.
+	var valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
+	// Certain Unicode calendars do not give a proper result: set the flag.
+	switch (userOptions.calendar) {	
+		case "hebrew": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf()
+			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
+		case "indian": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf() 
+			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
+		case "islamic":
+		case "islamic-rgsa": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf()
+			>= -42521673600000); break; // Computations are false before Haegirian epoch
+		}
+	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
+	let myElement = document.getElementById("UnicodeString");
+	try { myElement.innerHTML = (valid ? askedOptions.format(targetDate) : milesianAlertMsg("invalidDate")); } // Plutôt que targetDate.toLocaleTimeString(Locale,Options)
+	catch (e) { myElement.innerHTML = milesianAlertMsg("invalidDate"); }
+}
+	
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
-	let dateComponent;	// Local result of date decomposition process, used several times
-	// Initiate mode from main display
+	// Initiate Time zone mode for the "local" time from main display
 	TZSettings.mode = document.TZmode.TZcontrol.value;
-	// Timezone offset for next computations - opposite if JS offset.
+	// Timezone offset for next computations - opposite of JS offset.
 	switch (TZSettings.mode) {
 		case "TZ" : document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset();
 		// If TZ mode, Copy computed TZOffset into TZSettings fur future computations
@@ -78,16 +101,17 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		case "UTC" : TZSettings.offset = 0; document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset(); 	
 	}
 	TZSettings.msoffset = TZSettings.offset * Chronos.MINUTE_UNIT; // Small computation made ounce for all
+
+	var shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The UTC representation of targetDate date is the local date of TZ
+
 	// Initiate milesian clock and milesian string with present time and date
-	let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// This date is shifted as desired
-	let myElement = document.querySelector("#clock2");
+	var myElement = document.querySelector("#clock2");	// myElement is a work variable
 	setSolarYearClockHands (myElement, shiftDate.getMilesianUTCDate().year, shiftDate.getMilesianUTCDate().month, shiftDate.getMilesianUTCDate().date,
 		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() );
 
-	// Main frame fields
+	var dateComponent = shiftDate.getMilesianUTCDate();	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
 
 	// Update milesian field selector - using Date properties
-	dateComponent = shiftDate.getMilesianUTCDate();		// Get date-time component from shiftDate, following desired time zone
 	document.milesian.year.value = dateComponent.year;
     document.milesian.monthname.value = dateComponent.month;
     document.milesian.day.value = dateComponent.date;
@@ -96,16 +120,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.time.hours.value = dateComponent.hours;
 	document.time.mins.value = dateComponent.minutes;
 	document.time.secs.value = dateComponent.seconds;
-	
-	// Set Milesian date strings
 
-	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
-	for (let i = 0; i < myElements.length; i++) {
-	myElements[i].innerHTML = shiftDate.toMilesianLocaleDateString
+	// Write Milesian date string, near the clock (without time)
+	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
+	myElement.innerHTML = shiftDate.toMilesianLocaleDateString
 		(undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
-	}
 
-	// Display standard date 
+	
+	// Display julio-gregorian date 
 	// Translate to Julian if before date of switch to Gregorian calendar
 
 	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
@@ -123,12 +145,12 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
 		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + " av. J.-C."));
 
-	// Update settings
+	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
 	document.gregorianswitch.monthname.value = gregorianSwitch.getUTCMonth();
 	document.gregorianswitch.day.value = gregorianSwitch.getUTCDate();
 	
-	// Date conversion frame
+	// Date conversion frame - other calendars than the Milesian
 	
     //  Update Gregorian Calendar - using Date properties
     document.gregorian.year.value = shiftDate.getUTCFullYear();
@@ -157,7 +179,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
-	//  Update ISO week calendar - using its Date properties
+	//  Update ISO week calendar - using Date properties
 	dateComponent = shiftDate.getIsoWeekCalUTCDate();
 	document.isoweeks.year.value = dateComponent.year;
 	document.isoweeks.week.value = dateComponent.week;
@@ -185,6 +207,21 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
+
+	
+	// Unicode frame 
+	myElement = document.querySelector("#langCode");
+	myElement.innerHTML = userOptions.locale;		// Display Locale (language code) as obtained after negotiation process
+	myElement = document.querySelector("#timeZone");
+	myElement.innerHTML = userOptions.timeZone;	// Display time zone as obtained after negotiation process
+	
+	// Unicode date following options
+	putStringOnOptions();				
+
+	//	Milesian date string following options. Catch error if navigator fails, in this case write without time part.
+	myElement = document.getElementById("milesianDisplay");
+	try	{ myElement.innerHTML = targetDate.toMilesianLocaleDateString(userOptions.locale,Options); }
+	catch (e) { myElement.innerHTML = targetDate.toMilesianLocaleDateString(userOptions.locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"}); }
 	
 	// Lunar data frame
 
@@ -209,8 +246,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Update Delta T (seconds)
 	document.deltat.delta.value = (targetDate.getDeltaT()/Chronos.SECOND_UNIT);
 	
-	// Navigation frame
-
 	// Display UTC date & time
 	myElement = document.getElementById("UTCdate");
 	myElement.innerHTML = targetDate.toUTCIntlMilesianDateString();
@@ -222,10 +257,5 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// This variant makes a bug with MS Edge, if outside the range of handled values :
 	/*	targetDate.toLocaleTimeString
 		(Locale,{timeZone: "UTC", hour12: false}); */
-	
-	// Unicode frame - this frame is handled with putStringOnOptions
-
-	// Display date string, following options
-	putStringOnOptions();				
 
 }
