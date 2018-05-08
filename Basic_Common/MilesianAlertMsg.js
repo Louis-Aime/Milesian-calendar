@@ -59,6 +59,13 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 			de	: "Ungültiger Code ",
 			es	: "Código inválido ",
 			pt	: "Código inválido "
+			},
+		"browserError" : {
+			en	: "Internet browser error",
+			fr	: "Erreur du navigateur",
+			de	: "Internetbrowser Fehler",
+			es	: "Error de navegador",
+			pt	: "Erro no navegador"
 			}
 		};
 	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
