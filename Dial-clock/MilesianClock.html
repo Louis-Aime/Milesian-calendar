@@ -352,7 +352,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</td>
 		</tr>
 	</table>
-	<table class="dateconvert" align="center"><tr>
+	<table class="dateconvert" align="center">
+	<tr>
 		<th>Code langue </th>
 			<td>
 			<input name="Language" class="dateconvert" type="text" autocomplete="language" size="5">
@@ -360,8 +361,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			<td>Code effectif: </td><td id="langCode"></td>
 		</tr>
 	</table>
-	<table align="center"><tr><td>Exemple: <code>en-GB</code> ou <code>en-US</code>, vide: défaut système</td/></tr></table>
-	<table class="dateconvert" align="center"><tr>
+	<table align="center">
+	  <tr>
+	  <td>Exemple: <code>en-GB</code> ou <code>en-US</code>, vide: défaut système
+	  </td>
+	  </tr>
+	  </table>
+
+	<table class="dateconvert" align="center">
 		<tr>
 			<th>Calendrier </th>
 			<td>
@@ -392,12 +399,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<table class="dateconvert" align="center">
 		<tr><td>Code calendrier effectif: </td><td id="CalendarCode"></td></tr>
 	</table>
-	<table class="dateconvert" align="center"><tr>
+	<table class="dateconvert" align="center">
 		<tr><th>Zone horaire </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
 		</tr>
 		<tr><td>Zone effective: </td><td id="timeZone"></td></tr>
-		<table align="center"><tr><td>Exemple: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide: défaut système</td/></tr></table>
+	</table>
+	<table align="center">
+		<tr><td>Exemple: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide: défaut système</td></tr>
 		<tr><td colspan="2"><button class="dateconvert">Modifier les paramètres de représentation</button></td></tr>
 	</table>
   	</form>
