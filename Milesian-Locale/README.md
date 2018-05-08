@@ -12,7 +12,7 @@ Take benefit of the Unicode calendar environment and propose a Milesian string e
 Set a Date object to the date where the Sun is in the same position from the "timezone" as at Greenwich at the given date. 
 In other words, set a Date as a "local" date, "local" meaning: as it is specified with the timeZone value of Otpion.
 This function is not directly connected with the Milesian calendar, but is very usefull for computations on time zones.
-### toMilesianString.js ([Locale,[Options]])
+### toMilesianString ([Locale,[Options]])
 a method for the Date object.
 
 MilesianDateProperties.js is used.
@@ -22,3 +22,6 @@ as specified with Locale and Options, following Unicode format codes.
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] for details.
 
 The code of this function is not optimal. The only idea is to show a demonstrator on a few languages.
+
+## writeMilesianDate.html and writeMilesianDate.js
+A simple demonstration page that uses function toMilesianString().
