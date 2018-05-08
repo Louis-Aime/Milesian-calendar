@@ -5,6 +5,9 @@
 //  Changes from M2017-08:
 //		Delete MilesianAlertMsg object (not used anymore)
 //		Suppress ":" at end of messages, but leave " " (blank character)
+//  Changes M2018-05
+//		Enhance messages in German
+//		New entry: invalid code
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,23 +35,30 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 		"nonNumeric" : { 
 			en	: "Non numeric entry ",
 			fr	: "Entrée non numérique ",
-			de	: "Nich digitale Einführung ",
-			es	: "Entrada no digital ",
-			pt	: "Entrada não-digital "
+			de	: "Nicht numerische Eingabe ",
+			es	: "Entrada no numérica ",
+			pt	: "Entrada não numérica "
 			},
 		"nonInteger" : {
 			en	: "Non integer entry ",
 			fr	: "Entrée non entière ",
-			de	: "Nicht integer Nummer ",
+			de	: "Nicht ganzzahlige Zahl",
 			es	: "Entrada no entera ",
-			pt	: "Entrada não-inteira "
+			pt	: "Entrada não inteira "
 			},
 		"invalidDate" : {
 			en	: "Invalid date or time ",
-			fr	: "Date ou heure invalide ",
-			de	: "Ungültiges Datum ",
-			es	: "Fecha no válida ",
-			pt	: "Data inválida "
+			fr	: "Date ou heure non valide ",
+			de	: "Ungültiges Datum oder Uhrzeit ",
+			es	: "Fecha o hora no válida ",
+			pt	: "Data ou hora inválida "
+			},
+		"invalidCode" : {
+			en	: "Invalid code ",
+			fr	: "Code non valide ",
+			de	: "Ungültiger Code ",
+			es	: "Código inválido ",
+			pt	: "Código inválido "
 			}
 		};
 	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
