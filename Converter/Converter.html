@@ -5,7 +5,7 @@
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
-	<title>Convertisseur de calendriers</title>
+	<title>Convertisseur de dates</title>
 <!--
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
@@ -57,8 +57,8 @@ Inquiries: www.calendriermilesien.org
 <script type="text/javascript">
 </script>	
 -->
-<div class="dateconvert">
-<h2 class="dateconvert">Convertisseur de dates</h2>
+<section class="dateconvert">
+<h1 class="dateconvert">Convertisseur de dates</h1>
 
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
@@ -96,11 +96,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     <tr><th class="milesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
-</div>
+</section>
 
-<div class="dateconvert autoscroll">
-<h2>Calendriers pivots et navigation</h2>
-
+<section class="dateconvert autoscroll">
+<h1 >Calendriers pivots et navigation</h1>
+<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <script type="text/javascript">
 function setDateToToday() { // Self explanatory
 	let justNow = new Date();
@@ -346,9 +346,9 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	</tr>
 	</form>
 </table>
-</div>
-<div class="dateconvert">
-<h2>Séries chronologiques à 0h UTC</h2>
+</section>
+<section class="dateconvert">
+<h1>Séries chronologiques à 0h UTC</h1>
 
 	<table class="dateconvert" align="center">
 		<tr>
@@ -372,11 +372,11 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			<td id="MacOSCountDisplay"></td>
 		</tr>
 	</table>
-</div>	
-<div class="dateconvert">
-<h2>Calendriers Unicode</h2>
-	<table class="dateconvert" align="center">
-	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
+</section>	
+<section class="dateconvert">
+<h1>Calendriers Unicode</h1>
+ <form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
+  <table class="dateconvert" align="center">
 		<tr><th>Format</th>
 			<td>
 			<select name="Presentation" class="dateconvert" size="1">
@@ -386,34 +386,45 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			</td>
 			<td><button class="dateconvert">Ok</button></td>			
 		</tr>
-	</form></table>
+  </table>
+  <table class="dateconvert" align="center">
+		<tr><th>Code langue</th>
+			<td>
+			<input name="Language" class="dateconvert" type="text" autocomplete="language" size="5">
+			</td>
+			<td><button class="dateconvert">Ok</button></td>	
+			<td>Code utilisé: </td><td id="langCode"></td>
+		</tr>
+  </table>
+ </form>
+<table align="center"><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td/></tr></table>
 
-<h3>Grégorien et dérivés</h3>
+<h2>Grégorien et dérivés</h2>
   <table class="dateconvert" align="center">
 	<tr><th>Grégorien : </th><td class="unicodedate" id="gregory"></td></tr>
 	<tr><th>Thaï : </th><td class="unicodedate" id="buddhist"></td></tr>
 	<tr><th>Japonais : </th><td class="unicodedate" id="japanese"></td></tr>
 	<tr><th>Chinois moderne : </th><td class="unicodedate" id="roc"></td></tr>
   </table>
-<h3>Solaires modernes</h3>
+<h2>Solaires modernes</h2>
   <table class="dateconvert" align="center">
 	<tr><th>Milésien :</th><td class="milesiandate"></td></tr>
    	<tr><th>Persan : </th><td class="unicodedate" id="persian"></td></tr>
 	<tr><th>Indien moderne : </th><td class="unicodedate" id="indian"></td></tr>
   </table>
-<h3>Copte et éthiopiens</h3>
+<h2>Copte et éthiopiens</h2>
   <table class="dateconvert" align="center">
  	<tr><th>Copte : </th><td class="unicodedate" id="coptic"></td></tr>
 	<tr><th>Ethiopien antique : </th><td class="unicodedate" id="ethioaa"></td></tr>
 	<tr><th>Ethiopien chrétien : </th><td class="unicodedate" id="ethiopic"></td></tr>
    </table>
-<h3>Luni-solaires</h3>
+<h2>Luni-solaires</h2>
   <table class="dateconvert" align="center">
    	<tr><th>Hébraïque : </th><td class="unicodedate" id="hebrew"></td></tr>
 	<tr><th>Chinois traditionnel : </th><td class="unicodedate" id="chinese"></td></tr>
 	<tr><th>Coréen traditionnel : </th><td class="unicodedate" id="dangi"></td></tr>
   </table>
-<h3>Lunaires musulmans</h3>
+<h2>Lunaires musulmans</h2>
   <table class="dateconvert" align="center">
    	<tr><th>Standard : </th><td class="unicodedate" id="islamic"></td></tr>
 	<tr><th>Umm al-Qura : </th><td class="unicodedate" id="islamic-umalqura"></td></tr>
@@ -421,8 +432,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<tr><th>Tabulaire civil : </th><td class="unicodedate" id="islamic-civil"></td></tr>
 	<tr><th>Arabie saoudite : </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
   </table>
-
-</div>
-<h3 class="dateconvert">© 2018-04 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+</section>
+<section class="dateconvert">
+<h1>Liens utiles</h1>
+  <table class="dateconvert" align="center">
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
+  </table>
+</section>
+<h3 class="dateconvert">© 2018-04 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </body>
 </html>

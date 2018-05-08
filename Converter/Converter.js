@@ -39,6 +39,8 @@ Version M2018-02-29
 *	Enhance control of calendar validity.
 Version M2018-04-11
 * 	First version, after Milesian Clock Display
+Version M2018-05-13
+*	User may specify display language
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -72,9 +74,21 @@ var
 
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
-	// User Locale and Options
-	let Locale = "fr-FR"; // In some other version, possibility to change language
-	let userOptions; 
+	// User Locale and Options used for the Unicode section only
+	var Locale = document.LocaleOptions.Language.value; // Read language code as specified by user
+	try {		// Try finding the effective language sting
+	var askedOptions = 
+		Locale == "" ? new Intl.DateTimeFormat() : new Intl.DateTimeFormat (Locale);
+	}
+	catch (e) {	// Locale was not a valid language code
+		alert (milesianAlertMsg("invalidCode") + '"' + Locale + '"');
+		document.LocaleOptions.Language.value = '';  // Set Language code to empty string
+		return; } // exit function after this error.
+	let userOptions = askedOptions.resolvedOptions();
+	Locale = userOptions.locale; // Locale = userOptions.locale.slice(0,5);
+	let myElement = document.querySelector("#langCode");
+	myElement.innerHTML = Locale;	// Display Locale as obtained after negotiation process
+	
 	switch (document.LocaleOptions.Presentation.value) {
 		case "long" :
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
@@ -88,7 +102,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let dateComponent = targetDate.getMilesianUTCDate();
 
 	// Set Milesian clock
-	let myElement = document.querySelector("#clock3");
+	myElement = document.querySelector("#clock3");
 	setSolarYearClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
 
 	// Update milesian field selector - using Date properties
@@ -97,9 +111,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.milesian.day.value = dateComponent.date;
 
 	// Set Milesian date string wherever needed
+	let milesianLocale = [undefined, Locale]; // First Milesian string shall be on blank Locale, second will be in specified language
 	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
 	for (let i = 0; i < myElements.length; i++) {
-	myElements[i].innerHTML = targetDate.toMilesianLocaleDateString(Locale,userOptions);
+	myElements[i].innerHTML = targetDate.toMilesianLocaleDateString(milesianLocale[i],userOptions);
 	}
 	// Display standard date 
 	// Translate to Julian if before initial date of switch to Gregorian calendar
@@ -113,7 +128,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		};
 	myElement = document.getElementById("juliogregdate");
 	myElement.innerHTML = 
-		targetDate.toMilesianLocaleDateString(Locale,{timeZone:"UTC",weekday:"long"}) // weekday in a safe manner, even on MS Edge
+		targetDate.toMilesianLocaleDateString(undefined,{timeZone:"UTC",weekday:"long"}) // weekday in a safe manner, even on MS Edge
 		+ " "
 		+ (dateComponent.date) + " "	// Date in the month
 		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
