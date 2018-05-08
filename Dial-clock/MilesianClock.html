@@ -25,12 +25,12 @@
 	
 <!-- Specific for this page -->
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
-	<script type="text/javascript" src="MilesianClockDisplay_P2.js"></script>
+	<script type="text/javascript" src="MilesianClockDisplayCompEntries.js"></script>
 
 </head>
 <body>
-<div class="dateconvert">
-<h1 class="dateconvert">Horloge milésienne</h1>
+<section class="dateconvert">
+<h1>Horloge milésienne</h1>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
 <svg width="300" height="100%" xml:lang="fr" onload="JavaScript:setDateToNow()"
@@ -90,11 +90,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </svg>
 
 <table class="dateconvert" align="center">
-    <tr><th class="milesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
+    <tr><th id="clockmilesiandate" ></th> </tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
-
-<div class="dateconvert">
+</section>
+<section class="dateconvert">
 <h1>Heure et fuseau horaire</h1>
 	<table class="dateconvert" align="center">
 		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
@@ -112,11 +112,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</tr>
 		</form>
 	</table>
-	 <table class="dateconvert" align="center"> <tr>
-		<th>UTC :</th>
-		 <td id="UTCdate"></td>
-		 <td id="UTCtime"></td>
-	  </tr> </table>
 
 	<table class="dateconvert" align="center">
 	  <tr> 
@@ -130,14 +125,21 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	  </tr>
 	</table>
 
-	<table class="dateconvert" align="center">
+	 <table class="dateconvert" align="center"> <tr>
+		<th>UTC :</th>
+		 <td id="UTCdate"></td>
+		 <td id="UTCtime"></td>
+		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+		<button class="dateconvert" >Maintenant</button></form></td>
+	  </tr> </table>
+
+	  <table class="dateconvert" align="center">
 	  <tr>
 		<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
+		<th>Cette date à UTC</th>
 		<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
 		<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 		</form>
-		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-		<button class="dateconvert" >Maintenant</button></form></td>
 	  </tr>
 	 </table>
 	 
@@ -151,10 +153,10 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</form>
 	  </tr>
 	</table>
-</div>
-<div class="dateconvert autoscroll">
-<h1>Conversion de dates</h1>
-
+</section>
+<section class="dateconvert autoscroll">
+<h1>Dates selon les calendriers pivots</h1>
+<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 	<table class="dateconvert" align="center">
 	  <tr>
 		<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
@@ -302,8 +304,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	</tr>
 	</form>
 </table>
-</div>
-<div class="dateconvert">
+</section>
+<section class="dateconvert">
 <h1>Séries chronologiques</h1>
 	<table class="dateconvert" align="center">
 		<tr>
@@ -331,14 +333,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			<td id="unixCountDisplay"></td>
 		</tr>
 	</table>
-</div>	
-<div class="dateconvert">
-<h1>Langues et calendriers Unicode</h1>
-	<table class="dateconvert" align="center"> 
+</section>	
+<section class="dateconvert">
+<h1>Représentation Unicode</h1>
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setLocalePresentationCalendar();">
-		<tr><th> Langue </th><th> Format </th></tr>
-		<tr>
-			<td><input name="Locale" type="text" autocomplete="language" class="dateconvert" size="5"> </td>
+	<table class="dateconvert" align="center"> <tr>
+		<th>Format</th>
 			<td>
 			<select name="Presentation" class="dateconvert" size="1">
 				<option value="long">long</option>
@@ -351,19 +351,28 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</select>
 			</td>
 		</tr>
-		<tr>
-			<th colspan="2"> Calendrier </th>
+	</table>
+	<table class="dateconvert" align="center"><tr>
+		<th>Code langue </th>
+			<td>
+			<input name="Language" class="dateconvert" type="text" autocomplete="language" size="5">
+			</td>
+			<td>Code effectif: </td><td id="langCode"></td>
 		</tr>
+	</table>
+	<table align="center"><tr><td>Exemple: <code>en-GB</code> ou <code>en-US</code>, vide: défaut système</td/></tr></table>
+	<table class="dateconvert" align="center"><tr>
 		<tr>
-			<td colspan="2">
+			<th>Calendrier </th>
+			<td>
 			<select name="Calendar" size="1" class="dateconvert">
 				<option value="">par défaut</option>
 				<option value="buddhist">bouddhiste Thaï</option>
 				<option value="chinese">chinois traditionnel</option>
 				<option value="coptic">copte</option>
 				<option value="dangi">coréen traditionnel</option>
-				<option value="ethioaa">éthiopien Amete Alem (5493 A.C.) </option>
-				<option value="ethiopic">éthiopien Amete Mihret (8 A.D.)</option>
+				<option value="ethioaa">éthiopien base antique</option>
+				<option value="ethiopic">éthiopien base Incarnation</option>
 				<option value="gregory">grégorien (proleptique)</option>
 				<option value="hebrew">hébraïque</option>
 				<option value="indian">indien moderne</option>
@@ -379,21 +388,26 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</select> 
 			</td>
 		</tr>
-		<tr><th colspan="2">Zone horaire</th></tr>
-		<tr><td colspan="2"><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td></tr>
-		<tr>
-			<td colspan="2"><button name="Compute" value="options" class="dateconvert">Ok</button></td>	
-	   </tr>
-   	</form></table>
+	</table>
+	<table class="dateconvert" align="center"><tr>
+		<tr><th>Zone horaire </th>
+		<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
+		</tr>
+		<tr><td>Zone effective: </td><td id="timeZone"></td></tr>
+		<table align="center"><tr><td>Exemple: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide: défaut système</td/></tr></table>
+		<tr><td colspan="2"><button class="dateconvert">Modifier les paramètres de représentation</button></td></tr>
+	</table>
+  	</form>
+	<br>
 	<table class="dateconvert" align="center">
 		<tr><th>Date et heure Unicode</th></tr>
 		<tr><td id="UnicodeString"></td></tr>
 		<tr><th>Date et heure milésiennes</th></tr>
 		<tr><td id="milesianDisplay"></td></tr>
 	</table>
-</div>
-<div class="dateconvert">
-<h1 class="dateconvert">Données lunaires</h1>
+</section>
+<section class="dateconvert">
+<h1>Données lunaires</h1>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
  	<tr><th colspan="4">Lune moyenne corrigée</th></tr>
@@ -444,8 +458,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</form>
 	</tr>
 </table>
-</div>
-<div class="dateconvert">
+</section>
+<section class="dateconvert">
 <h1>Réglages</h1>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
 <table class="dateconvert" align="center">
@@ -476,7 +490,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       </tr>
 	</form>
 </table>
-</div>
-<h3 class="dateconvert">© 2018-02 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+</section>
+<section class="dateconvert">
+<h1>Liens utiles</h1>
+  <table class="dateconvert" align="center">
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
+	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
+  </table>
+</section>
+<h3 class="dateconvert">© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </body>
 </html>
