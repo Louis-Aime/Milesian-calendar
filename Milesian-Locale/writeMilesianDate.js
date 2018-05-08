@@ -55,6 +55,10 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		year	: (document.LocaleOptions.Year.value == "") ? undefined : document.LocaleOptions.Year.value,
 		era		: (document.LocaleOptions.Era.value == "") ? undefined : document.LocaleOptions.Era.value
 	}
+	let askedOptions = new Intl.DateTimeFormat (Locale,Options);
+	let usedOptions = askedOptions.resolvedOptions();
+	document.LocaleOptions.Elocale.value = usedOptions.locale;
+	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
 	document.LocaleOptions.Mstring.value = targetDate.toMilesianLocaleDateString(Locale,Options);
 	document.LocaleOptions.Gstring.value = targetDate.toLocaleDateString(Locale,Options);
 }

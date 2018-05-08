@@ -197,29 +197,35 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		// re-initiate Option variable following user's setting
 		let Options = Object.assign({}, userOptions);
 		
+		// Check that browser will display an interesting calendar
+		if (unicodeCalendarHandled (myElements[i].id) == myElements[i].id 	// the asked calendar... 
+			|| unicodeCalendarHandled (myElements[i].id) != "gregory")	{	// ... or at least a non plain gregory one
+		
 		//	test validity since a few calendar do not display properly if out of range
 		//	and arrange Options: delete era element for calendar which do not use it.
-		let valid = true;
-		switch (myElements[i].id) {	
-			case "hebrew": valid = (toLocalDate(targetDate, Options).valueOf()
-				>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-			case "indian": valid = (toLocalDate(targetDate, Options).valueOf() 
-				>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
-			case "islamic":
-			case "islamic-rgsa": valid = (toLocalDate(targetDate, Options).valueOf()
-				>= -42521673600000); break; // Computations are false before Haegirian epoch
-			case "ethiopic": valid = (toLocalDate(targetDate, Options).valueOf()
-				>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
-			case "ethioaa": Options.era = undefined; break; // suppress era part of Options, since the displayed era is "ERA0"
+			let valid = true;
+			switch (myElements[i].id) {	
+				case "hebrew": valid = (toLocalDate(targetDate, Options).valueOf()
+					>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
+				case "indian": valid = (toLocalDate(targetDate, Options).valueOf() 
+					>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
+				case "islamic":
+				case "islamic-rgsa": valid = (toLocalDate(targetDate, Options).valueOf()
+					>= -42521673600000); break; // Computations are false before Haegirian epoch
+				case "ethiopic": valid = (toLocalDate(targetDate, Options).valueOf()
+					>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
+				case "ethioaa": Options.era = undefined; break; // suppress era part of Options, since the displayed era is "ERA0"
+				}
+			
+			// Write date string. Protect writing process against errors raised by browsers.
+			try {
+				myElements[i].innerHTML = 
+				(valid ? targetDate.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options) : milesianAlertMsg("invalidDate"));
+				}
+			catch (e) {	// Attempt to write time string may fail due to out-of-range error with MS Edge
+				myElements[i].innerHTML = milesianAlertMsg("invalidDate");
+				}
 			}
-		
-		// Write date string. Protect writing process against errors raised by browsers.
-		try {
-			myElements[i].innerHTML = 
-			(valid ? targetDate.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options) : milesianAlertMsg("invalidDate"));
-			}
-		catch (e) {	// Attempt to write time string may fail due to out-of-range error with MS Edge
-			myElements[i].innerHTML = milesianAlertMsg("invalidDate");
-			}
+		else myElements[i].innerHTML = milesianAlertMsg("browserError")
 		}
 }

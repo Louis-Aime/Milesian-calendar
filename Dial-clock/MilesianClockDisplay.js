@@ -212,6 +212,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Unicode frame 
 	myElement = document.querySelector("#langCode");
 	myElement.innerHTML = userOptions.locale;		// Display Locale (language code) as obtained after negotiation process
+	myElement = document.querySelector("#CalendarCode");
+	myElement.innerHTML = userOptions.calendar;	// Display calendar obtained after negotiation process
 	myElement = document.querySelector("#timeZone");
 	myElement.innerHTML = userOptions.timeZone;	// Display time zone as obtained after negotiation process
 	

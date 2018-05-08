@@ -73,12 +73,13 @@ la version longue est affichée en latin.</p>
 	<table class="dateconvert" align="center"> <tbody>
 	 <form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
 	   <tr>
-		<th colspan="2">Locale: </th>
-		<td colspan="1"><input type="text" class="dateconvert" size="5" name="Locale" value=""> </td>
+		<th colspan="1">Locale: </th>
+		<td colspan="1"><input name="Locale" type="text" class="dateconvert" size="5" value=""> </td>
+		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" class="dateconvert" size="16"></td>
 	   </tr>
 	   <tr>
-		<th colspan="2">Calendrier: </th>
-		<td colspan="4">
+		<th colspan="1">Calendrier: </th>
+		<td colspan="3">
 			<select name="Calendar" size="1" class="dateconvert">
 			<option value="">par défaut</option>
 			<option value="buddhist">bouddhiste Thaï</option>
@@ -103,6 +104,12 @@ la version longue est affichée en latin.</p>
 		</td>
 	   </tr>
 	   <tr>
+	    <td colspan="1">Calendrier effectif: </td>
+	    <td colspan="3"><input name="Ecalend" type="text" class="dateconvert"></td>
+	   </tr>
+	   </table>
+	   <table class="dateconvert" align="center">
+	   <tr>
 		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
 		<td><button class="dateconvert" type="reset">Réinit</button></td>
 	   </tr>
@@ -114,8 +121,11 @@ la version longue est affichée en latin.</p>
 		<td><input type="text" class="dateconvert" size="5" name="Era" value=""></td>
 		<td><button class="dateconvert" >Ok</button></td>	
 	   </tr>
-	   <tr><td>Mil.:  </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
-	   <tr><td>CLDR: </td><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
+	   </table>
+	   <br>
+	   <table class="dateconvert" align="center">   
+	   <tr><th>Milesien:  </th><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
+	   <tr><th>CLDR: </th><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
 	 </form> 
 	</tbody></table>
 </div>
