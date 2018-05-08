@@ -31,8 +31,8 @@ Note: this stand-alone version is not so nice as the online version, that uses f
  * LightMilesianClock.html: the light milesian clock. display time and day. 
  Use Cadran_milesien_600, MilesianClockOperations, plus .js files of Basic_Common.
  * LightMilesianClock.svg: same as above.
- * MilesianClockDisplay and MilesianClockDisplay_P2 are button functions of MilesianClock.html. 
- Splitted in files of less than 20 kb.
+ * MilesianClockDisplay and	MilesianClockDisplayCompEntries.js are button functions of MilesianClock.html,  
+ splitted in files of less than 20 kb.
  * MilesianClockOperations.js: the commands of the Milesian Clock hands and text indications
  
  ## MilesianClockOperations.js
