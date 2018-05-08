@@ -11,8 +11,9 @@ Version M2018-02-28
 * suppress pad (not used, replace with standard Unicode functions)
 Version M2018-05-16
 * Use of .formatToParts method. Non conformant navigator (MS Edge) only know Gregorian calendars
+* Add unicodeCalendarHandled (calendar) : from a requested calendar, gives the used one.
 Contents
-* pad (number) : a utility to fill an initial 0 for 2-digit numbers.
+* unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
 * toLocalDate : return a Date object holding the version shifted by the time zone offset contained in options. 
 * toMilesianLocaleDateString ([locale, [options]]) : return a string with date and time, according to locale and options.
 Necessary files:
@@ -49,8 +50,15 @@ A "real" access is not working the same way an all platform, is not used is such
 In file milesianMonthNamesString.js, const pldr is declared, and milesianNames is constructed.
 Note: take care that text items from milesianNames be in the proper character set, corresponding to the Internet site.
 
-1.2 General pad utility function -> not needed, use Intl.NumberFormat constructor.
-
+1.2 General utilities: 
+* pad utility function -> not needed, use Intl.NumberFormat constructor.
+* unicodeCalendarHandled : which calendar is effectively used upon request through the Locale nu-ca- parameters
+*/
+function unicodeCalendarHandled (calendar) { // From an "asked" calendar, gives the "used" one.
+	var 	testOptions = new Intl.DateTimeFormat ("en-US-u-ca-"+calendar);
+	return 	testOptions.resolvedOptions().calendar;
+	}
+/*
 1.3 Utility to get the local Date-Time as a UTC date.
 
 /** Construct a date that represents the value of the given date shifted to the time zone indicated or resolved in Options.
