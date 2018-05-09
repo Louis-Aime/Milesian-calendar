@@ -90,10 +90,12 @@ function toLocalDate (myDate, Options = undefined) {
 			try {	// Try translating date into a string for the local date, then this string into a UTC date.
 					// If navigator does not accept, use standard TZ.
 				var localString = parseOptions.format(myDate) + " UTC";	// Elaborate a local display of date and declare it as UTC
-				localTime = new Date(localString);
+				let tryTime = new Date(localString); // If error occurs here, will not destroy backup result
+				let test = Math.abs(myDate.valueOf() - tryTime.valueOf());
+				if (!isNaN(test) && (Math.abs(test) < 2*Chronos.DAY_UNIT)) localTime = tryTime; // last security against unwanted effects
 				}
 				
-			catch (e) {	// If navigator still did not accept, return standard basic local time
+			catch (e1) {	// If navigator still did not accept, return standard basic local time (as initialised)
 				throw "Browser does not handle Unicode functions"; 
 				}
 			//			
