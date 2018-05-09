@@ -67,7 +67,8 @@ function toLocalDate (myDate, Options = undefined) {
 	if (Options == undefined) var askedOptions = new Intl.DateTimeFormat ()	// require locale and option from present implementation;
 	else var askedOptions = new Intl.DateTimeFormat (undefined, Options); // Computed object from asked locales and options
 	var usedOptions = askedOptions.resolvedOptions();
-	var	localTime; // To be used later
+	var	localTime = new Date (myDate.valueOf() - myDate.getTimezoneOffset()*Chronos.MINUTE_UNIT); 
+		//Basic value if no further computation possible
 
 	// This routine uses formatToParts. Another method is used for MS Edge, but limited to year 100 and above.
 	var numericOptions = new Intl.DateTimeFormat ("fr",{weekday: 'long',
@@ -92,14 +93,12 @@ function toLocalDate (myDate, Options = undefined) {
 				localTime = new Date(localString);
 				}
 				
-			catch (e) {	// If navigator did not accept, return undefined
-				localTime = undefined;
+			catch (e) {	// If navigator still did not accept, return standard basic local time
 				throw "Browser does not handle Unicode functions"; 
 				}
 			//			
 		}
 		else { 
-			localTime = undefined;
 			throw "Browser does not handle Unicode functions"; 
 			}
 		}
@@ -151,7 +150,7 @@ Date.prototype.toMilesianLocaleDateString = function (locales = undefined, optio
 		}
 	catch (e) {	// Got limitation from navigator - give a desesparate ersatz version, else abort
 		if (options == undefined) // No options given at call, system local time zone assumed
-			localTime.setTime(this.valueOf()-this.getTimezoneOffset())
+			localTime.setTime(this.valueOf()-this.getTimezoneOffset()*Chronos.MINUTE_UNIT)
 		else if (usedOptions.timeZone=="UTC") localTime.setTime(this.valueOf()) // If timeZone option was UTC, computation remains possible
 		else return milesianAlertMsg ("browserError");
 		}
