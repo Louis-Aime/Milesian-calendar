@@ -61,15 +61,15 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 			pt	: "Código inválido "
 			},
 		"browserError" : {
-			en	: "Internet browser error",
-			fr	: "Erreur du navigateur",
-			de	: "Internetbrowser Fehler",
-			es	: "Error de navegador",
-			pt	: "Erro no navegador"
+			en	: "Internet browser error ",
+			fr	: "Erreur du navigateur ",
+			de	: "Internetbrowser Fehler ",
+			es	: "Error de navegador ",
+			pt	: "Erro no navegador "
 			}
 		};
 	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
-	let lang = usedOptions.locale[0] + usedOptions.locale[1];
+	let lang = usedOptions.locale.substring(0,2);
 	let usedLang = "en";
 	for (let i = 0; i < languages.length; i++) if (lang == languages[i]) usedLang = lang; // Set usedLang to one of our languages, else to "en".
 	let message = errorMsg[inputError][usedLang];
