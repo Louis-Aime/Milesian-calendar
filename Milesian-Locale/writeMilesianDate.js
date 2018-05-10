@@ -41,13 +41,17 @@ function SetDayOffset (sign) { // the days are integer, all 24h, so local time m
 function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control.
 	let Locale = document.LocaleOptions.Locale.value;
 	let Calendar = document.LocaleOptions.Calendar.value;
+	let timeZone = document.LocaleOptions.TimeZone.value;
+	var askedOptions, usedOptions;
 	if (Locale == ""){ 
 		if (Calendar !== "") {
-			let askedOptions = new Intl.DateTimeFormat ();
-			let usedOptions = askedOptions.resolvedOptions();
+			askedOptions = new Intl.DateTimeFormat ();
+			usedOptions = askedOptions.resolvedOptions();
 			Locale = usedOptions.locale.slice(0,5) + "-u-ca-" + Calendar}
 		else Locale = undefined}
 	else if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar;
+	askedOptions = new Intl.DateTimeFormat (Locale);
+	userOptions = askedOptions.resolvedOptions(); 
 	let Options = {	// No control !
 		weekday : (document.LocaleOptions.Weekday.value == "") ? undefined : document.LocaleOptions.Weekday.value,
 		day 	: (document.LocaleOptions.Day.value == "") ? undefined : document.LocaleOptions.Day.value,
@@ -55,10 +59,25 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		year	: (document.LocaleOptions.Year.value == "") ? undefined : document.LocaleOptions.Year.value,
 		era		: (document.LocaleOptions.Era.value == "") ? undefined : document.LocaleOptions.Era.value
 	}
-	let askedOptions = new Intl.DateTimeFormat (Locale,Options);
-	let usedOptions = askedOptions.resolvedOptions();
+	if (timeZone !== "") 
+		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
+	// Check here that Options with timeZone is valid
+	try {
+		askedOptions = Intl.DateTimeFormat (Locale, Options);
+		}
+	catch (e) {
+		alert (milesianAlertMsg("invalidCode") + '"' + Options.timeZone + '"');
+		document.LocaleOptions.TimeZone.value = ''; 	// Reset TimeZone indication to empty string
+		delete Options.timeZone; // Delete property
+		askedOptions = Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
+	}
+
+	askedOptions = new Intl.DateTimeFormat (Locale,Options);
+	usedOptions = askedOptions.resolvedOptions();
+	document.LocaleOptions.ETimeZone.value=usedOptions.timeZone;
 	document.LocaleOptions.Elocale.value = usedOptions.locale;
 	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
-	document.LocaleOptions.Mstring.value = targetDate.toMilesianLocaleDateString(Locale,Options);
+	document.LocaleOptions.M2string.value = askedOptions.milesianFormat(targetDate);
+	// document.LocaleOptions.Mstring.value = targetDate.toMilesianLocaleDateString(Locale,Options);
 	document.LocaleOptions.Gstring.value = targetDate.toLocaleDateString(Locale,Options);
 }

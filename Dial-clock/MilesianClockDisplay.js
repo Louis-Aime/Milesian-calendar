@@ -21,7 +21,7 @@ Other js necessary
 3. For clock operation
 *	MilesianClockOperations
 4. For display, using Unicode standards
-*	UnicodeMilesian (used to be: toMilesianLocaleDateString)
+*	UnicodeMilesianFormat (used to be: toMilesianLocaleDateString then UnicodeMilesian)
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
 */
 /*
@@ -106,10 +106,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// Initiate milesian clock and milesian string with present time and date
 	var myElement = document.querySelector("#clock2");	// myElement is a work variable
-	setSolarYearClockHands (myElement, shiftDate.getMilesianUTCDate().year, shiftDate.getMilesianUTCDate().month, shiftDate.getMilesianUTCDate().date,
+	setSolarYearClockHands (myElement, shiftDate.getUTCMilesianDate().year, shiftDate.getUTCMilesianDate().month, shiftDate.getUTCMilesianDate().date,
 		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() );
 
-	var dateComponent = shiftDate.getMilesianUTCDate();	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
+	var dateComponent = shiftDate.getUTCMilesianDate();	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
 
 	// Update milesian field selector - using Date properties
 	document.milesian.year.value = dateComponent.year;
@@ -123,23 +123,29 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// Write Milesian date string, near the clock (without time)
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
-	myElement.innerHTML = shiftDate.toMilesianLocaleDateString
-		(undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
-
+	myElement.innerHTML = shiftDate.toUTCIntlMilesianDateString() // the international notation, not sensitive to browsers nor languages								//toMilesianLocaleDateString
+		//if necessary, the format options are: (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
 	
 	// Display julio-gregorian date 
 	// Translate to Julian if before date of switch to Gregorian calendar
 
 	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		dateComponent = shiftDate.getJulianUTCDate()		// dateComponent object set to Julian date
+		dateComponent = shiftDate.getUTCJulianDate()		// dateComponent object set to Julian date
 	else { 												// else, dateComponent set to (standard) Gregorian coordinates
 		dateComponent.year  = shiftDate.getUTCFullYear();
 		dateComponent.month = shiftDate.getUTCMonth();
 		dateComponent.date	= shiftDate.getUTCDate();
 		};
 	myElement = document.getElementById("juliogregdate");
+	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
+	try {	// weekday in a safe manner, even on MS Edge
+		var weekday = weekdayFormat.format(shiftDate) ;
+		}
+	catch (e) {
+		weekday = "";
+		}
 	myElement.innerHTML = 
-		shiftDate.toMilesianLocaleDateString(undefined,{timeZone:"UTC",weekday:"long"}) // weekday in a safe manner, even on MS Edge
+		weekday
 		+ " "
 		+ (dateComponent.date) + " "	// Date in the month
 		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
@@ -163,13 +169,13 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 
     //  Update Julian Calendar - using Date properties 
-	dateComponent = shiftDate.getJulianUTCDate();
+	dateComponent = shiftDate.getUTCJulianDate();
     document.julian.year.value = dateComponent.year;
     document.julian.monthname.value = dateComponent.month;
     document.julian.day.value = dateComponent.date;
 
     //  Update Republican Calendar - using Date properties
-	dateComponent = shiftDate.getFrenchRevUTCDate();
+	dateComponent = shiftDate.getUTCFrenchRevDate();
     document.republican.year.value = dateComponent.year;
     document.republican.monthname.value = dateComponent.month;
     document.republican.day.value = dateComponent.date;	
@@ -180,7 +186,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
 	//  Update ISO week calendar - using Date properties
-	dateComponent = shiftDate.getIsoWeekCalUTCDate();
+	dateComponent = shiftDate.getUTCIsoWeekCalDate();
 	document.isoweeks.year.value = dateComponent.year;
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
@@ -222,8 +228,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	//	Milesian date string following options. Catch error if navigator fails, in this case write without time part.
 	myElement = document.getElementById("milesianDisplay");
-	try	{ myElement.innerHTML = targetDate.toMilesianLocaleDateString(userOptions.locale,Options); }
-	catch (e) { myElement.innerHTML = targetDate.toMilesianLocaleDateString(userOptions.locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"}); }
+	try	{ myElement.innerHTML = askedOptions.milesianFormat(targetDate); } // .toMilesianLocaleDateString(userOptions.locale,Options);
+	catch (e) { myElement.innerHTML = milesianAlertMsg("bowserError"); }
 	
 	// Lunar data frame
 

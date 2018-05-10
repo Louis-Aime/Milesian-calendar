@@ -25,7 +25,7 @@ Other js necessary
 3. For clock operation
 *	MilesianClockOperations
 4. For display, using Unicode standards
-*	UnicodeMilesian (used to be: toMilesianLocaleDateString)
+*	UnicodeMilesianFormat (used to be: UnicodeMilesian, and even before: toMilesianLocaleDateString)
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
 *	RomanMonthNames
 */
@@ -76,7 +76,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// User Locale and Options used for the Unicode section only
 	var Locale = document.LocaleOptions.Language.value; // Read language code as specified by user
-	try {		// Try finding the effective language sting
+	try {		// Try finding the effective language string
 	var askedOptions = 
 		Locale == "" ? new Intl.DateTimeFormat() : new Intl.DateTimeFormat (Locale);
 	}
@@ -114,7 +114,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let milesianLocale = [undefined, Locale]; // First Milesian string shall be on blank Locale, second will be in specified language
 	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
 	for (let i = 0; i < myElements.length; i++) {
-	myElements[i].innerHTML = targetDate.toMilesianLocaleDateString(milesianLocale[i],userOptions);
+		interAskedOptions = new Intl.DateTimeFormat(milesianLocale[i],userOptions);
+		myElements[i].innerHTML = interAskedOptions.milesianFormat(targetDate);
 	}
 	// Display standard date 
 	// Translate to Julian if before initial date of switch to Gregorian calendar
@@ -127,8 +128,15 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		dateComponent.date	= targetDate.getUTCDate();
 		};
 	myElement = document.getElementById("juliogregdate");
+	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
+	try {	// weekday in a safe manner, even on MS Edge
+		var weekday = weekdayFormat.format(shiftDate) ;
+		}
+	catch (e) {
+		weekday = "";
+		}
 	myElement.innerHTML = 
-		targetDate.toMilesianLocaleDateString(undefined,{timeZone:"UTC",weekday:"long"}) // weekday in a safe manner, even on MS Edge
+		weekday // weekday in a safe manner, even on MS Edge
 		+ " "
 		+ (dateComponent.date) + " "	// Date in the month
 		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French

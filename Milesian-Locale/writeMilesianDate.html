@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="CBCCE.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
  	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
- 	<script type="text/javascript" src="UnicodeMilesian.js"></script>
+ 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 	<script type="text/javascript" src="writeMilesianDate.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	
@@ -71,7 +71,7 @@ la version longue est affichée en latin.</p>
 	   <tr>
 		<th colspan="1">Locale: </th>
 		<td colspan="1"><input name="Locale" type="text" class="dateconvert" size="5" value=""> </td>
-		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" class="dateconvert" size="16"></td>
+		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="dateconvert" size="16"></td>
 	   </tr>
 	   <tr>
 		<th colspan="1">Calendrier: </th>
@@ -101,9 +101,15 @@ la version longue est affichée en latin.</p>
 	   </tr>
 	   <tr>
 	    <td colspan="1">Calendrier effectif: </td>
-	    <td colspan="3"><input name="Ecalend" type="text" class="dateconvert"></td>
+	    <td colspan="3"><input name="Ecalend" type="text" disabled="disabled" class="dateconvert"></td>
 	   </tr>
 	   </table>
+		<table class="dateconvert" align="center">
+			<tr><th>Zone horaire </th>
+			<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
+			</tr>
+			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="dateconvert" size="30"></td></tr>
+		</table>
 	   <table class="dateconvert" align="center">
 	   <tr>
 		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
@@ -119,8 +125,8 @@ la version longue est affichée en latin.</p>
 	   </tr>
 	   </table>
 	   <br>
-	   <table class="dateconvert" align="center">   
-	   <tr><th>Milesien:  </th><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Mstring" value=""></td></tr>
+	   <table class="dateconvert" align="center">
+	   <tr><th>Milésien: </th><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="M2string" value=""></td></tr>
 	   <tr><th>CLDR: </th><td colspan=5><input type="text" class="dateconvert" disabled="disabled" size="40" name="Gstring" value=""></td></tr>
 	 </form> 
     </table>
