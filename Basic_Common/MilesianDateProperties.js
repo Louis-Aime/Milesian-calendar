@@ -1,40 +1,45 @@
 /* Milesian properties added to Date
-// Character set is UTF-8
-// This code, to be manually imported, set properties to object Date for the Milesian calendar.
-// Version M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
-// Package CBCCE is used.
-// File MilesianMonthNames.xml is not used in this version, the file has been stringified as "pldr".
-//  getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
-//  getMilesianUTCDate : same as above, in UTC time.
-//  setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
-//  setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-//  toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
-//  toUTCIntlMilesianDateString : same as above, in UTC time zone.
+	Character set is UTF-8
+	This code, to be manually imported, set properties to object Date for the Milesian calendar.
+Versions
+	Version M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
+	Version M2018-05-19 : create getUTCMilesianDate, getMilesianUTCDate to be deprecated 
+Required
+	Package CBCCE is used.
+Contents
+	getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+	getUTCMilesianDate : same as above, in UTC time.
+		getMilesianUTCDate : deprecated version of above
+	setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
+	setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+	toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
+	toUTCIntlMilesianDateString : same as above, in UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2017 - Louis A. de Fouquières
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 1. The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-// 2. Changes with respect to any former version shall be documented.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+	1. The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+	2. Changes with respect to any former version shall be documented.
 //
-// The software is provided "as is", without warranty of any kind,
-// express of implied, including but not limited to the warranties of
-// merchantability, fitness for a particular purpose and noninfringement.
-// In no event shall the authors of copyright holders be liable for any
-// claim, damages or other liability, whether in an action of contract,
-// tort or otherwise, arising from, out of or in connection with the software
-// or the use or other dealings in the software.
-// Inquiries: www.calendriermilesien.org
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and noninfringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-/*// Import or make visible: 
+//
+/*  Import or make visible: 
 	CalendarCycleComputationEngine.js
 */
 var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompose into Milesian years, months, date, hours, minutes, seconds, ms
@@ -69,8 +74,11 @@ var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompos
 Date.prototype.getMilesianDate = function () {
   return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params);
 }
-Date.prototype.getMilesianUTCDate = function () {
+Date.prototype.getUTCMilesianDate = function () {
   return cbcceDecompose (this.getTime(), Milesian_time_params);
+}
+Date.prototype.getMilesianUTCDate = function () { // Deprecated version
+	return this.getUTCMilesianDate();
 }
 Date.prototype.setTimeFromMilesian = function (year, month, date, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),

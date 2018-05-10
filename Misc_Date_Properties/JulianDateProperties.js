@@ -90,11 +90,14 @@ Date.prototype.getJulianDate = function () {
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}
 }
-Date.prototype.getJulianUTCDate = function () {
+Date.prototype.getUTCJulianDate = function () {
 	let shiftedDate = cbcceDecompose (this.getTime(), Julian_calendar_params);
 	let romanDate = romanDecompose (shiftedDate.dayinyear);
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}	
+}
+Date.prototype.getJulianUTCDate = function () { // Deprecated version
+	return this.getUTCJulianDate();
 }
 Date.prototype.getJulianDay = function () { // From this Unix time stamp, give Julian day in decimal. This is always a UTC-based time. Integer values at 12h UTC (noon).
   return (this.getTime() + JULIAN_DAY_UTC0_EPOCH_OFFSET - (12 * Chronos.HOUR_UNIT)) / Chronos.DAY_UNIT;

@@ -1,37 +1,43 @@
 /* French revolutionary calendar properties added to Date object
-// Character set is UTF-8
-// This code, to be manually imported, set properties to object Date for the French Revolutionary calendar.
-// Version M2017-12-26
-// Package CBCCE is used.
-//  getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
-//  getFrenchRevUTCDate : same as above, in UTC time.
-//  setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
-//  setUTCTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+Character set is UTF-8
+This code, to be manually imported, set properties to object Date for the French Revolutionary calendar.
+Version M2017-12-26
+Version M2018-05-19 : create getUTCFrenchRevDate, getFrenchRevUTCDate to be deprecated 
+Required
+	CBCCE is used.
+Contents
+	getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+	getUTCFrenchRevDate : same as above, in UTC time.
+		getFrenchRevUTCDate : deprecated version
+	setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
+	setUTCTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2017 - Louis A. de Fouquières
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 1. The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-// 2. Changes with respect to any former version shall be documented.
-//
-// The software is provided "as is", without warranty of any kind,
-// express of implied, including but not limited to the warranties of
-// merchantability, fitness for a particular purpose and noninfringement.
-// In no event shall the authors of copyright holders be liable for any
-// claim, damages or other liability, whether in an action of contract,
-// tort or otherwise, arising from, out of or in connection with the software
-// or the use or other dealings in the software.
-// Inquiries: www.calendriermilesien.org
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+	1. The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+	2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and noninfringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-// Import CBCCE, or make visible.
+// 
+/* Import CBCCE, or make visible. */
+//
 var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompose into years, months, date, hours, minutes, seconds, ms
 	timeepoch : -6004454400000, // Unix timestamp of 3 10m 1779 00h00 UTC in ms, the origin for the algorithm
 	coeff : [ 
@@ -66,7 +72,10 @@ var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompo
 Date.prototype.getFrenchRevDate = function () {
   return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params);
 }
-Date.prototype.getFrenchRevUTCDate = function () {
+Date.prototype.getUTCFrenchRevDate = function () {
+  return cbcceDecompose (this.getTime(), FrenchRev_time_params);
+}
+Date.prototype.getFrenchRevUTCDate = function () { // Deprecated version
   return cbcceDecompose (this.getTime(), FrenchRev_time_params);
 }
 Date.prototype.setTimeFromFrenchRev = function (year, month, date, 
