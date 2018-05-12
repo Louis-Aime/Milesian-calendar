@@ -74,12 +74,12 @@ function putStringOnOptions() { // print Unicode string, following already compu
 	var valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
 	// Certain Unicode calendars do not give a proper result: set the flag.
 	switch (userOptions.calendar) {	
-		case "hebrew": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf()
+		case "hebrew": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf()
 			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf() 
+		case "indian": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf() 
 			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
 		case "islamic":
-		case "islamic-rgsa": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).valueOf()
+		case "islamic-rgsa": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
 		}
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
@@ -138,8 +138,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		};
 	myElement = document.getElementById("juliogregdate");
 	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
+	let  weekday = ""; // by default
 	try {	// weekday in a safe manner, even on MS Edge
-		var weekday = weekdayFormat.format(shiftDate) ;
+		weekday = weekdayFormat.format(shiftDate) ;
 		}
 	catch (e) {
 		weekday = "";
