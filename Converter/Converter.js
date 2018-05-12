@@ -73,36 +73,12 @@ var
 	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)); // Upper limit of the Republican calendar
 
 function setDisplay () {	// Disseminate targetDate and time on all display fields
-
-	// User Locale and Options used for the Unicode section only
-	var Locale = document.LocaleOptions.Language.value; // Read language code as specified by user
-	try {		// Try finding the effective language string
-	var askedOptions = 
-		Locale == "" ? new Intl.DateTimeFormat() : new Intl.DateTimeFormat (Locale);
-	}
-	catch (e) {	// Locale was not a valid language code
-		alert (milesianAlertMsg("invalidCode") + '"' + Locale + '"');
-		document.LocaleOptions.Language.value = '';  // Set Language code to empty string
-		return; } // exit function after this error.
-	let userOptions = askedOptions.resolvedOptions();
-	Locale = userOptions.locale; // Locale = userOptions.locale.slice(0,5);
-	let myElement = document.querySelector("#langCode");
-	myElement.innerHTML = Locale;	// Display Locale as obtained after negotiation process
 	
-	switch (document.LocaleOptions.Presentation.value) {
-		case "long" :
-			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
-			break;
-		case "numeric" : 
-			userOptions = {day : "2-digit", month: "2-digit", year : "numeric", era : "short", timeZone : "UTC"}; 
-			break;
-		}
-		
 	// Get Milesian date components from targetDate
 	let dateComponent = targetDate.getMilesianUTCDate();
 
 	// Set Milesian clock
-	myElement = document.querySelector("#clock3");
+	let myElement = document.querySelector("#clock3");
 	setSolarYearClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
 
 	// Update milesian field selector - using Date properties
@@ -110,13 +86,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.milesian.monthname.value = dateComponent.month;
     document.milesian.day.value = dateComponent.date;
 
-	// Set Milesian date string wherever needed
-	let milesianLocale = [undefined, Locale]; // First Milesian string shall be on blank Locale, second will be in specified language
-	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
-	for (let i = 0; i < myElements.length; i++) {
-		interAskedOptions = new Intl.DateTimeFormat(milesianLocale[i],userOptions);
-		myElements[i].innerHTML = interAskedOptions.milesianFormat(targetDate);
-	}
 	// Display standard date 
 	// Translate to Julian if before initial date of switch to Gregorian calendar
 
@@ -129,8 +98,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		};
 	myElement = document.getElementById("juliogregdate");
 	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
+	let  weekday = ""; // by default
 	try {	// weekday in a safe manner, even on MS Edge
-		var weekday = weekdayFormat.format(shiftDate) ;
+		weekday = weekdayFormat.format(targetDate) ;
 		}
 	catch (e) {
 		weekday = "";
@@ -197,7 +167,39 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString();
 
-//	Display dates in several calendars provided by Unicode
+	// Handle Intl.DateTimeFormat elements only here, in case browser does not handle this built-in
+	// User Locale and Options used 
+	var Locale = document.LocaleOptions.Language.value; // Read language code as specified by user
+	try {		// Try finding the effective language string
+	var askedOptions = 
+		Locale == "" ? new Intl.DateTimeFormat() : new Intl.DateTimeFormat (Locale);
+	}
+	catch (e) {	// Locale was not a valid language code
+		alert (milesianAlertMsg("invalidCode") + '"' + Locale + '"');
+		document.LocaleOptions.Language.value = '';  // Set Language code to empty string
+		return; } // exit function after this error.
+	let userOptions = askedOptions.resolvedOptions();
+	Locale = userOptions.locale; // Locale = userOptions.locale.slice(0,5);
+	myElement = document.querySelector("#langCode");
+	myElement.innerHTML = Locale;	// Display Locale as obtained after negotiation process
+	
+	switch (document.LocaleOptions.Presentation.value) {
+		case "long" :
+			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
+			break;
+		case "numeric" : 
+			userOptions = {day : "2-digit", month: "2-digit", year : "numeric", era : "short", timeZone : "UTC"}; 
+			break;
+		}
+	// Set Milesian date string wherever needed
+	let milesianLocale = [undefined, Locale]; // First Milesian string shall be on blank Locale, second will be in specified language
+	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
+	for (let i = 0; i < myElements.length; i++) {
+		let interAskedOptions = new Intl.DateTimeFormat(milesianLocale[i],userOptions);
+		myElements[i].innerHTML = interAskedOptions.milesianFormat(targetDate);
+	}
+	
+	//	Display dates in several calendars provided by Unicode
 	myElements = document.getElementsByClassName('unicodedate'); 	// List of date elements to be computed
 	for (let i = 0; i < myElements.length; i++) {
 		// myElements[i].id is the ID of the Element, which is the Unicode name of the calendar
@@ -213,14 +215,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		//	and arrange Options: delete era element for calendar which do not use it.
 			let valid = true;
 			switch (myElements[i].id) {	
-				case "hebrew": valid = (toLocalDate(targetDate, Options).valueOf()
+				case "hebrew": valid = (targetDate.valueOf()
 					>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-				case "indian": valid = (toLocalDate(targetDate, Options).valueOf() 
+				case "indian": valid = (targetDate.valueOf() 
 					>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
 				case "islamic":
-				case "islamic-rgsa": valid = (toLocalDate(targetDate, Options).valueOf()
+				case "islamic-rgsa": valid = (targetDate.valueOf()
 					>= -42521673600000); break; // Computations are false before Haegirian epoch
-				case "ethiopic": valid = (toLocalDate(targetDate, Options).valueOf()
+				case "ethiopic": valid = (targetDate.valueOf()
 					>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
 				case "ethioaa": Options.era = undefined; break; // suppress era part of Options, since the displayed era is "ERA0"
 				}
