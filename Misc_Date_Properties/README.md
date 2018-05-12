@@ -37,7 +37,7 @@ Package CBCCE is used.
 ## ISOWeekCalendarDateProperties.js: computations on ISO 8601 week calendar
 Package CBCCE and MilesianDateProperties are used.
 * getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
-* getIsoWeekCalUTCDate : same as above, in UTC time.
+* getUTCIsoWeekCalDate : same as above, in UTC time.
 * setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
 * setUTCTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 * toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-www-dd
@@ -47,7 +47,7 @@ Package CBCCE and MilesianDateProperties are used.
 Package CBCCE is used.
 * getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 12. Conversion is in local time.
 Month 12 is for the Complementary days.
-* getFrenchRevUTCDate :  same as above, in UTC time.
+* getUTCFrenchRevDate :  same as above, in UTC time.
 * setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from rev. calendar date + local hour.
 * setUTCTimeFromFrenchRev : (year, month, date, hours, minutes, seconds, milliseconds) : same as above, from UTC
 * toIntlFrenchRevDateString : return a string with the date elements in Revolutionary
