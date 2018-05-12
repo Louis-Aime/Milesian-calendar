@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <link href="milesian.css" rel="stylesheet"/>
+  <title>Test calendriers Unicode</title>
+	<script type="text/javascript" src="CBCCE.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+ 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+ 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="UnicodeTester.js"></script>
+	
+</head>
+<body>
+<section>
+<h1 class="dateconvert">Expression de date<br>et calendriers Unicode</h1>
+<p class="dateconvert">"Locale": code langue et pays au format "ll-PP",<br>
+par exemple "en-US": l'anglais aux Etats-Unis.<br>
+"Calendrier": l'un des calendriers définis par Unicode.<br>
+"Options": représentation de chaque composant de date<br>
+avec "numeric", "2-digit", "long", "short" ou "narrow".<br>
+Noms de mois milésiens non définis dans une langue:<br>
+la version longue est affichée en latin.</p>
+<!-- section heure locale et UTC avec contrôles -->
+	<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
+		<table class="dateconvert" align="center">
+			<tr><th>Mode</th>
+				<td>
+					<select name="TZcontrol" size="1" class="dateconvert">
+					<option value="UTC">UTC</option>
+					<option value="TZ" selected>Fuseau système</option>
+					<option value="Fixed">Décalage fixe</option>
+					</select></td>
+				<th>Décalage</th> 
+				<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
+				<td>mn</td>
+				<td><button class="dateconvert">Ok</button></td>
+			</tr>
+		</table>
+	</form>
+		
+	<table class="dateconvert" align="center">
+	  <tr> 
+		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		 <td>Heure locale : </td>
+		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
+		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
+		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
+		 <td><button class="dateconvert">Ok</button></td>	
+		</form>
+	  </tr>
+	</table>
+
+	 <table class="dateconvert" align="center"> <tr>
+		<th>UTC :</th>
+		 <td id="UTCdate"></td>
+		 <td id="UTCtime"></td>
+		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+		<button class="dateconvert" >Maintenant</button></form></td>
+	  </tr> </table>
+
+	  <table class="dateconvert" align="center">
+	  <tr>
+		<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
+		<th>Cette date à UTC</th>
+		<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		</form>
+	  </tr>
+	 </table>
+	 
+	<table class="dateconvert" align="center"> 
+	  <tr>
+		<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+		<td>+/- secondes</td>
+		<td><button class="dateconvert symbol" formaction="Javascript:addTime(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="60" class="dateconvert yearnum"></td>
+		<td><button class="dateconvert symbol" formaction="Javascript:addTime(1);">+</button></td>
+		</form>
+	  </tr>
+	</table>
+<br>
+<!-- fin section heure, début section date -->
+	<table class="dateconvert" align="center">
+       <tr>
+        <th>Jour</th>
+        <th>Quant.</th>
+        <th>Mois</th>
+        <th>Année</th>
+        <th></th>
+      </tr>
+      <tr>
+	    <form name="milesian" class="dateconvert" method="post" action="JavaScript:calcMilesian();">
+        <td><input name="dayofweek" type="text" class="dateconvert" size="18" disabled="disabled" /> </td>
+        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
+        <td>
+        <select name="monthname" size="1" class="dateconvert">
+		<option value="0">1m</option>
+        <option value="1">2m</option>
+        <option value="2">3m</option>
+        <option value="3">4m</option>
+        <option value="4">5m</option>
+        <option value="5">6m</option>
+        <option value="6">7m</option>
+        <option value="7">8m</option>
+        <option value="8">9m</option>
+        <option value="9">10m</option>
+        <option value="10">11m</option>
+        <option value="11">12m</option>
+		</select> </td>
+        <td><input name="year" type="number" class="dateconvert yearnum"> </td>
+        <td><button class="dateconvert">Ok</button></td>
+		</form>
+      </tr>
+   </table>
+<table class="dateconvert" align="center">
+    <tr><form name="Today" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
+      <td><button class="dateconvert" value="Now" name="Compute" >Maintenant</button></td>
+ 	  </form>
+	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+		<td>+/- jours</td>
+		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
+		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+    </form></tr>
+</table>
+<br>
+<!-- Input Locale and Options, output String -->
+<div class="dateconvert autoscroll">
+	<table class="dateconvert" align="center"> 
+	 <form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
+	   <tr>
+		<th colspan="1">Locale: </th>
+		<td colspan="1"><input name="Locale" type="text" class="dateconvert" size="5" value=""> </td>
+		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="dateconvert" size="16"></td>
+	   </tr>
+	   <tr>
+		<th colspan="1">Calendrier: </th>
+		<td colspan="3">
+			<select name="Calendar" size="1" class="dateconvert">
+			<option value="">par défaut</option>
+			<option value="buddhist">bouddhiste Thaï</option>
+			<option value="chinese">chinois traditionnel</option>
+			<option value="coptic">copte</option>
+			<option value="dangi">coréen traditionnel</option>
+			<option value="ethioaa">éthiopien Amete Alem (5493 A.C.) </option>
+			<option value="ethiopic">éthiopien Amete Mihret (8 A.D.)</option>
+			<option value="gregory">grégorien (proleptique)</option>
+			<option value="hebrew">hébraïque</option>
+			<option value="indian">indien moderne</option>
+			<option value="islamic">islamique standard</option>
+			<option value="islamic-umalqura">islamique Umm al-Qura</option>
+			<option value="islamic-tbla">islamique tabulaire astronomique</option>
+			<option value="islamic-civil">islamique tabulaire civil</option>
+			<option value="islamic-rgsa">islamique, Arabie saoudite</option>
+			<option value="iso8601">grégorien avec règles ISO 8601</option>
+			<option value="japanese">japonais impérial</option>
+			<option value="persian">persan</option>
+			<option value="roc">chinois de république populaire</option>
+			</select> 
+		</td>
+	   </tr>
+	   <tr>
+	    <td colspan="1">Calendrier effectif: </td>
+	    <td colspan="3"><input name="Ecalend" type="text" disabled="disabled" class="dateconvert"></td>
+	   </tr>
+	   </table>
+		<table class="dateconvert" align="center">
+			<tr><th>Zone horaire </th>
+			<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
+			</tr>
+			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="dateconvert" size="30"></td></tr>
+		</table>
+	   <table class="dateconvert" align="center">
+	   <tr>
+		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
+	   </tr>
+	   <tr>
+		<td><input type="text" class="dateconvert" size="5" name="Weekday" value="long"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Day" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Month" value="long"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Year" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Era" value=""></td>
+	   </tr>
+	   <tr>
+		<th>Hour</th><th>Minute</th><th>Second</th>
+		<td><button class="dateconvert" type="reset">Réinit</button></td>
+	   </tr>
+	   <tr>
+		<td><input type="text" class="dateconvert" size="5" name="Hour" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Minute" value="numeric"> </td>
+		<td><input type="text" class="dateconvert" size="5" name="Second" value="numeric"> </td>
+		<td><button class="dateconvert" >Ok</button></td>	
+	   </tr>
+	   </table>
+	   <br>
+	   <table class="dateconvert" align="center">
+	   <tr><th>Milésien: </th><td id="Mstring"></td></tr>
+	   <tr><th>CLDR: </th><td id="Gstring"></td></tr>
+	 </form> 
+    </table>
+</div>
+</section>
+<section class="dateconvert">
+<h2>Liens utiles</h2>
+  <table class="dateconvert" align="center">
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
+	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
+  </table>
+ <h3 class="dateconvert">© 2017-2018 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
+ <script type="text/javascript" >setDateToNow();</script>
+</section>
+</body>
+</html>
