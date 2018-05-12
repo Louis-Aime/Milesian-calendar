@@ -6,22 +6,27 @@ First objective: set the months names for a set of languages as defined [here](h
 This file is no more used in this implementation. It has been transferred to [Milesian_Datasets](https://github.com/Louis-Aime/Milesian_datasets).
 ## milesianMonthNamesString.js 
 The Milesian month names object stored as a string, and parsed upon initialisation.
-## UnicodeMilesian.js
+## UnicodeMilesianFormat.js
 Take benefit of the Unicode calendar environment and propose a Milesian string elaboration routine using the CLDR.
+### unicodeCalendarHandled (calendar)
+If user specifies calendar, which calendar will he get
 ### toLocalDate (Date, [Options])
-Set a Date object to the date where the Sun is in the same position from the "timezone" as at Greenwich at the given date. 
+Set an object containing a Date object to the date where the Sun is in the same position from the "timezone" as at Greenwich
+at the given date, and an "accuracy" indication: with weak-browsers, it is not always possible to get the exact result. 
 In other words, set a Date as a "local" date, "local" meaning: as it is specified with the timeZone value of Otpion.
 This function is not directly connected with the Milesian calendar, but is very usefull for computations on time zones.
+### milesianFormatToParts
+A method to Intl.DateTimeFormat, with the same effect than .formatToParts, but the parts will be of the milesian date.
+### milesianFormat
+A method to Intl.DateTimeFormat, with the same effect than .format, but yields the string of a milesian date.
 ### toMilesianString ([Locale,[Options]])
-a method for the Date object.
+this method is deprecated, and no longer available.
 
 MilesianDateProperties.js is used.
 
-toMilesianDateString ([Locale,[Options]]) is a Date method that generates the string of a Milesian date
-as specified with Locale and Options, following Unicode format codes. 
-see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] for details.
+see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] 
+for details on Locale and Options passed to Intl.DateTimeFormat ()
 
-The code of this function is not optimal. The only idea is to show a demonstrator on a few languages.
-
-## writeMilesianDate.html and writeMilesianDate.js
-A simple demonstration page that uses function toMilesianString().
+## unicodeTester.html and unicodeTester.js
+A simple demonstration page that uses the abone functions and enables it to understand how Unicode calendars 
+are rendered with several browser.
