@@ -79,9 +79,13 @@ function toLocalDate (myDate, Options = undefined) {
 	else if (Options.timeZone == "UTC") { return { localDate: new Date(myDate.valueOf()), accuracy : "exact"};} // Other trivial case: time zone asked is UTC.
 	else { // Now the difficult part begins
 	  try {
-		var askedOptions = new Intl.DateTimeFormat (undefined, Options); // Computed object from asked locales and options
+		// Before any further action, test whether asked time zone corresponds to default time zone
+		var askedOptions = new Intl.DateTimeFormat (); // Default parameters	
 		var usedOptions = askedOptions.resolvedOptions();
+		if (Options.timeZone == usedOptions.timeZone) { return { localDate : localTime, accuracy : "exact" };}
 		// First try using formatToParts, which is the surest way.
+		askedOptions = new Intl.DateTimeFormat (undefined, Options); // Computed object from specified options
+		usedOptions = askedOptions.resolvedOptions();
 		var numericOptions = new Intl.DateTimeFormat ("fr",{weekday: 'long',
 			year: 'numeric',  month: 'numeric',  day: 'numeric',  hour: 'numeric',  minute: 'numeric',  second: 'numeric',  era: 'narrow', 
 			timeZone: usedOptions.timeZone});
@@ -104,7 +108,7 @@ function toLocalDate (myDate, Options = undefined) {
 						// If navigator does not accept, use standard TZ.
 					let testTime = new Date(parseOptions.format(myDate) + " UTC"); // Elaborate a string display of the local date, 
 					// and construct a date as a UTC. If an error occurs here, will not destroy backup result.
-					return { localDate : localTime, accuracy : "exact" };
+					return { localDate : testTime, accuracy : "exact" };
 					}
 				catch (e1) {	// Browser failed parsing. Then return standard basic local time (as initialised) but with a caveat
 					throw "Approximate local date evaluation"; 
@@ -209,11 +213,18 @@ Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) { // Issue a Mi
 	// FormatToParts does not work, however we can use a backup version using the backup LocalDate, without formatting the Milesian date.
 	catch (e) { // just catch and continue
 	}
-	try { // Compute a local date, but check result accuracy
-		let localComput = toLocalDate(myDate, {timeZone : this.resolvedOptions().timeZone});
-		return localComput.localDate.toUTCIntlMilesianDateString() + ((localComput.accuracy == "exact") ? "" : " (approx)"); 
+	try { // Compute a local date, mention accuracy
+		let localComput = toLocalDate(myDate, {timeZone : this.resolvedOptions().timeZone}),
+			those = this.resolvedOptions();
+		return localComput.localDate.toUTCIntlMilesianDateString() 
+			+ " " + (those.hour == undefined ? "" :(new Intl.DateTimeFormat(those.locale, 
+						{hour : those.hour, minute : those.minute, second : those.second, hour12 : false, timeZone : "UTC"}))
+						.format(localComput.localDate))
+			+ ((localComput.accuracy == "exact") ? "" : " (approx)"); 
 	}
 	catch (e1) { // Actually, this case should not happen, except error with toLocaleDate
-		return myDate.toIntlMilesianDateString()+" (system)"; 
+		return myDate.toIntlMilesianDateString()
+				+ " " + myDate.toTimeString()
+				+ " (system)"; 
 	}
 }
