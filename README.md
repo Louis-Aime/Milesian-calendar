@@ -23,9 +23,9 @@ In order to demonstrate the routines, you may extract all software and data piec
 Properties and method are added to the standard JS Date object, 
 in order to specify dates with Milesian figure or get the Milesian figure from a Date. 
 The modules are:
-### CalendarCycleComputationEngine.js
+### CBCCE.js
 A computation module for converting from Timestamp to calendar representation and the reverse, with any calendar 
-that can be described in terms of hierarchy of cycles, with an intercalary element (a day, generally) 
+that can be described in terms of hierarchy of cycles, with an intercalary element (a day, a year, a cycle of years...) 
 inserted or omitted at end of each cycle, under the principle of postfix intercalation. This works for the Milesian calendar. 
 This works too for the julian and gregorian calendars, provided that we let the "roman" year begin on 1 March,
 as it used to be before Julius Caesar's reform, and provided that we use a specific function for decomposition in "roman" months.
@@ -48,12 +48,17 @@ In principle, Common Locale Data Repository (CLDR) provide ways to make such com
 Getters of coordinates of a mean moon, and of an estimate of the "Delta Time" used by astronomers. 
 Enables to anticipate possible eclipses in a similar way to the [Antikythera mechanism](https://en.wikipedia.org/wiki/Antikythera_mechanism)
 
-## Milesian Locale: compute Milesian date string and other languages and calendar date string following CLDR project model
+## Milesian Locale 
+Format Milesian date string in different languages, following CLDR project model
 Requires 
 * Basic_Common files.
 
-Generate Milesian Date strings in different languages, as specified in the Common Locale Data Repository (CDLR) project.
+Demonstrate the "computation" of a string expressing a Milesian date following locales and options 
+as specified by Common Locales Data Repository (CLDR) of Unicode.
 
+Generate also a date string with the standard CDLR routines in any Unicode-supported language and calendar.
+Thus, this package may be used as a converter from Milesian into any Unicode-registred calendar.
+Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
 
 ## Year-signature
 Requires: 
@@ -62,29 +67,20 @@ Requires:
 
 Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
 
-## Numeric-clock
+## Dial-clock
 Requires 
 * Basic_Common
 * Misc_Date_Properties (complete) 
 * Milesian Locale
 
-This is a "Milesian numeric perpetual calendar", demonstrating how to convert dates to/from gregorian, julian and Milesian calendars, 
-and giving moon and Delta T coordinates.
+This is a "Milesian clock", with month, day, hour and minute hands. Seconds are also possible. 
+The package demonstrates also how to convert dates to/from gregorian, julian and Milesian calendars, Julian Day, 
+and to any Unicode calendar, or other "serie", and finally giving moon and Delta T coordinates.
 
-## Write-Milesian-Date
-Requires 
-* Basic_Common 
-* Milesian Locale.
-
-Demonstrate the "computation" of a string expressing a Milesian date following locales and options 
-as specified by Common Locales Data Repository (CLDR).
-
-Generate also a date string with the standard CDLR routines in any Unicode-supported language and calendar.
-Thus, this package may be used as a converter from Milesian into any Unicode-registred calendar.
-Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
-
-## Dial-clock 
+## Converter 
 Requires 
 * Basic_Common
+* Misc_Date_Properties (complete) 
+* Milesian Locale
 
-Demonstrate dial Milesian clocks, with month, day, hour and minute hands. Seconds are also possible.
+A simplified version of the Milesian clock, handles dates only.
