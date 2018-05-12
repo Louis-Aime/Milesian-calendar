@@ -19,7 +19,7 @@ This function is used in "DateProperties" packages of this repository.
 ## MilesianDateProperties.js: methods for the Milesian calendar.
 Package CCBCCE is used.
 * getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
-* getMilesianUTCDate : same as above, in UTC time.
+* getUTCMilesianDate : same as above, in UTC time.
 * setTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : set Time from milesian date + local hour.
 * setUTCTimeFromMilesian (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 * toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
