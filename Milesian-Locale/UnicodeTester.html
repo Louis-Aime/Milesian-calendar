@@ -12,16 +12,17 @@
 	
 </head>
 <body>
-<section>
+<section class="dateconvert">
 <h1 class="dateconvert">Expression de date<br>et calendriers Unicode</h1>
-<p class="dateconvert">"Locale": code langue et pays au format "ll-PP",<br>
-par exemple "en-US": l'anglais aux Etats-Unis.<br>
-"Calendrier": l'un des calendriers définis par Unicode.<br>
-"Options": représentation de chaque composant de date<br>
-avec "numeric", "2-digit", "long", "short" ou "narrow".<br>
+<p class="dateconvert">"Locale": code langue et pays,<br>
+par exemple "fr" ou "en-US".<br>
+"Zone horaire": ville de référence de fuseau horaire.<br>
+Voir valeurs possibles via liens en bas de page.<br>
 Noms de mois milésiens non définis dans une langue:<br>
 la version longue est affichée en latin.</p>
-<!-- section heure locale et UTC avec contrôles -->
+</section>
+<section class="dateconvert">
+<h2 class="dateconvert">Heure et décalage horaire</h2>
 	<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 		<table class="dateconvert" align="center">
 			<tr><th>Mode</th>
@@ -38,19 +39,17 @@ la version longue est affichée en latin.</p>
 			</tr>
 		</table>
 	</form>
-		
-	<table class="dateconvert" align="center">
-	  <tr> 
-		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
-		 <td>Heure locale : </td>
-		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
-		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
-		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
-		 <td><button class="dateconvert">Ok</button></td>	
-		</form>
-	  </tr>
-	</table>
-
+	<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		<table class="dateconvert" align="center">
+		  <tr> 
+			 <td>Heure locale : </td>
+			 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
+			 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
+			 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
+			 <td><button class="dateconvert">Ok</button></td>	
+		  </tr>
+		</table>
+	</form>
 	 <table class="dateconvert" align="center"> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
@@ -79,19 +78,20 @@ la version longue est affichée en latin.</p>
 		</form>
 	  </tr>
 	</table>
-<br>
-<!-- fin section heure, début section date -->
+</section>
+<section class="dateconvert">
+<h2 class="dateconvert">Date</h2>
 	<table class="dateconvert" align="center">
        <tr>
         <th>Jour</th>
         <th>Quant.</th>
         <th>Mois</th>
         <th>Année</th>
-        <th></th>
+        <th> </th>
       </tr>
       <tr>
 	    <form name="milesian" class="dateconvert" method="post" action="JavaScript:calcMilesian();">
-        <td><input name="dayofweek" type="text" class="dateconvert" size="18" disabled="disabled" /> </td>
+        <td><input name="dayofweek" type="text" class="dateconvert" size="12" disabled="disabled" /> </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
         <td>
         <select name="monthname" size="1" class="dateconvert">
@@ -124,9 +124,10 @@ la version longue est affichée en latin.</p>
 		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
     </form></tr>
 </table>
-<br>
-<!-- Input Locale and Options, output String -->
-<div class="dateconvert autoscroll">
+</section>
+<section class="dateconvert">
+<h2 class="dateconvert">Options de présentation</h2>
+  <div class="dateconvert autoscroll">
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
 	 <table class="dateconvert" align="center"> 
 	   <tr>
@@ -171,34 +172,83 @@ la version longue est affichée en latin.</p>
 			</tr>
 			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="dateconvert" size="30"></td></tr>
 		</table>
-	   <table class="dateconvert" align="center">
+	 <table class="dateconvert" align="center">
 	   <tr>
-		<th>Weekday</th><th>Day</th><th>Month</th><th>Year</th><th>Era</th>
+		<th>Jour semaine</th><th>Quantième</th><th>Mois</th><th>Année</th>
 	   </tr>
 	   <tr>
-		<td><input type="text" class="dateconvert" size="5" name="Weekday" value="long"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Day" value="numeric"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Month" value="long"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Year" value="numeric"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Era" value=""></td>
+		<td><select name="Weekday" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="narrow">étroit</option>
+			<option value="short">court</option>
+			<option value="long" selected>long</option>
+			</select></td>
+		<td><select name="Day" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric" selected>numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			</select></td>
+		<td><select name="Month" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric">numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			<option value="narrow">étroit</option>
+			<option value="short">court</option>
+			<option value="long" selected>long</option>
+			</select></td>
+		<td><select name="Year" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric" selected>numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			</select></td>
 	   </tr>
 	   <tr>
-		<th>Hour</th><th>Minute</th><th>Second</th>
+		<th>Heure</th><th>Minute</th><th>Seconde</th><th>Cycle horaire</th>
+	   </tr>
+	   <tr>
+		<td><select name="Hour" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric" selected>numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			</select></td>
+		<td><select name="Minute" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric" selected>numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			</select></td>
+		<td><select name="Second" class="dateconvert" size="1">
+			<option value="">absent</option>
+			<option value="numeric" selected>numérique</option>
+			<option value="2-digit">2 chiffres</option>
+			</select></td>
+		<td><select name="Hour12" size="1" class="dateconvert">
+			<option value="" selected>usage local</option>
+			<option value="true">12h</option>
+			<option value="false">24h</option>
+			</select></td>
+	   </tr>
+	  <tr> 
+		<th>Ere:</th>
+		<td><select name="Era" class="dateconvert" size="1">
+			<option value="" selected>absent</option>
+			<option value="narrow">étroit</option>
+			<option value="short">court</option>
+			<option value="long">long</option>
+			</select></td>
 		<td><button class="dateconvert" type="reset">Réinit</button></td>
+		<td><button class="dateconvert" >Ok</button></td>
 	   </tr>
-	   <tr>
-		<td><input type="text" class="dateconvert" size="5" name="Hour" value="numeric"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Minute" value="numeric"> </td>
-		<td><input type="text" class="dateconvert" size="5" name="Second" value="numeric"> </td>
-		<td><button class="dateconvert" >Ok</button></td>	
-	   </tr>
-	   </table>
-	   <br>
+   </table>
+  </form> 
+ </div>
+</section>
+<section class="dateconvert">
+<h2 class="dateconvert">Expressions de date</h2>
+<div class="dateconvert autoscroll">
 	   <table class="dateconvert" align="center">
 	   <tr><th>Unicode: </th><td id="Gstring"></td></tr>
 	   <tr><th>Milésien: </th><td id="Mstring"></td></tr>
-     </table>
-	</form> 
+	 </table>
 </div>
 </section>
 <section class="dateconvert">

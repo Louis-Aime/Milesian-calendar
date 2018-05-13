@@ -2,7 +2,7 @@
 To be used with UnicodeTester.html
 Character set is UTF-8
 Versions: preceding versions were a personal makeup page, under the name writeMilesian.
-	M2018-05-21 : incorporated time management tools
+	M2018-05-22 : incorporated time management tools and secured entries
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -61,7 +61,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	else if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar;
 	askedOptions = new Intl.DateTimeFormat (Locale);
 	userOptions = askedOptions.resolvedOptions(); 
-	let Options = {	// No control !
+	let Options = {	// controlled via <select>
 		weekday : (document.LocaleOptions.Weekday.value == "") ? undefined : document.LocaleOptions.Weekday.value,
 		day 	: (document.LocaleOptions.Day.value == "") ? undefined : document.LocaleOptions.Day.value,
 		month	: (document.LocaleOptions.Month.value == "") ? undefined : document.LocaleOptions.Month.value,
@@ -69,7 +69,8 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		era		: (document.LocaleOptions.Era.value == "") ? undefined : document.LocaleOptions.Era.value,
 		hour	: (document.LocaleOptions.Hour.value == "") ? undefined : document.LocaleOptions.Hour.value,
 		minute	: (document.LocaleOptions.Minute.value == "") ? undefined : document.LocaleOptions.Minute.value,
-		second	: (document.LocaleOptions.Second.value == "") ? undefined : document.LocaleOptions.Second.value
+		second	: (document.LocaleOptions.Second.value == "") ? undefined : document.LocaleOptions.Second.value,
+		hour12	: (document.LocaleOptions.Hour12.value == "") ? undefined : (document.LocaleOptions.Hour12.value == "true")
 	}
 	if (timeZone !== "") 
 		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
