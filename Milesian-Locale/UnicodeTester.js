@@ -158,7 +158,7 @@ function setDateToNow(){ // Self explanatory
     targetDate = new Date(); // set new Date object.
 	setDisplay ();
 }
-function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so local time may change making this operation
+function SetDayOffset (sign) { // the days are integer, all 24h, so local time may change making this operation
 	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
 	let days = Math.round (document.control.shift.value);
 	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
@@ -196,24 +196,22 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		targetDate.setUTCHours(UTChours, 0, 0, 0); //targetDate.setUTCMinutes(0); targetDate.setSeconds(0); targetDate.setMilliseconds(0);
 		setDisplay();	
 }
-
-function calcMilesian() {	// on OK on Milesian date
+function calcMilesian() {
 	var day =  Math.round (document.milesian.day.value);
 	var month = document.milesian.monthname.value;
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
-		alert (milesianAlertMsg("invalidDate") + '"'  + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
-	else {		
-		targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
-		setDisplay ();
+		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+	else { switch (TZSettings.mode){
+		case "TZ": targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : targetDate.setUTCTimeFromMilesian (year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCTimeFromMilesian (year, month, day); 
+			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
-}
-function SetDayOffset (sign) { // the days are integer, all 24h, so local time may change making this operation
-	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
-	let days = Math.round (document.control.shift.value);
-	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
-	else { 
-		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
-		setDisplay();
+	setDisplay ();
 	}
 }
