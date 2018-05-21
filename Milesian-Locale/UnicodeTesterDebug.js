@@ -1,6 +1,8 @@
 /* Unicode Tester: test Unicode calendars formatting capabilities. 
 To be used with UnicodeTester.html
 Character set is UTF-8
+Debug version 
+	M2018-05-29: trace cases of toLocalDate computations
 Versions: preceding versions were a personal makeup page, under the name writeMilesian.
 	M2018-05-22 : incorporated time management tools and secured entries
 	M2018-05-29 : enhanced and simplified control of options
@@ -108,19 +110,39 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	// Certain Unicode calendars do not give a proper result: here is the control code.
 	
 	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
+
+	// Debug 1/2
+	let myLocal = toLocalDate(targetDate, timeZone);
+	document.getElementById("Mcontrol").innerHTML = myLocal.way + " - " + myLocal.localDate.toUTCIntlMilesianDateString();
+	// End debug 1/2
+
 	switch (usedOptions.calendar) {	
-		case "hebrew": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+		case "hebrew": valid = (myLocal.localDate.valueOf()					//toLocalDate(targetDate, usedOptions.timeZone).localDate.valueOf()
 			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf() 
+		case "indian": valid = (myLocal.localDate.valueOf()					//toLocalDate(targetDate, usedOptions.timeZone).localDate.valueOf() 
 			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
 		case "islamic":
-		case "islamic-rgsa": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+		case "islamic-rgsa": valid = (myLocal.localDate.valueOf()			//toLocalDate(targetDate, usedOptions.timeZone).localDate.valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
 		}
 		
 	let myElement = document.getElementById("Gstring");
-	try { myElement.innerHTML = (valid ? "" : milesianAlertMsg("invalidDate")) + askedOptions.format(targetDate); }
-	catch (e) { myElement.innerHTML = milesianAlertMsg("browserError"); }
+	try { myElement.innerHTML = (valid ? "" : milesianAlertMsg("invalidDate")) + askedOptions.format(targetDate); 
+	
+	// Debug 2/2
+	let parseOptions = { year: 'numeric',  month: 'short',  day: 'numeric',  // no Era !
+					hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
+	if (!(timeZone == (undefined || ""))) parseOptions.timeZone = timeZone;
+	let formatterOptions = new Intl.DateTimeFormat ("en-US", parseOptions);
+	let testString = formatterOptions.format(targetDate);
+	let testTime = new Date(testString + " UTC"); 
+	document.getElementById("Gcontrol").innerHTML = testString + " - " + testTime.toISOString();
+	// End debug 2/2
+	
+	}
+	catch (e) { myElement.innerHTML = milesianAlertMsg("browserError"); 
+	
+	}
 }
 
 function setDisplay () { // Considering that targetDate time has been set to the desired date, this routines updates all form fields.
