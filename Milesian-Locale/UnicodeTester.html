@@ -21,7 +21,7 @@ Voir valeurs possibles via liens en bas de page.<br>
 Noms de mois milésiens non définis dans une langue:<br>
 la version longue est affichée en latin.</p>
 </section>
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h2 class="dateconvert">Heure et décalage horaire</h2>
 	<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 		<table class="dateconvert" align="center">
@@ -79,7 +79,7 @@ la version longue est affichée en latin.</p>
 	  </tr>
 	</table>
 </section>
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h2 class="dateconvert">Date</h2>
 	<table class="dateconvert" align="center">
        <tr>
@@ -125,14 +125,14 @@ la version longue est affichée en latin.</p>
     </form></tr>
 </table>
 </section>
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h2 class="dateconvert">Options de présentation</h2>
   <div class="dateconvert autoscroll">
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
 	 <table class="dateconvert" align="center"> 
 	   <tr>
 		<th colspan="1">Locale: </th>
-		<td colspan="1"><input name="Locale" type="text" class="dateconvert" size="5" value=""> </td>
+		<td colspan="1"><input name="Locale" type="text" autocomplete="language" class="dateconvert" size="5" value=""> </td>
 		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="dateconvert" size="16"></td>
 	   </tr>
 	   <tr>
@@ -227,27 +227,31 @@ la version longue est affichée en latin.</p>
 			<option value="false">24h</option>
 			</select></td>
 	   </tr>
-	  <tr> 
-		<th>Ere:</th>
+	<tr> 
+		<th></th><th>Ere:</th>
+		<td><button class="dateconvert" type="reset">Réinit</button></td> <td></td>
+	</tr> 
+	<tr><td></td>
 		<td><select name="Era" class="dateconvert" size="1">
 			<option value="" selected>absent</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
 			<option value="long">long</option>
 			</select></td>
-		<td><button class="dateconvert" type="reset">Réinit</button></td>
-		<td><button class="dateconvert" >Ok</button></td>
-	   </tr>
+		<td><button class="dateconvert" >Ok</button></td> <td></td>
+	</tr>
    </table>
   </form> 
  </div>
 </section>
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h2 class="dateconvert">Expressions de date</h2>
 <div class="dateconvert autoscroll">
 	   <table class="dateconvert" align="center">
 	   <tr><th>Unicode: </th><td id="Gstring"></td></tr>
 	   <tr><th>Milésien: </th><td id="Mstring"></td></tr>
+	   <tr><td></td><td id="Gcontrol"></td></tr>
+	   <tr><td></td><td id="Mcontrol"></td></tr>
 	 </table>
 </div>
 </section>
