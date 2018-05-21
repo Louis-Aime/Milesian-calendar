@@ -94,7 +94,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h1>Heure et fuseau horaire</h1>
 	<table class="dateconvert" align="center">
 		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
@@ -116,7 +116,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<table class="dateconvert" align="center">
 	  <tr> 
 		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
-		 <td>Heure locale : </td>
+		 <td>Heure selon mode : </td>
 		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
 		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
 		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
@@ -334,20 +334,20 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</tr>
 	</table>
 </section>	
-<section class="dateconvert">
+<section class="dateconvert autoscroll">
 <h1>Représentation Unicode</h1>
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setLocalePresentationCalendar();">
 	<table class="dateconvert" align="center"> <tr>
 		<th>Format</th>
 			<td>
 			<select name="Presentation" class="dateconvert" size="1">
-				<option value="long">long</option>
-				<option value="textCumWeek" selected>texte avec semaine</option>
-				<option value="textSineWeek">texte sans semaine</option>
-				<option value="short">abrégé</option>
-				<option value="numeric">numérique</option>
-				<option value="2-digit">2 chiffres</option>
-				<option value="year-2-digit">année 2 chiffres</option>
+				<option value="long">Texte complet</option>
+				<option value="standard" selected>Texte courant</option>
+				<option value="short">Texte abrégé</option>
+				<option value="narrow">Texte compact</option>
+				<option value="numeric">Numérique complet</option>
+				<option value="2-digit">Numérique compact</option>
+				<option value="year-2-digit">Année 2 chiffres</option>
 			</select>
 			</td>
 		</tr>
@@ -444,8 +444,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
  </table>
  <table class="dateconvert" align="center">
     <tr>
-	 <th colspan="4">Calendrier lunaire virtuel</th>
+	 <th colspan="4">Calendrier lunaire virtuel à Greenwich</th>
 	</tr>
+      <tr>
+        <th>Origine</th>
+        <th>Jour</th>
+        <th>Mois</th>
+        <th>Année lunaire</th>
+      </tr>
 	<tr>
 	 <td>An 0:</td>
 	 <td><input name="CElunardate" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
