@@ -69,24 +69,6 @@ var
 					hour : "numeric", minute : "numeric", second : "numeric"}; 	// Initial presentation options.
 	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	// Formatting options initialisation
 	userOptions = askedOptions.resolvedOptions(); // Initialisation of explicit display options
-
-function putStringOnOptions() { // print Unicode string, following already computed options.
-	var valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
-	// Certain Unicode calendars do not give a proper result: set the flag.
-	switch (userOptions.calendar) {	
-		case "hebrew": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf()
-			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf() 
-			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
-		case "islamic":
-		case "islamic-rgsa": valid = (toLocalDate(targetDate, {timeZone: userOptions.timeZone}).localDate.valueOf()
-			>= -42521673600000); break; // Computations are false before Haegirian epoch
-		}
-	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
-	let myElement = document.getElementById("UnicodeString");
-	try { myElement.innerHTML = (valid ? askedOptions.format(targetDate) : milesianAlertMsg("invalidDate")); } // Plutôt que targetDate.toLocaleTimeString(Locale,Options)
-	catch (e) { myElement.innerHTML = milesianAlertMsg("invalidDate"); }
-}
 	
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
@@ -218,14 +200,30 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Unicode frame 
 	myElement = document.querySelector("#langCode");
-	myElement.innerHTML = userOptions.locale;		// Display Locale (language code) as obtained after negotiation process
+	// Display Locale (language code only) as obtained after negotiation process
+	myElement.innerHTML = userOptions.locale.includes("-u-") ? userOptions.locale.substring (0,userOptions.locale.indexOf("-u-")) : userOptions.locale ;		
 	myElement = document.querySelector("#CalendarCode");
 	myElement.innerHTML = userOptions.calendar;	// Display calendar obtained after negotiation process
 	myElement = document.querySelector("#timeZone");
 	myElement.innerHTML = userOptions.timeZone;	// Display time zone as obtained after negotiation process
 	
-	// Unicode date following options
-	putStringOnOptions();				
+	// Print Unicode string, following already computed options.
+ 
+	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
+	// Certain Unicode calendars do not give a proper result: set the flag.
+	switch (userOptions.calendar) {	
+		case "hebrew": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
+		case "indian": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf() 
+			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
+		case "islamic":
+		case "islamic-rgsa": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+			>= -42521673600000); break; // Computations are false before Haegirian epoch
+		}
+	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
+	myElement = document.getElementById("UnicodeString");
+	try { myElement.innerHTML = (valid ? askedOptions.format(targetDate) : milesianAlertMsg("invalidDate")); } // Plutôt que targetDate.toLocaleTimeString(Locale,Options)
+	catch (e) { myElement.innerHTML = milesianAlertMsg("invalidDate"); }
 
 	//	Milesian date string following options. Catch error if navigator fails, in this case write without time part.
 	myElement = document.getElementById("milesianDisplay");
@@ -244,11 +242,13 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 				+  ((targetDate.getLunarTime().seconds < 10) ? "0" : "") + targetDate.getLunarTime().seconds + "s";
 	document.moon.moondate.value = targetDate.getLunarDateTime().date + " " 
 				+  (++targetDate.getLunarDateTime().month) + "m";
-	document.moon.CElunardate.value = 	Math.ceil(dateComponent.age);
+
+	dateComponent = shiftDate.getCELunarDate();				
+	document.moon.CElunardate.value = 	dateComponent.date;
 	document.moon.CElunarmonth.value = 	++dateComponent.month;
 	document.moon.CElunaryear.value = 	dateComponent.year;
-	dateComponent = targetDate.getHegirianMoonDate();	
-	document.moon.hegiriandate.value = 	Math.ceil(dateComponent.age);
+	dateComponent = shiftDate.getHegirianLunarDate();	
+	document.moon.hegiriandate.value = 	dateComponent.date;
 	document.moon.hegirianmonth.value = ++dateComponent.month;
 	document.moon.hegirianyear.value = 	dateComponent.year;
 	

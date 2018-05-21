@@ -43,7 +43,9 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 		}
 	userOptions = askedOptions.resolvedOptions(); 
 	Locale = userOptions.locale; 	// Here Locale is no longer an empty string
-	
+	if (Locale.includes("-u-"))		// The Unilog extension ("-u-") is indicated in the specified locale, drop it
+	Locale = Locale.substring (0,Locale.indexOf("-u-"));
+		
 	// Now add specified calendar
 	if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar; // Calendar is a selected value, no entry error expected
 	
@@ -53,29 +55,29 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long",
 					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
-		case "textCumWeek":
+		case "standard":
 			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
 					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
-		case "textSineWeek":
-			Options = {weekday : undefined, day : "numeric", month: "long", year : "numeric", era : "short",
-					hour : "numeric", minute : "numeric", second : "numeric"};
-			break;
 		case "short":
-			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "narrow",
+			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short",
+					hour : "numeric"};
+			break;
+		case "narrow":
+			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", era : "narrow",
 					hour : "2-digit", minute : "2-digit", second : "2-digit"};
 			break;	
 		case "numeric":
-			Options = {weekday : undefined, day : "numeric", month : "numeric", year : "numeric", era : "narrow",
+			Options = {weekday : "short", day : "numeric", month : "numeric", year : "numeric", era : "short",
 					hour : "2-digit", minute : "2-digit", second : "2-digit"};
 			break;
 		case "2-digit":
-			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "numeric", era : undefined,
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+			Options = {weekday : "narrow", day : "2-digit", month : "2-digit", year : "numeric", 
+					hour : "2-digit", minute : "2-digit"};
 			break;
 		case "year-2-digit":
-			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "2-digit", era : undefined,
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "2-digit", 
+					hour : "2-digit"};
 		}
 	
 	// Add time zone if specified
