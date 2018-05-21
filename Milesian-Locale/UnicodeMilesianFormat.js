@@ -7,18 +7,20 @@ Versions
 	M2017-12-28 catches MS Edge generated error
 	M2017-12-26 formal update of M2017-07-04 concerning dependent files.
 	M2018-02-28 
-* Rename toMilesianString.js into UnicodeMilesian.js
-* full use of Unicode time zone offset base - more specifically non-integer offsets
-* add toLocalDate
-* suppress pad (not used, replace with standard Unicode functions)
-Version M2018-05-20
-	Use of .formatToParts method
-	Define 2 new methods on Intl.DateTimeFormat, one "format" and one "formatToParts"
-	For non conformant browsers (MS Edge), make it possible to generate and parse a date in order to compute time zone offset. 
-	Add unicodeCalendarHandled (calendar) : from a requested calendar (in Locale), gives the used one.
+		Rename toMilesianString.js into UnicodeMilesian.js
+		full use of Unicode time zone offset base - more specifically non-integer offsets
+		add toLocalDate
+		suppress pad (not used, replace with standard Unicode functions)
+	M2018-05-20
+		Use of .formatToParts method
+		Define 2 new methods on Intl.DateTimeFormat, one "format" and one "formatToParts"
+		For non conformant browsers (MS Edge), make it possible to generate and parse a date in order to compute time zone offset. 
+		Add unicodeCalendarHandled (calendar) : from a requested calendar (in Locale), gives the used one.
+	M2018-05-30
+		Restructure toLocalDate parameters - whenever possible, TZ parameter passed is used.
 Contents
 	unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
-	toLocalDate : return a Date object holding the version shifted by the time zone offset contained in options. 
+	toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
 	Date.prototype.toMilesianLocaleDateString (deprecated).
@@ -67,62 +69,74 @@ function unicodeCalendarHandled (calendar) { // From an "asked" calendar, gives 
 
 /** Construct a date that represents the value of the given date shifted to the time zone indicated or resolved in Options.
 As in many situations it is not possible to compute the exact local Date-Time, the result here is an Object:
-{ localDate : (a Date object with the best possible result), accuracy : (see under)}
+{ localDate : (a Date object with the best possible result), accuracy : (see under), way :(for debug, how did we compute)}
 Possible values for accuracy:
 	"exact" : local date has been computed with formatToParts or by parsing a date string, in a 'safe' period.
 	"approximate" : local date could not be computed exactly, the returned date is the local date as from the user's settings, not from Unicode.
 */
-function toLocalDate (myDate, Options = undefined) {
+function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a time zone. // Initially : Options
 	var	localTime = new Date (myDate.valueOf() - myDate.getTimezoneOffset()*Chronos.MINUTE_UNIT); //Basic value if no further computation possible
-	if (Options.timeZone == undefined) // Very simple case: time zone is system default
-		{ return { localDate : localTime, accuracy : "exact" };}
-	else if (Options.timeZone == "UTC") { return { localDate: new Date(myDate.valueOf()), accuracy : "exact"};} // Other trivial case: time zone asked is UTC.
-	else { // Now the difficult part begins
-	  try {
-		// Before any further action, test whether asked time zone corresponds to default time zone
+	// if (myTZ == (undefined || "")) return { localDate: localTime, accuracy : "exact", way : "default" }; 
+	if (myTZ == "UTC") return { localDate: new Date(myDate.valueOf()), accuracy : "exact", way : "UTC"}; // Trivial case: time zone asked is UTC.
+	// First try to resolve time zone option.
+	try {
+	// Before any further action, test format functions
 		var askedOptions = new Intl.DateTimeFormat (); // Default parameters	
-		var usedOptions = askedOptions.resolvedOptions();
-		if (Options.timeZone == usedOptions.timeZone) { return { localDate : localTime, accuracy : "exact" };}
-		// First try using formatToParts, which is the surest way.
-		askedOptions = new Intl.DateTimeFormat (undefined, Options); // Computed object from specified options
-		usedOptions = askedOptions.resolvedOptions();
-		var numericOptions = new Intl.DateTimeFormat ("fr",{weekday: 'long',
-			year: 'numeric',  month: 'numeric',  day: 'numeric',  hour: 'numeric',  minute: 'numeric',  second: 'numeric',  era: 'narrow', 
-			timeZone: usedOptions.timeZone});
-		try {	// try using formatToParts. If not usable, use the variant algorithm
-			let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at usedOptions.timeZone
-			localTime = new Date(Date.UTC		// Construct a UTC date based on the figures of the local date.
-					(localTC[6].value, localTC[4].value-1, localTC[2].value, localTC[10].value, localTC[12].value, localTC[14].value));
-			if (localTC[8].value == "av. J.-C.") localTC[6].value = 1-localTC[6].value;
-			localTime.setUTCFullYear(localTC[6].value);	// If year was a 2-digit figure, ensure true value.
-			return { localDate : localTime, accuracy : "exact" };
-			}
-		catch (e) { // Other method without formatToParts, but limited to year 101 and above, because dates with 2-digit years are not properly parsed.
-			// Recall: 2-digit years nn are generally set to 19nn or 20nn. 
-			// Moreover, if nn is lower than the Day index, the Day index is considered the year...
-			if (myDate.getUTCFullYear() > 100)	{
-				var parseOptions = new Intl.DateTimeFormat ("en-US",{
-					year: 'numeric',  month: 'short',  day: 'numeric',  hour: 'numeric',  minute: 'numeric',  second: 'numeric', era: 'narrow', hour12: false, 
-					timeZone: usedOptions.timeZone});
-				try {	// Try translating date into a string for the local date, then this string into a UTC date.
-						// If navigator does not accept, use standard TZ.
-					let testTime = new Date(parseOptions.format(myDate) + " UTC"); // Elaborate a string display of the local date, 
-					// and construct a date as a UTC. If an error occurs here, will not destroy backup result.
-					return { localDate : testTime, accuracy : "exact" };
-					}
-				catch (e1) {	// Browser failed parsing. Then return standard basic local time (as initialised) but with a caveat
-					throw "Approximate local date evaluation"; 
-					return { localDate : localTime, accuracy : "approximate" };
-					}		
-			}
-			else  // Here, without FormatToParts and with an ambiguous date expression, return standard basic time with a caveat
-				return { localDate : localTime, accuracy : "approximate" };
-			}
+		}
+	catch (e) { // No DateTimeFormat, even with default, use basic local time.
+		return {localDate : localTime, accuracy : "approx" , way : "noformat"}
 	  }
-	  catch (e2) { // DateTimeFormat not handled at all. Take localTime computed at the beginning.
-		return { localDate : localTime, accuracy : "approximate" };
-	  }
+	// Here a minimum format Option management works.
+	try {
+		if (myTZ == (undefined || ""))
+			askedOptions = new Intl.DateTimeFormat ("en-GB")
+		else
+			askedOptions = new Intl.DateTimeFormat ("en-GB", {timeZone : myTZ}); // Submit specified time zone
 	}
+	catch (e) { // Submitted option is not valid
+		return { localDate : localTime, accuracy : "approx" , way : "invalidTZ"}	// myTZ is not empty, but not a valid time zone
+	}
+	// Here askedOptions are set with valid asked timeZone
+
+	// Set a format object suitable to extract numeric components from Date string
+	let numericSettings = {weekday: 'long', era: 'short', year: 'numeric',  month: 'numeric',  day: 'numeric',  
+			hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
+	if (!(myTZ == (undefined || ""))) numericSettings.timeZone = myTZ;	
+	var numericOptions = new Intl.DateTimeFormat ("en-GB", numericSettings);
+		
+	try {	// try using formatToParts. If not usable, use the variant algorithm
+		let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
+		localTime = new Date(Date.UTC		// Construct a UTC date based on the figures of the local date.
+				(localTC[6].value, localTC[4].value-1, localTC[2].value, localTC[10].value, localTC[12].value, localTC[14].value));
+		if (localTC[8].value == "BC") localTC[6].value = 1-localTC[6].value; // Correct years in BC Era.
+		localTime.setUTCFullYear(localTC[6].value);	// If year was a 2-digit figure, ensure true value.
+		return { localDate : localTime, accuracy : "exact", way : "ToParts" }; // Success
+		}
+	catch (e) { // can't use formatToParts. Continue.
+		}
+	// The next method uses the date string parsing functions. 
+	// However, as 2-digits years are erroneously handled, a bypass is used for dates whose year is < 100.
+	// Recall: 2-digit years nn are generally set to 19nn or 20nn. 
+	// Moreover, if nn is lower than the Day index, the Day index is considered the year...
+	var parseOptions = { year: 'numeric',  month: 'short',  day: 'numeric',  
+					hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
+	if (!(myTZ == (undefined || ""))) parseOptions.timeZone = myTZ;
+	var formatterOptions = new Intl.DateTimeFormat ("en-US", parseOptions);
+	let realUTCYear = myDate.getUTCFullYear(), workYear = Math.max (realUTCYear, 104); // Compute either the time, or the time offset.
+			// Choose a Gregorian bissextile year for the computations.
+	let workDate = new Date (Date.UTC(workYear, myDate.getUTCMonth(), myDate.getUTCDate(),
+							myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getUTCSeconds(), myDate.getUTCMilliseconds()));
+	try {	// Try translating this working date into a string for the local date, then this string into a UTC date.
+			// If navigator does not accept, use standard TZ.
+		let testTime = new Date(formatterOptions.format(workDate) + " UTC"); // Elaborate a string display of the local date, 
+		// and construct a date as a UTC. If an error occurs here, this will not destroy the backup result.
+		if (workYear != realUTCYear) 	// Here we transfer to the real year, assuming that there is no DST before year 104 - a reasonable assumption
+			testTime.setUTCFullYear (realUTCYear + testTime.getUTCFullYear()-workYear) ;
+		return {localDate : testTime, accuracy : "exact" , way : "parse"}; 
+		}
+	catch (e) {	// Browser failed parsing. Then return standard basic local time (as initialised) but with a caveat
+		return { localDate : localTime, accuracy : "approximate", way : "noparse" };
+		}		
 }
 //////////////////////////////////////////////////////
 //
@@ -136,11 +150,16 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	var	
-		locale = this.resolvedOptions().locale,	// Fetch the locale from this and change the calendar into "gregory"
+		locale = this.resolvedOptions().locale,	// Fetch the locale from this 
 		lang = locale.includes("-") ? locale.substring (0,locale.indexOf("-")) : locale;	// the pure language identifier, without country
-	if (locale.includes("-u-"))
-		locale = locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-"))) + "ca-gregory"
-		else locale = locale + "-u-ca-gregory"; // The locale with language, possibly country, maybe numbering system, and Gregorian calendar.
+	// Change the calendar of locale to "gregory"
+	locale = (locale.includes("-u-") 
+		? 	(locale.substring(locale.indexOf("-u-")).includes("ca-") 
+				? locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-")))
+				: locale )
+			+ "ca-"
+		: locale + "-u-ca-"
+		) + "gregory" ;
 	var 
 		figure2 = new Intl.NumberFormat (locale, {minimumIntegerDigits : 2, useGrouping : false}),
 		figure3 = new Intl.NumberFormat (locale, {minimumIntegerDigits : 3, useGrouping : false});
@@ -152,7 +171,7 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 		let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
 		let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
 		if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate();	// system local date, expressed in Milesian
-		else 				milesianComponents = toLocalDate(myDate,{timeZone: TZ}).localDate.getUTCMilesianDate(); // TZ local date.
+		else 				milesianComponents = toLocalDate(myDate, TZ).localDate.getUTCMilesianDate(); // TZ local date.
 		// Here milesianComponents holds the local Milesian date figures, we replace the Gregorian day, month and year components with those.
 		return referenceComponents.map ( ({type, value}) => {
 			switch (type) {
@@ -214,17 +233,31 @@ Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) { // Issue a Mi
 	catch (e) { // just catch and continue
 	}
 	try { // Compute a local date, mention accuracy
-		let localComput = toLocalDate(myDate, {timeZone : this.resolvedOptions().timeZone}),
-			those = this.resolvedOptions();
+		var	those = this.resolvedOptions(), 
+			localComput;
+		try {
+			localComput = toLocalDate(myDate, those.timeZone); // In some browsers, the resolved time zone may not be a valid option !
+			}
+		catch (e) {
+			localComput = toLocalDate(myDate);	
+			localComput.accuracy = "approximate";
+		}
 		return localComput.localDate.toUTCIntlMilesianDateString() 
-			+ " " + (those.hour == undefined ? "" :(new Intl.DateTimeFormat(those.locale, 
+			+ " " + (those.hour == null ? "" :(new Intl.DateTimeFormat(those.locale, 
 						{hour : those.hour, minute : those.minute, second : those.second, hour12 : false, timeZone : "UTC"}))
 						.format(localComput.localDate))
 			+ ((localComput.accuracy == "exact") ? "" : " (approx)"); 
 	}
-	catch (e1) { // Actually, this case should not happen, except error with toLocaleDate
-		return myDate.toIntlMilesianDateString()
-				+ " " + myDate.toTimeString()
-				+ " (system)"; 
+	catch (e) { // This case should only happen in case of error with resolvedOptions or with the last return statement
 	}
+	var myTimeString;
+	try {
+		myTimeString = myDate.toLocaleTimeString(this.locale,those);
+		}
+	catch (e) {
+		myTimeString = myDate.toTimeString();	// the minimum version
+	}
+	return myDate.toIntlMilesianDateString()
+				+ " " + myTimeString
+				+ " (system)"; 
 }
