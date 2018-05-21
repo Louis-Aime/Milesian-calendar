@@ -31,3 +31,12 @@ for details on Locale and Options passed to Intl.DateTimeFormat ()
 A simple demonstration page that uses the abone functions and enables it to understand how Unicode calendars 
 are rendered with several browsers.
 Module UnicodeTesterDebug.js is a variant to UnicodeTester.js, for debug purposes.
+
+## Installation
+Require:
+* Basic_Common
+
+1. Extract Basic_Common into a directory of your computer. You may extract all, it does not matter.
+1. Extract this directory and into the same directory.
+1. Launch "UnicodeTester" in our browser, and enjoy.
+1. UnicodeTesterDebug.js may replace UnicodeTester.js. Either you change the name, or you change the link in UnicodeTester.html.
