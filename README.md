@@ -38,49 +38,56 @@ Messages used in "Alert" JS commands.
 This file, and only this one, should be recoded for sites not using UTF-8 character sets.
 
 ## Misc_Date_Properties
-Other modules enable Date computation in non-CLDR calendars, or other informations. Use CalendarCycleComputationEngine.js.
+Other modules enable Date computation in non-CLDR calendars, or other informations. 
+
+Require 
+* CBCCE.js.
 ### JulianDateProperties.js
 Computation with the Julian calendar, and with the Julian Day Number (see [https://en.wikipedia.org/wiki/Julian_day]).
 ### IsoWeekCalendarDateProperties.js
 Computation on the ISO 8601 week calendar, the calendar in weeks resulting from the ISO 8601 norm. 
 In principle, Common Locale Data Repository (CLDR) provide ways to make such computations. This is just a simplier way.
 ### LunarDateProperties.js
-Getters of coordinates of a mean moon, and of an estimate of the "Delta Time" used by astronomers. 
+Getters of coordinates of a mean moon, of 2 simple lunar calendars, 
+and of an estimate of the "Delta Time" used by astronomers. 
 Enables to anticipate possible eclipses in a similar way to the [Antikythera mechanism](https://en.wikipedia.org/wiki/Antikythera_mechanism)
 
 ## Milesian Locale 
-Format Milesian date string in different languages, following CLDR project model
-Requires 
-* Basic_Common files.
-
-Demonstrate the "computation" of a string expressing a Milesian date following locales and options 
-as specified by Common Locales Data Repository (CLDR) of Unicode.
-
-Generate also a date string with the standard CDLR routines in any Unicode-supported language and calendar.
-Thus, this package may be used as a converter from Milesian into any Unicode-registred calendar.
+Format Milesian date string in different languages, following Common Locales Data Repository (CLDR) of Unicode.
+Generate also date string of any calendar and language proposed by Unicode.
 Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
 
+Require
+* Basic_Common files.### milesianMonthNamesString
+A stringified version of the milesianMonthNames XML file.
+### UnicodeMilesianFormat
+Functions to format a date as a Milesian date expression
+### UnicodeTester
+HTML and JS files, with a UnicodeTesterDebug variant, to test the generation of date string with Unicode tools.
+
 ## Year-signature
-Requires: 
+Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
+
+Require: 
 * Basic_Common
 * Misc_Date_Properties: only LunarDateProperties.js is used.
 
-Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
-
 ## Dial-clock
-Requires 
+The "Milesian clock".
+
+Require 
 * Basic_Common
 * Misc_Date_Properties (complete) 
 * Milesian Locale
 
 This is a "Milesian clock", with month, day, hour and minute hands. Seconds are also possible. 
 The package demonstrates also how to convert dates to/from gregorian, julian and Milesian calendars, Julian Day, 
-and to any Unicode calendar, or other "serie", and finally giving moon and Delta T coordinates.
+and to any Unicode calendar, or other "series", and finally giving moon and Delta T coordinates.
 
 ## Converter 
-Requires 
+A simplified version of the Milesian clock, handles dates only.
+
+Require 
 * Basic_Common
 * Misc_Date_Properties (complete) 
 * Milesian Locale
-
-A simplified version of the Milesian clock, handles dates only.
