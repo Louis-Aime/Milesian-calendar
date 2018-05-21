@@ -27,6 +27,7 @@ MilesianDateProperties.js is used.
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] 
 for details on Locale and Options passed to Intl.DateTimeFormat ()
 
-## unicodeTester.html and unicodeTester.js
+## UnicodeTester.html, UnicodeTester.js, UnicodeTesterDebug.js
 A simple demonstration page that uses the abone functions and enables it to understand how Unicode calendars 
-are rendered with several browser.
+are rendered with several browsers.
+Module UnicodeTesterDebug.js is a variant to UnicodeTester.js, for debug purposes.
