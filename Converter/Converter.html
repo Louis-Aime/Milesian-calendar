@@ -380,8 +380,9 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		<tr><th>Format</th>
 			<td>
 			<select name="Presentation" class="dateconvert" size="1">
-				<option value="long" selected>Complet (adapté sur ordinateur)</option>
-				<option value="numeric">En chiffres (adapté sur mobile)</option>
+				<option value="long" selected>Texte (pour ordinateur)</option>
+				<option value="numeric">Chiffres (pour mobile)</option>
+				<option value="numericwoera">Compact (pour mobile)</option>
 			</select>
 			</td>
 			<td><button class="dateconvert">Ok</button></td>			
@@ -397,7 +398,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		</tr>
   </table>
  </form>
-<table align="center"><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td/></tr></table>
+<table align="center"><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td></tr></table>
 
 <h2>Grégorien et dérivés</h2>
   <table class="dateconvert" align="center">
@@ -408,10 +409,11 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
   </table>
 <h2>Solaires modernes</h2>
   <table class="dateconvert" align="center">
-	<tr><th>Milésien :</th><td class="milesiandate"></td></tr>
+	<tr><th>Milésien<sup>*</sup> :</th><td class="milesiandate"></td></tr>
    	<tr><th>Persan : </th><td class="unicodedate" id="persian"></td></tr>
 	<tr><th>Indien moderne : </th><td class="unicodedate" id="indian"></td></tr>
   </table>
+<i><sup>*</sup>affichage suivant canevas Unicode, selon navigateur</i>
 <h2>Copte et éthiopiens</h2>
   <table class="dateconvert" align="center">
  	<tr><th>Copte : </th><td class="unicodedate" id="coptic"></td></tr>
@@ -422,9 +424,9 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
   <table class="dateconvert" align="center">
    	<tr><th>Hébraïque : </th><td class="unicodedate" id="hebrew"></td></tr>
 	<tr><th>Chinois traditionnel : </th><td class="unicodedate" id="chinese"></td></tr>
-	<tr><th>Coréen traditionnel : </th><td class="unicodedate" id="dangi"></td></tr>
+	<tr><th>Coréen traditionnel<sup>*</sup> : </th><td class="unicodedate" id="dangi"></td></tr>
   </table>
-<i>Sous certains navigateurs, remplacé par le coréen moderne</i>
+<i><sup>*</sup>sous certains navigateurs, remplacé par le coréen moderne</i>
 <h2>Lunaires musulmans</h2>
   <table class="dateconvert" align="center">
    	<tr><th>Standard : </th><td class="unicodedate" id="islamic"></td></tr>
@@ -437,7 +439,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 <section class="dateconvert">
 <h1>Liens utiles</h1>
   <table class="dateconvert" align="center">
-	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
   </table>
 </section>
 <h3 class="dateconvert">© 2018-04 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
