@@ -13,9 +13,13 @@ In this version, Delta T is computed from a fractional value of the time.
 The result is rounded to the nearest second, and may change within a year.
 * getCEMoonDate : the date expressed in mean Moon coordinates, i.e. lunar year, lunar month, decimal moon day, lunar hour shift. 
 The "Common Era" (CE) mean moon origin, i.e. year 0, month 0, age 0 is : year 0 month 1m day 3 at 10h 07 mn 25 s. 
+* getCELunarDate : the date expressed as of a lunar calendar, with which 
+each lunar month begins the UTC day after a mean new moon occurs. 
 * getHegirianMoonDate : same as above, with Hegirian epoch i.e. 6 8m 621 14h 7 mn 48s, 
 so that first evening of first moon month of year 1 is 26 7m 622, (julian 14 July 622).
 Thus day one is 27 7m 622, julian 15 July 622, proleptic gregorian 18 July 622.
+* getHegirianLunarDate : the date expressed as of a lunar calendar, with which 
+each lunar month begins the UTC day after a mean new moon occurs. Calendar origin is same as Haegirian.
 * getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (h, m, s). 
 At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
 * getLunarDateTime (timezone offset in mins, the caller's by default) : gives lunar date and time.
