@@ -41,6 +41,8 @@ Version M2018-04-11
 * 	First version, after Milesian Clock Display
 Version M2018-05-13
 *	User may specify display language
+Version M2018-05-30
+*	Enhance / bug fix
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -177,9 +179,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	catch (e) {	// Locale was not a valid language code
 		alert (milesianAlertMsg("invalidCode") + '"' + Locale + '"');
 		document.LocaleOptions.Language.value = '';  // Set Language code to empty string
-		return; } // exit function after this error.
+		askedOptions = new Intl.DateTimeFormat();
+		} 
 	let userOptions = askedOptions.resolvedOptions();
-	Locale = userOptions.locale; // Locale = userOptions.locale.slice(0,5);
+	Locale = userOptions.locale; 
+	if (Locale.includes("-u-"))		// The Unilog extension ("-u-") is indicated in the specified locale, drop it
+	Locale = Locale.substring (0,Locale.indexOf("-u-"));
+
+	// Display Locale (only language part)
 	myElement = document.querySelector("#langCode");
 	myElement.innerHTML = Locale;	// Display Locale as obtained after negotiation process
 	
@@ -188,7 +195,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
 			break;
 		case "numeric" : 
-			userOptions = {day : "2-digit", month: "2-digit", year : "numeric", era : "short", timeZone : "UTC"}; 
+			userOptions = {weekday : "short", day : "numeric", month: "numeric", year : "numeric", era : "short", timeZone : "UTC"}; 
+			break;
+		case "numericwoera" : 
+			userOptions = {weekday : "narrow", day : "2-digit", month: "2-digit", year : "numeric", timeZone : "UTC"}; 
 			break;
 		}
 	// Set Milesian date string wherever needed
