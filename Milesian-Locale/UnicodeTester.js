@@ -70,17 +70,17 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar; 
 	
 	// Add presentation options
-	let Options = {	// controlled via <select>
-		weekday : (document.LocaleOptions.Weekday.value == "") ? undefined : document.LocaleOptions.Weekday.value,
-		day 	: (document.LocaleOptions.Day.value == "") ? undefined : document.LocaleOptions.Day.value,
-		month	: (document.LocaleOptions.Month.value == "") ? undefined : document.LocaleOptions.Month.value,
-		year	: (document.LocaleOptions.Year.value == "") ? undefined : document.LocaleOptions.Year.value,
-		era		: (document.LocaleOptions.Era.value == "") ? undefined : document.LocaleOptions.Era.value,
-		hour	: (document.LocaleOptions.Hour.value == "") ? undefined : document.LocaleOptions.Hour.value,
-		minute	: (document.LocaleOptions.Minute.value == "") ? undefined : document.LocaleOptions.Minute.value,
-		second	: (document.LocaleOptions.Second.value == "") ? undefined : document.LocaleOptions.Second.value,
-		hour12	: (document.LocaleOptions.Hour12.value == "") ? undefined : (document.LocaleOptions.Hour12.value == "true")
-	}
+	let Options = {};	
+	if	(document.LocaleOptions.Weekday.value != "")	Options.weekday = document.LocaleOptions.Weekday.value;
+	if	(document.LocaleOptions.Day.value != "") 	Options.day = document.LocaleOptions.Day.value;
+	if	(document.LocaleOptions.Month.value != "") 	Options.month = document.LocaleOptions.Month.value;
+	if 	(document.LocaleOptions.Year.value != "")	Options.year = document.LocaleOptions.Year.value;
+	if	(document.LocaleOptions.Era.value != "")	Options.era	= document.LocaleOptions.Era.value;
+	if	(document.LocaleOptions.Hour.value != "")	Options.hour = document.LocaleOptions.Hour.value;
+	if	(document.LocaleOptions.Minute.value != "")	Options.minute = document.LocaleOptions.Minute.value;
+	if	(document.LocaleOptions.Second.value != "")	Options.second	= document.LocaleOptions.Second.value;
+	if	(document.LocaleOptions.Hour12.value != "")	Options.hour12	= (document.LocaleOptions.Hour12.value == "true");
+	
 	if (timeZone !== "") 
 		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
 	// Check here that Options with timeZone is valid
