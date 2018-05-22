@@ -234,13 +234,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 					>= -42521673600000); break; // Computations are false before Haegirian epoch
 				case "ethiopic": valid = (targetDate.valueOf()
 					>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
-				case "ethioaa": Options.era = undefined; break; // suppress era part of Options, since the displayed era is "ERA0"
+				case "ethioaa": delete Options.era ; break; // suppress era part of Options, since the displayed era is "ERA0"
 				}
 			
 			// Write date string. Protect writing process against errors raised by browsers.
 			try {
 				myElements[i].innerHTML = 
-				(valid ? targetDate.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options) : milesianAlertMsg("invalidDate"));
+				(valid ? new Intl.DateTimeFormat(Locale+"-u-ca-"+myElements[i].id, Options).format(targetDate)  //.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options)
+						: milesianAlertMsg("invalidDate"));
 				}
 			catch (e) {	// Attempt to write time string may fail due to out-of-range error with MS Edge
 				myElements[i].innerHTML = milesianAlertMsg("invalidDate");
