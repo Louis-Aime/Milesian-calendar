@@ -74,8 +74,10 @@ Possible values for accuracy:
 	"exact" : local date has been computed with formatToParts or by parsing a date string, in a 'safe' period.
 	"approximate" : local date could not be computed exactly, the returned date is the local date as from the user's settings, not from Unicode.
 */
-function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a time zone. // Initially : Options
+function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a time zone. 
 	var	localTime = new Date (myDate.valueOf() - myDate.getTimezoneOffset()*Chronos.MINUTE_UNIT); //Basic value if no further computation possible
+	// Normally, should get the time zone offset and compute shifted date. Should take one line !! 
+	// Halas, time zone offset is not available. So we have to get it by other ways, depending upon the browser.
 	// if (myTZ == (undefined || "")) return { localDate: localTime, accuracy : "exact", way : "default" }; 
 	if (myTZ == "UTC") return { localDate: new Date(myDate.valueOf()), accuracy : "exact", way : "UTC"}; // Trivial case: time zone asked is UTC.
 	// First try to resolve time zone option.
@@ -173,6 +175,8 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 		if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate();	// system local date, expressed in Milesian
 		else 				milesianComponents = toLocalDate(myDate, TZ).localDate.getUTCMilesianDate(); // TZ local date.
 		// Here milesianComponents holds the local Milesian date figures, we replace the Gregorian day, month and year components with those.
+		let monthContext = 'format'; // Begin computing the context, 'format' or 'stand-alone'
+		if (referenceOptions.day == undefined && referenceOptions.year == undefined) monthContext = 'stand-alone';
 		return referenceComponents.map ( ({type, value}) => {
 			switch (type) {
 				case "era" : return {type:type, value: ""};  	// No era in the Milesian system
@@ -187,33 +191,31 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 					} 
 				case "month" : 
 					let Xpath1 = "", node = undefined;	// will be used for searching the month's names in the Locale data registry
-					// return (milesianComponents.month+1) + "m" // maybe not necessary
+					let monthWidth = "";
 					switch (referenceOptions.month) {	
 					//	case "numeric": return milesianComponents.month+1; break; That is the "easy" way, we do not use it. Numeric should give 1m, 2m etc, like "narrow".
 						// case "2-digit": return {type:type, value: figure2.format (milesianComponents.month+1)};
-						case "narrow":	// Only the international (Latin) value can be used in this case
-							Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='narrow']/month[@type="
-								+ (milesianComponents.month+1) + "]";
-							node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-							return {type:type, value: node.stringValue};
-						case "short": case "numeric" :	// Only the international "xm" format, where x is 1 to 12, is used in these cases.
-							Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='abbreviated']/month[@type="
-								+ (milesianComponents.month+1) + "]";
-							node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-							return {type:type, value: node.stringValue};
-						case "long":	// By default, take the Latin name;
-							Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='wide']/month[@type="
-								+ (milesianComponents.month+1) + "]";
-							node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-							let revis = node.stringValue;
-							// Search if a language specific name exists
-							Xpath1 = "/pldr/ldml/identity/language[@type=" + "'"+lang+"'"+ "]/../calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='wide']/month[@type="
-								+ (milesianComponents.month+1) + "]";
-							node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-							if (node.stringValue !== "") revis = node.stringValue; // If found, replace Latin name with language specific one.
-							return {type:type, value: revis}; 
-						default : return {type:type, value: (milesianComponents.month+1)+"m"}; 
-						} 	// end of "month" case
+						case "numeric" : case "2-digit": monthWidth = "numeric" ; break; 
+						case "narrow":	monthWidth = "narrow" ; break;
+						case "short": monthWidth = "abbreviated"; break; 
+						case "long" : monthWidth = "wide"; break;
+						default : return {type:type, value: (milesianComponents.month+1)+"m"};
+						} 	// end of referenceMonth switch
+					// Now fetch month string value from database.
+					Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='"+monthContext
+						+"']/monthWidth[@type='"+monthWidth
+						+"']/month[@type="+(milesianComponents.month+1) + "]";
+					node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
+					let revis = node.stringValue;
+					// Search if a language specific name exists
+					Xpath1 = "/pldr/ldml/identity/language[@type='"+lang
+						+"']/../calendar[@type='milesian']/months/monthContext[@type='"+monthContext
+						+"']/monthWidth[@type='"+monthWidth
+						+"']/month[@type=" + (milesianComponents.month+1) + "]";
+					node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
+					if (node.stringValue !== "") revis = node.stringValue; // If found, replace Latin name with language specific one.
+					if (referenceOptions.month == "2-digit" && !isNaN(revis)) revis = figure2.format (revis);
+					return {type:type, value: revis}; 
 				default : return {type: type, value: value};
 				}	// Other values in parts are not changed.
 			});	// End of mapping function
