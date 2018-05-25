@@ -190,7 +190,7 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 					// return (milesianComponents.month+1) + "m" // maybe not necessary
 					switch (referenceOptions.month) {	
 					//	case "numeric": return milesianComponents.month+1; break; That is the "easy" way, we do not use it. Numeric should give 1m, 2m etc, like "narrow".
-						case "2-digit": return {type:type, value: figure2.format (milesianComponents.month+1)};
+						// case "2-digit": return {type:type, value: figure2.format (milesianComponents.month+1)};
 						case "narrow":	// Only the international (Latin) value can be used in this case
 							Xpath1 = "/pldr/ldmlBCP47/calendar[@type='milesian']/months/monthContext[@type='format']/monthWidth[@type='narrow']/month[@type="
 								+ (milesianComponents.month+1) + "]";
