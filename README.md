@@ -58,7 +58,8 @@ Generate also date string of any calendar and language proposed by Unicode.
 Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
 
 Require
-* Basic_Common files.### milesianMonthNamesString
+* Basic_Common files.
+### milesianMonthNamesString
 A stringified version of the milesianMonthNames XML file.
 ### UnicodeMilesianFormat
 Functions to format a date as a Milesian date expression
