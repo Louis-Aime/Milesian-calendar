@@ -34,6 +34,8 @@ Version M2018-02-29
 *	Enhance control of calendar validity.
 Version M2018-05-15
 *	Put Unicode and Milesian strings computation in setDisplay. 
+Version M2018-10-22
+*	asekdOption variable was mis-declared, due to a ";" instead of ","
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -66,7 +68,7 @@ var
 		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
 	TZSettings = {mode : "TZ", offset : 0, msoffset : 0},	// initialisation to be superseded
 	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
-					hour : "numeric", minute : "numeric", second : "numeric"}; 	// Initial presentation options.
+					hour : "numeric", minute : "numeric", second : "numeric"}, 	// Initial presentation options.
 	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	// Formatting options initialisation
 	userOptions = askedOptions.resolvedOptions(); // Initialisation of explicit display options
 	
