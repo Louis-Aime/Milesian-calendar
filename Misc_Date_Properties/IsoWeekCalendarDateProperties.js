@@ -4,19 +4,19 @@ This code, to be manually imported, set properties to object Date for the ISO we
 Versions
 	M2017-12-26 replace CalendarCycleComputationEngine with CBCCE
 	M2018-05-19 set alias to getIsoWeekCalUTCDate (to be deprecated): getUTCIsoWeekCalDate
+	M2018-10-26 delete getIsoWeekCalUTCDate (deprecated)
 Required
 	Package CBCCE is used.
 	Package MilesianDateProperties is used (in order to compute quickly year of date to be converted into ISO week calendar)
 Contents
 	getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 	getUTCIsoWeekCalDate : same as above, in UTC time.
-		getIsoWeekCalUTCDate : as above, to be deprecated.
 	setTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : set Time from ISO week calendar date + local hour.
 	setUTCTimeFromIsoWeekCal (year, week, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 	toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-Www-dd
 	toUTCIsoWeekCalDateString : same as above, in UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
@@ -39,7 +39,7 @@ Contents
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-/* Import CalendarCycleComputationEngine, or make visible. */ 
+/* Import CBCCE, or make visible. */ 
 /* Import MilseianDateProperties, or make visible. */
 var
 isoWeekCalendar_params = { // To be used with a Unix timestamp in ms. Decompose a delay within a year in week number and day.
@@ -84,9 +84,6 @@ Date.prototype.getUTCIsoWeekCalDate = function () {
 	let compoundDate = cbcceDecompose (this.valueOf() - base.valueOf(), isoWeekCalendar_params);
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year});
 	return compoundDate;
-}
-Date.prototype.getIsoWeekCalUTCDate = function () { // Deprecated version
-	return this.getUTCIsoWeekCalDate();
 }
 Date.prototype.setTimeFromIsoWeekCal = function (year, week, day, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),

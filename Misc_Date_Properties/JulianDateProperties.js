@@ -1,40 +1,45 @@
 /* Julian calendar and Julian Day properties added to Date object
-// Character set is UTF-8
-// This code, to be manually imported, set properties to object Date for the Milesian calendar.
-// Version M2017-12-26 : replace CalendarCycleComputationEngine with CBCCE
-// Package CBCCE is used.
-//  getJulianCalendarDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
-//  getJulianCalendarUTCDate : same as above, in UTC time.
-//  getJulianDay : the decimal Julian Day, from the UTC time.
-//  setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
-//  setUTCTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
-//  setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day.
-//  setJulianDay (julianDay[, timeZoneOffset]) : set date as specified by integer (or rounded) Julian day, without changing local time.
+	Character set is UTF-8
+	This code, to be manually imported, set properties to object Date for the Julian calendar and for the Julian day.
+Versions 
+	M2017-12-26 : replace CalendarCycleComputationEngine with CBCCE
+	Version M2018-05-19 : create getUTCJulianDate, getJulianUTCDate to be deprecated 
+	Version M2018-10-26 : delete getJulianUTCDate (deprecated)
+Required
+	Package CBCCE is used.
+Contents
+	getJulianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
+	getUTCJulianDate : same as above, in UTC time.
+	getJulianDay : the decimal Julian Day, from the UTC time.
+	setTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
+	setUTCTimeFromJulianCalendar (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+	setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day.
+	setJulianDay (julianDay[, timeZoneOffset]) : set date as specified by integer (or rounded) Julian day, without changing local time.
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 1. The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-// 2. Changes with respect to any former version shall be documented.
-//
-// The software is provided "as is", without warranty of any kind,
-// express of implied, including but not limited to the warranties of
-// merchantability, fitness for a particular purpose and noninfringement.
-// In no event shall the authors of copyright holders be liable for any
-// claim, damages or other liability, whether in an action of contract,
-// tort or otherwise, arising from, out of or in connection with the software
-// or the use or other dealings in the software.
-// Inquiries: www.calendriermilesien.org
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+	1. The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+	2. Changes with respect to any former version shall be documented.
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and noninfringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
 //
 // 1. Basic tools of this package
-/*// Import CalendarCycleComputationEngine, or make visible. */
+//
+/* Import CalendarCycleComputationEngine, or make visible. */
 var 
   JULIAN_DAY_UTC0_EPOCH_OFFSET = 210866803200000, // Julian Day 0 at 0h00 UTC.
   Julian_calendar_params = { // To by used for the Julian calendar with a Unix timestamp. Calendar starts on 1 March of year 0 (i.e. 1 before Common Era).
@@ -82,6 +87,7 @@ function romanCompose (romanDate) { // from a Roman date, returns the offset day
 	return { 'yearshift' : yearshift, 'daysinyear' : Math.floor((month * 153 + 2) / 5) + days }
 	}
 }
+//
 // 2. Properties added to Date object
 //
 Date.prototype.getJulianDate = function () {
@@ -95,9 +101,6 @@ Date.prototype.getUTCJulianDate = function () {
 	let romanDate = romanDecompose (shiftedDate.dayinyear);
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}	
-}
-Date.prototype.getJulianUTCDate = function () { // Deprecated version
-	return this.getUTCJulianDate();
 }
 Date.prototype.getJulianDay = function () { // From this Unix time stamp, give Julian day in decimal. This is always a UTC-based time. Integer values at 12h UTC (noon).
   return (this.getTime() + JULIAN_DAY_UTC0_EPOCH_OFFSET - (12 * Chronos.HOUR_UNIT)) / Chronos.DAY_UNIT;

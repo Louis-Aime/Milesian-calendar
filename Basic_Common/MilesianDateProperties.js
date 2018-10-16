@@ -4,6 +4,7 @@
 Versions
 	Version M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
 	Version M2018-05-19 : create getUTCMilesianDate, getMilesianUTCDate to be deprecated 
+	Version M2018-10-26 : delete getMilesianUTCDate (deprecated)
 Required
 	Package CBCCE is used.
 Contents
@@ -15,7 +16,7 @@ Contents
 	toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
 	toUTCIntlMilesianDateString : same as above, in UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -40,7 +41,7 @@ Inquiries: www.calendriermilesien.org
 // 1. Basic tools of this package
 //
 /*  Import or make visible: 
-	CalendarCycleComputationEngine.js
+	CBCCE.js
 */
 var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompose into Milesian years, months, date, hours, minutes, seconds, ms
 	timeepoch : -188395804800000, // Unix timestamp of 1 1m -4000 00h00 UTC in ms
@@ -76,9 +77,6 @@ Date.prototype.getMilesianDate = function () {
 }
 Date.prototype.getUTCMilesianDate = function () {
   return cbcceDecompose (this.getTime(), Milesian_time_params);
-}
-Date.prototype.getMilesianUTCDate = function () { // Deprecated version
-	return this.getUTCMilesianDate();
 }
 Date.prototype.setTimeFromMilesian = function (year, month, date, 
                                                hours = this.getHours(), minutes = this.getMinutes(), seconds = this.getSeconds(),

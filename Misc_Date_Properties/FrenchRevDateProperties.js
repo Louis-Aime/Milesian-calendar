@@ -1,18 +1,19 @@
 /* French revolutionary calendar properties added to Date object
 Character set is UTF-8
 This code, to be manually imported, set properties to object Date for the French Revolutionary calendar.
-Version M2017-12-26
-Version M2018-05-19 : create getUTCFrenchRevDate, getFrenchRevUTCDate to be deprecated 
+Versions 
+	M2017-12-26
+	M2018-05-19 : create getUTCFrenchRevDate, getFrenchRevUTCDate to be deprecated 
+	M2018-10-26 : getFrenchRevUTCDate deprecated
 Required
 	CBCCE is used.
 Contents
 	getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 	getUTCFrenchRevDate : same as above, in UTC time.
-		getFrenchRevUTCDate : deprecated version
 	setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
 	setUTCTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -73,9 +74,6 @@ Date.prototype.getFrenchRevDate = function () {
   return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params);
 }
 Date.prototype.getUTCFrenchRevDate = function () {
-  return cbcceDecompose (this.getTime(), FrenchRev_time_params);
-}
-Date.prototype.getFrenchRevUTCDate = function () { // Deprecated version
   return cbcceDecompose (this.getTime(), FrenchRev_time_params);
 }
 Date.prototype.setTimeFromFrenchRev = function (year, month, date, 
