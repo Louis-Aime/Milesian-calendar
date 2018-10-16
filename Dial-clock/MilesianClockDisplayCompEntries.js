@@ -26,6 +26,7 @@ Inquiries: www.calendriermilesien.org
 */
 
 function setLocalePresentationCalendar() {	// What happens when Locale-presentation-calendar option button hit
+	// askedOptions and userOptions are global variables declared in MilesianClockDisplay.js
 	var myElement, // work variable
 	// Get user-specified parameters
 	Locale = document.LocaleOptions.Language.value,
@@ -43,7 +44,7 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 		}
 	userOptions = askedOptions.resolvedOptions(); 
 	Locale = userOptions.locale; 	// Here Locale is no longer an empty string
-	if (Locale.includes("-u-"))		// The Unilog extension ("-u-") is indicated in the specified locale, drop it
+	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
 	Locale = Locale.substring (0,Locale.indexOf("-u-"));
 		
 	// Now add specified calendar
@@ -99,6 +100,7 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 }
 
 function setDateToNow(){ // Self explanatory
+	// targetDate is declared in MilesianClockDisplay.js
     targetDate = new Date(); // set new Date object and initiate to date-time of call
 	setDisplay(); 
 }

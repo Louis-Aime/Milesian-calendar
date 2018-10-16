@@ -23,6 +23,8 @@ Other js necessary
 4. For display, using Unicode standards
 *	UnicodeMilesianFormat (used to be: toMilesianLocaleDateString then UnicodeMilesian)
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
+5. Continuation of present file
+*	MilesianClockDisplayCompEntries (could be appended to this file, but total file is then more than 20k)
 */
 /*
 Version M2018-01-04 :
@@ -34,8 +36,8 @@ Version M2018-02-29
 *	Enhance control of calendar validity.
 Version M2018-05-15
 *	Put Unicode and Milesian strings computation in setDisplay. 
-Version M2018-10-22
-*	asekdOption variable was mis-declared, due to a ";" instead of ","
+Version M2018-10-26
+*	askedOptions and userOptions variables were mis-declared, due to a ";" instead of ","
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
