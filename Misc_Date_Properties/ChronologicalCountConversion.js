@@ -1,37 +1,41 @@
 /* Chronological count conversion
-// Character set is UTF-8
-// This package, to be manually imported, converts the standard Unix time counter into several well-known counters
-// Version M2017-12-27 : Initial
-// No dependent file, all constants here (Day_Unit is defined again)
-// A single method added to Date object
-//	getCount (serie), where serie is one of the following chronological series
-//		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
-//		"julianDayAtNight" :  on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
-//		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
-//		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
-//		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
-//		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
+	Character set is UTF-8
+	This package, to be manually imported, converts the standard Unix time counter into several well-known counters
+Versions
+	M2017-12-27 : Initial
+	M2018-10-26 : Enhance comments
+Required
+	No dependent file, all constants here (Day_Unit is defined again)
+Contents
+	A single method added to Date object
+	getCount (count), where count is one of the following chronological series
+		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
+		"julianDayAtNight" :  on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
+		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
+		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
+		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
+		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017 - Louis A. de Fouquières
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 1. The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-// 2. Changes with respect to any former version shall be documented.
-//
-// The software is provided "as is", without warranty of any kind,
-// express of implied, including but not limited to the warranties of
-// merchantability, fitness for a particular purpose and noninfringement.
-// In no event shall the authors of copyright holders be liable for any
-// claim, damages or other liability, whether in an action of contract,
-// tort or otherwise, arising from, out of or in connection with the software
-// or the use or other dealings in the software.
-// Inquiries: www.calendriermilesien.org
+/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+	1. The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+	2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and noninfringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+Inquiries: www.calendriermilesien.org
 *////////////////////////////////////////////////////////////////////////////////
 Date.prototype.getCount = function (countType) {
 	const   
@@ -48,5 +52,5 @@ Date.prototype.getCount = function (countType) {
 		case "macOSCount" :  convertMs -= 2416480 * DAY_UNIT + HALF_DAY_UNIT; break;
 		default : return NaN;
 	}
-	return (this.valueOf() + convertMs) /DAY_UNIT ;
+	return (this.valueOf() + convertMs) / DAY_UNIT ;
 }

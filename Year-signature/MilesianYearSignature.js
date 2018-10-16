@@ -1,41 +1,43 @@
 /* Milesian Year Signature
-// Character set is UTF-8
-// This set of functions, to be manually imported, computes year key figures.
-// Package CBCCE is used.
-// Each function returns a compound value with the yearly key figures for one calendar:
-//  julianSignature: for the Julian calendar,
-//  gregorianSignature: for the Gregorian calendar,
-//  milesianSignature: for the Milesian calendar.
-// Key figure include:
-//  doomsday : the weekday number of "0th March" or "0th 1m", see this information on this method by John Conway.
-//	easterResidue: number of days from 21st March (30th 3m for Milesian) to the computus Spring full moon.
-//  eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
-//  epact: Julian / Gregorian computus epact, Milesian mean moon epact.
-//  annualResidue: 29.5 minus epact (Milesian only).
-// Version 1: M2017-06-04
-// Version 2: M2017-12-26
-//	Use CBCCE 
+	Character set is UTF-8
+	This set of functions, to be manually imported, computes year key figures.
+Versions 
+	M2017-06-04
+	M2017-12-26
+	M2018-10-26: enhance comments
+Required
+	Package CBCCE is used.
+Each function returns a compound value with the yearly key figures for one calendar:
+	julianSignature: for the Julian calendar,
+	gregorianSignature: for the Gregorian calendar,
+	milesianSignature: for the Milesian calendar.
+Key figure include:
+	doomsday : the weekday number of "0th March" or "0th 1m", see this information on this method by John Conway.
+	easterResidue: number of days from 21st March (30th 3m for Milesian) to the computus Spring full moon.
+	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
+	epact: Julian / Gregorian computus epact, Milesian mean moon epact.
+	annualResidue: 29.5 minus epact (Milesian only).
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017 - Louis A. de Fouquières
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 1. The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-// 2. Changes with respect to any former version shall be documented.
-//
-// The software is provided "as is", without warranty of any kind,
-// express of implied, including but not limited to the warranties of
-// merchantability, fitness for a particular purpose and noninfringement.
-// In no event shall the authors of copyright holders be liable for any
-// claim, damages or other liability, whether in an action of contract,
-// tort or otherwise, arising from, out of or in connection with the software
-// or the use or other dealings in the software.
-// Inquiries: www.calendriermilesien.org
+/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and noninfringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+Inquiries: www.calendriermilesien.org
 */
 ///////////////////////////////////////////////////////////////////////////////
 // Import CBCCE, or make visible.
