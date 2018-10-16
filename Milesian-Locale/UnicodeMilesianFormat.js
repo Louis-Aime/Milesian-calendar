@@ -1,8 +1,8 @@
 /* Unicode Milesian date string generation functions
+	Character set is UTF-8
 Milesian date string generation functions using Unicode tools.
-Character set is UTF-8
-This code, to be manually imported, set properties to object Intl.DateTimeFormat, in order to generate Milesian date strings
-Using Intl.DateTimeFormat.prototype.
+	This code, to be manually imported, set properties to object Intl.DateTimeFormat, in order to generate Milesian date strings
+	using Intl.DateTimeFormat.prototype.
 Versions
 	M2017-12-28 catches MS Edge generated error
 	M2017-12-26 formal update of M2017-07-04 concerning dependent files.
@@ -18,6 +18,8 @@ Versions
 		Add unicodeCalendarHandled (calendar) : from a requested calendar (in Locale), gives the used one.
 	M2018-05-30
 		Restructure toLocalDate parameters - whenever possible, TZ parameter passed is used.
+	M2018-10-26
+		Delete a whole set of complicated code dedicated to MS Edge, that lack most calendar functions.
 Contents
 	unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
 	toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
@@ -106,7 +108,7 @@ function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a
 	if (!(myTZ == (undefined || ""))) numericSettings.timeZone = myTZ;	
 	var numericOptions = new Intl.DateTimeFormat ("en-GB", numericSettings);
 		
-	try {	// try using formatToParts. If not usable, use the variant algorithm
+	try {	// try using formatToParts. If not usable, use localTime previously computed.
 		let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
 		localTime = new Date(Date.UTC		// Construct a UTC date based on the figures of the local date.
 				(localTC[6].value, localTC[4].value-1, localTC[2].value, localTC[10].value, localTC[12].value, localTC[14].value));
@@ -114,31 +116,9 @@ function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a
 		localTime.setUTCFullYear(localTC[6].value);	// If year was a 2-digit figure, ensure true value.
 		return { localDate : localTime, accuracy : "exact", way : "ToParts" }; // Success
 		}
-	catch (e) { // can't use formatToParts. Continue.
-		}
-	// The next method uses the date string parsing functions. 
-	// However, as 2-digits years are erroneously handled, a bypass is used for dates whose year is < 100.
-	// Recall: 2-digit years nn are generally set to 19nn or 20nn. 
-	// Moreover, if nn is lower than the Day index, the Day index is considered the year...
-	var parseOptions = { year: 'numeric',  month: 'short',  day: 'numeric',  
-					hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
-	if (!(myTZ == (undefined || ""))) parseOptions.timeZone = myTZ;
-	var formatterOptions = new Intl.DateTimeFormat ("en-US", parseOptions);
-	let realUTCYear = myDate.getUTCFullYear(), workYear = Math.max (realUTCYear, 104); // Compute either the time, or the time offset.
-			// Choose a Gregorian bissextile year for the computations.
-	let workDate = new Date (Date.UTC(workYear, myDate.getUTCMonth(), myDate.getUTCDate(),
-							myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getUTCSeconds(), myDate.getUTCMilliseconds()));
-	try {	// Try translating this working date into a string for the local date, then this string into a UTC date.
-			// If navigator does not accept, use standard TZ.
-		let testTime = new Date(formatterOptions.format(workDate) + " UTC"); // Elaborate a string display of the local date, 
-		// and construct a date as a UTC. If an error occurs here, this will not destroy the backup result.
-		if (workYear != realUTCYear) 	// Here we transfer to the real year, assuming that there is no DST before year 104 - a reasonable assumption
-			testTime.setUTCFullYear (realUTCYear + testTime.getUTCFullYear()-workYear) ;
-		return {localDate : testTime, accuracy : "exact" , way : "parse"}; 
-		}
-	catch (e) {	// Browser failed parsing. Then return standard basic local time (as initialised) but with a caveat
-		return { localDate : localTime, accuracy : "approximate", way : "noparse" };
-		}		
+	catch (e) { // can't use formatToParts. This is MS Edge specific. Just use standard TimezoneOffset.
+		return { localDate : localTime, accuracy : "approx" , way : "noformatToParts"}	// 
+	}
 }
 //////////////////////////////////////////////////////
 //
