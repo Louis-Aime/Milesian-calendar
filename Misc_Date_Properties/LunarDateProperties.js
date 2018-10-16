@@ -4,11 +4,12 @@ This code, to be manually imported, set properties representing lunar phases to 
 Versions 
 	M2017-12-26 replace CalendarCycleComputationEngine with CBCCE.
 	M2018-05-28 enhanced comments and add a more lunar calendar functions
+	M2018-10-26 fix typos
 Required:
 	Package CBCCE is used.
 Contents: methods for Date.prototype
 	getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
-		TT is Terrestrial Time, a uniform time scale defined with a second defined independantly from Earth movements.
+		TT is Terrestrial Time, a uniform time scale defined with a second defined independently from Earth movements.
 		DeltaT is erratic and difficult to compute, however, the general trend of DeltaT is due to the braking  of the Earth's daily revolution.
 		This estimate of Delta T in seconds from the year expressed in Common Era is: -20 + 32 v², where v = (A – 1820) / 100.
 		In this version, Delta T is computed from a fractional value of the time. The result is rounded to the nearest second.
@@ -23,7 +24,7 @@ Contents: methods for Date.prototype
 		When height is around 0 at new or full moon, eclipse is possible.
 	There is no setter function in this package.
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
