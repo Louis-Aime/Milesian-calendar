@@ -43,6 +43,8 @@ Version M2018-05-13
 *	User may specify display language
 Version M2018-05-30
 *	Enhance / bug fix
+Version M2018-10-26
+*	Update reference to UTC date getters
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +79,7 @@ var
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 	
 	// Get Milesian date components from targetDate
-	let dateComponent = targetDate.getMilesianUTCDate();
+	let dateComponent = targetDate.getUTCMilesianDate();
 
 	// Set Milesian clock
 	let myElement = document.querySelector("#clock3");
@@ -92,7 +94,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Translate to Julian if before initial date of switch to Gregorian calendar
 
 	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		dateComponent = targetDate.getJulianUTCDate()		// dateComponent object set to Julian date
+		dateComponent = targetDate.getUTCJulianDate()		// dateComponent object set to Julian date
 	else { 												// else, dateComponent set to (standard) Gregorian coordinates
 		dateComponent.year  = targetDate.getUTCFullYear();
 		dateComponent.month = targetDate.getUTCMonth();
@@ -124,13 +126,13 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 	
     //  Update Julian Calendar - using Date properties 
-	dateComponent = targetDate.getJulianUTCDate();
+	dateComponent = targetDate.getUTCJulianDate();
     document.julian.year.value = dateComponent.year;
     document.julian.monthname.value = dateComponent.month;
     document.julian.day.value = dateComponent.date;
 
     //  Update Republican Calendar - using Date properties
-	dateComponent = targetDate.getFrenchRevUTCDate();
+	dateComponent = targetDate.getUTCFrenchRevDate();
     document.republican.year.value = dateComponent.year;
     document.republican.monthname.value = dateComponent.month;
     document.republican.day.value = dateComponent.date;	
@@ -141,7 +143,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
 
 	//  Update ISO week calendar - using its Date properties
-	dateComponent = targetDate.getIsoWeekCalUTCDate();
+	dateComponent = targetDate.getUTCIsoWeekCalDate();
 	document.isoweeks.year.value = dateComponent.year;
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
