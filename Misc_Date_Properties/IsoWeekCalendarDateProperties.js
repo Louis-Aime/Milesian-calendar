@@ -5,9 +5,9 @@ Versions
 	M2017-12-26 replace CalendarCycleComputationEngine with CBCCE
 	M2018-05-19 set alias to getIsoWeekCalUTCDate (to be deprecated): getUTCIsoWeekCalDate
 	M2018-10-26 delete getIsoWeekCalUTCDate (deprecated)
+	M2018-11-02 set reference year to Gregorian year only
 Required
 	Package CBCCE is used.
-	Package MilesianDateProperties is used (in order to compute quickly year of date to be converted into ISO week calendar)
 Contents
 	getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 	getUTCIsoWeekCalDate : same as above, in UTC time.
@@ -70,16 +70,18 @@ function isoWeekCalendarBase (year) { 			// yields the monday 00:00 first moment
 	return referenceDate.valueOf() - ((referenceDate.getUTCDay() + 6) % 7)* Chronos.DAY_UNIT // Substract weekday number - 1 (+6) modulo 7 in order to come back to monday
 }
 Date.prototype.getIsoWeekCalDate = function () {
-	let year = this.getMilesianDate().year; 	// Milesian year begins always before ISO week year, therefore ISO week calendar year is either Milesian year, either - 1.
-	let base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
+	let base = new Date (this.valueOf() - 3 * Chronos.DAY_UNIT); // ISO year and Gregorian year of this date are the same, or ISO year is one unit less than Gregorian
+	let year = base.getFullYear(); 
+	base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
 	if (base.valueOf() > this.valueOf()-(this.getTimezoneOffset() * Chronos.MINUTE_UNIT)) base.setTime (isoWeekCalendarBase(--year)); 
 	let compoundDate = cbcceDecompose (this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT - base.valueOf(), isoWeekCalendar_params);
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year});
 	return compoundDate;
 }
 Date.prototype.getUTCIsoWeekCalDate = function () {
-	let year = this.getUTCMilesianDate().year; 	// Milesian year begins always before ISO week year, therefore ISO week calendar year is either Milesian year, either - 1.
-	let base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
+	let base = new Date (this.valueOf() - 3 * Chronos.DAY_UNIT); // ISO year and Gregorian year of this date are the same, or ISO year is one unit less than Gregorian
+	let year = base.getUTCFullYear(); 
+	base = new Date (isoWeekCalendarBase(year));	// This is the first day of ISO week year.
 	if (base.valueOf() > this.valueOf()) base.setTime (isoWeekCalendarBase(--year));
 	let compoundDate = cbcceDecompose (this.valueOf() - base.valueOf(), isoWeekCalendar_params);
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year});
