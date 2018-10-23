@@ -20,16 +20,19 @@ Versions
 		Restructure toLocalDate parameters - whenever possible, TZ parameter passed is used.
 	M2018-10-26
 		Delete a whole set of complicated code dedicated to MS Edge, that lack most calendar functions.
+	M2018-10-29
+		Update comments
 Contents
 	unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
 	toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
-	Date.prototype.toMilesianLocaleDateString (deprecated).
 Required:
-	MilesianMonthNames.xml: fetched source of month names - may be provided by milesianMonthNamesString
-	MilesianDateProperties.js (and dependent files)
-	MilesianAlertMsg.js
+	Access to milesianNames, a global object that hold the names of milesian months in several languages
+		This object is either constructed through milesianMonthNamesString.js
+		or fetched from MilesianMonthNames.xml through milesianCommonSettings
+		(this way seems ideal, but is complex and finally not recommended)
+	MilesianDateProperties.js (and dependent file CBCCE)
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -39,9 +42,9 @@ without limitation the rights to use, copy, modify, merge, publish,
 distribute, sub-license, and/or sell copies of the Software, and to
 permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
-1. The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-2. Changes with respect to any former version shall be documented.
+	1. The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+	2. Changes with respect to any former version shall be documented.
 
 The software is provided "as is", without warranty of any kind,
 express of implied, including but not limited to the warranties of
@@ -55,10 +58,9 @@ Inquiries: www.calendriermilesien.org
 /*
 1. Basic tools of this package
 
-1.1 Access to XML file: 
-A "real" access is not working the same way an all platform, is not used is such.
-In file milesianMonthNamesString.js, const pldr is declared, and milesianNames is constructed.
-Note: take care that text items from milesianNames be in the proper character set, corresponding to the Internet site's.
+1.1 Access to the list of month names: 
+Object milesianNames, resulting from a DOMParser operation, hold the names of milesian calendar items in several languages.
+Please take care that text items from milesianNames be in the proper character set, corresponding to the Internet site's.
 
 1.2 General utilities: 
 *	unicodeCalendarHandled : which calendar is effectively used upon request through the Locale nu-ca- parameters
@@ -120,13 +122,15 @@ function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a
 		return { localDate : localTime, accuracy : "approx" , way : "noformatToParts"}	// 
 	}
 }
-//////////////////////////////////////////////////////
-//
-// 2. Methods added to Intl.DateTimeFormat object for display of Milesian dates
-//
-// The method makes the best possible use of Unicode concepts for calendar, and re-use the expression pattern of gregory dates.
-//
-//////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////
+
+2. Methods added to Intl.DateTimeFormat object for display of Milesian dates
+
+The method makes the best possible use of Unicode concepts for calendar, and re-use the expression pattern of gregory dates.
+
+2.1 FormatToParts in milesian elements
+
+*/
 
 Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Give formatted elements of a Milesian date.
 	// This function works only if .formatToParts is provided, else an error is thrown.
@@ -204,7 +208,9 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 		throw e; // Error to be handled by caller, but do not stop working.
 		}
 }
-
+/*
+2.2 Construct a string that expresses a date in the Milesian calendar.
+*/
 Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) { // Issue a Milesian string for the date.
 	// First, try using FormatToParts
 	try {
