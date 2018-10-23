@@ -45,6 +45,11 @@ Version M2018-05-30
 *	Enhance / bug fix
 Version M2018-10-26
 *	Update reference to UTC date getters
+Version M2018-10-29
+*	New choices for date string display
+Version M2018-11-02
+*	Catch out-of-range errors
+*	Catch display error on Unicode Um-al-Qura calendar
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -196,6 +201,15 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		case "long" :
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
 			break;
+		case "standard":
+			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", timeZone : "UTC"};
+			break;
+		case "short":
+			userOptions = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short", timeZone : "UTC"};
+			break;
+		case "narrow":
+			userOptions = {weekday : "narrow", day : "numeric", month: "narrow", year : "2-digit", timeZone : "UTC"};
+			break;	
 		case "numeric" : 
 			userOptions = {weekday : "short", day : "numeric", month: "numeric", year : "numeric", era : "short", timeZone : "UTC"}; 
 			break;
@@ -234,6 +248,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 				case "islamic":
 				case "islamic-rgsa": valid = (targetDate.valueOf()
 					>= -42521673600000); break; // Computations are false before Haegirian epoch
+				case "islamic-umalqura": valid = (targetDate.valueOf()
+					>= -6227305142400000); break; // Computations are false before 2 6m -195366
 				case "ethiopic": valid = (targetDate.valueOf()
 					>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
 				case "ethioaa": delete Options.era ; break; // suppress era part of Options, since the displayed era is "ERA0"
