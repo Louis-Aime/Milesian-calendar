@@ -111,8 +111,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	let days = Math.round (document.control.shift.value);
 	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
 	else { 
-		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
-		setDisplay();
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 </script>	
@@ -147,8 +152,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		if	( isNaN(day)  || isNaN (year ))
 			alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
 		else { 
-			targetDate.setUTCTimeFromMilesian (year, month, day);
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setUTCTimeFromMilesian (year, month, day);
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
+			}
 		}
 	}
   </script>  
@@ -184,8 +194,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		if	( isNaN(day)  || isNaN (year ))
 			alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
 		else {
-			targetDate.setUTCFullYear(year, month, day);
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setUTCFullYear(year, month, day);
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
+			}
 		}
 	}
   </script>
@@ -220,8 +235,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		if	( isNaN(day)  || isNaN (year))
 			alert (milesianAlertMsg("invalidDate") + '"' + document.julian.day.value + '" "' + document.julian.year.value + '"')
 		else {
-			targetDate.setUTCTimeFromJulianCalendar(year, month, day); 
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setUTCTimeFromJulianCalendar(year, month, day); 
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
+			}
 		}
 	}
   </script>  
@@ -256,8 +276,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		if	( isNaN(day)  || isNaN (year))
 			alert (milesianAlertMsg("invalidDate") + '"' + document.republican.day.value + '" "' + document.republican.year.value + '"')
 		else { 
-			targetDate.setUTCTimeFromFrenchRev(year, month, day);
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setUTCTimeFromFrenchRev(year, month, day);
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
+			}
 		}
 	  }
   </script>
@@ -295,9 +320,14 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		if	( isNaN(day)  || isNaN (week) || isNaN (year))
 			alert (milesianAlertMsg("invalidDate") + '"' + document.isoweeks.year.value + '" "' + document.isoweeks.week.value + '"')
 		else { 
-			targetDate.setUTCTimeFromIsoWeekCal(year, week, day);
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setUTCTimeFromIsoWeekCal(year, week, day);
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
 			}
+		}
 	  }
   </script>
 	<tr>
@@ -333,8 +363,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		var j = Math.round(document.daycounter.julianday.value); // extract Julian Day, integer value expected.
 		if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
 		else {
-			targetDate.setTimeFromJulianDay (j-0.5); 
-			setDisplay ();
+			let testDate = new Date (targetDate.valueOf());			
+			testDate.setTimeFromJulianDay (j-0.5); 
+			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+			else {
+				targetDate = new Date (testDate.valueOf());
+				setDisplay();
+			}
 		}
 	  }
   </script>
@@ -379,9 +414,12 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		<tr><th>Format</th>
 			<td>
 			<select name="Presentation" class="dateconvert" size="1">
-				<option value="long" selected>Texte (pour ordinateur)</option>
-				<option value="numeric">Chiffres (pour mobile)</option>
-				<option value="numericwoera">Compact (pour mobile)</option>
+				<option value="long">Texte complet</option>
+				<option value="standard" selected>Texte courant</option>
+				<option value="short">Abrégé</option>
+				<option value="narrow">Condensé</option>
+				<option value="numeric">Numérique complet</option>
+				<option value="numericwoera">Numérique abrégé</option>
 			</select>
 			</td>
 			<td><button class="dateconvert">Ok</button></td>			
