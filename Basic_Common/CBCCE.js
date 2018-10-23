@@ -25,8 +25,10 @@ Versions:
 		This version is an extension of the original "Calendar Cycle Computation Engine" and replaces it.
 	Version 2 : M2018-05-28
 		Comments enhanced
+	Version 3 : M2018-11-02
+		Catch case where the time stamp passed to cbcceDecompose is "NaN"
 */
-/* Copyright Miletus 2016-2017 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -94,28 +96,32 @@ Day_milliseconds = { 	// To convert a time or a duration to and from days + mill
 // cbcceDecompose : from time series figure to decomposition
 ///////////////////////////////////////////// 
 function cbcceDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by params.
-  quantity -= params.timeepoch; // set at initial value the quantity to decompose into cycles.
+  if (!isNaN (quantity)) quantity -= params.timeepoch; // set at initial value the quantity to decompose into cycles. Else leave NaN.
   var result = new Object(); // Construct initial compound result 
   for (let i = 0; i < params.canvas.length; i++) {	// Define property of result object (a date or date-time)
     Object.defineProperty (result, params.canvas[i].name, {enumerable : true, writable : true, value : params.canvas[i].init});
   }
   let addCycle = 0; 	// flag that upper cycle has one element more or less (i.e. a 5 years franciade or 13 months luni-solar year)
   for (let i = 0; i < params.coeff.length; ++i) {	// Perform decomposition by dividing by the successive cycle length
-    let r = 0; 		// r is the computed quotient for this level of decomposition
-    if (params.coeff[i].cyclelength == 1) r = quantity; // avoid performing a trivial division by 1.
-    else {		// at each level, search at the same time the quotient (r) and the modulus (quantity)
-      while (quantity < 0) {
-        --r; 
-        quantity += params.coeff[i].cyclelength;
-      }
-	  let ceiling = params.coeff[i].ceiling + addCycle;
-      while ((quantity >= params.coeff[i].cyclelength) && (r < ceiling)) {
-        ++r; 
-        quantity -= params.coeff[i].cyclelength;
-      }
-	  addCycle = (r == ceiling) ? params.coeff[i].subCycleShift : 0; // if at last section of this cycle, add or subtract 1 to the ceiling of next cycle
-    }
-    result[params.coeff[i].target] += r*params.coeff[i].multiplier; // add result to suitable part of result array	
+    if (isNaN(quantity)) 
+		result[params.coeff[i].target] = NaN	// Case where time stamp is not a number, e.g. out of bounds.
+	else {
+		let r = 0; 		// r is the computed quotient for this level of decomposition
+		if (params.coeff[i].cyclelength == 1) r = quantity; // avoid performing a trivial division by 1.
+		else {		// at each level, search at the same time the quotient (r) and the modulus (quantity)
+		  while (quantity < 0) {
+			--r; 
+			quantity += params.coeff[i].cyclelength;
+		  }
+		  let ceiling = params.coeff[i].ceiling + addCycle;
+		  while ((quantity >= params.coeff[i].cyclelength) && (r < ceiling)) {
+			++r; 
+			quantity -= params.coeff[i].cyclelength;
+		  }
+		  addCycle = (r == ceiling) ? params.coeff[i].subCycleShift : 0; // if at last section of this cycle, add or subtract 1 to the ceiling of next cycle
+		}
+		result[params.coeff[i].target] += r*params.coeff[i].multiplier; // add result to suitable part of result array	
+	}
   }	
   return result;
 }
