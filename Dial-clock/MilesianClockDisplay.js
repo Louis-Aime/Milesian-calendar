@@ -38,6 +38,11 @@ Version M2018-05-15
 *	Put Unicode and Milesian strings computation in setDisplay. 
 Version M2018-10-26
 *	askedOptions and userOptions variables were mis-declared, due to a ";" instead of ","
+Version M2018-10-29
+*	enhanced management of display parameters
+Version M2018-11-02
+*	Catch out-of-range errors
+*	Catch display error on Unicode Um-al-Qura calendar
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -68,11 +73,13 @@ var
 	lowerRepublicanDate = new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
 	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)), // Upper limit of the Republican calendar
 		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
-	TZSettings = {mode : "TZ", offset : 0, msoffset : 0},	// initialisation to be superseded
-	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
-					hour : "numeric", minute : "numeric", second : "numeric"}, 	// Initial presentation options.
-	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	// Formatting options initialisation
-	userOptions = askedOptions.resolvedOptions(); // Initialisation of explicit display options
+
+	// Initial definition of display options parameters (global variables), to be superseded at initialisation
+	TZSettings = {mode : "TZ", offset : 0, msoffset : 0},	
+	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", 
+					hour : "numeric", minute : "numeric", second : "numeric"}, 	
+	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	
+	userOptions = askedOptions.resolvedOptions(); 
 	
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
@@ -87,9 +94,13 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		case "UTC" : TZSettings.offset = 0; document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset(); 	
 	}
 	TZSettings.msoffset = TZSettings.offset * Chronos.MINUTE_UNIT; // Small computation made ounce for all
+	
+	compLocalePresentationCalendar(); // Establish initial / recomputed date string display parameters 
 
 	var shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The UTC representation of targetDate date is the local date of TZ
-
+	if (isNaN (shiftDate.valueOf())) { // targetDate may be in bounds, and shiftDate out of bounds.
+		alert (milesianAlertMsg("outOfRange")) ; return 
+	}
 	// Initiate milesian clock and milesian string with present time and date
 	var myElement = document.querySelector("#clock2");	// myElement is a work variable
 	setSolarYearClockHands (myElement, shiftDate.getUTCMilesianDate().year, shiftDate.getUTCMilesianDate().month, shiftDate.getUTCMilesianDate().date,
@@ -223,6 +234,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		case "islamic":
 		case "islamic-rgsa": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
+		case "islamic-umalqura": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+			>= -6227305142400000); break; // Computations are false before 2 6m -195366
 		}
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");

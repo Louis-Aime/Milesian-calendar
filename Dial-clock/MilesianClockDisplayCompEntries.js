@@ -1,6 +1,8 @@
 /* Milesian Clock and converter functions - computations on entries
 Character set is UTF-8.
-See Milesian Clock Display (.html and .js) for details.
+See Milesian Clock Display (.html and .js) for details. This file is a continuation.
+Version
+	M2018-11-02 : Prevent out-of-range errors
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -25,7 +27,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 
-function setLocalePresentationCalendar() {	// What happens when Locale-presentation-calendar option button hit
+function compLocalePresentationCalendar() {	// Manage date string display parameters
 	// askedOptions and userOptions are global variables declared in MilesianClockDisplay.js
 	var myElement, // work variable
 	// Get user-specified parameters
@@ -57,7 +59,7 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
 		case "standard":
-			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
+			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric",
 					hour : "numeric", minute : "numeric", second : "numeric"};
 			break;
 		case "short":
@@ -65,11 +67,11 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 					hour : "numeric"};
 			break;
 		case "narrow":
-			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", era : "narrow",
+			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", 
 					hour : "2-digit", minute : "2-digit", second : "2-digit"};
 			break;	
 		case "numeric":
-			Options = {weekday : "short", day : "numeric", month : "numeric", year : "numeric", era : "short",
+			Options = {weekday : "short", day : "numeric", month : "numeric", year : "numeric", era : "narrow",
 					hour : "2-digit", minute : "2-digit", second : "2-digit"};
 			break;
 		case "2-digit":
@@ -95,15 +97,19 @@ function setLocalePresentationCalendar() {	// What happens when Locale-presentat
 		askedOptions = Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
 	}
 	userOptions = askedOptions.resolvedOptions();	// The global variable.
-
-	setDisplay();	// set all, as Locale may change the way the first Milesian string is written
 }
+
+
 
 function setDateToNow(){ // Self explanatory
 	// targetDate is declared in MilesianClockDisplay.js
     targetDate = new Date(); // set new Date object and initiate to date-time of call
 	setDisplay(); 
 }
+function setLocalePresentationCalendar() {	// What happens when Locale-presentation-calendar option button hit
+	setDisplay(); // Display parameters shall be recomputed
+}
+
 function setMode() {	// Just change mode UTC, time zone or fixed offset.
 	setDisplay();
 }
@@ -131,8 +137,13 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	let days = Math.round (document.control.shift.value);
 	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
 	else { 
-		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
-		setDisplay();
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 function addTime (sign) { // A number of seconds is added or subtracted to or from the Timestamp.
@@ -140,29 +151,45 @@ function addTime (sign) { // A number of seconds is added or subtracted to or fr
 	let secs = Math.round (document.UTCshift.shift.value);
 	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.shift.value + '"')
 	else { 
-		targetDate.setTime (targetDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
-		setDisplay();
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setTime (testDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 function calcTime() { // Here the hours are deemed local hours
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
 	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) 
 		alert (milesianAlertMsg("invalidDate") + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
-	 else {switch (TZSettings.mode) {
-		case "TZ" : targetDate.setHours(hours, mins, secs, 0); break;
-		case "UTC" : targetDate.setUTCHours(hours, mins, secs, 0); break;
+	 else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ" : testDate.setHours(hours, mins, secs, 0); break;
+		case "UTC" : testDate.setUTCHours(hours, mins, secs, 0); break;
 		case "Fixed" : 
-			targetDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
-			targetDate.setUTCHours(hours, mins, secs, 0); 
-			targetDate.setTime(targetDate.getTime() + TZSettings.msoffset);
+			testDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
+			testDate.setUTCHours(hours, mins, secs, 0); 
+			testDate.setTime(targetDate.getTime() + TZSettings.msoffset);
 		}
-		setDisplay();	
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
-		if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
-		targetDate.setUTCHours(UTChours, 0, 0, 0); //targetDate.setUTCMinutes(0); targetDate.setSeconds(0); targetDate.setMilliseconds(0);
-		setDisplay();	
+	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
+	let testDate = new Date (targetDate.valueOf());
+	testDate.setUTCHours(UTChours, 0, 0, 0);
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
 }
 function calcMilesian() {
 	var day =  Math.round (document.milesian.day.value);
@@ -170,17 +197,23 @@ function calcMilesian() {
 	var year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
-	else { switch (TZSettings.mode){
-		case "TZ": targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
+	else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": testDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 			break;
-		case "UTC" : targetDate.setUTCTimeFromMilesian (year, month, day);
+		case "UTC" : testDate.setUTCTimeFromMilesian (year, month, day);
 			break;
 		case "Fixed" : 	
 			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCTimeFromMilesian (year, month, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
-	setDisplay ();
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
@@ -190,8 +223,13 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	else {
 		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
 		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
-	targetDate.setTimeFromJulianDay (j); 
-	setDisplay ();
+		let testDate = new Date (targetDate.valueOf());
+		testDate.setTimeFromJulianDay (j);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
 	}
 }
 function calcGregorian() {
@@ -200,19 +238,25 @@ function calcGregorian() {
 	var year =  Math.round (document.gregorian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
-	else { switch (TZSettings.mode) {
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
 		case "TZ": 
-			targetDate.setFullYear(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			testDate.setFullYear(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
 			break;
-		case "UTC" : targetDate.setUTCFullYear(year, month, day);
+		case "UTC" : testDate.setUTCFullYear(year, month, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCFullYear (year, month, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		} 
-		setDisplay ();
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 		}
+	}
 }
 function calcJulian(){
 	var day =  Math.round(document.julian.day.value);
@@ -220,19 +264,25 @@ function calcJulian(){
 	var year =  Math.round(document.julian.year.value);
 	if	( isNaN(day)  || isNaN (year))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.julian.day.value + '" "' + document.julian.year.value + '"')
-	else { switch (TZSettings.mode) {
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
 		case "TZ": 
-			targetDate.setTimeFromJulianCalendar(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			testDate.setTimeFromJulianCalendar(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
 			break;
-		case "UTC" : targetDate.setUTCTimeFromJulianCalendar(year, month, day);
+		case "UTC" : testDate.setUTCTimeFromJulianCalendar(year, month, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCTimeFromJulianCalendar (year, month, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
-		setDisplay ();
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 		}
+	}
 }
 function calcFrenchRev(){
 	let day =  Math.round(document.republican.day.value);
@@ -240,19 +290,25 @@ function calcFrenchRev(){
 	let year =  Math.round(document.republican.year.value);
 	if	( isNaN(day)  || isNaN (year))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.republican.day.value + '" "' + document.republican.year.value + '"')
-	else { switch (TZSettings.mode) {
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
 		case "TZ": 
-			targetDate.setTimeFromFrenchRev(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			testDate.setTimeFromFrenchRev(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
 			break;
-		case "UTC" : targetDate.setUTCTimeFromFrenchRev(year, month, day);
+		case "UTC" : testDate.setUTCTimeFromFrenchRev(year, month, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCTimeFromFrenchRev (year, month, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
-		setDisplay ();
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 		}
+	}
 }
 function calcISO() {
 	var day =  Math.round (document.isoweeks.day.value);
@@ -260,17 +316,23 @@ function calcISO() {
 	var year =  Math.round (document.isoweeks.year.value);
 	if	( isNaN(day)  || isNaN (week) || isNaN (year))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.isoweeks.year.value + '" "' + document.isoweeks.week.value + '"')
-	else { switch (TZSettings.mode) {
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
 		case "TZ": 
-			targetDate.setTimeFromIsoWeekCal(year, week, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			testDate.setTimeFromIsoWeekCal(year, week, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
 			break;
-		case "UTC" : targetDate.setUTCTimeFromIsoWeekCal(year, week, day);
+		case "UTC" : testDate.setUTCTimeFromIsoWeekCal(year, week, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCTimeFromIsoWeekCal (year, week, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
-		setDisplay ();
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 		}
+	}
 }
