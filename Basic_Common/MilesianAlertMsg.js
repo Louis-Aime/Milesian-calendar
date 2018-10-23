@@ -8,10 +8,12 @@ Versions
 		Delete MilesianAlertMsg object (no longer used)
 		Suppress ":" at end of messages, but leave " " (blank character)
 	M2018-05
-	Enhance messages in German
-	New message entries: 
-		invalidCode (for e formatting option)
-		browserError (after error catched because browser does not handle certain JS objects, like Unicode formatter objects)
+		Enhance messages in German
+		New message entries: 
+			invalidCode (for e formatting option)
+			browserError (after error catched because browser does not handle certain JS objects, like Unicode formatter objects)
+	M2018-11-02
+		New message entry : outOfRange		
 Required:
 	No other file required
 */
@@ -74,6 +76,13 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 			de	: "Internetbrowser Fehler ",
 			es	: "Error de navegador ",
 			pt	: "Erro no navegador "
+			},
+		"outOfRange" : {
+			en	: "Date or value out of range ",
+			fr	: "Date ou valeur hors limites ",
+			de	: "Datum oder Wert außerhalb Bereichs ",
+			es	: "Fecha o valor fuera de límites ",
+			pt	: "Data ou valor fora do intervalo "	
 			}
 		};
 	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
