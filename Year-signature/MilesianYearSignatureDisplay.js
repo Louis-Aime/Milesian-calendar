@@ -97,6 +97,7 @@ function setYearOffset(shift) {
 	shift = Math.round(shift);	// Force to integer value
 	let year = Math.round(document.year.year.value) + Math.round(shift);
 	if (isNaN (year)) alert (milesianAlertMsg("nonInteger") + '"' + document.control.shift.value + '" "' + document.year.year.value + '"')
+	else if (year < -271820 || year > 275760) alert (milesianAlertMsg("outOfRange"))
 	else { 
 		document.year.year.value = year;
 		computeSignature (year);
