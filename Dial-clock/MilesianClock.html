@@ -98,25 +98,32 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <h1>Heure et fuseau horaire</h1>
 	<table class="dateconvert" align="center">
 		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
-			<tr><th>Mode</th>
-				<td>
+			<tr><th colspan="2">Mode</th>
+				<td colspan="4">
 					<select name="TZcontrol" size="1" class="dateconvert">
 					<option value="UTC">UTC</option>
 					<option value="TZ" selected>Fuseau système</option>
 					<option value="Fixed">Décalage fixe</option>
 					</select></td>
+			</tr>
+			<tr>
 				<th>Décalage</th> 
-				<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
+				<td><select name="TZOffsetSign" class="dateconvert" size="2">
+				<option value="1">+</option>
+				<option value="-1">-</option>
+				</select> </td>
+				<td><input name="TZOffset" type="text" class="dateconvert yearnum"></td>
 				<td>mn</td>
+				<td><input name="TZOffsetSec" type="number" class="dateconvert daynum"></td>
+				<td>s</td>
 				<td><button class="dateconvert">Ok</button></td>
 			</tr>
 		</form>
 	</table>
-
 	<table class="dateconvert" align="center">
 	  <tr> 
 		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
-		 <td>Heure selon mode : </td>
+		 <th>Heure du mode : </th>
 		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
 		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
 		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
@@ -160,7 +167,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<table class="dateconvert" align="center">
 	  <tr>
 		<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
-		<td>+/- jours</td>
+		<td>+/- jours (24h)</td>
 		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
 		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
 		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
@@ -331,6 +338,10 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		<tr>
 			<th>Compteur Unix : </th>
 			<td id="unixCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Semaine : </th>
+			<td id="weekDisplay"></td>
 		</tr>
 	</table>
 </section>	
@@ -506,6 +517,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
         <td><button class="dateconvert">Ok</button></td>
       </tr>
+	</form>
+</table>
+<table class="dateconvert" align="center">
+	<form name="controloptions" class="dateconvert" autocomplete="off" method="post" action="">
+	  <tr>
+	    <td><input type="checkbox" name="datevalidity" checked></td>
+		<th>Contrôle de validité des dates saisies</th>
+	  </tr>
 	</form>
 </table>
 </section>

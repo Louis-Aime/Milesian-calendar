@@ -43,6 +43,10 @@ Version M2018-10-29
 Version M2018-11-02
 *	Catch out-of-range errors
 *	Catch display error on Unicode Um-al-Qura calendar
+Version M2018-11-03
+*	Display ISO week calendar string
+*	Use date entry validity control option
+*	Adapt TZ offset to min and sec
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -75,7 +79,7 @@ var
 		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
 
 	// Initial definition of display options parameters (global variables), to be superseded at initialisation
-	TZSettings = {mode : "TZ", offset : 0, msoffset : 0},	
+	TZSettings = {mode : "TZ", msoffset : 0},	
 	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", 
 					hour : "numeric", minute : "numeric", second : "numeric"}, 	
 	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	
@@ -85,15 +89,31 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// Initiate Time zone mode for the "local" time from main display
 	TZSettings.mode = document.TZmode.TZcontrol.value;
-	// Timezone offset for next computations - opposite of JS offset.
+	// Timezone offset for next computations - opposite of JS off;set.
+	// if (isNaN (document.TZmode.TZOffset.value)) alert (milesianAlertMsg("nonNumeric") + ' "' + document.TZmode.TZOffset.value + '"');
+	let 
+		systemDecimalTZ = - targetDate.getTimezoneOffset(), // Decimal minutes
+		systemSign = (systemDecimalTZ < 0 ? -1 : 1),
+		absoluteDecimalTZ = systemSign * systemDecimalTZ,
+		absoluteTZmin = Math.floor (absoluteDecimalTZ),
+		absoluteTZsec = Math.round ((absoluteDecimalTZ-absoluteTZmin) * 60);
 	switch (TZSettings.mode) {
-		case "TZ" : document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset();
-		// If TZ mode, Copy computed TZOffset into TZSettings fur future computations
-		case "Fixed" : TZSettings.offset = -document.TZmode.TZOffset.value; break;
+		case "TZ" : 
+			document.TZmode.TZOffsetSign.value = systemSign;
+			document.TZmode.TZOffset.value = absoluteTZmin;
+			document.TZmode.TZOffsetSec.value = absoluteTZsec;
+		// Continue for  this case, copy computed TZOffset into TZSettings fur future computations
+		case "Fixed" : TZSettings.msoffset = 
+			- document.TZmode.TZOffsetSign.value 
+			* (document.TZmode.TZOffset.value * Chronos.MINUTE_UNIT + document.TZmode.TZOffsetSec.value * Chronos.SECOND_UNIT);
+			break;
 		// If UTC mode, set computation offset to 0, but set displayed field to TZ value
-		case "UTC" : TZSettings.offset = 0; document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset(); 	
+		case "UTC" : 
+			TZSettings.msoffset = 0; 
+			document.TZmode.TZOffsetSign.value = systemSign;
+			document.TZmode.TZOffset.value = absoluteTZmin;
+			document.TZmode.TZOffsetSec.value = absoluteTZsec;
 	}
-	TZSettings.msoffset = TZSettings.offset * Chronos.MINUTE_UNIT; // Small computation made ounce for all
 	
 	compLocalePresentationCalendar(); // Establish initial / recomputed date string display parameters 
 
@@ -211,6 +231,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement = document.querySelector("#weekDisplay");
+	myElement.innerHTML = targetDate.toIsoWeekCalDateString();
 
 	
 	// Unicode frame 

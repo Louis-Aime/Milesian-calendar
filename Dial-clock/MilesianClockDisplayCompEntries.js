@@ -60,7 +60,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 			break;
 		case "standard":
 			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric",
-					hour : "numeric", minute : "numeric", second : "numeric"};
+					hour : "numeric", minute : "numeric"};
 			break;
 		case "short":
 			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short",
@@ -99,8 +99,6 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	userOptions = askedOptions.resolvedOptions();	// The global variable.
 }
 
-
-
 function setDateToNow(){ // Self explanatory
 	// targetDate is declared in MilesianClockDisplay.js
     targetDate = new Date(); // set new Date object and initiate to date-time of call
@@ -114,19 +112,31 @@ function setMode() {	// Just change mode UTC, time zone or fixed offset.
 	setDisplay();
 }
 function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
-	var day =  Math.round (document.gregorianswitch.day.value);
-	var month = document.gregorianswitch.monthname.value;
-	var year =  Math.round (document.gregorianswitch.year.value);
+	var 
+	 day =  Math.round (document.gregorianswitch.day.value),
+	 month = document.gregorianswitch.monthname.value,
+	 year =  Math.round (document.gregorianswitch.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorianswitch.day.value + '" "' + document.gregorianswitch.year.value + '"')
 	else {		
-		let A = new Date (Date.UTC(year, month, day, 0, 0, 0, 0));
-		if (A.valueOf() < Date.UTC(1582,9,15,0,0,0,0)) {	// If specified date is prior to 15 October 1582, reject change and keep current
+		let testDate = new Date (Date.UTC(year, month, day, 0, 0, 0, 0));
+		if (testDate.valueOf() < Date.UTC(1582,9,15,0,0,0,0)) {	// If specified date is prior to 15 October 1582, reject change and keep current
 			month++ ;
 			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + ' ' + year + '"')
 			}
 		else {
-		gregorianSwitch = new Date (A.valueOf());
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf());
+			if (shiftDate.getUTCDate() != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.gregorianswitch.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.gregorianswitch.year.value + '"');
+			  setDisplay(); // back to former value
+			  return
+			  }
+		    }
+		gregorianSwitch = new Date (testDate.valueOf());
 			}
 		}	
 	setDisplay();	
@@ -172,7 +182,7 @@ function calcTime() { // Here the hours are deemed local hours
 		case "Fixed" : 
 			testDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
 			testDate.setUTCHours(hours, mins, secs, 0); 
-			testDate.setTime(targetDate.getTime() + TZSettings.msoffset);
+			testDate.setTime(testDate.getTime() + TZSettings.msoffset);
 		}
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
@@ -192,9 +202,10 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 function calcMilesian() {
-	var day =  Math.round (document.milesian.day.value);
-	var month = document.milesian.monthname.value;
-	var year =  Math.round (document.milesian.year.value);
+	var 
+	 day =  Math.round (document.milesian.day.value),
+	 month = document.milesian.monthname.value,
+	 year =  Math.round (document.milesian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
 	else {
@@ -211,6 +222,16 @@ function calcMilesian() {
 		}
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCMilesianDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.milesian.day.value 
+				+ ' ' + ++month + 'm ' 
+				+ document.milesian.year.value + '"');
+			  return
+			  }
+		    }
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
@@ -233,9 +254,10 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	}
 }
 function calcGregorian() {
-	var day =  Math.round (document.gregorian.day.value);
-	var month = (document.gregorian.monthname.value);
-	var year =  Math.round (document.gregorian.year.value);
+	var 
+	 day =  Math.round (document.gregorian.day.value),
+	 month = (document.gregorian.monthname.value),
+	 year =  Math.round (document.gregorian.year.value);
 	if	( isNaN(day)  || isNaN (year ))
 		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
 	else { 
@@ -247,12 +269,22 @@ function calcGregorian() {
 		case "UTC" : testDate.setUTCFullYear(year, month, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCFullYear (year, month, day); 
 			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		} 
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCDate() != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.gregorian.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.gregorian.year.value + '"');
+			  return
+			  }
+		    }			
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
@@ -279,6 +311,16 @@ function calcJulian(){
 		}
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCJulianDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.julian.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.julian.year.value + '"');
+			  return
+			  }
+		    }
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
@@ -299,12 +341,22 @@ function calcFrenchRev(){
 		case "UTC" : testDate.setUTCTimeFromFrenchRev(year, month, day);
 			break;
 		case "Fixed" : 	
-			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
 			shiftDate.setUTCTimeFromFrenchRev (year, month, day); 
 			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
 		}
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCFrenchRevDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.republican.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.republican.year.value + '"');
+			  return
+			  }
+		    }
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
@@ -331,6 +383,16 @@ function calcISO() {
 		}
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCIsoWeekCalDate().week != week) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.isoweeks.day.value 
+				+ ' W' + document.isoweeks.week.value + ' ' 
+				+ document.isoweeks.year.value + '"');
+			  return
+			  }
+		    }
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
