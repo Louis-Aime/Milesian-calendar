@@ -50,6 +50,9 @@ Version M2018-10-29
 Version M2018-11-02
 *	Catch out-of-range errors
 *	Catch display error on Unicode Um-al-Qura calendar
+Version M2018-11-03
+*	Add control of date of switching to Gregorian calendar
+*	Add control of validity of entered dates
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +80,7 @@ var
 	justNow = new Date(),
 	targetDate = new Date(Date.UTC(justNow.getFullYear(),justNow.getMonth(),justNow.getDate(),0,0,0,0)),	// target date will be used to update everything
 	gregorianSwitch =  		// Settings: date where the Gregorian calendar was enforced (in Rome) 
-		new Date (Date.UTC(1582, 9, 15, 0, 0, 0, 0)), 
+		new Date (Date.UTC(1582, 11, 20, 0, 0, 0, 0)), 
 	lowerRepublicanDate = new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
 	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)); // Upper limit of the Republican calendar
 
@@ -120,6 +123,11 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		+ (dateComponent.date) + " "	// Date in the month
 		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
 		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + " av. J.-C."))	;
+
+	// Update settings (date of switching to gregorian calendar)
+	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
+	document.gregorianswitch.monthname.value = gregorianSwitch.getUTCMonth();
+	document.gregorianswitch.day.value = gregorianSwitch.getUTCDate();
 
     //  Update Gregorian Calendar - using standard JS date methods
     document.gregorian.year.value = targetDate.getUTCFullYear();

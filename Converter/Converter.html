@@ -96,7 +96,78 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
-
+<section class="dateconvert">
+<h1>Réglages</h1>
+<!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
+<script type="text/javascript">
+function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
+	var 
+	 day =  Math.round (document.gregorianswitch.day.value),
+	 month = document.gregorianswitch.monthname.value,
+	 year =  Math.round (document.gregorianswitch.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorianswitch.day.value + '" "' + document.gregorianswitch.year.value + '"')
+	else {		
+		let testDate = new Date (Date.UTC(year, month, day, 0, 0, 0, 0));
+		if (testDate.valueOf() < Date.UTC(1582,9,15,0,0,0,0)) {	// If specified date is prior to 15 October 1582, reject change and keep current
+			month++ ;
+			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + ' ' + year + '"')
+			}
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf());
+			if (shiftDate.getUTCDate() != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.gregorianswitch.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.gregorianswitch.year.value + '"');
+			  setDisplay(); // back to former value
+			  return
+			  }
+		    }
+		gregorianSwitch = new Date (testDate.valueOf());
+			}
+		}	
+	setDisplay();	
+}
+</script>
+<table class="dateconvert" align="center">
+	 <tr><th>Date de passage au calendrier grégorien</th></tr>
+	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>
+</table>
+<table class="dateconvert" align="center">
+	 <form name="gregorianswitch" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
+	  <tr>
+		<td><input name="day" type="number" value="15" min="1" max="31" class="dateconvert daynum"></td>
+        <td>
+        <select name="monthname" size="1" class="dateconvert">
+        <option value="0">janvier</option>
+        <option value="1">février</option>
+        <option value="2">mars</option>
+        <option value="3">avril</option>
+        <option value="4">mai</option>
+        <option value="5">juin</option>
+        <option value="6">juillet</option>
+        <option value="7">août</option>
+        <option value="8">septembre</option>
+        <option value="9">octobre</option>
+        <option value="10">novembre</option>
+        <option value="11">décembre</option>
+		</select> </td>
+        <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
+        <td><button class="dateconvert">Ok</button></td>
+      </tr>
+	</form>
+</table>
+<table class="dateconvert" align="center">
+	<form name="controloptions" class="dateconvert" autocomplete="off" method="post" action="">
+	  <tr>
+	    <td><input type="checkbox" name="datevalidity" checked></td>
+		<th>Contrôle de validité des dates saisies</th>
+	  </tr>
+	</form>
+</table>
+</section>
 <section class="dateconvert autoscroll">
 <h1 >Calendriers pivots et navigation</h1>
 <table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
@@ -155,9 +226,17 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			let testDate = new Date (targetDate.valueOf());			
 			testDate.setUTCTimeFromMilesian (year, month, day);
 			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
-			else {
-				targetDate = new Date (testDate.valueOf());
-				setDisplay();
+		else {
+		  if (document.controloptions.datevalidity.checked)  // Control that date entered is valid
+			if (testDate.getUTCMilesianDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.milesian.day.value 
+				+ ' ' + ++month + 'm ' 
+				+ document.milesian.year.value + '"');
+			  return
+			  }
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 			}
 		}
 	}
@@ -198,8 +277,17 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			testDate.setUTCFullYear(year, month, day);
 			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 			else {
-				targetDate = new Date (testDate.valueOf());
-				setDisplay();
+			  if (document.controloptions.datevalidity.checked)  // Control that date entered is valid
+				if (testDate.getUTCDate() != day) {
+				  alert (milesianAlertMsg("invalidDate") 
+					+ '"' + document.gregorian.day.value 
+					+ ' ' + ++month + ' ' 
+					+ document.gregorian.year.value + '"');
+				  return
+			  
+		    }			
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 			}
 		}
 	}
@@ -239,6 +327,14 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			testDate.setUTCTimeFromJulianCalendar(year, month, day); 
 			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 			else {
+			  if (document.controloptions.datevalidity.checked)  // Control that date entered is valid
+				if (testDate.getUTCJulianDate().date != day) {
+				  alert (milesianAlertMsg("invalidDate") 
+					+ '"' + document.julian.day.value 
+					+ ' ' + ++month + ' ' 
+					+ document.julian.year.value + '"');
+				  return
+				}		    
 				targetDate = new Date (testDate.valueOf());
 				setDisplay();
 			}
@@ -280,11 +376,19 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			testDate.setUTCTimeFromFrenchRev(year, month, day);
 			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 			else {
+			  if (document.controloptions.datevalidity.checked)  // Control that date entered is valid
+				if (testDate.getUTCFrenchRevDate().date != day) {
+				  alert (milesianAlertMsg("invalidDate") 
+					+ '"' + document.republican.day.value 
+					+ ' ' + ++month + ' ' 
+					+ document.republican.year.value + '"');
+				  return
+				  }
 				targetDate = new Date (testDate.valueOf());
 				setDisplay();
 			}
 		}
-	  }
+	}
   </script>
   <tr id="republicanline">
 	<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
@@ -324,6 +428,14 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 			testDate.setUTCTimeFromIsoWeekCal(year, week, day);
 			if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
 			else {
+			  if (document.controloptions.datevalidity.checked)  // Control that date entered is valid
+				if (testDate.getUTCIsoWeekCalDate().week != week) {
+				  alert (milesianAlertMsg("invalidDate") 
+					+ '"' + document.isoweeks.day.value 
+					+ ' W' + document.isoweeks.week.value + ' ' 
+					+ document.isoweeks.year.value + '"');
+				  return
+				  }
 				targetDate = new Date (testDate.valueOf());
 				setDisplay();
 			}
