@@ -42,8 +42,8 @@ Inquiries: www.calendriermilesien.org
 var 
 	targetDate = new Date(),
 	shiftDate = shiftDate = new Date (targetDate.getTime() - targetDate.getTimezoneOffset()*Chronos.MINUTE_UNIT),
-	TZSettings = {mode : "TZ", offset : 0, msoffset : 0};	// initialisation to be superseded
-//	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
+	TZSettings = {mode : "TZ", msoffset : 0};	// initialisation to be superseded
+	//	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
 	//				hour : "numeric", minute : "numeric", second : "numeric"}; 	// Initial presentation options.
 
 function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control. Called by setDisplay
@@ -116,10 +116,12 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		case "islamic":
 		case "islamic-rgsa": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
+		case "islamic-umalqura": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+			>= -6227305142400000); break; // Computations are false before 2 6m -195366
 		}
 		
 	let myElement = document.getElementById("Gstring");
-	try { myElement.innerHTML = (valid ? "" : milesianAlertMsg("invalidDate")) + askedOptions.format(targetDate); }
+	try { myElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.format(targetDate); }
 	catch (e) { myElement.innerHTML = milesianAlertMsg("browserError"); }
 }
 
@@ -129,14 +131,30 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	// Initiate Time zone mode for the "local" time from main display
 	TZSettings.mode = document.TZmode.TZcontrol.value;
 	// Timezone offset for next computations - opposite of JS offset.
+	// if (isNaN (document.TZmode.TZOffset.value)) alert (milesianAlertMsg("nonNumeric") + ' "' + document.TZmode.TZOffset.value + '"');
+	let 
+		systemDecimalTZ = - targetDate.getTimezoneOffset(), // Decimal minutes
+		systemSign = (systemDecimalTZ < 0 ? -1 : 1),
+		absoluteDecimalTZ = systemSign * systemDecimalTZ,
+		absoluteTZmin = Math.floor (absoluteDecimalTZ),
+		absoluteTZsec = Math.round ((absoluteDecimalTZ-absoluteTZmin) * 60);
 	switch (TZSettings.mode) {
-		case "TZ" : document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset();
-		// If TZ mode, Copy computed TZOffset into TZSettings fur future computations
-		case "Fixed" : TZSettings.offset = -document.TZmode.TZOffset.value; break;
+		case "TZ" : 
+			document.TZmode.TZOffsetSign.value = systemSign;
+			document.TZmode.TZOffset.value = absoluteTZmin;
+			document.TZmode.TZOffsetSec.value = absoluteTZsec;
+		// Continue for  this case, copy computed TZOffset into TZSettings fur future computations
+		case "Fixed" : TZSettings.msoffset = 
+			- document.TZmode.TZOffsetSign.value 
+			* (document.TZmode.TZOffset.value * Chronos.MINUTE_UNIT + document.TZmode.TZOffsetSec.value * Chronos.SECOND_UNIT);
+			break;
 		// If UTC mode, set computation offset to 0, but set displayed field to TZ value
-		case "UTC" : TZSettings.offset = 0; document.TZmode.TZOffset.value = -targetDate.getTimezoneOffset(); 	
+		case "UTC" : 
+			TZSettings.msoffset = 0; 
+			document.TZmode.TZOffsetSign.value = systemSign;
+			document.TZmode.TZOffset.value = absoluteTZmin;
+			document.TZmode.TZOffsetSec.value = absoluteTZsec;
 	}
-	TZSettings.msoffset = TZSettings.offset * Chronos.MINUTE_UNIT; // Small computation made ounce for all
 
 	shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The UTC representation of targetDate date is the local date of TZ
 	

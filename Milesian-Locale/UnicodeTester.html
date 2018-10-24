@@ -23,26 +23,34 @@ la version longue est affichée en latin.</p>
 </section>
 <section class="dateconvert autoscroll">
 <h2 class="dateconvert">Heure et décalage horaire</h2>
-	<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
-		<table class="dateconvert" align="center">
-			<tr><th>Mode</th>
-				<td>
+	<table class="dateconvert" align="center">
+		<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
+			<tr><th colspan="2">Mode</th>
+				<td colspan="4">
 					<select name="TZcontrol" size="1" class="dateconvert">
 					<option value="UTC">UTC</option>
 					<option value="TZ" selected>Fuseau système</option>
 					<option value="Fixed">Décalage fixe</option>
 					</select></td>
+			</tr>
+			<tr>
 				<th>Décalage</th> 
-				<td><input name="TZOffset" type="number" class="dateconvert yearnum"></td>
+				<td><select name="TZOffsetSign" class="dateconvert" size="2">
+				<option value="1">+</option>
+				<option value="-1">-</option>
+				</select> </td>
+				<td><input name="TZOffset" type="text" class="dateconvert yearnum"></td>
 				<td>mn</td>
+				<td><input name="TZOffsetSec" type="number" class="dateconvert daynum"></td>
+				<td>s</td>
 				<td><button class="dateconvert">Ok</button></td>
 			</tr>
-		</table>
-	</form>
+		</form>
+	</table>
 	<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
 		<table class="dateconvert" align="center">
 		  <tr> 
-			 <td>Heure selon mode : </td>
+			 <td>Heure du mode : </td>
 			 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
 			 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
 			 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
