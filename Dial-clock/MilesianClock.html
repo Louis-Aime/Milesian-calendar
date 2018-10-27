@@ -6,7 +6,7 @@
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
 	<title>Horloge milésienne</title>
-	
+	<!-- Last update M2018-11-07 insert js functions in relation with data entries  and clock run -->
 <!-- Month names - if not through .XML  -->
 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="RomanMonthNames.js"></script>
@@ -25,7 +25,6 @@
 	
 <!-- Specific for this page -->
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
-	<script type="text/javascript" src="MilesianClockDisplayCompEntries.js"></script>
 
 </head>
 <body>
@@ -96,8 +95,9 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </section>
 <section class="dateconvert autoscroll">
 <h1>Heure et fuseau horaire</h1>
+
 	<table class="dateconvert" align="center">
-		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setMode();">
+		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 			<tr><th colspan="2">Mode</th>
 				<td colspan="4">
 					<select name="TZcontrol" size="1" class="dateconvert">
@@ -120,6 +120,30 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 			</tr>
 		</form>
 	</table>
+
+<script type="text/javascript">
+function calcTime() { // Here the hours are deemed local hours
+	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
+	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) 
+		alert (milesianAlertMsg("invalidDate") + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
+	 else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ" : testDate.setHours(hours, mins, secs, 0); break;
+		case "UTC" : testDate.setUTCHours(hours, mins, secs, 0); break;
+		case "Fixed" : 
+			testDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
+			testDate.setUTCHours(hours, mins, secs, 0); 
+			testDate.setTime(testDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
 	<table class="dateconvert" align="center">
 	  <tr> 
 		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
@@ -132,6 +156,23 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	  </tr>
 	</table>
 
+<script type="text/javascript">
+function setDateToNow(){ // Self explanatory
+	// targetDate is declared in MilesianClockDisplay.js
+    targetDate = new Date(); // set new Date object and initiate to date-time of call
+	setDisplay(); 
+}
+function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
+	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
+	let testDate = new Date (targetDate.valueOf());
+	testDate.setUTCHours(UTChours, 0, 0, 0);
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+</script>
 	 <table class="dateconvert" align="center"> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
@@ -150,6 +191,22 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	  </tr>
 	 </table>
 	 
+<script type="text/javascript">
+function addTime (sign) { // A number of seconds is added or subtracted to or from the Timestamp.
+	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
+	let secs = Math.round (document.UTCshift.shift.value);
+	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.shift.value + '"')
+	else { 
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setTime (testDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
 	<table class="dateconvert" align="center"> 
 	  <tr>
 		<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
@@ -161,19 +218,57 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	  </tr>
 	</table>
 </section>
+
 <section class="dateconvert autoscroll">
 <h1>Dates selon les calendriers pivots</h1>
+<script type="text/javascript">
+function setDayOffset (sign = 1) { // Choice here: the days are integer, all 24h, so local time may change making this operation
+	let days = Math.round (document.control.shift.value);
+	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
+	else { 
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
+		if (isNaN(testDate.valueOf())) { 
+			alert (milesianAlertMsg("outOfRange"));
+			window.clearInterval(clockPeriod);
+			}
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+var clockPeriod; // Tick generator
+function clockRun (runSwitch = 0) { // Start or stop automatic clock run
+	switch (runSwitch) {
+		case 2 : window.clearInterval(clockPeriod); // Change speed next line
+		case 1 : clockPeriod = window.setInterval(setDayOffset, 40000/document.run.speed.value); break;
+		case 0 : 
+		default : window.clearInterval(clockPeriod); 
+		}
+}
+</script>
 <table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 	<table class="dateconvert" align="center">
 	  <tr>
-		<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+		<form name="control" class="dateconvert" method="post">
 		<td>+/- jours (24h)</td>
-		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);" >-</button></td>
 		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
+
+<table class="dateconvert" align="center">
+  <tr>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(0)">O</button></td>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(1)">></button></td>
+	  <form name="run" class="dateconvert" method="post">
+	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(2)"></td>
+	  </form>
+  </tr> 
+</table>
 
   <table class="dateconvert" align="center">
       <tr>
@@ -185,6 +280,45 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       </tr>
 
 	 <tr>
+
+<script type="text/javascript">
+function calcMilesian() {
+	var 
+	 day =  Math.round (document.milesian.day.value),
+	 month = document.milesian.monthname.value,
+	 year =  Math.round (document.milesian.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+	else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": testDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCTimeFromMilesian (year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCTimeFromMilesian (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCMilesianDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.milesian.day.value 
+				+ ' ' + ++month + 'm ' 
+				+ document.milesian.year.value + '"');
+			  return
+			  }
+		    }
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
 	 <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
 		<td>Milésien : </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
@@ -203,11 +337,50 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <option value="10">11m</option>
         <option value="11">12m</option>
 		</select> </td>
-        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
         <td><button class="dateconvert">Ok</button></td>
 		</form>
       </tr>
 
+<script type="text/javascript">
+function calcGregorian() {
+	var 
+	 day =  Math.round (document.gregorian.day.value),
+	 month = (document.gregorian.monthname.value),
+	 year =  Math.round (document.gregorian.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorian.day.value + '" "' + document.gregorian.year.value + '"')
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": 
+			testDate.setFullYear(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCFullYear(year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCFullYear (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		} 
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCDate() != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.gregorian.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.gregorian.year.value + '"');
+			  return
+			  }
+		    }			
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
       <tr id="gregorianline">
 		<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
         <td>Grégorien : </td>
@@ -226,11 +399,50 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="gregorian" class="dateconvert">Ok</button></td>
  		</form>
      </tr>	  
-      <tr>
+
+<script type="text/javascript">
+function calcJulian(){
+	var day =  Math.round(document.julian.day.value);
+	var month = new Number(document.julian.monthname.value); // month has to be a number.
+	var year =  Math.round(document.julian.year.value);
+	if	( isNaN(day)  || isNaN (year))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.julian.day.value + '" "' + document.julian.year.value + '"')
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": 
+			testDate.setTimeFromJulianCalendar(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCTimeFromJulianCalendar(year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCTimeFromJulianCalendar (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCJulianDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.julian.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.julian.year.value + '"');
+			  return
+			  }
+		    }
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
+	 <tr>
 		<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulian();">
         <td>Julien : </td>
         <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
@@ -248,11 +460,50 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" min="-271816" max="275755" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="julian" class="dateconvert">Ok</button> </td>
  		</form>
      </tr>
-      <tr id="republicanline">
+
+<script type="text/javascript">
+function calcFrenchRev(){
+	let day =  Math.round(document.republican.day.value);
+	let month = new Number(document.republican.monthname.value); // month has to be a number.
+	let year =  Math.round(document.republican.year.value);
+	if	( isNaN(day)  || isNaN (year))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.republican.day.value + '" "' + document.republican.year.value + '"')
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": 
+			testDate.setTimeFromFrenchRev(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCTimeFromFrenchRev(year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			shiftDate.setUTCTimeFromFrenchRev (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCFrenchRevDate().date != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.republican.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.republican.year.value + '"');
+			  return
+			  }
+		    }
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
+	 <tr id="republicanline">
 		<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
         <td>Républicain : </td>
         <td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
@@ -271,11 +522,51 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <option value="11">Fructidor</option>
         <option value="12">Complément.</option>
         </select></td>
-        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" min="-273613" max="273969" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="republican" class="dateconvert">Ok</button> </td>
  		</form>
      </tr>
 </table>
+
+<script type="text/javascript">
+
+function calcISO() {
+	var day =  Math.round (document.isoweeks.day.value);
+	var week = Math.round (document.isoweeks.week.value);
+	var year =  Math.round (document.isoweeks.year.value);
+	if	( isNaN(day)  || isNaN (week) || isNaN (year))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.isoweeks.year.value + '" "' + document.isoweeks.week.value + '"')
+	else { 
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": 
+			testDate.setTimeFromIsoWeekCal(year, week, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCTimeFromIsoWeekCal(year, week, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (testDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCTimeFromIsoWeekCal (year, week, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf() - (TZSettings.mode == "TZ" ? testDate.getTimezoneOffset()*Chronos.MINUTE_UNIT : TZSettings.msoffset));
+			if (shiftDate.getUTCIsoWeekCalDate().week != week) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.isoweeks.day.value 
+				+ ' W' + document.isoweeks.week.value + ' ' 
+				+ document.isoweeks.year.value + '"');
+			  return
+			  }
+		    }
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
   <table class="dateconvert" align="center">
      <tr>
         <th></th>
@@ -297,21 +588,41 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         <option value="6">samedi</option>
         <option value="7">dimanche</option>
         </select></td>
-        <td><input name="week" type="number" class="dateconvert daynum"  min="1" max="53"> </td>
-        <td><input name="year" type="number" class="dateconvert yearnum"></td>
+        <td><input name="week" type="number" min="1" max="53" class="dateconvert daynum"> </td>
+        <td><input name="year" type="number" min="-271820" max="275760" class="dateconvert yearnum"></td>
         <td><button name="Compute" value="isoweeks" class="dateconvert">Ok</button> </td>
 	  </form>
 	</tr>
  </table>
+
+<script type="text/javascript">
+function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
+	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
+	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
+	if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
+	else {
+		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
+		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
+		let testDate = new Date (targetDate.valueOf());
+		testDate.setTimeFromJulianDay (j);
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
 <table class="dateconvert" align="center">
     <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien : </th><td></td>
-		<td><input name="julianday" type="text" value="1" class="dateconvert"></td>
+		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="dateconvert"></td>
 		<td><button name="setday" value="julianday" class="dateconvert">Ok</button></td>
 	</tr>
 	</form>
 </table>
 </section>
+
 <section class="dateconvert">
 <h1>Séries chronologiques</h1>
 	<table class="dateconvert" align="center">
@@ -345,9 +656,13 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		</tr>
 	</table>
 </section>	
+
 <section class="dateconvert autoscroll">
 <h1>Représentation Unicode</h1>
-	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setLocalePresentationCalendar();">
+<script type="text/javascript">
+
+</script>
+	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
 	<table class="dateconvert" align="center"> <tr>
 		<th>Format</th>
 			<td>
@@ -429,6 +744,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 		<tr><td id="milesianDisplay"></td></tr>
 	</table>
 </section>
+
 <section class="dateconvert">
 <h1>Données lunaires</h1>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
@@ -488,9 +804,42 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	</tr>
 </table>
 </section>
+
 <section class="dateconvert">
 <h1>Réglages</h1>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
+<script type="text/javascript">
+function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
+	var 
+	 day =  Math.round (document.gregorianswitch.day.value),
+	 month = document.gregorianswitch.monthname.value,
+	 year =  Math.round (document.gregorianswitch.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.gregorianswitch.day.value + '" "' + document.gregorianswitch.year.value + '"')
+	else {		
+		let testDate = new Date (Date.UTC(year, month, day, 0, 0, 0, 0));
+		if (testDate.valueOf() < Date.UTC(1582,9,15,0,0,0,0)) {	// If specified date is prior to 15 October 1582, reject change and keep current
+			month++ ;
+			alert (milesianAlertMsg("invalidDate") + '"' + day + ' ' + month + ' ' + year + '"')
+			}
+		else {
+		  if (document.controloptions.datevalidity.checked) { // Control that date entered is valid
+			let shiftDate = new Date (testDate.valueOf());
+			if (shiftDate.getUTCDate() != day) {
+			  alert (milesianAlertMsg("invalidDate") 
+				+ '"' + document.gregorianswitch.day.value 
+				+ ' ' + ++month + ' ' 
+				+ document.gregorianswitch.year.value + '"');
+			  setDisplay(); // back to former value
+			  return
+			  }
+		    }
+		gregorianSwitch = new Date (testDate.valueOf());
+			}
+		}	
+	setDisplay();	
+}
+</script>
 <table class="dateconvert" align="center">
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>

@@ -3,14 +3,12 @@ Character set is UTF-8.
 These functions are associated with the Milesian clock and converter html page: 
 They use the basic Milesian calendar functions, and the conversion functions of other calendar,
 in order to display the Milesian on-line clock and to perform calendar conversion.
-
 Associated with: 
 *	MilesianClock.html
-Other js necessary
 1. Common functions
 *	CBCCE (the Cycle-Based Calendar Computation Engine)
 *	MilesianAlertMsg
-2. For conversions
+2. For conversions and clock operation
 *	MilesianClockOperations
 *	MilesianDateProperties
 *	JulianDateProperties
@@ -18,13 +16,9 @@ Other js necessary
 *	IsoWeekCalendarDateProperties
 *	LunarDateProperties
 *	ChronologicalCountConversion
-3. For clock operation
-*	MilesianClockOperations
-4. For display, using Unicode standards
+3. For display, using Unicode standards
 *	UnicodeMilesianFormat (used to be: toMilesianLocaleDateString then UnicodeMilesian)
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
-5. Continuation of present file
-*	MilesianClockDisplayCompEntries (could be appended to this file, but total file is then more than 20k)
 */
 /*
 Version M2018-01-04 :
@@ -47,6 +41,8 @@ Version M2018-11-03
 *	Display ISO week calendar string
 *	Use date entry validity control option
 *	Adapt TZ offset to min and sec
+Version M2018-11-08
+*	Group remote .js file, insert data entry in other file
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -70,20 +66,87 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 */
-var 
-	targetDate = new Date(),	// target date will be used to update everything
-	gregorianSwitch =  		// Settings: date where the Gregorian calendar was enforced (may change from one country to the other) 
-		new Date (Date.UTC(1582, 11, 20, 0, 0, 0, 0)), // Values for France, on initialisation. In principle, should be fetched from Unicode.
+var  // set of global variables, used when updating calendar
+	targetDate = new Date(),	// Reference UTC date
+	gregorianSwitch =  		// Date where Gregorian calendar enforced 
+		new Date (Date.UTC(1582, 11, 20, 0, 0, 0, 0)), // France
 	lowerRepublicanDate = new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
 	upperRepublicanDate = new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)), // Upper limit of the Republican calendar
-		// Caveat with these limits: it is assumed that the timezone cannot be changed during a session.
-
-	// Initial definition of display options parameters (global variables), to be superseded at initialisation
 	TZSettings = {mode : "TZ", msoffset : 0},	
 	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", 
 					hour : "numeric", minute : "numeric", second : "numeric"}, 	
 	askedOptions = new Intl.DateTimeFormat(undefined,Options), 	
 	userOptions = askedOptions.resolvedOptions(); 
+
+function compLocalePresentationCalendar() {	// Manage date string display parameters
+	var 
+		Locale = document.LocaleOptions.Language.value,
+		Calendar = document.LocaleOptions.Calendar.value,
+		timeZone = document.LocaleOptions.TimeZone.value;
+
+	// Negotiate effective language code and display 
+	try {
+		askedOptions = Locale == "" ? new Intl.DateTimeFormat() : new Intl.DateTimeFormat (Locale);
+		}
+	catch (e) {	// Locale is not a valid language code
+		alert (milesianAlertMsg("invalidCode") + '"' + Locale + '"');
+		document.LocaleOptions.Language.value = ''; // user-specified value back to blank
+		askedOptions = new Intl.DateTimeFormat();	// and prepare to resolve language code with default value
+		}
+	userOptions = askedOptions.resolvedOptions(); 
+	Locale = userOptions.locale; 	// Here Locale is no longer an empty string
+	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
+	Locale = Locale.substring (0,Locale.indexOf("-u-"));
+		
+	// Specify calendar
+	if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar; // No entry error expected
+	
+	// Set presentation options from one of the standard presentations listed.
+	switch (document.LocaleOptions.Presentation.value) {
+		case "long":
+			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long",
+					hour : "numeric", minute : "numeric", second : "numeric"};
+			break;
+		case "standard":
+			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric",
+					hour : "numeric", minute : "numeric"};
+			break;
+		case "short":
+			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short",
+					hour : "numeric"};
+			break;
+		case "narrow":
+			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", 
+					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+			break;	
+		case "numeric":
+			Options = {weekday : "short", day : "numeric", month : "numeric", year : "numeric", era : "narrow",
+					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+			break;
+		case "2-digit":
+			Options = {weekday : "narrow", day : "2-digit", month : "2-digit", year : "numeric", 
+					hour : "2-digit", minute : "2-digit"};
+			break;
+		case "year-2-digit":
+			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "2-digit", 
+					hour : "2-digit"};
+		}
+	
+	// Add time zone
+	if (timeZone !== "") 
+		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
+	// Check here that Options with timeZone is valid
+	try {
+		askedOptions = Intl.DateTimeFormat (Locale, Options);
+		}
+	catch (e) {
+		alert (milesianAlertMsg("invalidCode") + '"' + Options.timeZone + '"');
+		document.LocaleOptions.TimeZone.value = ''; 	// Reset TimeZone indication to empty string
+		delete Options.timeZone; // Delete property
+		askedOptions = Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
+	}
+	userOptions = askedOptions.resolvedOptions();	// The global variable.
+}
 	
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
