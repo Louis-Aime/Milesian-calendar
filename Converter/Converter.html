@@ -154,7 +154,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
         <option value="10">novembre</option>
         <option value="11">décembre</option>
 		</select> </td>
-        <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="dateconvert yearnum"></td>
         <td><button class="dateconvert">Ok</button></td>
       </tr>
 	</form>
@@ -170,39 +170,60 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </section>
 <section class="dateconvert autoscroll">
 <h1 >Calendriers pivots et navigation</h1>
-<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <script type="text/javascript">
 function setDateToToday() { // Self explanatory
 	let justNow = new Date();
 	targetDate = new Date(Date.UTC(justNow.getFullYear(),justNow.getMonth(),justNow.getDate(),0,0,0,0));	// target date will be used to update everything
 	setDisplay();
 }
-function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so local time may change making this operation
-	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
+function setDayOffset (sign = 1) { // Choice here: the days are integer, all 24h, so local time may change making this operation
 	let days = Math.round (document.control.shift.value);
 	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
 	else { 
 		let testDate = new Date(targetDate.valueOf());
 		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
-		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		if (isNaN(testDate.valueOf())) { 
+			alert (milesianAlertMsg("outOfRange"));
+			window.clearInterval(clockPeriod);
+			}
 		else {
 			targetDate = new Date (testDate.valueOf());
 			setDisplay();
 		}
 	}
 }
+var clockPeriod; // Tick generator
+function clockRun (runSwitch = 0) { // Start or stop automatic clock run
+	switch (runSwitch) {
+		case 2 : window.clearInterval(clockPeriod); // Change speed next line
+		case 1 : clockPeriod = window.setInterval(setDayOffset, 40000/document.run.speed.value); break;
+		case 0 : 
+		default : window.clearInterval(clockPeriod); 
+		}
+}
 </script>	
+<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <table class="dateconvert" align="center">
   <tr>
 	<td><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToToday();">
     <button class="dateconvert" >Aujourd'hui</button></form></td>
-    <form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+    <form name="control" class="dateconvert" method="post">
     <td> +/- jours</td>
-	<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
+	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
 	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-	<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(1);">+</button></td>
     </form>
   </tr>
+</table>
+
+<table class="dateconvert" align="center">
+  <tr>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(0)">O</button></td>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(1)">></button></td>
+	  <form name="run" class="dateconvert" method="post">
+	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(2)"></td>
+	  </form>
+  </tr> 
 </table>
 
 <table class="dateconvert" align="center">
@@ -213,7 +234,6 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<th>Année</th>
 	<th></th>
   </tr>
-
 
   <script type="text/javascript">
 	function calcMilesian() {
@@ -260,7 +280,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<option value="10">11m</option>
 	<option value="11">12m</option>
 	</select> </td>
-	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
 	<td><button class="dateconvert">Ok</button></td>
 	</form>	  
   </tr>
@@ -310,7 +330,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<option value="10">novembre</option>
 	<option value="11">décembre</option>
 	</select></td>
-	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
 	<td><button class="dateconvert">Ok</button></td>
 	</form>
   </tr>	  
@@ -359,7 +379,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<option value="10">novembre</option>
 	<option value="11">décembre</option>
 	</select></td>
-	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><input name="year" type="number" min="-271816" max="275755" class="dateconvert yearnum"></td>
 	<td><button class="dateconvert">Ok</button> </td>
 	</form>
   </tr>
@@ -409,7 +429,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 	<option value="11">Fructidor</option>
 	<option value="12">Complément.</option>
 	</select></td>
-	<td><input name="year" type="number" class="dateconvert yearnum"></td>
+	<td><input name="year" type="number" min="-273613" max="273969" class="dateconvert yearnum"></td>
 	<td><button class="dateconvert">Ok</button> </td>
 	</form>
   </tr>
@@ -462,8 +482,8 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
 		<option value="6">samedi</option>
 		<option value="7">dimanche</option>
 		</select></td>
-		<td><input name="week" type="number" class="dateconvert daynum"  min="1" max="53"> </td>
-		<td><input name="year" type="number" class="dateconvert yearnum"></td>
+		<td><input name="week" type="number" min="1" max="53" class="dateconvert daynum"> </td>
+		<td><input name="year" type="number" min="-271820" max="275760" class="dateconvert yearnum"></td>
 		<td><button class="dateconvert">Ok</button> </td>
 	  </form>
 	</tr>
@@ -487,7 +507,7 @@ function SetDayOffset (sign) { // Choice here: the days are integer, all 24h, so
   </script>
     <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien à 12h UTC : </th><td></td>
-		<td><input name="julianday" type="number" class="dateconvert" "juliandaynum"></td>
+		<td><input name="julianday" type="number" min="-97559413" max="102440588" class="dateconvert" "juliandaynum"></td>
 		<td><button class="dateconvert">Ok</button></td>
 	</tr>
 	</form>
