@@ -6,6 +6,7 @@ Versions
 	M2018-05-19 set alias to getIsoWeekCalUTCDate (to be deprecated): getUTCIsoWeekCalDate
 	M2018-10-26 delete getIsoWeekCalUTCDate (deprecated)
 	M2018-11-03 set reference year to Gregorian year only, and improve toString presentations
+	M2018-11-06	manage display of out-of-range date
 Required
 	Package CBCCE is used.
 Contents
@@ -77,7 +78,8 @@ Date.prototype.getIsoWeekCalDate = function () {
 		base.setTime (isoWeekCalendarBase(--year)); //... then set base of ISO year one year before.
 	let compoundDate = cbcceDecompose (this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT - base.valueOf(), isoWeekCalendar_params);
 	// Here we have computed the day-of-week, week number, and time of day elements within the year.
-	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year}); // Assign year in compound record.
+	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, 
+		value : (!isNaN(compoundDate.day) ? year : NaN)}); // Assign year in compound record. If computed compound is NaN, extend to year
 	return compoundDate;
 }
 Date.prototype.getUTCIsoWeekCalDate = function () {
@@ -88,7 +90,8 @@ Date.prototype.getUTCIsoWeekCalDate = function () {
 		base.setTime (isoWeekCalendarBase(--year));	//... then set base of ISO year one year before.
 	let compoundDate = cbcceDecompose (this.valueOf() - base.valueOf(), isoWeekCalendar_params);
 	// Here we have computed the day-of-week, week number, and time of day elements within the year.	
-	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, value : year}); // Assign year in compound record.
+	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, 
+		value : (!isNaN(compoundDate.day) ? year : NaN)}); // Assign year in compound record. If computed compound is NaN, extend to year
 	return compoundDate;
 }
 Date.prototype.setTimeFromIsoWeekCal = function (year, week, day, 
@@ -112,19 +115,23 @@ Date.prototype.toIsoWeekCalDateString = function () { //return a string with the
 	var dateElements = this.getIsoWeekCalDate();
 	let absYear = Math.abs(dateElements.year);
 	let TZ = -this.getTimezoneOffset()/60;
-	return ((dateElements.year < 0) ? "-": "") 
+	return isNaN(dateElements.year)
+		? "Invalid Date"
+		: ((dateElements.year < 0) ? "-": "") 
 			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear
 			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-0"+dateElements.day
 			+"T"+((dateElements.hours < 10) ? "0" : "") + dateElements.hours + ":"
 			+ ((dateElements.minutes < 10) ? "0" : "") + dateElements.minutes + ":"
 			+ ((dateElements.seconds < 10) ? "0" : "") + dateElements.seconds + ":"
 			+ ((dateElements.milliseconds < 100) ? "0" : "") + ((dateElements.milliseconds < 10) ? "0" : "") 
-			+ dateElements.milliseconds + "L";
+			+ dateElements.milliseconds + "L";	
 }
 Date.prototype.toUTCIsoWeekCalString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-ddThh:mm:ss:uuuZ, expressed at UTC date
 	var dateElements = this.getUTCIsoWeekCalDate();
 	let absYear = Math.abs(dateElements.year);
-	return ((dateElements.year < 0) ? "-": "") 
+	return isNaN(absYear)
+		? "Invalid Date"
+		: ((dateElements.year < 0) ? "-": "") 
 			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear
 			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-0"+dateElements.day
 			+"T"+((dateElements.hours < 10) ? "0" : "") + dateElements.hours + ":"

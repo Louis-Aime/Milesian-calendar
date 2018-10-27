@@ -5,6 +5,7 @@ Versions
 	M2017-12-26
 	M2018-05-19 : create getUTCFrenchRevDate, getFrenchRevUTCDate to be deprecated 
 	M2018-10-26 : getFrenchRevUTCDate deprecated
+	M2018-11-06	manage display of out-of-range date
 Required
 	CBCCE is used.
 Contents
@@ -12,6 +13,8 @@ Contents
 	getUTCFrenchRevDate : same as above, in UTC time.
 	setTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : set Time from julian calendar date + local hour.
 	setUTCTimeFromFrenchRev (year, month, date, hours, minutes, seconds, milliseconds) : same but from UTC time zone.
+	toIntlFrenchRevDateString : return a string with the date elements in Republican calendar: (day number) / (month number) / (year), month 1 to 12.
+	toUTCIntlFrenchRevDateString : same as above, in UTC time zone.	
 */////////////////////////////////////////////////////////////////////////////////////////////
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -96,9 +99,9 @@ Date.prototype.setUTCTimeFromFrenchRev = function (year, month = 0, date = 1,
 }
 Date.prototype.toIntlFrenchRevDateString = function () {
 	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params );
-	return dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
+	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
 }
 Date.prototype.toUTCIntlFrenchRevDateString = function () {
 	var dateElements = cbcceDecompose (this.getTime(), FrenchRev_time_params );
-	return dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
+	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
 }

@@ -2,9 +2,10 @@
 	Character set is UTF-8
 	This code, to be manually imported, set properties to object Date for the Milesian calendar.
 Versions
-	Version M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
-	Version M2018-05-19 : create getUTCMilesianDate, getMilesianUTCDate to be deprecated 
-	Version M2018-10-26 : delete getMilesianUTCDate (deprecated)
+	M2017-12-16 : replace CalendarCycleComputationEngine with CBCCE
+	M2018-05-19 : create getUTCMilesianDate, getMilesianUTCDate to be deprecated 
+	M2018-10-26 : delete getMilesianUTCDate (deprecated)
+	M2018-11-06	manage display of out-of-range date
 Required
 	Package CBCCE is used.
 Contents
@@ -98,9 +99,9 @@ Date.prototype.setUTCTimeFromMilesian = function (year, month = 0, date = 1,
 }
 Date.prototype.toIntlMilesianDateString = function () {
 	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params );
-	return dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
+	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
 }
 Date.prototype.toUTCIntlMilesianDateString = function () {
 	var dateElements = cbcceDecompose (this.getTime(), Milesian_time_params );
-	return dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
+	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+" "+(++dateElements.month)+"m "+dateElements.year;
 }
