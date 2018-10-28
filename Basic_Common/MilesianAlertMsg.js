@@ -42,16 +42,23 @@ Inquiries: www.calendriermilesien.org
 function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
 	var	languages = [ "en", "fr", "de", "es", "pt" ];
 	var errorMsg = {
+		"invalidInput": {
+			en : "Invalid input ",
+			fr : "Saisie invalide ",
+			de : "Ungültige Eingabe ",
+			es : "Entrada inválida ",
+			pt : "Entrada inválida "
+			},
 		"nonNumeric" : { 
-			en	: "Non numeric entry ",
-			fr	: "Entrée non numérique ",
+			en	: "Non numeric input ",
+			fr	: "Saisie non numérique ",
 			de	: "Nicht numerische Eingabe ",
 			es	: "Entrada no numérica ",
 			pt	: "Entrada não numérica "
 			},
 		"nonInteger" : {
-			en	: "Non integer entry ",
-			fr	: "Entrée non entière ",
+			en	: "Non integer input ",
+			fr	: "Saisie non entière ",
 			de	: "Nicht ganzzahlige Zahl",
 			es	: "Entrada no entera ",
 			pt	: "Entrada não inteira "
