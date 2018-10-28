@@ -294,9 +294,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
-	myElement = document.querySelector("#weekDisplay");
-	myElement.innerHTML = targetDate.toIsoWeekCalDateString();
-
 	
 	// Unicode frame 
 	myElement = document.querySelector("#langCode");
