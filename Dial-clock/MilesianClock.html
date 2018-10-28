@@ -112,9 +112,9 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 				<option value="1">+</option>
 				<option value="-1">-</option>
 				</select> </td>
-				<td><input name="TZOffset" type="text" class="dateconvert yearnum"></td>
+				<td><input name="TZOffset" type="number" min="0" max="1500" class="dateconvert yearnum"></td>
 				<td>mn</td>
-				<td><input name="TZOffsetSec" type="number" class="dateconvert daynum"></td>
+				<td><input name="TZOffsetSec" type="number" min="0" max="59" class="dateconvert daynum"></td>
 				<td>s</td>
 				<td><button class="dateconvert">Ok</button></td>
 			</tr>
@@ -183,93 +183,123 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 
 	  <table class="dateconvert" align="center">
 	  <tr>
-		<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
 		<th>Cette date à UTC</th>
-		<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
-		</form>
+		<td><button type="button" name="0h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button type="button" name="12h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
 	 
 <script type="text/javascript">
-function addTime (sign) { // A number of seconds is added or subtracted to or from the Timestamp.
-	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
-	let secs = Math.round (document.UTCshift.shift.value);
-	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.shift.value + '"')
-	else { 
-		let testDate = new Date(targetDate.valueOf());
-		testDate.setTime (testDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
-		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
-		else {
-			targetDate = new Date (testDate.valueOf());
-			setDisplay();
+var addedTime = 60; //Global variable, time to add or substract, in seconds.
+function changeAddTime () {
+	let secs = +document.timeShift.shift.value; 
+	if (!Number.isInteger(secs) || secs <= 0) 
+		alert (milesianAlertMsg("invalidInput"))
+	else
+		{ 
+		addedTime = secs; // Global variable updated
+		document.timeShift.shift.value = secs; // Confirm changed value
 		}
+	}
+
+function addTime (sign = 1) { // addedTime seconds is added or subtracted to or from the Timestamp.
+	changeAddTime();	// Force a valid value in field
+	let testDate = new Date(targetDate.valueOf());
+	testDate.setTime (testDate.getTime()+sign*addedTime*Chronos.SECOND_UNIT);
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
 	}
 }
 </script>
 	<table class="dateconvert" align="center"> 
 	  <tr>
-		<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+		<form name="timeShift" class="dateconvert" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button class="dateconvert symbol" formaction="Javascript:addTime(-1);" >-</button></td>
-		<td><input name="shift" type="number" value="60" class="dateconvert yearnum"></td>
-		<td><button class="dateconvert symbol" formaction="Javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><input name="shift" type="number" value="60" min="1" class="dateconvert yearnum"></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
 </section>
 
 <section class="dateconvert autoscroll">
-<h1>Dates selon les calendriers pivots</h1>
+<h1>Navigation par jours entiers</h1>
 <script type="text/javascript">
-function setDayOffset (sign = 1) { // Choice here: the days are integer, all 24h, so local time may change making this operation
-	let days = Math.round (document.control.shift.value);
-	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
-	else { 
-		let testDate = new Date(targetDate.valueOf());
-		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
-		if (isNaN(testDate.valueOf())) { 
-			alert (milesianAlertMsg("outOfRange"));
-			window.clearInterval(clockPeriod);
-			}
-		else {
-			targetDate = new Date (testDate.valueOf());
-			setDisplay();
+var 
+	dayOffset = 1, // Quantum of days to add or substract
+	clockPeriod, // Tick generator
+	clockDirection = 1; // Forward or reverse
+// no setDateToToday
+function changeDayOffset () { 
+	let days = +document.control.shift.value;
+	if (!Number.isInteger(days) || days <= 0) {
+		alert (milesianAlertMsg("invalidInput"));
+		clockRun(0);
 		}
+	else 
+	{ 
+		dayOffset = days; // Global variable updated
+		document.control.shift.value = days; // Confirm changed value
 	}
 }
-var clockPeriod; // Tick generator
-function clockRun (runSwitch = 0) { // Start or stop automatic clock run
-	switch (runSwitch) {
-		case 2 : window.clearInterval(clockPeriod); // Change speed next line
-		case 1 : clockPeriod = window.setInterval(setDayOffset, 40000/document.run.speed.value); break;
-		case 0 : 
-		default : window.clearInterval(clockPeriod); 
+function setDayOffset (sign=1) {
+	changeDayOffset();	// Force a valid value in field
+	let testDate = new Date(targetDate.valueOf());
+	testDate.setUTCDate (testDate.getUTCDate()+sign*dayOffset);
+	if (isNaN(testDate.valueOf())) { 
+		alert (milesianAlertMsg("outOfRange"));
+		clockRun(0);
 		}
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+function setDayOffsetPlus () {setDayOffset(+1)};
+function setDayOffsetMinus () {setDayOffset(-1)};
+function clockSet (direction = 1) {
+	clockDirection = direction;
+	clockRun (1);
+	}
+function clockRun (runSwitch = 0) { // Start or stop automatic clock run
+	window.clearInterval(clockPeriod); // Always begin with unswitching, in case of an anterior wrong call.
+	if (runSwitch == 1) // Set the runabout to desired speed
+		clockPeriod = clockDirection == 1
+			? window.setInterval(setDayOffsetPlus, 40000/document.run.speed.value)
+			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>
-<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
-	<table class="dateconvert" align="center">
-	  <tr>
-		<form name="control" class="dateconvert" method="post">
-		<td>+/- jours (24h)</td>
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);" >-</button></td>
-		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(1);">+</button></td>
-		</form>
-	  </tr>
-	</table>
+<table class="dateconvert" align="center">
+  <tr>
+	<!-- No "today" button -->
+    <form name="control" class="dateconvert" method="post" action="Javascript:changeDayOffset();">
+    <td> +/- jours</td>
+	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
+	<td><input name="shift" type="number" value="1" min="1" step="1" class="dateconvert yearnum"></td> 
+	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
+    </form>
+  </tr>
+</table>
 
 <table class="dateconvert" align="center">
   <tr>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(-1)"><</button></td>
 	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(1)">></button></td>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(1)">></button></td>
 	  <form name="run" class="dateconvert" method="post">
-	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(2)"></td>
+	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
 	  </form>
   </tr> 
 </table>
+</section>
 
+<section class="dateconvert autoscroll">
+<h1>Dates selon les calendriers pivots</h1>
+
+<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
   <table class="dateconvert" align="center">
       <tr>
         <th>Calendrier</th>
@@ -650,18 +680,11 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			<th>Compteur Unix : </th>
 			<td id="unixCountDisplay"></td>
 		</tr>
-		<tr>
-			<th>Semaine : </th>
-			<td id="weekDisplay"></td>
-		</tr>
 	</table>
 </section>	
 
 <section class="dateconvert autoscroll">
 <h1>Représentation Unicode</h1>
-<script type="text/javascript">
-
-</script>
 	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
 	<table class="dateconvert" align="center"> <tr>
 		<th>Format</th>
@@ -863,7 +886,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
         <option value="10">novembre</option>
         <option value="11">décembre</option>
 		</select> </td>
-        <td><input name="year" type="number" value="1582" class="dateconvert yearnum"></td>
+        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="dateconvert yearnum"></td>
         <td><button class="dateconvert">Ok</button></td>
       </tr>
 	</form>
