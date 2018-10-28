@@ -169,63 +169,83 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </table>
 </section>
 <section class="dateconvert autoscroll">
-<h1 >Calendriers pivots et navigation</h1>
+<h1 >Navigation temporelle</h1>
 <script type="text/javascript">
+var 
+	dayOffset = 1, // Quantum of days to add or substract
+	clockPeriod, // Tick generator
+	clockDirection = 1; // Forward or reverse
 function setDateToToday() { // Self explanatory
 	let justNow = new Date();
 	targetDate = new Date(Date.UTC(justNow.getFullYear(),justNow.getMonth(),justNow.getDate(),0,0,0,0));	// target date will be used to update everything
 	setDisplay();
 }
-function setDayOffset (sign = 1) { // Choice here: the days are integer, all 24h, so local time may change making this operation
-	let days = Math.round (document.control.shift.value);
-	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
-	else { 
-		let testDate = new Date(targetDate.valueOf());
-		testDate.setUTCDate (testDate.getUTCDate()+sign*days);
-		if (isNaN(testDate.valueOf())) { 
-			alert (milesianAlertMsg("outOfRange"));
-			window.clearInterval(clockPeriod);
-			}
-		else {
-			targetDate = new Date (testDate.valueOf());
-			setDisplay();
+function changeDayOffset () { 
+	let days = +document.control.shift.value;
+	if (!Number.isInteger(days) || days <= 0) {
+		alert (milesianAlertMsg("invalidInput"));
+		clockRun(0);
 		}
+	else 
+	{ 
+		dayOffset = days; // Global variable updated
+		document.control.shift.value = days; // Confirm changed value
 	}
 }
-var clockPeriod; // Tick generator
-function clockRun (runSwitch = 0) { // Start or stop automatic clock run
-	switch (runSwitch) {
-		case 2 : window.clearInterval(clockPeriod); // Change speed next line
-		case 1 : clockPeriod = window.setInterval(setDayOffset, 40000/document.run.speed.value); break;
-		case 0 : 
-		default : window.clearInterval(clockPeriod); 
+function setDayOffset (sign=1) {
+	changeDayOffset();	// Force a valid value in field
+	let testDate = new Date(targetDate.valueOf());
+	testDate.setUTCDate (testDate.getUTCDate()+sign*dayOffset);
+	if (isNaN(testDate.valueOf())) { 
+		alert (milesianAlertMsg("outOfRange"));
+		clockRun(0);
 		}
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+function setDayOffsetPlus () {setDayOffset(+1)};
+function setDayOffsetMinus () {setDayOffset(-1)};
+function clockSet (direction = 1) {
+	clockDirection = direction;
+	clockRun (1);
+	}
+function clockRun (runSwitch = 0) { // Start or stop automatic clock run
+	window.clearInterval(clockPeriod); // Always begin with unswitching, in case of an anterior wrong call.
+	if (runSwitch == 1) // Set the runabout to desired speed
+		clockPeriod = clockDirection == 1
+			? window.setInterval(setDayOffsetPlus, 40000/document.run.speed.value)
+			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>	
-<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <table class="dateconvert" align="center">
   <tr>
-	<td><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToToday();">
-    <button class="dateconvert" >Aujourd'hui</button></form></td>
-    <form name="control" class="dateconvert" method="post">
+	<td><button type="button" class="dateconvert" onclick="Javascript:setDateToToday();">Aujourd'hui</button></td>
+    <form name="control" class="dateconvert" method="post" action="Javascript:changeDayOffset();">
     <td> +/- jours</td>
 	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
-	<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(1);">+</button></td>
+	<td><input name="shift" type="number" value="1" min="1" step="1" class="dateconvert yearnum"></td> 
+	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
     </form>
   </tr>
 </table>
 
 <table class="dateconvert" align="center">
   <tr>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(-1)"><</button></td>
 	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(1)">></button></td>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(1)">></button></td>
 	  <form name="run" class="dateconvert" method="post">
-	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(2)"></td>
+	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
 	  </form>
   </tr> 
 </table>
+</section>
 
+<section class="dateconvert autoscroll">
+<h1 >Calendriers pivots</h1>
+<table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <table class="dateconvert" align="center">
   <tr>
 	<th>Calendrier</th>
