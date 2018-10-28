@@ -111,7 +111,7 @@ Date.prototype.setUTCTimeFromIsoWeekCal = function (year, week, day,
 	  }, isoWeekCalendar_params));
   return this.valueOf();
 }
-Date.prototype.toIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-ddThh:mm:ss:uuuTZ
+Date.prototype.toIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-d
 	var dateElements = this.getIsoWeekCalDate();
 	let absYear = Math.abs(dateElements.year);
 	let TZ = -this.getTimezoneOffset()/60;
@@ -119,24 +119,14 @@ Date.prototype.toIsoWeekCalDateString = function () { //return a string with the
 		? "Invalid Date"
 		: ((dateElements.year < 0) ? "-": "") 
 			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear
-			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-0"+dateElements.day
-			+"T"+((dateElements.hours < 10) ? "0" : "") + dateElements.hours + ":"
-			+ ((dateElements.minutes < 10) ? "0" : "") + dateElements.minutes + ":"
-			+ ((dateElements.seconds < 10) ? "0" : "") + dateElements.seconds + ":"
-			+ ((dateElements.milliseconds < 100) ? "0" : "") + ((dateElements.milliseconds < 10) ? "0" : "") 
-			+ dateElements.milliseconds + "L";	
+			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-"+dateElements.day;	
 }
-Date.prototype.toUTCIsoWeekCalString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-ddThh:mm:ss:uuuZ, expressed at UTC date
+Date.prototype.toUTCIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-d expressed at UTC date
 	var dateElements = this.getUTCIsoWeekCalDate();
 	let absYear = Math.abs(dateElements.year);
 	return isNaN(absYear)
 		? "Invalid Date"
 		: ((dateElements.year < 0) ? "-": "") 
-			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear
-			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-0"+dateElements.day
-			+"T"+((dateElements.hours < 10) ? "0" : "") + dateElements.hours + ":"
-			+ ((dateElements.minutes < 10) ? "0" : "") + dateElements.minutes + ":"
-			+ ((dateElements.seconds < 10) ? "0" : "") + dateElements.seconds + ":"
-			+ ((dateElements.milliseconds < 100) ? "0" : "") + ((dateElements.milliseconds < 10) ? "0" : "") 
-			+ dateElements.milliseconds + "Z";
+			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear	
+			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-"+dateElements.day;
 }
