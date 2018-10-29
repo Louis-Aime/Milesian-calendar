@@ -6,8 +6,35 @@
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
 	<title>Horloge milésienne</title>
-	<!-- Last update M2018-11-07 insert js functions in relation with data entries  and clock run -->
-<!-- Month names - if not through .XML  -->
+<!--
+Version 
+	M2018-11-07 insert js functions in relation with data entries  and clock run
+	M2018-11-09 continuous day shift value
+Milesian clock page, by Louis A. de FOUQUIERES
+Use Milesian calendar functions and Unicode tools.
+Copyright Miletus 2017-2018 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sub-license, or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+
+Inquiries: www.calendriermilesien.org
+-->
+	<!-- Month names - if not through .XML  -->
 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="RomanMonthNames.js"></script>
 	
@@ -190,10 +217,10 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	 </table>
 	 
 <script type="text/javascript">
-var addedTime = 60; //Global variable, time to add or substract, in seconds.
+var addedTime = 60; //Global variable, time to add or substract, in decimal seconds.
 function changeAddTime () {
 	let secs = +document.timeShift.shift.value; 
-	if (!Number.isInteger(secs) || secs <= 0) 
+	if (isNaN(secs) || secs <= 0) 
 		alert (milesianAlertMsg("invalidInput"))
 	else
 		{ 
@@ -226,16 +253,16 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 </section>
 
 <section class="dateconvert autoscroll">
-<h1>Navigation par jours entiers</h1>
+<h1>Navigation calendaire</h1>
 <script type="text/javascript">
 var 
-	dayOffset = 1, // Quantum of days to add or substract
+	dayOffset = 1, // Days (decimal) to add or substract
 	clockPeriod, // Tick generator
 	clockDirection = 1; // Forward or reverse
 // no setDateToToday
 function changeDayOffset () { 
 	let days = +document.control.shift.value;
-	if (!Number.isInteger(days) || days <= 0) {
+	if (isNaN(days) || days < 1) {
 		alert (milesianAlertMsg("invalidInput"));
 		clockRun(0);
 		}
@@ -248,7 +275,7 @@ function changeDayOffset () {
 function setDayOffset (sign=1) {
 	changeDayOffset();	// Force a valid value in field
 	let testDate = new Date(targetDate.valueOf());
-	testDate.setUTCDate (testDate.getUTCDate()+sign*dayOffset);
+	testDate.setTime (testDate.getTime()+sign*dayOffset*Chronos.DAY_UNIT);
 	if (isNaN(testDate.valueOf())) { 
 		alert (milesianAlertMsg("outOfRange"));
 		clockRun(0);
@@ -278,7 +305,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
     <form name="control" class="dateconvert" method="post" action="Javascript:changeDayOffset();">
     <td> +/- jours</td>
 	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
-	<td><input name="shift" type="number" value="1" min="1" step="1" class="dateconvert yearnum"></td> 
+	<td><input name="shift" type="number" value="1" min="1" step="any" class="dateconvert yearnum"></td> 
 	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
     </form>
   </tr>
