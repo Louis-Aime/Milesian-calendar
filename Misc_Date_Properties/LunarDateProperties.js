@@ -5,6 +5,7 @@ Versions
 	M2017-12-26 replace CalendarCycleComputationEngine with CBCCE.
 	M2018-05-28 enhanced comments and add a more lunar calendar functions
 	M2018-10-26 fix typos
+	M2018-11-10 new value for draconitic cycle, found in Wikipedia
 Required:
 	Package CBCCE is used.
 Contents: methods for Date.prototype
@@ -96,7 +97,8 @@ Draconitic_Params = { // to estimate the heighth of the moon. Around 0 at New Mo
 			// Proposition #1 : 993094200000 (2001-06-21T03:30Z) after a paper of Patrick Rocher (IMCCE 2005). This value is estimated form a plot.
 			// Proposition #2 : (tbc)
 	coeff : [
-		{cyclelength : 2351135835, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "cycle"}, // the length of the draconitic cycle
+		{cyclelength : 2351135879, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "cycle"}, // the length of the draconitic cycle
+			// varia : 2351135835 (after Patrick Rocher)
 		{cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"},		
 		],
 	canvas : [
