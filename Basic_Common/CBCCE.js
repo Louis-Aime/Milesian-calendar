@@ -13,7 +13,6 @@ The principles of these routines are explained in "L'heure milésienne", a book 
 
 Contents:
 	Chronos: a set of useful calendar constants, the number of milliseconds in a second, minute, hour and day.
-	Day_milliseconds : a simple example of a parameter object. May be used to convert fractional days in milliseconds and the reverse.
 	cbcceDecompose (quantity, params) : object containing the elements of the date in the target calendar
 		quantity:  a Posix time stamp to be converted into a complete date
 		params : the parameter object of the target calendar
@@ -27,6 +26,9 @@ Versions:
 		Comments enhanced
 	Version 3 : M2018-11-02
 		Catch case where the time stamp passed to cbcceDecompose is "NaN"
+	Version 4 : M2018-11-11
+		Extract Day_milliseconds (not used, still available in another file)
+		JSDoc comments
 */
 /* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -49,53 +51,51 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-var Chronos = { // Set of chronological constants generally used when handling Unix dates.
-  DAY_UNIT : 86400000, // One day in Unix time units
+/** Parameter object structure. Replace # with numbers or literals.
+ * var decomposeParameterExample = {
+ *	timeepoch : #, // origin time in milliseconds (or in the suitable unit) to be used for the decomposition, with respect to 1/1/1970 00:00 UTC.
+ *	coeff : [ // This array holds the coefficient used to decompose a time stamp into time cycles like eras, quadrisaeculae, centuries etc.
+ * 		{cyclelength : #, 	// length of the cycle, expressed in milliseconds.
+ *		ceiling : #, 		// Infinity, or the maximum number of cycles of this size minus one in the upper cycle; 
+ *							// the last cycle may hold an intercalary unit.
+ *		subCycleShift : #, 	// number (-1, 0 or +1) to add to the ceiling of the cycle of the next level when the ceiling is reached at this level.
+ *		multiplier : #, 	// multiplies the number of cycles of this level to convert into target units.
+ *		target : #, 		// the unit (e.g. "year") of the decomposition element at this level. 
+ *		} ,					// end of cycle description
+ *		{ 		// similar elements at a lower cycle level 
+ *		} 		// end of cycle description
+ *	], // End of this array, but not end of object
+ *	canvas : [ // this last array is the canvas of the decomposition , e.g. "year", "month", "date", with suitable properties at each level.
+ *		{ name : #,	// the name of the property at this level, which must match one target property of the coeff component,
+ *		init : #, 	// value of this component at epoch, and lowest value (except for the first component), 
+ *					// e.g. 0 for month, 1 for date, 0 for hours, minutes, seconds.
+ *		} // End of array element (only two properties)
+ *	] // End of second array
+ * }	// End of object.
+*/
+/** Constraints: 
+ *	1. 	The cycles and the canvas elements shall be defined from the largest to the smallest
+ *		e.g. four-century, then century, then four-year, then year, etc.
+ *	2. 	The same names shall be used for the "coeff" and the "canvas" properties, otherwise functions shall give erroneous results.
+*/
+/** Set of constants used in calendar computations with Unix/Posix time stamps
+ * @member {number} DAY_UNIT number of ms in one day
+ * @member {number} HOUR_UNIT number of ms in one hour
+ * @member {number} MINUTE_UNIT number of ms in one minute
+ * @member {number} SECOND_UNIT number of ms in one second
+*/
+var Chronos = { 
+  DAY_UNIT : 86400000, 
   HOUR_UNIT : 3600000,
   MINUTE_UNIT : 60000,
   SECOND_UNIT : 1000
 }
-/* Parameter object structure. Replace # with numbers or literals.
-var decomposeParameterExample = {
-	timeepoch : #, // origin time in milliseconds (or in the suitable unit) to be used for the decomposition, with respect to 1/1/1970 00:00 UTC.
-	coeff : [ // This array holds the coefficient used to decompose a time stamp into time cycles like eras, quadrisaeculae, centuries etc.
-		{cyclelength : #, 	// length of the cycle, expressed in milliseconds.
-		ceiling : #, 		// Infinity, or the maximum number of cycles of this size minus one in the upper cycle; the last cycle may hold an intercalary unit.
-		subCycleShift : #, 	//number (-1, 0 or +1) to add to the ceiling of the cycle of the next level when the ceiling is reached at this level.
-		multiplier : #, 	// multiplies the number of cycle of this level to convert into target units.
-		target : #, 		// the unit (e.g. "year") of the decomposition element at this level. 
-		} ,					// end of cycle description
-		{ 		// similar elements at a lower cycle level 
-		} 		// end of cycle description
-	], // End of this array, but not end of object
-	canvas : [ // this last array is the canvas of the decomposition , e.g. "year", "month", "date", with suitable properties at each level.
-		{ name : #,	// the name of the property at this level, which must match one target property of the coeff component,
-		init : #, 	// value of this component at epoch, and lowest value (except for the first component), e.g. 0 for month, 1 for date, 0 for hours, minutes, seconds.
-		} // End of array element (only two properties)
-	] // End of second array
-}	// End of object.
+/** Build a compound object from a time stamp holding the elements as required by a given cycle hierarchy model.
+ * @param {number} quantity: a time stamp representing the date to convert.
+ * @param {Object} params: the representation of the calendar structure and its connection to the time stamp.
+ * @returns {Object} the calendar elements in the structure that params prescribes.
 */
-/* Constraints: 
-	1. 	The cycles and the canvas elements shall be defined from the largest to the smallest
-		e.g. four-century, then century, then four-year, then year, etc.
-	2. 	The same names shall bu used for the "coeff" and the "canvas" properties, otherwise functions shall give erroneous results.
-*/
-var
-Day_milliseconds = { 	// To convert a time or a duration to and from days + milliseconds in day.
-	timeepoch : 0, 
-	coeff : [ // to be used with a Unix timestamp in ms. Decompose into days and milliseconds in day.
-	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "day_number"}, 
-	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds_in_day"}
-	],
-	canvas : [
-		{name : "day_number", init : 0},
-		{name : "milliseconds_in_day", init : 0},
-	]
-}
-/////////////////////////////////////////////
-// cbcceDecompose : from time series figure to decomposition
-///////////////////////////////////////////// 
-function cbcceDecompose (quantity, params) { // from a chronological number, build an compound object holding the elements as required by params.
+function cbcceDecompose (quantity, params) {
   if (!isNaN (quantity)) quantity -= params.timeepoch; // set at initial value the quantity to decompose into cycles. Else leave NaN.
   var result = new Object(); // Construct initial compound result 
   for (let i = 0; i < params.canvas.length; i++) {	// Define property of result object (a date or date-time)
@@ -125,9 +125,11 @@ function cbcceDecompose (quantity, params) { // from a chronological number, bui
   }	
   return result;
 }
-////////////////////////////////////////////
-// cbcceCompose: from compound object to time series figure.
-////////////////////////////////////////////
+/** Compute the time stamp from the element of a date in a given calendar.
+ * @param {Object} cells: the numeric elements of the date.
+ * @param {Object} params: the representation of the calendar structure and its connection to the time stamp.
+ * @returns {number} the time stamp
+*/
 function cbcceCompose (cells, params) { // from an object cells structured as params.canvas, compute the chronological number
 	var quantity = params.timeepoch ; // initialise Unix quantity to computation epoch
 	for (let i = 0; i < params.canvas.length; i++) { // cells value shifted as to have all 0 if at epoch
