@@ -1,21 +1,15 @@
 /* Chronological count conversion
 	Character set is UTF-8
-	This package, to be manually imported, converts the standard Unix time counter into several well-known counters
+	This package, to be manually imported, converts the standard Unix time counter into several well-known day counters
 Versions
 	M2017-12-27 : Initial
 	M2018-10-26 : Enhance comments
+	M2018-11-11 : JSDocs comments
 Required
 	No dependent file, all constants here (Day_Unit is defined again)
 Contents
-	A single method added to Date object
-	getCount (count), where count is one of the following chronological series
-		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
-		"julianDayAtNight" :  on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
-		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
-		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
-		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
-		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
-*/////////////////////////////////////////////////////////////////////////////////////////////
+	getCount (count), method added to Date.
+*/
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -36,7 +30,18 @@ claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
-*////////////////////////////////////////////////////////////////////////////////
+*/
+/** Give the decimal value of one the following chronological counters 
+ * @method getCount
+ * @param {string} the desired counter, one of the following values
+ * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
+ *		"julianDayAtNight" : 0 on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
+ *		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
+ *		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
+ *		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
+ *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
+ * @return {number} The desired counter, in decimal value
+*/
 Date.prototype.getCount = function (countType) {
 	const   
 		DAY_UNIT = 86400000,	// number of ms in one day
