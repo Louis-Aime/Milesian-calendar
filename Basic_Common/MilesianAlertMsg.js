@@ -13,7 +13,8 @@ Versions
 			invalidCode (for e formatting option)
 			browserError (after error catched because browser does not handle certain JS objects, like Unicode formatter objects)
 	M2018-11-02
-		New message entry : outOfRange		
+		New message entry : outOfRange	
+	M2018-11-11 : JSdoc comments, make code simplier
 Required:
 	No other file required
 */
@@ -38,6 +39,12 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
+*/
+/** Gives a string of a message in the language set by Locale.
+ * @param {string} inputError - the name of the message
+ * available messages: invalidInput, nonNumeric, nonInteger, invalidDate, invalidCode, browserError, outOfRange
+ * @return {string} the suitable message, in the language set with the locale, or in English
+ * languages are : en, fr, de, es, pt.
 */
 function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
 	var	languages = [ "en", "fr", "de", "es", "pt" ];
@@ -92,10 +99,8 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 			pt	: "Data ou valor fora do intervalo "	
 			}
 		};
-	let askedOptions = new Intl.DateTimeFormat(); let usedOptions = askedOptions.resolvedOptions(); // Current language... may be simplier.
-	let lang = usedOptions.locale.substring(0,2);
 	let usedLang = "en";
+	let lang = new Intl.DateTimeFormat().resolvedOptions().locale.substring(0,2);
 	for (let i = 0; i < languages.length; i++) if (lang == languages[i]) usedLang = lang; // Set usedLang to one of our languages, else to "en".
-	let message = errorMsg[inputError][usedLang];
-	return message;
+	return errorMsg[inputError][usedLang];
 }
