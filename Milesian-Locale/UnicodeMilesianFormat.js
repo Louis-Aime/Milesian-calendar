@@ -22,18 +22,18 @@ Versions
 		Delete a whole set of complicated code dedicated to MS Edge, that lack most calendar functions.
 	M2018-10-29
 		Update comments
+	M2018-11-11
+		Put "basic tools" in a separate file.
+		Add IntelliSense comments.
 Contents
-	unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
-	toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
 Required:
 	Access to milesianNames, a global object that hold the names of milesian months in several languages
-		This object is either constructed through milesianMonthNamesString.js
-		or fetched from MilesianMonthNames.xml through milesianCommonSettings
-		(this way seems ideal, but is complex and finally not recommended)
 	MilesianDateProperties.js (and dependent file CBCCE)
-*/////////////////////////////////////////////////////////////////////////////////////////////
+	toLocalDate in UnicodeBasic
+	Intl object with FormatToParts
+*/
 /* Copyright Miletus 2016-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -54,85 +54,14 @@ claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
-*////////////////////////////////////////////////////////////////////////////////
-/*
-1. Basic tools of this package
-
-1.1 Access to the list of month names: 
-Object milesianNames, resulting from a DOMParser operation, hold the names of milesian calendar items in several languages.
-Please take care that text items from milesianNames be in the proper character set, corresponding to the Internet site's.
-
-1.2 General utilities: 
-*	unicodeCalendarHandled : which calendar is effectively used upon request through the Locale nu-ca- parameters
-*/
-function unicodeCalendarHandled (calendar) { // From an "asked" calendar, gives the "used" one.
-	return 	new Intl.DateTimeFormat("en-US-u-ca-"+calendar).resolvedOptions().calendar;
-	}
-/*
-1.3 Utility to get the local Date-Time as an UTC date.
-
-/** Construct a date that represents the value of the given date shifted to the time zone indicated or resolved in Options.
-As in many situations it is not possible to compute the exact local Date-Time, the result here is an Object:
-{ localDate : (a Date object with the best possible result), accuracy : (see under), way :(for debug, how did we compute)}
-Possible values for accuracy:
-	"exact" : local date has been computed with formatToParts or by parsing a date string, in a 'safe' period.
-	"approximate" : local date could not be computed exactly, the returned date is the local date as from the user's settings, not from Unicode.
-*/
-function toLocalDate (myDate, myTZ = "") {  //myTZ : a string with the name of a time zone. 
-	var	localTime = new Date (myDate.valueOf() - myDate.getTimezoneOffset()*Chronos.MINUTE_UNIT); //Basic value if no further computation possible
-	// Normally, should get the time zone offset and compute shifted date. Should take one line !! 
-	// Halas, time zone offset is not available. So we have to get it by other ways, depending upon the browser.
-	// if (myTZ == (undefined || "")) return { localDate: localTime, accuracy : "exact", way : "default" }; 
-	if (myTZ == "UTC") return { localDate: new Date(myDate.valueOf()), accuracy : "exact", way : "UTC"}; // Trivial case: time zone asked is UTC.
-	// First try to resolve time zone option.
-	try {
-	// Before any further action, test format functions
-		var askedOptions = new Intl.DateTimeFormat (); // Default parameters	
-		}
-	catch (e) { // No DateTimeFormat, even with default, use basic local time.
-		return {localDate : localTime, accuracy : "approx" , way : "noformat"}
-	  }
-	// Here a minimum format Option management works.
-	try {
-		if (myTZ == (undefined || ""))
-			askedOptions = new Intl.DateTimeFormat ("en-GB")
-		else
-			askedOptions = new Intl.DateTimeFormat ("en-GB", {timeZone : myTZ}); // Submit specified time zone
-	}
-	catch (e) { // Submitted option is not valid
-		return { localDate : localTime, accuracy : "approx" , way : "invalidTZ"}	// myTZ is not empty, but not a valid time zone
-	}
-	// Here askedOptions are set with valid asked timeZone
-
-	// Set a format object suitable to extract numeric components from Date string
-	let numericSettings = {weekday: 'long', era: 'short', year: 'numeric',  month: 'numeric',  day: 'numeric',  
-			hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
-	if (!(myTZ == (undefined || ""))) numericSettings.timeZone = myTZ;	
-	var numericOptions = new Intl.DateTimeFormat ("en-GB", numericSettings);
-		
-	try {	// try using formatToParts. If not usable, use localTime previously computed.
-		let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
-		localTime = new Date(Date.UTC		// Construct a UTC date based on the figures of the local date.
-				(localTC[6].value, localTC[4].value-1, localTC[2].value, localTC[10].value, localTC[12].value, localTC[14].value));
-		if (localTC[8].value == "BC") localTC[6].value = 1-localTC[6].value; // Correct years in BC Era.
-		localTime.setUTCFullYear(localTC[6].value);	// If year was a 2-digit figure, ensure true value.
-		return { localDate : localTime, accuracy : "exact", way : "ToParts" }; // Success
-		}
-	catch (e) { // can't use formatToParts. This is MS Edge specific. Just use standard TimezoneOffset.
-		return { localDate : localTime, accuracy : "approx" , way : "noformatToParts"}	// 
-	}
-}
-/*/////////////////////////////////////////////////////
-
-2. Methods added to Intl.DateTimeFormat object for display of Milesian dates
-
-The method makes the best possible use of Unicode concepts for calendar, and re-use the expression pattern of gregory dates.
-
-2.1 FormatToParts in milesian elements
-
 */
 
-Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Give formatted elements of a Milesian date.
+/** FormatToParts that issues parts of a Milesian date.
+ * @method milesianFormatToParts
+ * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
+ * @returns {Object} same object structure than for FormatToParts method.
+*/
+Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	var	
@@ -156,8 +85,8 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 	try	{
 		let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
 		let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
-		if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate();	// system local date, expressed in Milesian
-		else 				milesianComponents = toLocalDate(myDate, TZ).localDate.getUTCMilesianDate(); // TZ local date.
+		if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate()	// system local date, expressed in Milesian
+		else 					milesianComponents = toLocalDate(myDate, TZ).localDate.getUTCMilesianDate(); // TZ local date.
 		// Here milesianComponents holds the local Milesian date figures, we replace the Gregorian day, month and year components with those.
 		let monthContext = 'format'; // Begin computing the context, 'format' or 'stand-alone'
 		if (referenceOptions.day == undefined && referenceOptions.year == undefined) monthContext = 'stand-alone';
@@ -208,10 +137,12 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) { // Giv
 		throw e; // Error to be handled by caller, but do not stop working.
 		}
 }
-/*
-2.2 Construct a string that expresses a date in the Milesian calendar.
+/** a Intl.DateTimeFormat.format method that issues a string representing a Milesian date.
+ * @method milesianFormat
+ * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
+ * @returns {string} the date following the Unicode options
 */
-Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) { // Issue a Milesian string for the date.
+Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) { 
 	// First, try using FormatToParts
 	try {
 		let parts = this.milesianFormatToParts (myDate); // Compute components
