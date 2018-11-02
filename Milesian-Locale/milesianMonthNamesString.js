@@ -1,23 +1,26 @@
 /* monthNamesString 
 Charset UTF-8.
 Contents:
-	Milesian month names XML base as a string, to transformed into a DOM.
-	If this file is used for Web site, consider changing "const" to "var" in order to avoid constant redeclaration error,
-	and consider re-encoding it after the site's reference chararacter set.
+	pldr: stringified version of an XML document organising the Milesian calendar data for the Unicode tools 
+	milesianNames: a DOM object parsed from pldr.
+Notes:
+	1. If this file is used for Web site, consider changing "const" to "var" in order to avoid constant redeclaration error,
+	and consider re-encoding it after the site's reference character set.
+	2. milesianNames must be declared after pldr.
 Version
-	M2017 : Build month names in Latin (default), fr, en, de, es, pt
+	M2017: Build month names in Latin (default), fr, en, de, es, pt
 	M2018-06-04
 		Build an original narrow type
 		type format monthWidth numeric differs from type stand-alone.
+	M2018-11-11: Enhance comments, put JSDoc comments.
 */
-/*
-This JS is a variant to "milesianCommonSettings.js".
-Instead of getting the XML files of calendar definitions, this file holds the dataset as a string constant named pldr, 
-and parses it into milesianNames, a structured object that uses the function "toMilesianDateString".
-This file is suitable to off-line operations.
-For Web site, usage of "milesianCommonSettings.js" with a suitable XML file is recommended.
+/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+Inquiries: www.calendriermilesien.org
 */
-/* Caution: see declarations after const pldr */
+/** Stringified XML base, consisting in 2 blocks: 
+ * ldmlBCP47 declares Milesian calendar general item, 
+ * ldml declares language specific names
+*/
 const pldr =
 '<?xml version="1.0" encoding="UTF-8" ?>\
 <!-- Milesian month names definition - non language-specific section  -->\
@@ -387,5 +390,6 @@ const pldr =
   </ldml>\
 </pldr>'
 
-var parser = new DOMParser();
-var milesianNames = parser.parseFromString(pldr, "application/xml"); 
+/** The milesian elements held in pldr, parsed as a DOM.
+*/
+var milesianNames = new DOMParser().parseFromString(pldr, "application/xml");
