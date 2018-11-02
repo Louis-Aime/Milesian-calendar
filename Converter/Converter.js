@@ -109,7 +109,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		dateComponent.date	= targetDate.getUTCDate();
 		};
 	myElement = document.getElementById("juliogregdate");
-	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
+	let weekdayFormat = new Intl.DateTimeFormat(undefined,{timeZone:"UTC",weekday:"long"});
 	let  weekday = ""; // by default
 	try {	// weekday in a safe manner, even on MS Edge
 		weekday = weekdayFormat.format(targetDate) ;
@@ -121,8 +121,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		weekday // weekday in a safe manner, even on MS Edge
 		+ " "
 		+ (dateComponent.date) + " "	// Date in the month
-		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
-		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + " av. J.-C."))	;
+		+ romanMonthName(dateComponent.month, "long") + " "	// Name of the month, in locale-defined language
+		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + ' ' + romanEra(dateComponent.year,"short")))	;
 
 	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();

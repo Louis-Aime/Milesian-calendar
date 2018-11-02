@@ -10,6 +10,7 @@
 Version 
 	M2018-11-07 insert js functions in relation with data entries  and clock run
 	M2018-11-09 continuous day shift value
+	M2018-11-10 Add Julian calendar date display
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2018 - Louis A. de Fouquières
@@ -49,6 +50,9 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="LunarDateProperties.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
     <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	
+	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeBasic.js"></script>
 	
 <!-- Specific for this page -->
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
@@ -799,24 +803,29 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 <h1>Données lunaires</h1>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
- 	<tr><th colspan="4">Lune moyenne corrigée</th></tr>
+ 	<tr><th colspan="2">Lune moyenne corrigée</th></tr>
      <tr>
-		<th>Âge lunaire</th>	<th>Reliquat</th>   <th>Hauteur</th>  
+		<th>Âge lunaire</th>	<th>Reliquat</th> 
 	 </tr>
 	 <tr>
 		<td><input name="age" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
 		<td><input name="residue" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
-		<td><input name="height" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
  <table class="dateconvert" align="center">
-	<tr><th>Heure lunaire (cycle des marées)</th></tr>
+	<tr><th>Heure lunaire<br>(marées)</th><th>Date lunaire<br>(hauteur de lune)</th></tr>
 	<tr>
 		<td><input name="moontime" value="" type="text" class="dateconvert" disabled="disabled" size="12"> </td>
-	</tr>
-	<tr><th>Date lunaire (hauteur de lune)</th></tr>
-	<tr>
 		<td><input name="moondate" value="" type="text" class="dateconvert" disabled="disabled" size="8"> </td>
+	</tr>
+ </table>
+ <table class="dateconvert" align="center">
+	<tr> <th colspan="3">Données draconitiques (éclipses)</th></tr>
+	<tr><th>Angle</th><th>Heure</th><th>Hauteur</th></tr>
+	<tr>
+		<td><input name="angle" value="" type="text" class="dateconvert" disabled="disabled" size="8"> </td>
+		<td><input name="dracotime" value="" type="text" class="dateconvert" disabled="disabled" size="12"> </td>
+		<td><input name="height" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
  <table class="dateconvert" align="center">

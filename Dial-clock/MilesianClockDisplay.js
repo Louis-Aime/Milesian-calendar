@@ -335,6 +335,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	dateComponent = targetDate.getCEMoonDate();
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
+	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
+	document.moon.dracotime.value = targetDate.getDraconiticTime().hours + "h "
+				+  ((targetDate.getDraconiticTime().minutes < 10) ? "0" : "") + targetDate.getDraconiticTime().minutes + "mn "
+				+  ((targetDate.getDraconiticTime().seconds < 10) ? "0" : "") + targetDate.getDraconiticTime().seconds + "s";	
 	document.moon.height.value = targetDate.getDraconiticHeight().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
 	document.moon.moontime.value = targetDate.getLunarTime().hours + "h " 
 				+  ((targetDate.getLunarTime().minutes < 10) ? "0" : "") + targetDate.getLunarTime().minutes + "mn "
