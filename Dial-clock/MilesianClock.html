@@ -35,10 +35,9 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 -->
-	<!-- Month names - if not through .XML  -->
+<!-- Month names - until they are in .XML files -->
 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
-	<script type="text/javascript" src="RomanMonthNames.js"></script>
-	
+
 <!-- General packages -->
 	<script type="text/javascript" src="CBCCE.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
@@ -46,13 +45,12 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
 	<script type="text/javascript" src="JulianDateProperties.js"></script>
 	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+ 	<script type="text/javascript" src="LunarDateProperties.js"></script>
     <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
-	<script type="text/javascript" src="LunarDateProperties.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
-    <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
-	
-	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
+    <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	
 <!-- Specific for this page -->
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
@@ -852,9 +850,9 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</tr>
  </table> 
 </form>
-<br>
 <table class="dateconvert" align="center">
- 	<tr><th colspan="2">Estimation de Delta T (UTC = TT - Delta T)</th></tr>
+ 	<tr><th colspan="2">Estimation de Delta T (secondes)<br>
+		(UTC = Temps Terrestre - Delta T)</th></tr>
      <tr>
 		<form name="deltat" class="dateconvert" method="post" action="JavaScript:void(0);">
 		<td>Delta T (secondes):</td>

@@ -186,7 +186,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	}
 	// Initiate milesian clock and milesian string with present time and date
 	var myElement = document.querySelector("#clock2");	// myElement is a work variable
-	setSolarYearClockHands (myElement, shiftDate.getUTCMilesianDate().year, shiftDate.getUTCMilesianDate().month, shiftDate.getUTCMilesianDate().date,
+	setMilesianCalendarClockHands (myElement, shiftDate.getUTCMilesianDate().year, shiftDate.getUTCMilesianDate().month, shiftDate.getUTCMilesianDate().date,
 		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() );
 
 	var dateComponent = shiftDate.getUTCMilesianDate();	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
@@ -201,36 +201,20 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.time.mins.value = dateComponent.minutes;
 	document.time.secs.value = dateComponent.seconds;
 
-	// Write Milesian date string, near the clock (without time)
+	// Write date strings near the clock, using Unicode and Unicode-derived routines
+	var labelDate = new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	// Write Milesian date string
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
-	myElement.innerHTML = shiftDate.toUTCIntlMilesianDateString() // the international notation, not sensitive to browsers nor languages								//toMilesianLocaleDateString
-		//if necessary, the format options are: (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	myElement.innerHTML = labelDate.milesianFormat (shiftDate);
 	
-	// Display julio-gregorian date 
+	// Display julio-gregorian date. Use standard Unicode or UnicodeJulianFormat. 
 	// Translate to Julian if before date of switch to Gregorian calendar
 
-	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		dateComponent = shiftDate.getUTCJulianDate()		// dateComponent object set to Julian date
-	else { 												// else, dateComponent set to (standard) Gregorian coordinates
-		dateComponent.year  = shiftDate.getUTCFullYear();
-		dateComponent.month = shiftDate.getUTCMonth();
-		dateComponent.date	= shiftDate.getUTCDate();
-		};
 	myElement = document.getElementById("juliogregdate");
-	let weekdayFormat = new Intl.DateTimeFormat("fr",{timeZone:"UTC",weekday:"long"});
-	let  weekday = ""; // by default
-	try {	// weekday in a safe manner, even on MS Edge
-		weekday = weekdayFormat.format(shiftDate) ;
-		}
-	catch (e) {
-		weekday = "";
-		}
-	myElement.innerHTML = 
-		weekday
-		+ " "
-		+ (dateComponent.date) + " "	// Date in the month
-		+ romanMonthNames.fr[dateComponent.month] + " "	// Name of the month, in French
-		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + " av. J.-C."));
+	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
+		myElement.innerHTML = labelDate.julianFormat(shiftDate)
+	else
+		myElement.innerHTML = labelDate.format(shiftDate);
 
 	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
@@ -335,17 +319,12 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	dateComponent = targetDate.getCEMoonDate();
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
-	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
-	document.moon.dracotime.value = targetDate.getDraconiticTime().hours + "h "
-				+  ((targetDate.getDraconiticTime().minutes < 10) ? "0" : "") + targetDate.getDraconiticTime().minutes + "mn "
-				+  ((targetDate.getDraconiticTime().seconds < 10) ? "0" : "") + targetDate.getDraconiticTime().seconds + "s";	
+	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
+	document.moon.dracotime.value = new Date(shiftDate.valueOf() + targetDate.getDraconiticSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	document.moon.height.value = targetDate.getDraconiticHeight().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
-	document.moon.moontime.value = targetDate.getLunarTime().hours + "h " 
-				+  ((targetDate.getLunarTime().minutes < 10) ? "0" : "") + targetDate.getLunarTime().minutes + "mn "
-				+  ((targetDate.getLunarTime().seconds < 10) ? "0" : "") + targetDate.getLunarTime().seconds + "s";
+	document.moon.moontime.value = new Date(shiftDate.valueOf() + targetDate.getLunarSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	document.moon.moondate.value = targetDate.getLunarDateTime().date + " " 
 				+  (++targetDate.getLunarDateTime().month) + "m";
-
 	dateComponent = shiftDate.getCELunarDate();				
 	document.moon.CElunardate.value = 	dateComponent.date;
 	document.moon.CElunarmonth.value = 	++dateComponent.month;
