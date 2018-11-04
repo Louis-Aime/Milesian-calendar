@@ -23,8 +23,13 @@ Versions
 	M2018-10-29
 		Update comments
 	M2018-11-11
-		Put "basic tools" in a separate file.
+		Put "basic tools" in a separate file: 
+			unicodeCalendarHandled 
+			toLocalDate
 		Add IntelliSense comments.
+	M2018-11-13
+		Bug fix: when the string is computed by default, the time string should contain only options for time, not for date.
+		Add comments about extracted functions
 Contents
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -171,7 +176,7 @@ Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) {
 	}
 	var myTimeString;
 	try {
-		myTimeString = myDate.toLocaleTimeString(this.locale,those);
+		myTimeString = myDate.toLocaleTimeString(this.locale,{hour : those.hour, minute : those.minute, second : those.second, hour12 : false});
 		}
 	catch (e) {
 		myTimeString = myDate.toTimeString();	// the minimum version
