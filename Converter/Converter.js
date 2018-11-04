@@ -91,38 +91,27 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// Set Milesian clock
 	let myElement = document.querySelector("#clock3");
-	setSolarYearClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
+	setMilesianCalendarClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
 
 	// Update milesian field selector - using Date properties
 	document.milesian.year.value = dateComponent.year;
     document.milesian.monthname.value = dateComponent.month;
     document.milesian.day.value = dateComponent.date;
 
-	// Display standard date 
-	// Translate to Julian if before initial date of switch to Gregorian calendar
+	// Write date strings near the clock, using Unicode and Unicode-derived routines
+	var labelDate = new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	// Write Milesian date string near the clock (another one is among the Unicode calendars)
+	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
+	myElement.innerHTML = labelDate.milesianFormat (targetDate);
+	
+	// Display julio-gregorian date. Use standard Unicode or UnicodeJulianFormat. 
+	// Translate to Julian if before date of switch to Gregorian calendar
 
-	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		dateComponent = targetDate.getUTCJulianDate()		// dateComponent object set to Julian date
-	else { 												// else, dateComponent set to (standard) Gregorian coordinates
-		dateComponent.year  = targetDate.getUTCFullYear();
-		dateComponent.month = targetDate.getUTCMonth();
-		dateComponent.date	= targetDate.getUTCDate();
-		};
 	myElement = document.getElementById("juliogregdate");
-	let weekdayFormat = new Intl.DateTimeFormat(undefined,{timeZone:"UTC",weekday:"long"});
-	let  weekday = ""; // by default
-	try {	// weekday in a safe manner, even on MS Edge
-		weekday = weekdayFormat.format(targetDate) ;
-		}
-	catch (e) {
-		weekday = "";
-		}
-	myElement.innerHTML = 
-		weekday // weekday in a safe manner, even on MS Edge
-		+ " "
-		+ (dateComponent.date) + " "	// Date in the month
-		+ romanMonthName(dateComponent.month, "long") + " "	// Name of the month, in locale-defined language
-		+ (dateComponent.year > 0 ? dateComponent.year : ((-dateComponent.year + 1) + ' ' + romanEra(dateComponent.year,"short")))	;
+	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
+		myElement.innerHTML = labelDate.julianFormat(targetDate)
+	else
+		myElement.innerHTML = labelDate.format(targetDate);
 
 	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
@@ -198,7 +187,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		} 
 	let userOptions = askedOptions.resolvedOptions();
 	Locale = userOptions.locale; 
-	if (Locale.includes("-u-"))		// The Unilog extension ("-u-") is indicated in the specified locale, drop it
+	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
 	Locale = Locale.substring (0,Locale.indexOf("-u-"));
 
 	// Display Locale (only language part)
@@ -226,11 +215,11 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			break;
 		}
 	// Set Milesian date string wherever needed
-	let milesianLocale = [undefined, Locale]; // First Milesian string shall be on blank Locale, second will be in specified language
+	let milesianOptions = new Intl.DateTimeFormat(Locale,userOptions);
 	let myElements = document.getElementsByClassName('milesiandate'); 	// List of date elements to be computed
+	// myElements.forEach ( function(val, ind, tab) {tab[ind].innerHTML = milesianOptions.milesianFormat(targetDate)} ); // why this does not work ?
 	for (let i = 0; i < myElements.length; i++) {
-		let interAskedOptions = new Intl.DateTimeFormat(milesianLocale[i],userOptions);
-		myElements[i].innerHTML = interAskedOptions.milesianFormat(targetDate);
+	myElements[i].innerHTML = milesianOptions.milesianFormat(targetDate);
 	}
 	
 	//	Display dates in several calendars provided by Unicode

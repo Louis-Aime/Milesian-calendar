@@ -19,7 +19,7 @@ var timeOutId1;					// Tick generator identifier
 function setLightClockToNow() {	// Set clock to present date and time
     let targetDate = new Date(); // targeDate is today and now.
 	let theClock = window.document.querySelector("#clock1"); 	// This object is the clock below. Do not call before clock loaded.
-	setSolarYearClockHands (theClock, targetDate.getMilesianDate().year, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
+	setMilesianCalendarClockHands (theClock, targetDate.getMilesianDate().year, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
 		targetDate.getHours(), targetDate.getMinutes(), targetDate.getSeconds() ); 
 }
 function setLightClockTicks() { // To be inserted on load of light clock

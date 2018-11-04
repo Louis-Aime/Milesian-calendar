@@ -34,7 +34,6 @@ Inquiries: www.calendriermilesien.org
 	
 <!-- Month names - until they are in .XML files -->
 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
-	<script type="text/javascript" src="RomanMonthNames.js"></script>
 
 <!-- General packages -->
 	<script type="text/javascript" src="CBCCE.js"></script>
@@ -45,13 +44,11 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
     <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
-    <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
-	
-	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
+    <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	
-	
-<!-- Scripts spécifiques à cette page -->
+<!-- Script spécifique à cette page -->
     <script type="text/javascript" src="Converter.js"></script>
  <!--   <script type="text/javascript" src="ConverterSet.js"></script> -->
 
@@ -96,7 +93,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 </g>
 </svg>
 <table class="dateconvert" align="center">
-    <tr><th class="milesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
+    <tr><th id="clockmilesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
