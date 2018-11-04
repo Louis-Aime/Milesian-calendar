@@ -5,6 +5,7 @@ Julian date string generation functions using Unicode tools.
 	using Intl.DateTimeFormat.prototype.
 Versions
 	M2018-11-11 Initiate from UnicodeMilesianFormat, separate and comment
+	M2018-11-14 instead of alerting, return an error message as result if FormatToParts not implemented
 Contents
 	-- unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
 	-- toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
@@ -102,6 +103,6 @@ Intl.DateTimeFormat.prototype.julianFormat = function (myDate) {
 		}
 	// FormatToParts does not work -> just leave an error message
 	catch (e) { // just catch and continue
-		alert (milesianAlertMsg ('browserError'))
+		return (milesianAlertMsg ('browserError'))
 	}
 }
