@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+	<title>Get milesian months' names</title>
+	<!-- HTML basic code to insert as a widget or somewhere in the application
+on an always-used page or any page that wants to write a date with milesian months.
+milesian month XML file should be available somewhere. UPDATE URI IN LAST SCRIPT.
+If installed on a separate domain, this domain's server should allow external GET access -->
+
+<link href="milesian.css" rel="stylesheet"/>
+
+<script type="text/javascript" src="CBCCE.js"></script>
+<script type="text/javascript" src="MilesianDateProperties.js"></script>
+
+<script type="text/javascript" src="UnicodeBasic.js"></script>
+<script type="text/javascript" src="MilesianXMLLoad.js"></script> <!-- variant to: milesianMonthNamesString -->
+<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
+
+
+</head>
+<body>
+<h1 class="dateconvert">Chaîne date du jour</h1>	
+<p class="dateconvert MilesianDateString"></p>
+<script type="text/javascript">
+	initiateMilesianNames ("../xml/milesianMonthNames.xml");
+</script>
+</body>
+</html>
