@@ -5,8 +5,9 @@ Versions
 	M2017-06-04
 	M2017-12-26
 	M2018-10-26: enhance comments
+	M2018-11-13: JSDoc comments
 Required
-	Package CBCCE is used.
+	Package CBCCE.
 Each function returns a compound value with the yearly key figures for one calendar:
 	julianSignature: for the Julian calendar,
 	gregorianSignature: for the Gregorian calendar,
@@ -17,7 +18,7 @@ Key figure include:
 	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 	epact: Julian / Gregorian computus epact, Milesian mean moon epact.
 	annualResidue: 29.5 minus epact (Milesian only).
-*/////////////////////////////////////////////////////////////////////////////////////////////
+*/
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -39,16 +40,28 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-///////////////////////////////////////////////////////////////////////////////
-// Import CBCCE, or make visible.
-///////////////////////////////////////////////////////////////////////////////
+/** Positive remainder of a division. 
+ * @param {number} dividend - any number.
+ * @param {number} divisor - any strictly  positive number. If not stricly positive, result is "undefined".
+ * @return {number} the remainder r is such that 0 <= r < divisor and there is an integer n 
+ * such as dividend == n * divisor + r.
+ * @example positiveModulo (year, 19) + 1 is the gold number of the year, used for Easter computation.
+*/
 function positiveModulo (dividend, divisor) {	// Positive modulo, with only positive divisor
 	if (divisor <= 0) return ;	// Stop execution and return "Undefined"
 	while (dividend < 0) dividend += divisor;
 	while (dividend >= divisor) dividend -= divisor;
 	return dividend
 }
-
+/** key figures of a year of the Julian calendar
+ * @param {number} year, integer number representing the year investigated
+ * @return {Object.<string, number>} signature
+ * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
+ * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
+ * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
+ * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
+ * {boolean} signature.isLong - whether this year is a leap year (366 days long).
+*/
 function julianSignature (year) {
 	var
 		yearParams = { 	// Decompose a Julian year figure
@@ -78,6 +91,15 @@ function julianSignature (year) {
 	signature.isLong = yearCoeff.annum == 0;	// Year is long if annum part in decomposition is 0
 	return signature;
 }
+/** key figures of a year of the Gregorian calendar
+ * @param {number} year, integer number representing the year investigated
+ * @return {Object.<string, number>} signature
+ * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
+ * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
+ * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
+ * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
+ * {boolean} signature.isLong - whether this year is a leap year (366 days long).
+*/
 function gregorianSignature (year) {
 	var
 		yearParams = { 	// Decompose a Gregorian year figure
@@ -116,6 +138,15 @@ function gregorianSignature (year) {
 		// Long if year part in decomposition is 0, and it is not a secular year except a multiple of 400.
 	return signature;
 }
+/** key figures of a year of the Milesian calendar, the slight change is this: year 2400 and then every 3200 year, is not leap.
+ * @param {number} year, integer number representing the year investigated
+ * @return {Object.<string, number>} signature
+ * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
+ * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
+ * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
+ * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
+ * {boolean} signature.isLong - whether this year is a leap year (366 days long).
+*/
 function milesianSignature (year) {
 	var
 		yearParams = { 	// Decompose a Milesian year figure for doomsday and Easter computus.
