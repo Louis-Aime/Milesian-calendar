@@ -87,6 +87,20 @@ CE_Lunar_params = {
 		{name : "time", init : 0}
 	]
 } ,
+/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon month, and phase in milliseconds
+* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
+*/
+Moon_Phase_params = {
+	timeepoch : -62167873955000, // from the mean new moon of 3 1m 0 at 10:07:25 Terrestrial Time.
+	coeff : [ 
+		 {cyclelength : 2551442875, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "month"}, // this cycle length is one mean lunar month
+		 {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"}	// in milliseconds
+	], 
+	canvas : [
+		{name : "month", init : 0},
+		{name : "phase", init : 0}
+	]
+} ,
 /** CBCCE parameters to be used in order to change lunar calendar epoch, without changing lunar age.
 * Usage of this parameter set: change between Common Era and Hegirian moon calendar, 7688 lunar month offset.
 * timeepoch base is 0.
@@ -118,14 +132,28 @@ Draconitic_Params = { //
 		{name : "cycle", init :0},
 		{name : "phase", init : 0}		
 		]
-}
+},
+/**
+ * @description conversion from Posix timestamp to days + milliseconds in day, and the reverse, with CBCCE
+*/
+Day_milliseconds = { 	// To convert a time or a duration to and from days + milliseconds in day.
+	timeepoch : 0, 
+	coeff : [ // to be used with a Unix timestamp in ms. Decompose into days and milliseconds in day.
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "day_number"}, 
+	  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "milliseconds_in_day"}
+	],
+	canvas : [
+		{name : "day_number", init : 0},
+		{name : "milliseconds_in_day", init : 0},
+	]
+};
 /*
  2. Properties added to Date object
 */
 /** Compute an estimate of Delta T, defined as: UTC = TT - Delta T. The estimate is only the quadratic part of Delta T.
  * @method getDeltaT
  * @param {Date} the date where Delta T is estimated (estimation is per exact date, not per year)
- * return {number} Delta T, an integer signed number of seconds
+ * return {number} Delta T. Unit is milliseconds, result reflects an integer signed number of seconds
 */
 Date.prototype.getDeltaT = function () { 
 	const JULIAN_CENTURY_UNIT = 36525 * 86400000;	
@@ -137,7 +165,7 @@ Date.prototype.getDeltaT = function () {
  * Origin morning of 3 1m 000
  * an adjustement to Terrestrial Time (TT) is applied
  * @method getCEMoonDate
- * @return {{year: number, month: number, age: number}}
+ * @return {{year: number, month: number, age: number}} age is a decimal figure
 */
 Date.prototype.getCEMoonDate = function () {	// 
 	return cbcceDecompose (this.getTime()+this.getDeltaT(), CE_Moon_params);
@@ -146,7 +174,7 @@ Date.prototype.getCEMoonDate = function () {	//
  * First day of this lunar calendar is on 4 1m 000, and is expressed day 1 month 1 year 0.
  * an adjustement to Terrestrial Time (TT) is applied
  * @method getCELunarDate
- * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
+ * @return {{year: number, month: number, date: integer number (1 to 30), time: number of milliseconds}}
 */
 Date.prototype.getCELunarDate = function () {	// The lunar date coordinate at this date, 0h UTC
 	let refDate = new Date (this.valueOf());
@@ -155,7 +183,7 @@ Date.prototype.getCELunarDate = function () {	// The lunar date coordinate at th
 }
 /** The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
  * Origin evening of 25 7m 622
- * an adjustement to Terrestrial Time (TT) is applied
+ * an adjustment to Terrestrial Time (TT) is applied
  * @method getHegirianMoonDate
  * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
 */Date.prototype.getHegirianMoonDate = function () {
@@ -168,7 +196,7 @@ Date.prototype.getCELunarDate = function () {	// The lunar date coordinate at th
 /** The lunar "mean" Hegirian calendar date coordinate at this date, 0h UTC. 
  * First day of this lunar calendar is on 26 7m 622, and is expressed day 1 month 1 year 1.
  * It corresponds to 1 9 641 of CE lunar calendar
- * an adjustement to Terrestrial Time (TT) is applied
+ * an adjustment to Terrestrial Time (TT) is applied
  * @method getHegirianLunarDate
  * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
 */
@@ -183,6 +211,7 @@ Date.prototype.getHegirianLunarDate = function () {
 }
 /** Lunar time is such that the moon is at the same place in the sky that the sun at this time, the same day; 
  * effects of time zone and daylight saving time rules are taken into account
+ * @deprecated
  * @method getLunarTime
  * @param {number} timeZoneOffset - Offset from UTC due to time zone, in minutes, by default system time zone offset
  * @return {{hours: number, minutes: number, seconds: number}} the lunar time
@@ -191,6 +220,15 @@ Date.prototype.getLunarTime = function (timeZoneOffset = this.getTimezoneOffset(
 	let timeOffset = this.getCEMoonDate().age * Chronos.DAY_UNIT * Chronos.DAY_UNIT / CE_Moon_params.coeff[1].cyclelength;
     let fakeDate = cbcceDecompose (this.getTime() - timeZoneOffset * Chronos.MINUTE_UNIT - timeOffset, Milesian_time_params);
 	return {hours : fakeDate.hours, minutes : fakeDate.minutes, seconds : fakeDate.seconds};
+}
+/** Angle between the moon position and the sun position.
+ * @method LunarSunTimeAngle
+ * @return {number} delay to add to current time in order to get lunar time
+*/
+Date.prototype.getLunarSunTimeAngle = function () {
+	let msOffset = 
+		- Math.round(Chronos.DAY_UNIT * cbcceDecompose (this.getTime() + this.getDeltaT(), Moon_Phase_params).phase/Moon_Phase_params.coeff[0].cyclelength);
+	return cbcceDecompose (msOffset, Day_milliseconds).milliseconds_in_day ; 
 }
 /** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
  * the moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
@@ -212,13 +250,23 @@ Date.prototype.getLunarDateTime = function (timeZoneOffset = this.getTimezoneOff
 }
 /** Draconitic angle between the rising node of the moon and the moon itself
  * @method getDraconiticAngle
- * @return angle in decimal degrees
+ * @return {number} angle in decimal degrees
 */
 Date.prototype.getDraconiticAngle = function () {
 	return 360 * cbcceDecompose (this.getTime() + this.getDeltaT(), Draconitic_Params).phase / Draconitic_Params.coeff[0].cyclelength
 }
+/** Draconitic time angle between the rising node of the moon and the sun
+ * @method getDraconiticSunTimeAngle
+ * @return {number} delay to add to current time in order to get Draconitic time
+*/
+Date.prototype.getDraconiticSunTimeAngle = function () {
+	return Math.round 
+	 (Chronos.DAY_UNIT * cbcceDecompose (this.getTime() + this.getDeltaT(), Draconitic_Params).phase / Draconitic_Params.coeff[0].cyclelength)
+	 + this.getLunarSunTimeAngle()
+}
 /** Draconitic time, i.e. the time were the rising node is at same place that the sun at that time the same day.
  * @method getDraconiticTime
+ * @deprecated
  * @param {number} timeZoneOffset - Offset from UTC due to time zone, in minutes, by default system time zone offset
  * @return {{hours: number, minutes: number, seconds: number}} the draconitic time
 */
