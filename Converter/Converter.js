@@ -230,10 +230,11 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		// re-initiate Option variable following user's setting
 		let Options = Object.assign({}, userOptions);
 		
-		// Check that browser will display an interesting calendar
-		if (unicodeCalendarHandled (myElements[i].id) == myElements[i].id 	// the asked calendar... 
-			|| unicodeCalendarHandled (myElements[i].id) != "gregory")	{	// ... or at least a non plain gregory one
-		
+		// Check that browser will display an interesting calendar, considering the language asked
+		let displayedCalendar = unicodeCalendarHandled (myElements[i].id,Locale);
+		if (displayedCalendar == myElements[i].id 	// the displayed calendar is as expected ...
+			|| displayedCalendar != "gregory"	// ... or at least is not the plain gregory one...
+			|| displayedCalendar != new Intl.DateTimeFormat(Locale).resolvedOptions().calendar )	{ // ... nor the default one for that language
 		//	test validity since a few calendar do not display properly if out of range
 		//	and arrange Options: delete era element for calendar which do not use it.
 			let valid = true;
@@ -262,6 +263,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 				myElements[i].innerHTML = milesianAlertMsg("invalidDate");
 				}
 			}
-		else myElements[i].innerHTML = milesianAlertMsg("browserError")
+		else myElements[i].innerHTML = "(" + displayedCalendar + ")"; // Calendar displayed is a default one.
 		}
 }

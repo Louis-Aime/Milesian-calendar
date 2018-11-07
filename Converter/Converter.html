@@ -4,8 +4,6 @@
 <html>
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-	<link href="milesian.css" rel="stylesheet"/>
-	<title>Convertisseur de dates</title>
 <!--
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
@@ -31,26 +29,27 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 -->
-	
-<!-- Month names - until they are in .XML files -->
-	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 
 <!-- General packages -->
+	<link href="milesian.css" rel="stylesheet"/>
 	<script type="text/javascript" src="CBCCE.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
-	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
 	<script type="text/javascript" src="JulianDateProperties.js"></script>
-	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
-    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
     <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	
-<!-- Script spécifique à cette page -->
+<!-- Specific scripts -->
+	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
+	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
     <script type="text/javascript" src="Converter.js"></script>
- <!--   <script type="text/javascript" src="ConverterSet.js"></script> -->
+
+	<title>Convertisseur de dates</title>
 
 </head>
 <body>
@@ -173,7 +172,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 <h1 >Navigation temporelle</h1>
 <script type="text/javascript">
 var 
-	dayOffset = 1, // Quantum of days to add or substract
+	dayOffset = 1, // Quantum of days to add or subtract
 	clockPeriod, // Tick generator
 	clockDirection = 1; // Forward or reverse
 function setDateToToday() { // Self explanatory
