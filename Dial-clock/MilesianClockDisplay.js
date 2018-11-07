@@ -132,50 +132,46 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 					hour : "2-digit"};
 		}
 	
-	// Add time zone
+	// Add time zone in Options
 	if (timeZone !== "") 
-		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
-	// Check here that Options with timeZone is valid
+		Options.timeZone = timeZone ; 
+	// is timeZone valid ?
 	try {
 		askedOptions = Intl.DateTimeFormat (Locale, Options);
 		}
 	catch (e) {
 		alert (milesianAlertMsg("invalidCode") + '"' + Options.timeZone + '"');
-		document.LocaleOptions.TimeZone.value = ''; 	// Reset TimeZone indication to empty string
+		document.LocaleOptions.TimeZone.value = '';
 		delete Options.timeZone; // Delete property
 		askedOptions = Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
 	}
-	userOptions = askedOptions.resolvedOptions();	// The global variable.
+	userOptions = askedOptions.resolvedOptions();
 }
 	
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
 	// Initiate Time zone mode for the "local" time from main display
 	TZSettings.mode = document.TZmode.TZcontrol.value;
-	// Timezone offset for next computations - opposite of JS off;set.
-	// if (isNaN (document.TZmode.TZOffset.value)) alert (milesianAlertMsg("nonNumeric") + ' "' + document.TZmode.TZOffset.value + '"');
-	let 
-		systemDecimalTZ = - targetDate.getTimezoneOffset(), // Decimal minutes
-		systemSign = (systemDecimalTZ < 0 ? -1 : 1),
-		absoluteDecimalTZ = systemSign * systemDecimalTZ,
-		absoluteTZmin = Math.floor (absoluteDecimalTZ),
-		absoluteTZsec = Math.round ((absoluteDecimalTZ-absoluteTZmin) * 60);
+/** TZSettings.msoffset is JS time zone offset in milliseconds (UTC - local time)
+ * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
+*/
+	TZSettings.msoffset = targetDate.getRealTZmsOffset().valueOf();
+	let
+		systemSign = (TZSettings.msoffset > 0 ? -1 : 1), // invert sign because of JS convention for time zone
+		absoluteRealOffset = - systemSign * TZSettings.msoffset,
+		absoluteTZmin = Math.floor (absoluteRealOffset / Chronos.MINUTE_UNIT),
+		absoluteTZsec = Math.floor ((absoluteRealOffset - absoluteTZmin * Chronos.MINUTE_UNIT) / Chronos.SECOND_UNIT);
 	switch (TZSettings.mode) {
+		case "UTC" : 
+			TZSettings.msoffset = 0; // Set offset to 0, but leave time zone offset on display
 		case "TZ" : 
 			document.TZmode.TZOffsetSign.value = systemSign;
 			document.TZmode.TZOffset.value = absoluteTZmin;
 			document.TZmode.TZOffsetSec.value = absoluteTZsec;
-		// Continue for  this case, copy computed TZOffset into TZSettings fur future computations
-		case "Fixed" : TZSettings.msoffset = 
+			break;
+		case "Fixed" : TZSettings.msoffset = // Here compute specified time zone offset
 			- document.TZmode.TZOffsetSign.value 
 			* (document.TZmode.TZOffset.value * Chronos.MINUTE_UNIT + document.TZmode.TZOffsetSec.value * Chronos.SECOND_UNIT);
-			break;
-		// If UTC mode, set computation offset to 0, but set displayed field to TZ value
-		case "UTC" : 
-			TZSettings.msoffset = 0; 
-			document.TZmode.TZOffsetSign.value = systemSign;
-			document.TZmode.TZOffset.value = absoluteTZmin;
-			document.TZmode.TZOffsetSec.value = absoluteTZsec;
 	}
 	
 	compLocalePresentationCalendar(); // Establish initial / recomputed date string display parameters 
@@ -293,14 +289,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
 	// Certain Unicode calendars do not give a proper result: set the flag.
 	switch (userOptions.calendar) {	
-		case "hebrew": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+		case "hebrew": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
 			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf() 
+		case "indian": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf() 
 			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
 		case "islamic":
-		case "islamic-rgsa": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+		case "islamic-rgsa": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
-		case "islamic-umalqura": valid = (toLocalDate(targetDate, userOptions.timeZone).localDate.valueOf()
+		case "islamic-umalqura": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
 			>= -6227305142400000); break; // Computations are false before 2 6m -195366
 		}
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)

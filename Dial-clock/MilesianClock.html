@@ -4,8 +4,6 @@
 <html>
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-	<link href="milesian.css" rel="stylesheet"/>
-	<title>Horloge milésienne</title>
 <!--
 Version 
 	M2018-11-07 insert js functions in relation with data entries  and clock run
@@ -35,26 +33,28 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 -->
-<!-- Month names - until they are in .XML files -->
-	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 
 <!-- General packages -->
+	<link href="milesian.css" rel="stylesheet"/>
 	<script type="text/javascript" src="CBCCE.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
-	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
 	<script type="text/javascript" src="JulianDateProperties.js"></script>
-	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
- 	<script type="text/javascript" src="LunarDateProperties.js"></script>
-    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
     <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 	
 <!-- Specific for this page -->
+	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
+	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+ 	<script type="text/javascript" src="LunarDateProperties.js"></script>
+    <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
 
+	<title>Horloge milésienne</title>
 </head>
 <body>
 <section class="dateconvert">
@@ -161,7 +161,7 @@ function calcTime() { // Here the hours are deemed local hours
 		case "TZ" : testDate.setHours(hours, mins, secs, 0); break;
 		case "UTC" : testDate.setUTCHours(hours, mins, secs, 0); break;
 		case "Fixed" : 
-			testDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
+			testDate.setUTCTimeFromMilesian (document.milesian.year.value, document.milesian.monthname.value, document.milesian.day.value);
 			testDate.setUTCHours(hours, mins, secs, 0); 
 			testDate.setTime(testDate.getTime() + TZSettings.msoffset);
 		}
@@ -202,12 +202,12 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table class="dateconvert" align="center"> <tr>
+	 <table class="dateconvert" align="center"> 
+	  <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
-		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-		<button class="dateconvert" >Maintenant</button></form></td>
+		 <td colspan=4><button type="button" class="dateconvert" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
 	  </tr> </table>
 
 	  <table class="dateconvert" align="center">
@@ -219,7 +219,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	 </table>
 	 
 <script type="text/javascript">
-var addedTime = 60; //Global variable, time to add or substract, in decimal seconds.
+var addedTime = 60; //Global variable, time to add or subtract, in decimal seconds.
 function changeAddTime () {
 	let secs = +document.timeShift.shift.value; 
 	if (isNaN(secs) || secs <= 0) 
@@ -257,38 +257,38 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 <section class="dateconvert autoscroll">
 <h1>Navigation calendaire</h1>
 <script type="text/javascript">
-var 
-	dayOffset = 1, // Days (decimal) to add or substract
-	clockPeriod, // Tick generator
-	clockDirection = 1; // Forward or reverse
-// no setDateToToday
-function changeDayOffset () { 
-	let days = +document.control.shift.value;
-	if (isNaN(days) || days < 1) {
-		alert (milesianAlertMsg("invalidInput"));
-		clockRun(0);
+	var 
+		dayOffset = 1, // Days (decimal) to add or substract
+		clockPeriod, // Tick generator
+		clockDirection = 1; // Forward or reverse
+	// no setDateToToday
+	function changeDayOffset () { 
+		let days = +document.control.shift.value;
+		if (isNaN(days) || days < 1) {
+			alert (milesianAlertMsg("invalidInput"));
+			clockRun(0);
+			}
+		else 
+		{ 
+			dayOffset = days; // Global variable updated
+			document.control.shift.value = days; // Confirm changed value
 		}
-	else 
-	{ 
-		dayOffset = days; // Global variable updated
-		document.control.shift.value = days; // Confirm changed value
 	}
-}
-function setDayOffset (sign=1) {
-	changeDayOffset();	// Force a valid value in field
-	let testDate = new Date(targetDate.valueOf());
-	testDate.setTime (testDate.getTime()+sign*dayOffset*Chronos.DAY_UNIT);
-	if (isNaN(testDate.valueOf())) { 
-		alert (milesianAlertMsg("outOfRange"));
-		clockRun(0);
+	function setDayOffset (sign=1) {
+		changeDayOffset();	// Force a valid value in field
+		let testDate = new Date(targetDate.valueOf());
+		testDate.setTime (testDate.getTime()+sign*dayOffset*Chronos.DAY_UNIT);
+		if (isNaN(testDate.valueOf())) { 
+			alert (milesianAlertMsg("outOfRange"));
+			clockRun(0);
+			}
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
 		}
-	else {
-		targetDate = new Date (testDate.valueOf());
-		setDisplay();
 	}
-}
-function setDayOffsetPlus () {setDayOffset(+1)};
-function setDayOffsetMinus () {setDayOffset(-1)};
+	function setDayOffsetPlus () {setDayOffset(+1)};
+	function setDayOffsetMinus () {setDayOffset(-1)};
 function clockSet (direction = 1) {
 	clockDirection = direction;
 	clockRun (1);
