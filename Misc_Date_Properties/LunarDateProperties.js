@@ -2,11 +2,12 @@
 Character set is UTF-8
 This code, to be manually imported, set properties representing lunar phases to object Date
 Versions 
-	M2017-12-26 replace CalendarCycleComputationEngine with CBCCE.
-	M2018-05-28 enhanced comments and add a more lunar calendar functions
-	M2018-10-26 fix typos
-	M2018-11-10 new value for draconitic cycle, found in Wikipedia
-	M2018-11-12 JSdoc comments + add dacronitic routines
+	M2017-12-26 : replace CalendarCycleComputationEngine with CBCCE.
+	M2018-05-28 : enhanced comments and add a more lunar calendar functions
+	M2018-10-26 : fix typos
+	M2018-11-10 : new value for draconitic cycle, found in Wikipedia
+	M2018-11-12 : JSdoc comments + add dacronitic routines
+	M2018-11-16 : adapt to TZ in ms rather than in mn
 Required:
 	Package CBCCE.
 Contents: methods for Date.prototype
@@ -20,8 +21,11 @@ Contents: methods for Date.prototype
 	getCELunarDate: the Moon date at 0h UTC at this calendar date.
 	getHegirianMoonDate : same as above, with Hegirian epoch i.e. 6 8m 621 14h 7 mn 48s, so that first evening of first moon month of year 1 is 26 7m 622.
 	getHegirianLunarDate : the Hegirian date at 0h UTC at this calendar date. 
-	getLunarTime (timezone offset in mins, the caller's by default) : gives lunar time (H, m, s). 
+	getLunarTime (timezone offset in milliseconds, the caller's system defautl by default) : gives lunar time (H, m, s). 
 		At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
+	getDraconiticAngle : Angle between Draco and moon in degrees
+	getDraconiticSunTimeAngle : Angle between Draco and the sun, in milliseconds
+	getDraconiticTime : local time where ascending node is at place of sun the same day
 	getDraconiticHeight : a very rough estimate of the height of the moon (-5° to +5°). 
 		When height is around 0 at new or full moon, eclipse is possible.
 	There is no setter function in this package.
@@ -213,12 +217,12 @@ Date.prototype.getHegirianLunarDate = function () {
  * effects of time zone and daylight saving time rules are taken into account
  * @deprecated
  * @method getLunarTime
- * @param {number} timeZoneOffset - Offset from UTC due to time zone, in minutes, by default system time zone offset
+ * @param {number} timeZoneOffset - Offset from UTC due to time zone, in milliseconds, by default system time zone offset
  * @return {{hours: number, minutes: number, seconds: number}} the lunar time
 */
-Date.prototype.getLunarTime = function (timeZoneOffset = this.getTimezoneOffset()) { 
+Date.prototype.getLunarTime = function (timeZoneOffset = this.getRealTZmsOffset()) { 
 	let timeOffset = this.getCEMoonDate().age * Chronos.DAY_UNIT * Chronos.DAY_UNIT / CE_Moon_params.coeff[1].cyclelength;
-    let fakeDate = cbcceDecompose (this.getTime() - timeZoneOffset * Chronos.MINUTE_UNIT - timeOffset, Milesian_time_params);
+    let fakeDate = cbcceDecompose (this.getTime() - timeZoneOffset - timeOffset, Milesian_time_params);
 	return {hours : fakeDate.hours, minutes : fakeDate.minutes, seconds : fakeDate.seconds};
 }
 /** Angle between the moon position and the sun position.
@@ -233,10 +237,10 @@ Date.prototype.getLunarSunTimeAngle = function () {
 /** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
  * the moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
  * @method getLunarDateTime
- * @param {number} timeZoneOffset - Offset from UTC due to time zone, in minutes, by default system time zone offset
+ * @param {number} timeZoneOffset - Offset from UTC due to time zone, in milliseconds, by default system time zone offset
  * @return  {{month: number, date: number, hours: number, minutes: number, seconds: number}} Date + time corresponding to the Lunar date.
 */
-Date.prototype.getLunarDateTime = function (timeZoneOffset = this.getTimezoneOffset()) {
+Date.prototype.getLunarDateTime = function (timeZoneOffset = this.getRealTZmsOffset()) {
 	// Each of the Sun's (mean) position on the Ecliptic circle is identified with the number of days since Summer solstice: 0 to 364.
 	const 	yearCycle = 31557600000,		// Duration of a year (365,25 days) in milliseconds
 			sideralMoonCycle = 2360594880 ; // Sideral cycle of the Moon (27,3217 days) in milliseconds 		
@@ -245,7 +249,7 @@ Date.prototype.getLunarDateTime = function (timeZoneOffset = this.getTimezoneOff
 		// The number of days to add to the date of new moon, to obtain the date where the Sun shall be at the Moon's present position on the Ecliptic
 	let fakeDate = cbcceDecompose (this.getTime() + Math.round((dayOffset - thisAge) * Chronos.DAY_UNIT), Milesian_time_params);
 	let timeOffset = thisAge * Chronos.DAY_UNIT * Chronos.DAY_UNIT / CE_Moon_params.coeff[1].cyclelength;
-    let fakeTime = cbcceDecompose (this.getTime() - timeZoneOffset * Chronos.MINUTE_UNIT - timeOffset, Milesian_time_params);
+    let fakeTime = cbcceDecompose (this.getTime() - timeZoneOffset - timeOffset, Milesian_time_params);
 	return {month: fakeDate.month, date: fakeDate.date, hours : fakeTime.hours, minutes : fakeTime.minutes, seconds : fakeTime.seconds};
 }
 /** Draconitic angle between the rising node of the moon and the moon itself
@@ -267,15 +271,15 @@ Date.prototype.getDraconiticSunTimeAngle = function () {
 /** Draconitic time, i.e. the time were the rising node is at same place that the sun at that time the same day.
  * @method getDraconiticTime
  * @deprecated
- * @param {number} timeZoneOffset - Offset from UTC due to time zone, in minutes, by default system time zone offset
+ * @param {number} timeZoneOffset - Offset from UTC due to time zone, in milliseconds, by default system time zone offset
  * @return {{hours: number, minutes: number, seconds: number}} the draconitic time
 */
-Date.prototype.getDraconiticTime = function (timeZoneOffset = this.getTimezoneOffset()) {
+Date.prototype.getDraconiticTime = function (timeZoneOffset = this.getRealTZmsOffset()) {
 	let timeOffset = // get time angle of the draconitic rise node with respect to the mean moon in ms
 		cbcceDecompose (this.getTime() + this.getDeltaT(), Draconitic_Params).phase * Chronos.DAY_UNIT / Draconitic_Params.coeff[0].cyclelength 
 		// Deduct moon time, for a shift with respect to the sun
 		- this.getCEMoonDate().age * Chronos.DAY_UNIT * Chronos.DAY_UNIT / CE_Moon_params.coeff[1].cyclelength;
-    let fakeDate = cbcceDecompose (this.getTime() - timeZoneOffset * Chronos.MINUTE_UNIT + timeOffset, Milesian_time_params);
+    let fakeDate = cbcceDecompose (this.getTime() - timeZoneOffset + timeOffset, Milesian_time_params);
 	return {hours : fakeDate.hours, minutes : fakeDate.minutes, seconds : fakeDate.seconds};
 }
 /** Rough estimation of Draconitic height
