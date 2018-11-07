@@ -7,6 +7,7 @@ Versions
 	M2018-10-26 : getFrenchRevUTCDate deprecated
 	M2018-11-06	: manage display of out-of-range date
 	M2018-11-11 : JSDocs comments
+	M2018-11-16 : adapt to time zone computation
 Required
 	Package CBCCE.
 Contents
@@ -83,7 +84,7 @@ var FrenchRev_time_params = { // To be used with a Unix timestamp in ms. Decompo
  * the figures of the Republican date in local time, in a compound object
 */
 Date.prototype.getFrenchRevDate = function () {
-  return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params);
+  return cbcceDecompose (this.getTime() - (this.getRealTZmsOffset()), FrenchRev_time_params);
 }
 /** Compose a date object with the figures of the Republican date in UTC time. 
  * @method getUTCFrenchRevDate
@@ -138,7 +139,7 @@ Date.prototype.setUTCTimeFromFrenchRev =
  * @return {string} a date in the form \d m [-]yyy\, example: 1/1/-1780 
 */
 Date.prototype.toIntlFrenchRevDateString = function () {
-	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), FrenchRev_time_params );
+	var dateElements = cbcceDecompose (this.getTime()- this.getRealTZmsOffset(), FrenchRev_time_params );
 	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+"/"+(++dateElements.month)+"/"+dateElements.year;
 }
 /** Compute a string representing the Republican date (UTC time) in numeric notation

@@ -7,8 +7,10 @@ Versions
 	M2018-10-26 : delete getMilesianUTCDate (deprecated)
 	M2018-11-06	: manage display of out-of-range date
 	M2018-11-11 : JSDoc comments
+	M2018-11-16 : replace getTimezoneOffset with getRealTZmsOffset
 Required
 	Package CBCCE
+	UnicodeBasic
 Contents
 	getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 	getUTCMilesianDate : same as above, in UTC time.
@@ -79,7 +81,7 @@ var Milesian_time_params = { // To be used with a Unix timestamp in ms. Decompos
  * the figures of the Milesian date in local time, in a compound object
 */
 Date.prototype.getMilesianDate = function () {
-  return cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params);
+  return cbcceDecompose (this.getTime() - (this.getRealTZmsOffset()), Milesian_time_params);
 }
 /** Compose a date object with the figures of the Milesian date in UTC time. 
  * @method getUTCMilesianDate
@@ -135,7 +137,7 @@ Date.prototype.setUTCTimeFromMilesian =
  * @return {string} a date in the form \d m'm' [-]yyy\, example: 1 1m 009 
 */
 Date.prototype.toIntlMilesianDateString = function () {
-	var dateElements = cbcceDecompose (this.getTime()- (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Milesian_time_params );
+	var dateElements = cbcceDecompose (this.getTime()- (this.getRealTZmsOffset()), Milesian_time_params );
 	let absYear = Math.abs(dateElements.year);
 	return isNaN(dateElements.year) ? "Invalid Date" : dateElements.date+" "+(++dateElements.month)+"m "
 		+ ((dateElements.year < 0) ? "-": "") 

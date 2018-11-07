@@ -8,6 +8,7 @@ Versions
 	M2018-11-03 : set reference year to Gregorian year only, and improve toString presentations
 	M2018-11-06	: manage display of out-of-range date
 	M2018-11-11 : JSDocs comments
+	M2018-11-16 : adapt to time zone computation
 Required
 	Package CBCCE.
 Contents
@@ -87,9 +88,9 @@ Date.prototype.getIsoWeekCalDate = function () {
 	let base = new Date (this.valueOf() + 3 * Chronos.DAY_UNIT); // Gregorian year of "base" is ISO week year of "this", or possibly one unit more.
 	let year = base.getFullYear(); 
 	base = new Date (isoWeekCalendarBase(year));	// This is the first day of tentative ISO week year.
-	if (base.valueOf() > this.valueOf()-(this.getTimezoneOffset() * Chronos.MINUTE_UNIT)) // If "this" is before the first day of tentative ISO year...
+	if (base.valueOf() > this.valueOf() - this.getRealTZmsOffset()) // If "this" is before the first day of tentative ISO year...
 		base.setTime (isoWeekCalendarBase(--year)); //... then set base of ISO year one year before.
-	let compoundDate = cbcceDecompose (this.valueOf() - this.getTimezoneOffset() * Chronos.MINUTE_UNIT - base.valueOf(), isoWeekCalendar_params);
+	let compoundDate = cbcceDecompose (this.valueOf() - this.getRealTZmsOffset() - base.valueOf(), isoWeekCalendar_params);
 	// Here we have computed the day-of-week, week number, and time of day elements within the year.
 	Object.defineProperty (compoundDate, "year", {enumerable : true, writable : true, 
 		value : (!isNaN(compoundDate.day) ? year : NaN)}); // Assign year in compound record. If computed compound is NaN, extend to year
@@ -158,7 +159,6 @@ Date.prototype.setUTCTimeFromIsoWeekCal =
 Date.prototype.toIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-d
 	var dateElements = this.getIsoWeekCalDate();
 	let absYear = Math.abs(dateElements.year);
-	let TZ = -this.getTimezoneOffset()/60;
 	return isNaN(dateElements.year)
 		? "Invalid Date"
 		: ((dateElements.year < 0) ? "-": "") 

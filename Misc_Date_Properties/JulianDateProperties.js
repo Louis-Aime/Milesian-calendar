@@ -9,6 +9,7 @@ Versions
 		JSDoc comments
 		Set default month and date for setJulianDay
 		Extract setJulianDay
+	M2018-11-16 : adapt to time zone computation
 Required
 	Package CBCCE
 Contents
@@ -107,7 +108,7 @@ function romanCompose (romanDate) { // from a Roman date, returns the offset day
  * the figures of the Julian calendar date in local time, in a compound object
 */
 Date.prototype.getJulianDate = function () {
-	let shiftedDate = cbcceDecompose (this.getTime() - (this.getTimezoneOffset() * Chronos.MINUTE_UNIT), Julian_calendar_params);
+	let shiftedDate = cbcceDecompose (this.getTime() - this.getRealTZmsOffset(), Julian_calendar_params);
 	let romanDate = romanDecompose (shiftedDate.dayinyear);
 	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
 			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}
