@@ -1,14 +1,19 @@
-/* Unicode tools used with Intl.DateTimeFormat for string generation functions with other calendars
+/* JS tools used with Date and Intl.DateTimeFormat objects replacing bugged or missing functions
 	Character set is UTF-8
-Utility functions used with Intl.DateTimeFormat object, offering supplemental functionalities.
 Versions
-	The tools wer originally developped with UnicodeMilesianFormat tools in 2017
+	The tools were originally developed with UnicodeMilesianFormat tools in 2017.
 	M2018-11-11 separate tools, in order to cater for several independent calendar implementations.
+	M2018-11-16 add a time zone offset computing function and a simple version of toLocalDate
 Contents
+	getRealTZmsOffset : the real time zone offset, in milliseconds, due to a bug in Chrome version of TZOffset.
 	unicodeCalendarHandled : from a requested calendar, gives the effectively used one.
 	toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
+	toResolvedLocalDate : A simple version, yields the best available date only, no external data. But gives sometimes NaN.
 Required
 	Access to "Chronos" object.
+*/
+/**
+ * @todo : deprecate toLocalDate, 1. should have an official equivalent 2. give a function with a Date result.
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -31,24 +36,52 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-/** @description Show which calendar is effectively used upon request through the Locale u-ca- parameters of Intl.DateTimeFormatate
- * @param (string) calendar: name of asked calendar
- * @returns (string) the calendar that the implementation selects
-*/
-function unicodeCalendarHandled (calendar) {
-	return 	new Intl.DateTimeFormat("en-US-u-ca-"+calendar).resolvedOptions().calendar;
-	}
-/*
-1.3 Utility to get the local Date-Time as an UTC date.
 
-/** @description Construct a date that represents the value of the given date shifted to the time zone indicated or resolved in Options. 
- * @summary The computation of the time zone is that of Unicode, or  the the standard TZOffset if Unicode's is not available.
- * @param myDate (Date object) the Date object to convert, and that shows the moment of time zone offset computation.
- * @param myTZ (string) the name of the time zone.
- * @returns (Object) {localDate : the best possible result, accuracy : ("exact": Unicode, "approximate": JS TZOffset, way :(for debug, how did we compute)}
+/** Compute the system time zone offset at this date, in ms.
+ * rationale: with Chrome (and others ?), the TZOffset returned value losses the seconds. 
+ * @returns {number} the time zone offset in milliseconds: UTC - local (same sign as TimezoneOffset)
+*/
+Date.prototype.getRealTZmsOffset = function () {	
+/** Gregorian coordinates of the system local date */
+	let localCoord = 
+		{year: this.getFullYear(), month: this.getMonth(), date: this.getDate(), 
+		hours: this.getHours(), minutes: this.getMinutes(), seconds: this.getSeconds(), milliseconds: this.getMilliseconds()};
+/** UTC Date constructed with the local date coordinates */
+	let localDate = new Date (0); 
+	localDate.setUTCFullYear (localCoord.year, localCoord.month, localCoord.date); 
+	localDate.setUTCHours (localCoord.hours, localCoord.minutes, localCoord.seconds, localCoord.milliseconds);
+	return this.valueOf() - localDate.valueOf()
+}
+
+/** Show which calendar is effectively used, in connection with a language, upon request through the Locale u-ca- parameters of Intl.DateTimeFormatate
+ * @param {string} calendar: name of asked calendar
+ * @param {string} locale: the language for which the request is done. If undefined, current locale.
+ * @returns {string} the calendar that the implementation selects
+*/
+function unicodeCalendarHandled (calendar, locale) {
+	if (locale == null || locale == "" ) locale = new Intl.DateTimeFormat().resolvedOptions().locale
+	else locale = new Intl.DateTimeFormat(locale).resolvedOptions().locale;
+	locale = (locale.includes("-u-") 
+	? 	(locale.substring(locale.indexOf("-u-")).includes("ca-") 
+			? locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-")))
+			: locale )
+		+ "ca-"
+	: locale + "-u-ca-"
+	) + calendar ;
+	return 	new Intl.DateTimeFormat(locale).resolvedOptions().calendar;
+	}
+
+/** Construct a date that represents the value of the given date shifted to the time zone indicated or resolved in Options. 
+ * The computation of the time zone is that of Unicode, or  the the standard TZOffset if Unicode's is not available.
+ * @param {Date} myDate - the Date object to convert, and that shows the moment of time zone offset computation.
+ * @param {string} myTZ - the name of the time zone.
+ * @returns {Object} r - see details
+ * {Date} r.localDate - the best possible result. 
+ * {string} r.accuracy - "exact": Unicode, "approximate": JS TZOffset
+ * {string} r.way - used for debugging, how did we compute
 */
 function toLocalDate (myDate, myTZ = "") {
-	var	localTime = new Date (myDate.valueOf() - myDate.getTimezoneOffset()*Chronos.MINUTE_UNIT); //Basic value if no further computation possible
+	var	localTime = new Date (myDate.valueOf() - myDate.getRealTZmsOffset()); //Basic value if no further computation possible
 	// Normally, should get the time zone offset and compute shifted date. Should take one line !! 
 	// Halas, time zone offset is not available. So we have to get it by other ways, depending upon the browser.
 	// if (myTZ == (undefined || "")) return { localDate: localTime, accuracy : "exact", way : "default" }; 
@@ -59,7 +92,7 @@ function toLocalDate (myDate, myTZ = "") {
 		var askedOptions = new Intl.DateTimeFormat (); // Default parameters	
 		}
 	catch (e) { // No DateTimeFormat, even with default, use basic local time.
-		return {localDate : localTime, accuracy : "approx" , way : "noformat"}
+		return {localDate : localTime, accuracy : "exact" , way : "noformat"} // No way of computing any local time, only system local time available
 	  }
 	// Here a minimum format Option management works.
 	try {
@@ -69,7 +102,7 @@ function toLocalDate (myDate, myTZ = "") {
 			askedOptions = new Intl.DateTimeFormat ("en-GB", {timeZone : myTZ}); // Submit specified time zone
 	}
 	catch (e) { // Submitted option is not valid
-		return { localDate : localTime, accuracy : "approx" , way : "invalidTZ"}	// myTZ is not empty, but not a valid time zone
+		return { localDate : new Date (NaN), accuracy : "exact" , way : "invalidTZ"}	// myTZ is not empty, but not a valid time zone
 	}
 	// Here askedOptions are set with valid asked timeZone
 	// Set a format object suitable to extract numeric components from Date string
@@ -80,13 +113,23 @@ function toLocalDate (myDate, myTZ = "") {
 		
 	try {	// try using formatToParts. If not usable, use localTime previously computed.
 		let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
-		localTime = new Date(Date.UTC		// Construct a UTC date based on the figures of the local date.
-				(localTC[6].value, localTC[4].value-1, localTC[2].value, localTC[10].value, localTC[12].value, localTC[14].value));
-		if (localTC[8].value == "BC") localTC[6].value = 1-localTC[6].value; // Correct years in BC Era.
-		localTime.setUTCFullYear(localTC[6].value);	// If year was a 2-digit figure, ensure true value.
+		localTime = new Date(0);
+		// Construct a UTC date based on the figures of the local date.
+		localTime.setUTCFullYear (
+			(localTC[8].value == "BC") ? 1-localTC[6].value : localTC[6].value, // year component
+			localTC[4].value-1, localTC[2].value); // month and date components 
+		localTime.setUTCHours(localTC[10].value, localTC[12].value, localTC[14].value); //Hours, minutes and seconds
 		return { localDate : localTime, accuracy : "exact", way : "ToParts" }; // Success
 		}
-	catch (e) { // can't use formatToParts. This is MS Edge specific. Just use standard TimezoneOffset.
-		return { localDate : localTime, accuracy : "approx" , way : "noformatToParts"}	// 
+	catch (e) { // can't use formatToParts. This is MS Edge specific. Just use standard TimezoneOffset if TZ was not specified, else return NaN
+		if   (myTZ == undefined || myTZ == "" || myTZ == new Intl.DateTimeFormat().resolvedOptions().timeZone)
+			return { localDate : localTime, accuracy : "exact" , way : "noformatToParts"}
+		else return {localDate : new Date (NaN), accuracy : "exact", way : "noformatToParts"}
 	}
+}
+/** Stub simplifying toLocalDate return object 
+* @return {Date} best fit or NaN
+*/
+function toResolvedLocalDate (myDate, myTZ = "") {
+	return toLocalDate (myDate, myTZ).localDate 
 }
