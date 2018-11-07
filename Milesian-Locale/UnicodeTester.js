@@ -4,6 +4,7 @@ Character set is UTF-8
 Versions: preceding versions were a personal makeup page, under the name writeMilesian.
 	M2018-05-22 : incorporated time management tools and secured entries
 	M2018-05-29 : enhanced and simplified control of options
+	M2018-11-16 : adapt to new (bugged) time zone handling
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -14,6 +15,7 @@ Required:
 	MilesianMonthNames.xml: 
 		or milesianMonthNamesString, a simpler version
 	MilesianAlertMsg.js
+	UnicodeBasic.js
 	UnicodeMilesianFormat.js
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
@@ -41,7 +43,7 @@ Inquiries: www.calendriermilesien.org
 
 var 
 	targetDate = new Date(),
-	shiftDate = shiftDate = new Date (targetDate.getTime() - targetDate.getTimezoneOffset()*Chronos.MINUTE_UNIT),
+	shiftDate = new Date (targetDate.getTime() - targetDate.getRealTZmsOffset()),
 	TZSettings = {mode : "TZ", msoffset : 0};	// initialisation to be superseded
 	//	Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "short",
 	//				hour : "numeric", minute : "numeric", second : "numeric"}; 	// Initial presentation options.
@@ -109,14 +111,14 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	
 	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
 	switch (usedOptions.calendar) {	
-		case "hebrew": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+		case "hebrew": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
 			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf() 
+		case "indian": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf() 
 			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
 		case "islamic":
-		case "islamic-rgsa": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+		case "islamic-rgsa": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
 			>= -42521673600000); break; // Computations are false before Haegirian epoch
-		case "islamic-umalqura": valid = (toLocalDate(targetDate, timeZone).localDate.valueOf()
+		case "islamic-umalqura": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
 			>= -6227305142400000); break; // Computations are false before 2 6m -195366
 		}
 		
@@ -130,30 +132,27 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	// Time section
 	// Initiate Time zone mode for the "local" time from main display
 	TZSettings.mode = document.TZmode.TZcontrol.value;
-	// Timezone offset for next computations - opposite of JS offset.
-	// if (isNaN (document.TZmode.TZOffset.value)) alert (milesianAlertMsg("nonNumeric") + ' "' + document.TZmode.TZOffset.value + '"');
-	let 
-		systemDecimalTZ = - targetDate.getTimezoneOffset(), // Decimal minutes
-		systemSign = (systemDecimalTZ < 0 ? -1 : 1),
-		absoluteDecimalTZ = systemSign * systemDecimalTZ,
-		absoluteTZmin = Math.floor (absoluteDecimalTZ),
-		absoluteTZsec = Math.round ((absoluteDecimalTZ-absoluteTZmin) * 60);
+/** TZSettings.msoffset is JS time zone offset in milliseconds (UTC - local time)
+ * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
+*/
+	TZSettings.msoffset = targetDate.getRealTZmsOffset().valueOf();
+	document.TZmode.sysTZoffset.value = targetDate.getTimezoneOffset();
+	let
+		systemSign = (TZSettings.msoffset > 0 ? -1 : 1), // invert sign because of JS convention for time zone
+		absoluteRealOffset = - systemSign * TZSettings.msoffset,
+		absoluteTZmin = Math.floor (absoluteRealOffset / Chronos.MINUTE_UNIT),
+		absoluteTZsec = Math.floor ((absoluteRealOffset - absoluteTZmin * Chronos.MINUTE_UNIT) / Chronos.SECOND_UNIT);
 	switch (TZSettings.mode) {
+		case "UTC" : 
+			TZSettings.msoffset = 0; // Set offset to 0, but leave time zone offset on display
 		case "TZ" : 
 			document.TZmode.TZOffsetSign.value = systemSign;
 			document.TZmode.TZOffset.value = absoluteTZmin;
 			document.TZmode.TZOffsetSec.value = absoluteTZsec;
-		// Continue for  this case, copy computed TZOffset into TZSettings fur future computations
-		case "Fixed" : TZSettings.msoffset = 
+			break;
+		case "Fixed" : TZSettings.msoffset = // Here compute specified time zone offset
 			- document.TZmode.TZOffsetSign.value 
 			* (document.TZmode.TZOffset.value * Chronos.MINUTE_UNIT + document.TZmode.TZOffsetSec.value * Chronos.SECOND_UNIT);
-			break;
-		// If UTC mode, set computation offset to 0, but set displayed field to TZ value
-		case "UTC" : 
-			TZSettings.msoffset = 0; 
-			document.TZmode.TZOffsetSign.value = systemSign;
-			document.TZmode.TZOffset.value = absoluteTZmin;
-			document.TZmode.TZOffsetSec.value = absoluteTZsec;
 	}
 
 	shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The UTC representation of targetDate date is the local date of TZ
@@ -184,65 +183,4 @@ function setDisplay () { // Considering that targetDate time has been set to the
 
 	// Write Milesian and Gregorian strings following currently visible options
 	putStringOnOptions();
-}
-function setDateToNow(){ // Self explanatory
-    targetDate = new Date(); // set new Date object.
-	setDisplay ();
-}
-function SetDayOffset (sign) { // the days are integer, all 24h, so local time may change making this operation
-	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
-	let days = Math.round (document.control.shift.value);
-	if (!Number.isInteger(days)) alert (milesianAlertMsg("nonInteger") + '"' + days + '"')
-	else { 
-		targetDate.setUTCDate (targetDate.getUTCDate()+sign*days);
-		setDisplay();
-	}
-}
-function addTime (sign) { // A number of seconds is added or subtracted to or from the Timestamp.
-	if (sign == undefined) sign = 1;	// Sign is either +1 or -1. Just in case it does not come as a parameter.
-	let secs = Math.round (document.UTCshift.shift.value);
-	if (isNaN(secs)) alert (milesianAlertMsg("nonInteger") + '"' + document.UTCshift.shift.value + '"')
-	else { 
-		targetDate.setTime (targetDate.getTime()+sign*secs*Chronos.SECOND_UNIT);
-		setDisplay();
-	}
-}
-function calcTime() { // Here the hours are deemed local hours
-	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
-	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) 
-		alert (milesianAlertMsg("invalidDate") + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
-	 else {switch (TZSettings.mode) {
-		case "TZ" : targetDate.setHours(hours, mins, secs, 0); break;
-		case "UTC" : targetDate.setUTCHours(hours, mins, secs, 0); break;
-		case "Fixed" : 
-			targetDate.setUTCTimeFromMilesian (	document.milesian.year.value, document.milesian.monthname.value,document.milesian.day.value );
-			targetDate.setUTCHours(hours, mins, secs, 0); 
-			targetDate.setTime(targetDate.getTime() + TZSettings.msoffset);
-		}
-		setDisplay();	
-	}
-}
-function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
-		if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
-		targetDate.setUTCHours(UTChours, 0, 0, 0); //targetDate.setUTCMinutes(0); targetDate.setSeconds(0); targetDate.setMilliseconds(0);
-		setDisplay();	
-}
-function calcMilesian() {
-	var day =  Math.round (document.milesian.day.value);
-	var month = document.milesian.monthname.value;
-	var year =  Math.round (document.milesian.year.value);
-	if	( isNaN(day)  || isNaN (year ))
-		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
-	else { switch (TZSettings.mode){
-		case "TZ": targetDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
-			break;
-		case "UTC" : targetDate.setUTCTimeFromMilesian (year, month, day);
-			break;
-		case "Fixed" : 	
-			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
-			shiftDate.setUTCTimeFromMilesian (year, month, day); 
-			targetDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
-		}
-	setDisplay ();
-	}
 }

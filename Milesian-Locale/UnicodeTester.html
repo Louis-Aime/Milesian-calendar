@@ -1,17 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <link href="milesian.css" rel="stylesheet"/>
-  <title>Test calendriers Unicode</title>
+
+<!-- General packages -->
+	<link href="milesian.css" rel="stylesheet"/>
 	<script type="text/javascript" src="CBCCE.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
     <script type="text/javascript" src="MilesianAlertMsg.js"></script>
  	<script type="text/javascript" src="UnicodeBasic.js"></script>
  	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
  	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
-	<script type="text/javascript" src="UnicodeTester.js"></script>
-	
-</head>
+
+<!-- Specific for this page -->
+	<script type="text/javascript" src="UnicodeTester.js"></script>	
+	<title>Test calendriers Unicode</title>
+  </head>
 <body>
 <section class="dateconvert">
 <h1 class="dateconvert">Expression de date<br>et calendriers Unicode</h1>
@@ -40,25 +43,69 @@ la version longue est affichée en latin.</p>
 				<option value="1">+</option>
 				<option value="-1">-</option>
 				</select> </td>
-				<td><input name="TZOffset" type="text" class="dateconvert yearnum"></td>
+				<td><input name="TZOffset" type="number" min="0" max="1500" class="dateconvert yearnum"></td>
 				<td>mn</td>
 				<td><input name="TZOffsetSec" type="number" class="dateconvert daynum"></td>
 				<td>s</td>
 				<td><button class="dateconvert">Ok</button></td>
 			</tr>
+			<tr>
+				<th colspan="2">Décalage système</th>
+				<td colspan="3"><input name="sysTZoffset" type="number" class="dateconvert" disabled="disabled"></td>
+				<td>mn</td>
+			</tr>
 		</form>
 	</table>
-	<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
-		<table class="dateconvert" align="center">
-		  <tr> 
-			 <td>Heure du mode : </td>
-			 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
-			 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
-			 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
-			 <td><button class="dateconvert">Ok</button></td>	
-		  </tr>
-		</table>
-	</form>
+<script type="text/javascript">
+function calcTime() { // Here the hours are deemed local hours
+	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), secs = Math.round (document.time.secs.value);
+	if (isNaN(hours) || isNaN (mins) || isNaN (secs)) 
+		alert (milesianAlertMsg("invalidDate") + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' + document.time.secs.value + '"')
+	 else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ" : testDate.setHours(hours, mins, secs, 0); break;
+		case "UTC" : testDate.setUTCHours(hours, mins, secs, 0); break;
+		case "Fixed" : 
+			testDate.setUTCTimeFromMilesian (document.milesian.year.value, document.milesian.monthname.value, document.milesian.day.value);
+			testDate.setUTCHours(hours, mins, secs, 0); 
+			testDate.setTime(testDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else {
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+	}
+}
+</script>
+	<table class="dateconvert" align="center">
+	  <tr> 
+		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		 <th>Heure du mode : </th>
+		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
+		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
+		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
+		 <td><button class="dateconvert">Ok</button></td>	
+		</form>
+	  </tr>
+	</table>
+<script type="text/javascript">
+function setDateToNow(){ // Self explanatory
+    targetDate = new Date(); // set new Date object.
+	setDisplay ();
+}
+function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
+	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
+	let testDate = new Date (targetDate.valueOf());
+	testDate.setUTCHours(UTChours, 0, 0, 0);
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+</script>
 	 <table class="dateconvert" align="center"> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
@@ -69,27 +116,78 @@ la version longue est affichée en latin.</p>
 
 	  <table class="dateconvert" align="center">
 	  <tr>
-		<form name="UTCset" class="dateconvert" method="post" action="JavaScript:setUTCHoursFixed();"> 
 		<th>Cette date à UTC</th>
-		<td><button name="0h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button name="12h" class="dateconvert" formaction="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
-		</form>
+		<td><button type="button" name="0h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button type="button" name="12h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
-	 
+
+<script type="text/javascript">
+var addedTime = 60; //Global variable, time to add or substract, in decimal seconds.
+function changeAddTime () {
+	let secs = +document.timeShift.shift.value; 
+	if (isNaN(secs) || secs <= 0) 
+		alert (milesianAlertMsg("invalidInput"))
+	else
+		{ 
+		addedTime = secs; // Global variable updated
+		document.timeShift.shift.value = secs; // Confirm changed value
+		}
+	}
+
+function addTime (sign = 1) { // addedTime seconds is added or subtracted to or from the Timestamp.
+	changeAddTime();	// Force a valid value in field
+	let testDate = new Date(targetDate.valueOf());
+	testDate.setTime (testDate.getTime()+sign*addedTime*Chronos.SECOND_UNIT);
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+</script>	 
 	<table class="dateconvert" align="center"> 
 	  <tr>
-		<form name="UTCshift" class="dateconvert" method="post" action="JavaScript:addTime();">
+		<form name="timeShift" class="dateconvert" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button class="dateconvert symbol" formaction="Javascript:addTime(-1);" >-</button></td>
-		<td><input name="shift" type="number" value="60" class="dateconvert yearnum"></td>
-		<td><button class="dateconvert symbol" formaction="Javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><input name="shift" type="number" value="60" min="1" class="dateconvert yearnum"></td>
+		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
 </section>
+
 <section class="dateconvert autoscroll">
 <h2 class="dateconvert">Date</h2>
+<script type="text/javascript">
+function calcMilesian() {
+	var 
+	 day =  Math.round (document.milesian.day.value),
+	 month = document.milesian.monthname.value,
+	 year =  Math.round (document.milesian.year.value);
+	if	( isNaN(day)  || isNaN (year ))
+		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
+	else {
+	  let testDate = new Date (targetDate.valueOf());
+	  switch (TZSettings.mode) {
+		case "TZ": testDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCTimeFromMilesian (year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCTimeFromMilesian (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+		}
+		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+		else 
+			// Here, no control of date validity, leave JS recompute the date if day is out of bounds
+			targetDate = new Date (testDate.valueOf());
+			setDisplay();
+		}
+}
+</script>
 	<table class="dateconvert" align="center">
        <tr>
         <th>Jour</th>
@@ -122,15 +220,47 @@ la version longue est affichée en latin.</p>
 		</form>
       </tr>
    </table>
+<script type="text/javascript">
+var 
+	dayOffset = 1; // Days (decimal) to add or substract
+// no setDateToToday
+function changeDayOffset () { 
+	let days = +document.control.shift.value;
+	if (isNaN(days) || days < 0) {
+		alert (milesianAlertMsg("invalidInput"));
+		// clockRun(0);
+		}
+	else 
+	{ 
+		dayOffset = days; // Global variable updated
+		document.control.shift.value = days; // Confirm changed value
+	}
+}
+function setDayOffset (sign=1) {
+	changeDayOffset();	// Force a valid value in field
+	let testDate = new Date(targetDate.valueOf());
+	testDate.setTime (testDate.getTime()+sign*dayOffset*Chronos.DAY_UNIT);
+	if (isNaN(testDate.valueOf())) { 
+		alert (milesianAlertMsg("outOfRange"));
+		// clockRun(0);
+		}
+	else {
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
+function setDayOffsetPlus () {setDayOffset(+1)};
+function setDayOffsetMinus () {setDayOffset(-1)};
+// No clock movement function
+</script>
 <table class="dateconvert" align="center">
-    <tr><form name="Today" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-      <td><button class="dateconvert" value="Now" name="Compute" >Maintenant</button></td>
- 	  </form>
-	<form name="control" class="dateconvert" method="post" action="Javascript:SetDayOffset();">
+    <tr>
+	    <td><button type="button" class="dateconvert" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
+	<form name="control" class="dateconvert" method="post" action="Javascript:setDayOffset();">
 		<td>+/- jours</td>
-		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(-1);" >-</button></td>
-		<td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-		<td><button class="dateconvert symbol" formaction="Javascript:SetDayOffset(1);">+</button></td>
+		<td><button class="dateconvert symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="1" min="0" step="any" class="dateconvert yearnum"></td> 
+		<td><button class="dateconvert symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
     </form></tr>
 </table>
 </section>
@@ -272,7 +402,9 @@ la version longue est affichée en latin.</p>
   </table>
  <h3 class="dateconvert">© 2017-2018 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
- <script type="text/javascript" >setDateToNow();</script>
+<script type="text/javascript" >
+setDateToNow();
+</script>
 </section>
 </body>
 </html>
