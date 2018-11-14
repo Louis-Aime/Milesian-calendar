@@ -12,6 +12,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <title>Horloge milésienne</title>
 <script type="text/javascript" xlink:href="CBCCE.js"></script>
+<script type="text/javascript" xlink:href="UnicodeBasic.js"></script>
 <script type="text/javascript" xlink:href="MilesianDateProperties.js"></script>
 <script type="text/javascript" xlink:href="MilesianClockOperations.js"></script>
 <script type="text/javascript">
