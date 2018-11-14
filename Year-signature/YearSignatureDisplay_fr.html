@@ -37,11 +37,11 @@
 <table class="dateconvert" align="center">
   <tbody>
 	<tr>
-	  <form name="control" class="dateconvert" method="post" autocomplete="off" action="Javascript:setYearOffset(document.control.dir.value*document.control.shift.value);">
+	  <form name="control" class="dateconvert" method="post" autocomplete="off" action="Javascript:void()">
       <th> +/- années:</th>
-	  <td><button name="minus" value="-1" class="dateconvert" formaction="Javascript:setYearOffset(-document.control.shift.value)">-</button></td>
-	  <td><input name="shift" type="number" value="1" class="dateconvert yearnum"></td> 
-      <td><button name="plus" value="+1" class="dateconvert" formaction="Javascript:setYearOffset(document.control.shift.value)">+</button></td>
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:setYearOffset(-document.control.shift.value)">-</button></td>
+	  <td><input name="shift" type="number" value="1" min="1" step="1" class="dateconvert yearnum"></td> 
+	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:setYearOffset(document.control.shift.value)">+</button></td>
     </form></tr>
   </tbody>
 </table>
