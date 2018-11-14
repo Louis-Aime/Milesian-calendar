@@ -6,14 +6,13 @@ Julian date string generation functions using Unicode tools.
 Versions
 	M2018-11-11 Initiate from UnicodeMilesianFormat, separate and comment
 	M2018-11-14 instead of alerting, return an error message as result if FormatToParts not implemented
+	M2018-11-24 use toResolvedLocalDate in place of toLocalDate
 Contents
-	-- unicodeCalendarHandled (calendar) : from a requested calendar, gives the effectively used one.
-	-- toLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
 	Intl.DateTimeFormat.prototype.julianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.julianFormat : : return a string with date and time, according to DateTimeFormat.
 Required:
 	JulianDateProperties (and dependent file CBCCE)
-	toLocalDate (working version on UnicodeMilesianFormat, to be transferred to some other file.)
+	UnicodeBasic
 	Intl object with FormatToParts
 */
 /* Copyright Miletus 2018 - Louis A. de Fouquières
@@ -64,7 +63,7 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraIfNeede
 		let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
 		var julianComponents = (TZ == undefined
 			? myDate.getJulianDate()	// system local date, expressed in Julian
-			: julianComponents = toLocalDate(myDate, TZ).localDate.getUTCJulianDate() ); // TZ local date.
+			: julianComponents = toResolvedLocalDate(myDate, TZ).getUTCJulianDate() ); // TZ local date.
 		// Here julianComponents holds the local Julian date figures, we replace the Gregorian date, month, year and era components with those.
 		// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
 		// then we insert the right year and era, computed separately.
@@ -101,8 +100,8 @@ Intl.DateTimeFormat.prototype.julianFormat = function (myDate) {
 		let parts = this.julianFormatToParts (myDate); // Compute components
 		return parts.map(({type, value}) => {return value;}).reduce((buf, part)=> buf + part, "");
 		}
-	// FormatToParts does not work -> just leave an error message
-	catch (e) { // just catch and continue
+	// FormatToParts does not work -> just return an error message
+	catch (e) { 
 		return (milesianAlertMsg ('browserError'))
 	}
 }

@@ -30,13 +30,15 @@ Versions
 	M2018-11-13
 		Bug fix: when the string is computed by default, the time string should contain only options for time, not for date.
 		Add comments about extracted functions
+	M2018-11-24
+		Use toResolvedLocalDate instead of toLocalDate
 Contents
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
 Required:
 	Access to milesianNames, a global object that hold the names of milesian months in several languages
 	MilesianDateProperties.js (and dependent file CBCCE)
-	toLocalDate in UnicodeBasic
+	UnicodeBasic
 	Intl object with FormatToParts
 */
 /* Copyright Miletus 2016-2018 - Louis A. de Fouquières
@@ -91,7 +93,7 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 		let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
 		let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
 		if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate()	// system local date, expressed in Milesian
-		else 					milesianComponents = toLocalDate(myDate, TZ).localDate.getUTCMilesianDate(); // TZ local date.
+		else 					milesianComponents = toResolvedLocalDate(myDate, TZ).getUTCMilesianDate(); // TZ local date.
 		// Here milesianComponents holds the local Milesian date figures, we replace the Gregorian day, month and year components with those.
 		let monthContext = 'format'; // Begin computing the context, 'format' or 'stand-alone'
 		if (referenceOptions.day == undefined && referenceOptions.year == undefined) monthContext = 'stand-alone';
@@ -153,26 +155,26 @@ Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) {
 		let parts = this.milesianFormatToParts (myDate); // Compute components
 		return parts.map(({type, value}) => {return value;}).reduce((buf, part)=> buf + part, "");
 		}
-	// FormatToParts does not work, however we can use a backup version using the backup LocalDate, without formatting the Milesian date.
+	// FormatToParts does not work, however we can use a backup version using the backup local date, without formatting the Milesian date.
 	catch (e) { // just catch and continue
 	}
 	try { // Compute a local date, mention accuracy
 		var	those = this.resolvedOptions(), 
-			localComput;
+			localComput, accuracy = true;
 		try {
-			localComput = toLocalDate(myDate, those.timeZone); // In some browsers, the resolved time zone may not be a valid option !
+			localComput = toResolvedLocalDate(myDate, those.timeZone); // In some browsers, the resolved time zone may not be a valid option !
 			}
 		catch (e) {
-			localComput = toLocalDate(myDate);	
-			localComput.accuracy = "approximate";
+			localComput = toResolvedLocalDate(myDate);	
+			accuracy = false;
 		}
-		return localComput.localDate.toUTCIntlMilesianDateString() 
+		return localComput.toUTCIntlMilesianDateString() 
 			+ " " + (those.hour == null ? "" :(new Intl.DateTimeFormat(those.locale, 
 						{hour : those.hour, minute : those.minute, second : those.second, hour12 : false, timeZone : "UTC"}))
-						.format(localComput.localDate))
-			+ ((localComput.accuracy == "exact") ? "" : " (approx)"); 
+						.format(localComput))
+			+ ( accuracy ? "" : " (apx)"); 
 	}
-	catch (e) { // This case should only happen in case of error with resolvedOptions or with the last return statement
+	catch (e) { // Cannot translate to a Unicode local date (error form toResolvedLocalDate) -> use toLocaleTimeString
 	}
 	var myTimeString;
 	try {
@@ -183,5 +185,5 @@ Intl.DateTimeFormat.prototype.milesianFormat = function (myDate) {
 	}
 	return myDate.toIntlMilesianDateString()
 				+ " " + myTimeString
-				+ " (system)"; 
+				+ " (s)"; 
 }
