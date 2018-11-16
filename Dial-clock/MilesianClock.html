@@ -52,6 +52,7 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
  	<script type="text/javascript" src="LunarDateProperties.js"></script>
     <script type="text/javascript" src="ChronologicalCountConversion.js"></script>
+	<script type="text/javascript" src="LunarClockOperation.js"></script>
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
 
 	<title>Horloge milésienne</title>
@@ -247,7 +248,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 		<form name="timeShift" class="dateconvert" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
 		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(-1);">-</button></td>
-		<td><input name="shift" type="number" value="60" min="1" class="dateconvert yearnum"></td>
+		<td><input name="shift" type="number" value="60" min="0" class="dateconvert yearnum"></td>
 		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
@@ -264,7 +265,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	// no setDateToToday
 	function changeDayOffset () { 
 		let days = +document.control.shift.value;
-		if (isNaN(days) || days < 1) {
+		if (isNaN(days) || days <= 0) {
 			alert (milesianAlertMsg("invalidInput"));
 			clockRun(0);
 			}
@@ -307,7 +308,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
     <form name="control" class="dateconvert" method="post" action="Javascript:changeDayOffset();">
     <td> +/- jours</td>
 	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
-	<td><input name="shift" type="number" value="1" min="1" step="any" class="dateconvert yearnum"></td> 
+	<td><input name="shift" type="number" value="1" min="0" step="any" class="dateconvert yearnum"></td> 
 	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
     </form>
   </tr>
@@ -799,6 +800,28 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 
 <section class="dateconvert">
 <h1>Données lunaires</h1>
+<svg id="lunisolar" width="200" height="100%" xml:lang="fr" 
+viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<title>Lune</title>
+
+<g id="moon" >
+<!-- the moon circle -->
+  <circle class="lit moondisk" cx="0" cy="0" r="100"/>
+<!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
+<!-- 
+radius: 2x same, bigger than circle radius
+x-axis-rotation : leave 0 (rotate total moon)
+large-arc-flag : leave 0
+sweep-flag of 1st arc: 0: round part on left, 1: round part on right
+sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
+order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
+-->
+  <path class="shaded moonphase" d="M 0 -200 a 200 200 0 0 0 0 400 a 200 200 0 0 1 0 -400 z" />
+</g>
+</svg>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
  	<tr><th colspan="2">Lune moyenne corrigée</th></tr>

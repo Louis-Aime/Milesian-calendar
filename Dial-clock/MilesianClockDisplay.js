@@ -310,9 +310,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	catch (e) { myElement.innerHTML = milesianAlertMsg("bowserError"); }
 	
 	// Lunar data frame
-
+	
 	// Update lunar parameters - using targetDate
 	dateComponent = targetDate.getCEMoonDate();
+	setMoonPhase(document.querySelector("#moon"),dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
 	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
