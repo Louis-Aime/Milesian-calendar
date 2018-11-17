@@ -808,8 +808,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <title>Lune</title>
 
 <g id="moon" >
-<!-- the moon circle -->
-  <circle class="lit moondisk" cx="0" cy="0" r="100"/>
+<!-- the moon circle  clipping device -->
+ <defs> <clipPath id="moonclip100">
+  <circle class="moondisk" cx="0" cy="0" r="100"/>
+ </clipPath></defs>
+<!-- moon picture -->
+<image xlink:href="Lunar_disk.jpg" x="-103" y ="-108" width="211" height="211" clip-path="url(#moonclip100)"/>
 <!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
 <!-- 
 radius: 2x same, bigger than circle radius
@@ -819,7 +823,7 @@ sweep-flag of 1st arc: 0: round part on left, 1: round part on right
 sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
 order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 -->
-  <path class="shaded moonphase" d="M 0 -200 a 200 200 0 0 0 0 400 a 200 200 0 0 1 0 -400 z" />
+  <path class="shaded moonphase" d="M 0 -100 a 100 100 0 0 0 0 200 a 100 100 0 0 1 0 -200 z" />
 </g>
 </svg>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
