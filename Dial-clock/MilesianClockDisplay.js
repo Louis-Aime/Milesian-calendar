@@ -10,6 +10,7 @@ Associated with:
 *	MilesianAlertMsg
 2. For conversions and clock operation
 *	MilesianClockOperations
+*	LunarClockOperation
 *	MilesianDateProperties
 *	JulianDateProperties
 *	FrenchRevDateProperties
@@ -43,6 +44,8 @@ Version M2018-11-03
 *	Adapt TZ offset to min and sec
 Version M2018-11-08
 *	Group remote .js file, insert data entry in other file
+Version M2018-11-27
+* 	Add Lunar clock display
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
