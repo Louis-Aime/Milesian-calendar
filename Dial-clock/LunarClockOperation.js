@@ -3,6 +3,7 @@
 	Operations on Lunar clock 
 Versions
 	M2018-11-24: experimental
+	M2018-11-28: enhancement: fetch centre and radius of SVG moondisk.
 Contents
 	setMoonPhase
 */
@@ -28,23 +29,27 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 /** set SVG display as to Moon age.
- * @param {Object} moon - SVG object representing a moon with shaded and lighted parts
- * @param {number} phase - Phase, in decimal degrees
+ * @param {Object} moon - SVG object representing a moon defined with a lit image and a "path" shaded part
+ * @param {number} phase - Phase, in radians (2 * PI is one lunar cycle)
 */
 function setMoonPhase (moon, phase) {
 	if (phase < 0) throw "Out of bounds";
-	var quart = Math.floor (2*phase / Math.PI), 
-		// reference radius of the moon circle, extracted from object
-		scaleRadius = moon.querySelector(".moondisk").getAttribute("r"),	
+	var 
+		// Which of the four main phase of the moon (0 to 3)
+		quart = Math.floor (2*phase / Math.PI), 
+		// moon disk object
+		moonDisk = moon.querySelector(".moondisk"),
+		// reference radius of the moon circle
+		scaleRadius = moonDisk.getAttribute("r"),	
+		// starting point, from the reference moon circle
+		sx = moonDisk.getAttribute ("cx"), sy = moonDisk.getAttribute ("cy")-scaleRadius,
 		// computed radius of the circle used for the moon phase
 		secondRadius = scaleRadius/Math.max(0.01,Math.abs(Math.cos(phase))),
 		// d attribute of path SVG object
-		pathstring = "M 0 " + -scaleRadius 
+		pathstring = "M " + sx + " " + sy
 			+ " a " + secondRadius +" " + secondRadius + " 0 0 " 
 			+ (quart % 2 == 0 ? 1 : 0) + " 0 " + 2*scaleRadius
 			+ " a " + scaleRadius + " " + scaleRadius + " 0 0 " 
-			+ (quart % 4 < 2 ? 1 : 0) + " 0 " + -2*scaleRadius + " z";
-		let myObj = moon.querySelector(".moonphase");
-		myObj.setAttribute("d",pathstring);
-	return pathstring;
+			+ (quart % 4 < 2 ? 1 : 0) + " 0 " + -2*scaleRadius + " z" ;
+	return moon.querySelector(".moonphase").setAttribute("d",pathstring);
 }
