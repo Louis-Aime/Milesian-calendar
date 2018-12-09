@@ -69,11 +69,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="clock2">
 <!-- the dial -->
 <image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
-<!-- the motto on the dial -->
-<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- the motto on the dial 
+<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text> -->
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
 <rect class="center month day" x="0" y="0" width="0" height="0"/>
-<!-- set the secondary time dial which sould appear under the month-day hands -->
+<!-- set the secondary time dial which should appear under the month-day hands -->
   <circle cx="0" cy="-80" r="60" fill="none" stroke="black" />
   <rect class="center hour minute second" x="0" y="-80" width="0" height="0"/> <!-- center of the time dial -->
   <g id="hourStroke">
@@ -90,6 +90,25 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   <use xlink:href="#hourStroke" transform="rotate(270,0,-80)"/>
   <use xlink:href="#hourStroke" transform="rotate(300,0,-80)"/>
   <use xlink:href="#hourStroke" transform="rotate(330,0,-80)"/>
+<!-- moon element -->
+<g id="moon" >
+<!-- the moon circle  clipping device -->
+ <defs> <clipPath id="moonclip60">
+  <circle class="moondisk" cx="0" cy="80" r="60"/>
+ </clipPath></defs>
+<!-- moon picture -->
+<image xlink:href="Lunar_disk.jpg" x="-61" y ="18" width="124" height="124" clip-path="url(#moonclip60)"/>
+<!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
+<!-- 
+radius: 2x same, bigger than circle radius
+x-axis-rotation : leave 0 (rotate total moon)
+large-arc-flag : leave 0
+sweep-flag of 1st arc: 0: round part on left, 1: round part on right
+sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
+order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
+-->
+  <path class="shaded moonphase" d="M 0 20 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
+</g>
 <!-- am/pm indicator -->
   <text class="clock ampm"
 	x="0" y="-50">am</text>
@@ -110,14 +129,13 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   opacity="0.8" >									
 	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
   </g>
-<!-- the year field -->
+<!-- the year field 
   <text class="clock yeardisplay"
-	x="0" y="+100"></text>
+	x="0" y="+100"></text> -->
 <!-- center circle -->
 <circle class="clockhand" r="9" />
 </g>
 </svg>
-
 <table class="dateconvert" align="center">
     <tr><th id="clockmilesiandate" ></th> </tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
@@ -800,32 +818,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 
 <section class="dateconvert">
 <h1>Données lunaires</h1>
-<svg id="lunisolar" width="200" height="100%" xml:lang="fr" 
-viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet"
-xmlns="http://www.w3.org/2000/svg" 
-xmlns:xlink="http://www.w3.org/1999/xlink">
 
-<title>Lune</title>
-
-<g id="moon" >
-<!-- the moon circle  clipping device -->
- <defs> <clipPath id="moonclip100">
-  <circle class="moondisk" cx="0" cy="0" r="100"/>
- </clipPath></defs>
-<!-- moon picture -->
-<image xlink:href="Lunar_disk.jpg" x="-103" y ="-108" width="211" height="211" clip-path="url(#moonclip100)"/>
-<!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
-<!-- 
-radius: 2x same, bigger than circle radius
-x-axis-rotation : leave 0 (rotate total moon)
-large-arc-flag : leave 0
-sweep-flag of 1st arc: 0: round part on left, 1: round part on right
-sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
-order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
--->
-  <path class="shaded moonphase" d="M 0 -100 a 100 100 0 0 0 0 200 a 100 100 0 0 1 0 -200 z" />
-</g>
-</svg>
 <form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
  <table class="dateconvert" align="center">
  	<tr><th colspan="2">Lune moyenne corrigée</th></tr>
