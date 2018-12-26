@@ -10,6 +10,7 @@ Versions
 		Set default month and date for setJulianDay
 		Extract setJulianDay
 	M2018-11-16 : adapt to time zone computation
+	M2019-01-06 : reconstruct julian calendar converter using CBCCE
 Required
 	Package CBCCE
 Contents
@@ -52,12 +53,20 @@ var
  * that describes the Julian calendar shifted to 1 March, with no month, with respect to Posix time
 */
 Julian_calendar_params = { // To by used for the Julian calendar with a Unix timestamp. Calendar starts on 1 March of year 0 (i.e. 1 before Common Era).
-//	Decompose in years, days in year, hours, minutes, seconds, ms.
+//	Decompose in year, month (starting with 0 for March), day in month (starting with 1), hours, minutes, seconds, ms.
+/* Within a year, the following cycles are considered
+	Five months cycle of 153 days. 1 March to 31 July, 1 August to 31 December, 1 January to end of February.
+	Bimester of 61 days.
+	Month of 31 days, since each bimester begins with a 31 days month.
+*/
 	timeepoch : -62162208000000, // 1 March of year 0, Julian calendar
 	coeff : [
-	  {cyclelength : 126230400000, ceiling : Infinity, subCycleShift : 0, multiplier : 4, target : "year"},
-	  {cyclelength : 31536000000, ceiling : 3, subCycleShift : 0, multiplier : 1, target : "year"},
-	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "dayinyear"}, // Day in year is 1 (1 March) to 366 (29 February)
+	  {cyclelength : 126230400000, ceiling : Infinity, subCycleShift : 0, multiplier : 4, target : "year"}, // Olympiade
+	  {cyclelength : 31536000000, ceiling : 3, subCycleShift : 0, multiplier : 1, target : "year"}, // One 365-days year
+	  {cyclelength : 13219200000, ceiling : Infinity, subCycleShift : 0, multiplier : 5, target : "month"}, // Five-months cycle
+	  {cyclelength : 5270400000, ceiling : Infinity, subCycleShift : 0, multiplier : 2, target : "month"}, // 61-days bimester
+	  {cyclelength : 2678400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "month"}, // 31-days month
+	  {cyclelength : 86400000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "date"}, // Date in month
 	  {cyclelength : 3600000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "hours"},
 	  {cyclelength : 60000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "minutes"},
 	  {cyclelength : 1000, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "seconds"},
@@ -65,39 +74,39 @@ Julian_calendar_params = { // To by used for the Julian calendar with a Unix tim
 	],
 	canvas : [ 
 		{name : "year", init : 0},
-		{name : "dayinyear", init : 1},
+		{name : "month", init : 2}, // Shifted year begins with month number 2 (March), thus simplify month shifting
+		{name : "date", init : 1},
 		{name : "hours", init : 0},
 		{name : "minutes", init : 0},
 		{name : "seconds", init : 0},
 		{name : "milliseconds", init : 0},
 	]	
 }
-/** romanDecompose : from day in year counted from 1 March, get Date (in month), month number (js style, 0 to 11) and year shift (0 or 1)
- * param {number} dayOfYear - day counted from 1 (1 March) to 366 (29 February of next year)
- * return {{year : number, month: number, date: number}} - the Roman date elements. year is 0 (same year) or 1 (next year)
+/** romanShift : from standard Roman (Julian or Gregorian) date compound with year beginning in January, build a shifted date compound, year beginning in March
+ * @param {{year : number, month: number, date: number}} - figures of a date in Julian calendar (or possibly Gregorian) 
+ * @return {{year : number, month: number, date: number}} - the shifted date elements. year is same year or -1, Jan and Feb are shifted by 12
 */
-function romanDecompose (dayOfYear) { // The switch from shifted date to Roman (Julian calendar) date uses Zeller's formula
-	var month = 0, date = 5*(dayOfYear-1)+2;
-	while (date >= 153) {
-		++month;
-		date -= 153;
+function romanShift (romanDate) {
+	if (romanDate.month < 0 || romanDate.month > 11) return undefined;  // Control validity of month only. Date may be negative or greater than 31. 
+	let shiftDate = {...romanDate};
+	if (romanDate.month < 2) {
+		shiftDate.year -= 1;
+		shiftDate.month += 12
 	}
-	date = Math.floor (date/5) + 1
-	return (month < 10) ? {year : 0, month : month + 2, date : date} : {year : 1, month : month - 10, date : date};
+	return shiftDate
 }
-/** romanCompose : from a Roman date compound, compute year and  day in year counted from 1 March
- * @param {{year : number, month: number, date: number}} - figures of a date in Julian calendar (or possibly Gregorian)
- * @return {{yearshift : number, daysinyear : number}} - 
- * yearshift: -1 if preceding year, 0 if same year. daysinyear: day number counted from 1 March.
+/** romanUnshift : from shifted Roman (Julian or Gregorian) date compound with year beginning in March, build the standard date compound, year beginning in January
+ * @param {{year : number, month: number, date: number}} - figures of shifted date, month 2 to 13 
+ * @return {{year : number, month: number, date: number}} - the standard Roman date elements. year is same year or +1, 12 and 13 are shifted by -12
 */
-function romanCompose (romanDate) { // from a Roman date, returns the offset days with respect to 1 March of same year. 	
-	if ((romanDate.month < 0) || (romanDate.month > 11)) { return undefined; } // Control validity of month only. Days may be negative or greater than 31. 
-	else 
-	{let yearshift = 0, month = 0, days = romanDate.date;
-		if (romanDate.month < 2) { yearshift -= 1;  month = romanDate.month + 10}
-		else { month = romanDate.month - 2};
-	return { 'yearshift' : yearshift, 'daysinyear' : Math.floor((month * 153 + 2) / 5) + days }
+function romanUnshift (shiftDate) {
+	if (shiftDate.month < 2 || shiftDate.month > 13)  return undefined;  // Control validity of month only. Date may be negative or greater than 31. 
+	let romanDate = {...shiftDate};
+	if (shiftDate.month > 11) {
+		romanDate.year += 1;
+		romanDate.month -= 12
 	}
+	return romanDate
 }
 /*
  2. Properties added to Date object
@@ -108,10 +117,7 @@ function romanCompose (romanDate) { // from a Roman date, returns the offset day
  * the figures of the Julian calendar date in local time, in a compound object
 */
 Date.prototype.getJulianDate = function () {
-	let shiftedDate = cbcceDecompose (this.getTime() - this.getRealTZmsOffset(), Julian_calendar_params);
-	let romanDate = romanDecompose (shiftedDate.dayinyear);
-	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
-			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}
+	return romanUnshift(cbcceDecompose (this.getTime() - this.getRealTZmsOffset(), Julian_calendar_params));
 }
 /** Compose a date object with the figures of the Julian calendar date in UTC time. 
  * @method getUTCJulianDate
@@ -119,10 +125,7 @@ Date.prototype.getJulianDate = function () {
  * the figures of the Julian calendar date in UTC time, in a compound object
 */
 Date.prototype.getUTCJulianDate = function () {
-	let shiftedDate = cbcceDecompose (this.getTime(), Julian_calendar_params);
-	let romanDate = romanDecompose (shiftedDate.dayinyear);
-	return {year : shiftedDate.year + romanDate.year, month : romanDate.month, date: romanDate.date, 
-			hours: shiftedDate.hours, minutes: shiftedDate.minutes, seconds: shiftedDate.seconds, milliseconds: shiftedDate.milliseconds}	
+	return romanUnshift (cbcceDecompose (this.getTime(), Julian_calendar_params));
 }
 /** Compute Julian day in decimal from Date object. This is always a UTC-based time. Integer values at 12h UTC (noon).
  * @method getJulianDay
@@ -145,12 +148,10 @@ Date.prototype.getJulianDay = function () {
 Date.prototype.setTimeFromJulianCalendar = 
   function(year, month, date, hours = this.getHours(), minutes = this.getMinutes(), 
 			seconds = this.getSeconds(), milliseconds = this.getMilliseconds()) {
-	let shift = romanCompose ({'month': month, 'date': date});
-	this.setTime (cbcceCompose({
-		'year' : year + shift.yearshift, 'dayinyear' : shift.daysinyear, 
-		'hours' : 0, 'minutes' : 0, 'seconds' : 0, 'milliseconds' : 0}, Julian_calendar_params ));	// First, set date à 0:00 UTC
-	this.setHours (hours, minutes, seconds, milliseconds);							// Then set hour of the day
-	return this.valueOf();
+	let shift = romanShift ({'year': year, 'month': month, 'date': date,
+		'hours': 0, 'minutes': 0, 'seconds': 0, 'milliseconds': 0});
+	this.setTime (cbcceCompose(shift, Julian_calendar_params ));	// First, set date à 0:00 UTC
+	return this.setHours (hours, minutes, seconds, milliseconds)	// Then set hour of the day
 }
 /** Modify date object with the figures of the Julian calendar date in UTC time. 
  * @method setUTCTimeFromJulianCalendar
@@ -166,12 +167,8 @@ Date.prototype.setTimeFromJulianCalendar =
 Date.prototype.setUTCTimeFromJulianCalendar = 
   function(year, month = 0, date = 1, hours = this.getUTCHours(), minutes = this.getUTCMinutes(), 
 			seconds = this.getUTCSeconds(), milliseconds = this.getMilliseconds()) {
- 	let shift = romanCompose ({'month': month, 'date': date});
-	this.setTime (cbcceCompose({
-		'year' : year + shift.yearshift, 'dayinyear' : shift.daysinyear, 
-		'hours' : hours, 'minutes' : minutes, 'seconds' : seconds, 'milliseconds' : milliseconds
-	}, Julian_calendar_params ));
-	return this.valueOf();	
+	return this.setTime (cbcceCompose(romanShift ({'year': year, 'month': month, 'date': date,
+		'hours': hours, 'minutes': minutes, 'seconds': seconds, 'milliseconds': milliseconds}), Julian_calendar_params ))	
 }
 /** Set time from a fractional Julian day 
  * @method setTimeFromJulianDay
@@ -179,6 +176,5 @@ Date.prototype.setUTCTimeFromJulianCalendar =
  * @return {number} date value of the modified date object after computation
 */
 Date.prototype.setTimeFromJulianDay = function (julianDay) { 
-	this.setTime (Math.round(julianDay*Chronos.DAY_UNIT) - JULIAN_DAY_UTC0_EPOCH_OFFSET + 12 * Chronos.HOUR_UNIT);
-  return this.valueOf()
+	return this.setTime (Math.round(julianDay*Chronos.DAY_UNIT) - JULIAN_DAY_UTC0_EPOCH_OFFSET + 12 * Chronos.HOUR_UNIT)
 }
