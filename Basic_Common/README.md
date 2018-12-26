@@ -6,7 +6,7 @@ A light css for all modules, in particular for the clock.
 
 ## CBCCE.js, Cycle-Based Calendar Computation Engine : basic tools for calendar computations
 The Compose and Decompose computation principle is explained in *l'Heure Milésienne* (Edilivre) by Louis-Aimé de Fouquières, p. 94 [http://www.calendriermilesien.org/l-heure-milesienne.html].
-However the principles have been extended to handled calendar architectures where at any level the last unit of a cycle may be shorter or longer than the other.
+However the principles have been extended to handle calendar architectures where at any level the last unit of a cycle may be shorter or longer than the other.
 * cbcceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date following a decomposition canvas.
 * cbcceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
 * Chronos is a passive object with four usefull values for calendar computations:
