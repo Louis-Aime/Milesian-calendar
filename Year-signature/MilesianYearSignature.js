@@ -6,6 +6,7 @@ Versions
 	M2017-12-26
 	M2018-10-26: enhance comments
 	M2018-11-13: JSDoc comments
+	M2019-01-13: Milesian intercalation is same as Gregorian
 Required
 	Package CBCCE.
 Each function returns a compound value with the yearly key figures for one calendar:
@@ -138,7 +139,7 @@ function gregorianSignature (year) {
 		// Long if year part in decomposition is 0, and it is not a secular year except a multiple of 400.
 	return signature;
 }
-/** key figures of a year of the Milesian calendar, the slight change is this: year 2400 and then every 3200 year, is not leap.
+/** key figures of a year of the Milesian calendar. Here no change with respect to Gregorian figures
  * @param {number} year, integer number representing the year investigated
  * @return {Object.<string, number>} signature
  * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
@@ -150,16 +151,14 @@ function gregorianSignature (year) {
 function milesianSignature (year) {
 	var
 		yearParams = { 	// Decompose a Milesian year figure for doomsday and Easter computus.
-			timeepoch : -800, 
+			timeepoch : 0, 
 			coeff : [
-			  {cyclelength : 3200, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "era"},
 			  {cyclelength : 400, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadrisaeculum"}, 
 			  {cyclelength : 100, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "saeculum"},
 			  {cyclelength : 4, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "quadriannum"}, 
 			  {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "annum"}
 			],
 			canvas : [
-				{name : "era", init : 0},
 				{name : "quadrisaeculum", init : 0},
 				{name : "saeculum", init : 0},
 				{name : "quadriannum", init : 0},
@@ -179,11 +178,11 @@ function milesianSignature (year) {
 			gold = positiveModulo (year, 19),
 			doomhour = new Date (0);
 		doomhour.setUTCHours (7); doomhour.setUTCMinutes (30); doomhour.setTimeFromMilesian (year, 0, 0); 
-		signature.doomsday = positiveModulo (-yearCoeff.era + 2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7);
+		signature.doomsday = positiveModulo (2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7);
 		signature.epact = Math.round(doomhour.getCEMoonDate().age*2)/2; 	// Milesian epact is a half-integer 
 		signature.annualResidue = 29.5 - signature.epact;
 		signature.easterResidue = positiveModulo (15 + 19*gold 			// Julian element, minus 
-		+ yearCoeff.era*25 + 3*(yearCoeff.quadrisaeculum) + yearCoeff.saeculum - 6 // Metemptose, including era impact; -6 because centuries are counted from -800
+		+ 3*(yearCoeff.quadrisaeculum) + yearCoeff.saeculum + 2 // Metemptose.
 		- Math.floor ((8*(32*yearCoeff.era + 4*yearCoeff.quadrisaeculum + yearCoeff.saeculum - 8) + 13) / 25 ) // Proemptose, modified Zeller computation
 		, 30);
 		signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );

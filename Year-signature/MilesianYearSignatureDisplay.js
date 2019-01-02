@@ -4,6 +4,8 @@
 Versions
 	M2017-01-09: Display Gold number 1 to 19, not 0 to 18.
 	M2018-10-26: Enhance comments
+	M2019-01-13: Suppress "Milesian" line, since Milesian figures are like Gregorian,
+		and rework Easter date in milesian
 Required
 	MilesianYearSignature
 	MilesianDateProperties
@@ -62,7 +64,7 @@ function computeSignature(year) {
 	document.julian.daynumber.value = signature.easterOffset;
 	document.julian.romandate.value = romanDateFrom21March(signature.easterOffset);
 	document.julian.milesiandate.value = milesianDateFrom30_3m(
-		signature.easterOffset-2+Math.floor(year/100)-Math.floor(year/400)+Math.floor((year+800)/3200));
+		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian figures
 	signature = gregorianSignature (year);
 	document.gregorian.day.value = signature.doomsday;
@@ -70,7 +72,7 @@ function computeSignature(year) {
 	document.gregorian.residue.value = signature.easterResidue;
 	document.gregorian.daynumber.value = signature.easterOffset;
 	document.gregorian.romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.gregorian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset+Math.floor((year+800)/3200));
+	document.gregorian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
 	// Milesian rule + Gregorian modified comput
 	signature = milesianSignature (year);
 	// Set year type
@@ -79,11 +81,6 @@ function computeSignature(year) {
 	document.milesianyearfigures.doomsday.value = signature.doomsday;
 	document.milesianyearfigures.epact.value = signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
 	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});
-	document.milesian.day.value = signature.doomsday;
-	document.milesian.residue.value = signature.easterResidue;
-	document.milesian.daynumber.value = signature.easterOffset;
-	document.milesian.romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.milesian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);	
 }
 function setYear(year) {
 	year = Math.round(year);	// Force to integer value
