@@ -11,6 +11,7 @@ Versions
 		Extract setJulianDay
 	M2018-11-16 : adapt to time zone computation
 	M2019-01-06 : reconstruct julian calendar converter using CBCCE
+	M2019-03-04 : replace {... Object} notation that does not fit to MS Edge
 Required
 	Package CBCCE
 Contents
@@ -88,7 +89,7 @@ Julian_calendar_params = { // To by used for the Julian calendar with a Unix tim
 */
 function romanShift (romanDate) {
 	if (romanDate.month < 0 || romanDate.month > 11) return undefined;  // Control validity of month only. Date may be negative or greater than 31. 
-	let shiftDate = {...romanDate};
+	let shiftDate = Object.assign ({},romanDate); // shiftDate = {...romanDate}; -- does not work with MS edge
 	if (romanDate.month < 2) {
 		shiftDate.year -= 1;
 		shiftDate.month += 12
@@ -101,7 +102,7 @@ function romanShift (romanDate) {
 */
 function romanUnshift (shiftDate) {
 	if (shiftDate.month < 2 || shiftDate.month > 13)  return undefined;  // Control validity of month only. Date may be negative or greater than 31. 
-	let romanDate = {...shiftDate};
+	let romanDate = Object.assign ({},shiftDate); // romanDate = {...shiftDate}; -- does not work with MS edge
 	if (shiftDate.month > 11) {
 		romanDate.year += 1;
 		romanDate.month -= 12
