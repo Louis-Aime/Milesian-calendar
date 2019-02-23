@@ -1,4 +1,4 @@
-/* Converter functions (- part 1 ?)
+/* Converter functions 
 Character set is UTF-8.
 These functions are associated with the ConverterClock html page: 
 They use the basic Milesian calendar functions, and the conversion functions of other calendar,
@@ -52,7 +52,9 @@ Version M2018-11-02
 *	Catch display error on Unicode Um-al-Qura calendar
 Version M2018-11-03
 *	Add control of date of switching to Gregorian calendar
-*	Add control of validity of entered dates
+*	Add validity control of entered dates
+Version M2019-03-04
+*	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -111,7 +113,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
 		myElement.innerHTML = labelDate.julianFormat(targetDate)
 	else
-		myElement.innerHTML = labelDate.format(targetDate);
+		try {myElement.innerHTML = labelDate.format(targetDate);}
+		catch (error) { myElement.innerHTML = milesianAlertMsg ("browserError"); };
 
 	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();

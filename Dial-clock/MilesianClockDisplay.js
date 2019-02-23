@@ -46,6 +46,8 @@ Version M2018-11-08
 *	Group remote .js file, insert data entry in other file
 Version M2018-11-27
 * 	Add Lunar clock display
+Version M2019-03-04
+* 	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -213,7 +215,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
 		myElement.innerHTML = labelDate.julianFormat(shiftDate)
 	else
-		myElement.innerHTML = labelDate.format(shiftDate);
+		try {myElement.innerHTML = labelDate.format(shiftDate);}
+		catch (error) { myElement.innerHTML = milesianAlertMsg ("browserError"); };
 
 	// Update settings (date of switching to gregorian calendar)
 	document.gregorianswitch.year.value = gregorianSwitch.getUTCFullYear();
@@ -320,11 +323,22 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
 	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
-	document.moon.dracotime.value = new Date(shiftDate.valueOf() + targetDate.getDraconiticSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	document.moon.height.value = targetDate.getDraconiticHeight().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
-	document.moon.moontime.value = new Date(shiftDate.valueOf() + targetDate.getLunarSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	document.moon.moondate.value = targetDate.getLunarDateTime().date + " " 
 				+  (++targetDate.getLunarDateTime().month) + "m";
+	try {
+		document.moon.dracotime.value = new Date(shiftDate.valueOf() + targetDate.getDraconiticSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
+	}
+	catch (error) {
+		document.moon.dracotime.value = "--:--:--";
+	}
+	try {
+		document.moon.moontime.value = new Date(shiftDate.valueOf() + targetDate.getLunarSunTimeAngle()).toLocaleTimeString(undefined,{timeZone:'UTC'});
+	}
+	catch (error) {
+		document.moon.moontime.value = "--:--:--";
+	}
+
 	dateComponent = shiftDate.getCELunarDate();				
 	document.moon.CElunardate.value = 	dateComponent.date;
 	document.moon.CElunarmonth.value = 	++dateComponent.month;
