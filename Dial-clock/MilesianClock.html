@@ -5,13 +5,14 @@
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 <!--
-Version 
+Versions 
 	M2018-11-07 insert js functions in relation with data entries  and clock run
 	M2018-11-09 continuous day shift value
 	M2018-11-10 Add Julian calendar date display
+	M2019-05-12 Suppress deprecated format attributes
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
-Copyright Miletus 2017-2018 - Louis A. de Fouquières
+Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -58,7 +59,7 @@ Inquiries: www.calendriermilesien.org
 	<title>Horloge milésienne</title>
 </head>
 <body>
-<section class="dateconvert">
+<section class="centered">
 <h1>Horloge milésienne</h1>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
@@ -136,19 +137,19 @@ order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 <circle class="clockhand" r="9" />
 </g>
 </svg>
-<table class="dateconvert" align="center">
+<table>
     <tr><th id="clockmilesiandate" ></th> </tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
-<section class="dateconvert autoscroll">
+<section class="centered autoscroll">
 <h1>Heure et fuseau horaire</h1>
 
-	<table class="dateconvert" align="center">
-		 <form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
+	<table>
+		 <form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 			<tr><th colspan="2">Mode</th>
 				<td colspan="4">
-					<select name="TZcontrol" size="1" class="dateconvert">
+					<select name="TZcontrol" size="1" class="centered">
 					<option value="UTC">UTC</option>
 					<option value="TZ" selected>Fuseau système</option>
 					<option value="Fixed">Décalage fixe</option>
@@ -156,15 +157,15 @@ order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 			</tr>
 			<tr>
 				<th>Décalage</th> 
-				<td><select name="TZOffsetSign" class="dateconvert" size="2">
+				<td><select name="TZOffsetSign" class="centered" size="2">
 				<option value="1">+</option>
 				<option value="-1">-</option>
 				</select> </td>
-				<td><input name="TZOffset" type="number" min="0" max="1500" class="dateconvert yearnum"></td>
+				<td><input name="TZOffset" type="number" min="0" max="1500" class="centered yearnum"></td>
 				<td>mn</td>
-				<td><input name="TZOffsetSec" type="number" min="0" max="59" class="dateconvert daynum"></td>
+				<td><input name="TZOffsetSec" type="number" min="0" max="59" class="centered daynum"></td>
 				<td>s</td>
-				<td><button class="dateconvert">Ok</button></td>
+				<td><button>Ok</button></td>
 			</tr>
 		</form>
 	</table>
@@ -192,14 +193,14 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-	<table class="dateconvert" align="center">
+	<table>
 	  <tr> 
-		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		<form name="time" autocomplete="off" method="post" action="JavaScript:calcTime();">
 		 <th>Heure du mode : </th>
-		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
-		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
-		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
-		 <td><button class="dateconvert">Ok</button></td>	
+		 <td><input name="hours" type="number" min="0" max="23" class="centered daynum">h</td>
+		 <td><input name="mins" type="number" min="0" max="59" class="centered daynum">mn</td>
+		 <td><input name="secs" type="number" min="0" max="59" class="centered daynum">s</td>
+		 <td><button>Ok</button></td>	
 		</form>
 	  </tr>
 	</table>
@@ -221,19 +222,19 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table class="dateconvert" align="center"> 
+	 <table> 
 	  <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
-		 <td colspan=4><button type="button" class="dateconvert" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
+		 <td colspan=4><button type="button" class="centered" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
 	  </tr> </table>
 
-	  <table class="dateconvert" align="center">
+	  <table>
 	  <tr>
 		<th>Cette date à UTC</th>
-		<td><button type="button" name="0h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button type="button" name="12h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		<td><button type="button" name="0h" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button type="button" name="12h" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
 	 
@@ -261,19 +262,19 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	}
 }
 </script>
-	<table class="dateconvert" align="center"> 
+	<table> 
 	  <tr>
-		<form name="timeShift" class="dateconvert" method="post" action="JavaScript:changeAddTime();">
+		<form name="timeShift" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(-1);">-</button></td>
-		<td><input name="shift" type="number" value="60" min="0" class="dateconvert yearnum"></td>
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><input name="shift" type="number" value="60" min="0" class="centered yearnum"></td>
+		<td><button type="button" class="symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
 </section>
 
-<section class="dateconvert autoscroll">
+<section class="centered autoscroll">
 <h1>Navigation calendaire</h1>
 <script type="text/javascript">
 	var 
@@ -320,35 +321,35 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>
-<table class="dateconvert" align="center">
+<table>
   <tr>
 	<!-- No "today" button -->
-    <form name="control" class="dateconvert" method="post" action="Javascript:changeDayOffset();">
+    <form name="control" method="post" action="Javascript:changeDayOffset();">
     <td> +/- jours</td>
-	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
-	<td><input name="shift" type="number" value="1" min="0" step="any" class="dateconvert yearnum"></td> 
-	<td><button type="button" class="dateconvert symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
+	<td><button type="button" class="symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
+	<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
+	<td><button type="button" class="symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
     </form>
   </tr>
 </table>
 
-<table class="dateconvert" align="center">
+<table>
   <tr>
-	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(-1)"><</button></td>
-	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="dateconvert symbol" onclick="Javascript:clockSet(1)">></button></td>
-	  <form name="run" class="dateconvert" method="post">
+	  <td><button type="button" class="symbol" onclick="Javascript:clockSet(-1)"><</button></td>
+	  <td><button type="button" class="symbol" onclick="Javascript:clockRun(0)">O</button></td>
+	  <td><button type="button" class="symbol" onclick="Javascript:clockSet(1)">></button></td>
+	  <form name="run" method="post">
 	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
 	  </form>
   </tr> 
 </table>
 </section>
 
-<section class="dateconvert autoscroll">
+<section class="centered autoscroll">
 <h1>Dates selon les calendriers pivots</h1>
 
 <table align="center"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
-  <table class="dateconvert" align="center">
+  <table>
       <tr>
         <th>Calendrier</th>
         <th>Jour</th>
@@ -397,11 +398,11 @@ function calcMilesian() {
 	}
 }
 </script>
-	 <form name="milesian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
+	 <form name="milesian" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
 		<td>Milésien : </td>
-        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
+        <td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
         <td>
-        <select name="monthname" size="1" class="dateconvert">
+        <select name="monthname" size="1" class="centered">
 		<option value="0">1m</option>
         <option value="1">2m</option>
         <option value="2">3m</option>
@@ -415,8 +416,8 @@ function calcMilesian() {
         <option value="10">11m</option>
         <option value="11">12m</option>
 		</select> </td>
-        <td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
-        <td><button class="dateconvert">Ok</button></td>
+        <td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
+        <td><button>Ok</button></td>
 		</form>
       </tr>
 
@@ -460,10 +461,10 @@ function calcGregorian() {
 }
 </script>
       <tr id="gregorianline">
-		<form name="gregorian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
+		<form name="gregorian" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
         <td>Grégorien : </td>
-        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
-        <td><select name="monthname" class="dateconvert" size="1">
+        <td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
+        <td><select name="monthname" class="centered" size="1">
         <option value="0">janvier</option>
         <option value="1">février</option>
         <option value="2">mars</option>
@@ -477,8 +478,8 @@ function calcGregorian() {
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="number" min="-271821" max="275760" class="dateconvert yearnum"></td>
-        <td><button name="Compute" value="gregorian" class="dateconvert">Ok</button></td>
+        <td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
+        <td><button name="Compute" value="gregorian">Ok</button></td>
  		</form>
      </tr>	  
 
@@ -521,10 +522,10 @@ function calcJulian(){
 }
 </script>
 	 <tr>
-		<form name="julian" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulian();">
+		<form name="julian" autocomplete="off" method="post" action="JavaScript:calcJulian();">
         <td>Julien : </td>
-        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"></td>
-        <td><select name="monthname" class="dateconvert" size="1">
+        <td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
+        <td><select name="monthname" class="centered" size="1">
         <option value="0">janvier</option>
         <option value="1">février</option>
         <option value="2">mars</option>
@@ -538,8 +539,8 @@ function calcJulian(){
         <option value="10">novembre</option>
         <option value="11">décembre</option>
         </select></td>
-        <td><input name="year" type="number" min="-271816" max="275755" class="dateconvert yearnum"></td>
-        <td><button name="Compute" value="julian" class="dateconvert">Ok</button> </td>
+        <td><input name="year" type="number" min="-271816" max="275755" class="centered yearnum"></td>
+        <td><button name="Compute" value="julian">Ok</button> </td>
  		</form>
      </tr>
 
@@ -582,10 +583,10 @@ function calcFrenchRev(){
 }
 </script>
 	 <tr id="republicanline">
-		<form name="republican" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
+		<form name="republican" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
         <td>Républicain : </td>
-        <td><input name="day" type="number" min="1" max="30" class="dateconvert daynum"> </td>
-        <td><select name="monthname" class="dateconvert" size="1">
+        <td><input name="day" type="number" min="1" max="30" class="centered daynum"> </td>
+        <td><select name="monthname" class="centered" size="1">
         <option value="0">Vendémiaire</option>
         <option value="1">Brumaire</option>
         <option value="2">Frimaire</option>
@@ -600,8 +601,8 @@ function calcFrenchRev(){
         <option value="11">Fructidor</option>
         <option value="12">Complément.</option>
         </select></td>
-        <td><input name="year" type="number" min="-273613" max="273969" class="dateconvert yearnum"></td>
-        <td><button name="Compute" value="republican" class="dateconvert">Ok</button> </td>
+        <td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum"></td>
+        <td><button name="Compute" value="republican">Ok</button> </td>
  		</form>
      </tr>
 </table>
@@ -645,7 +646,7 @@ function calcISO() {
 	}
 }
 </script>
-  <table class="dateconvert" align="center">
+  <table>
      <tr>
         <th></th>
         <th>Jour</th>
@@ -654,10 +655,10 @@ function calcISO() {
         <th></th>
       </tr>
 	<tr id="isoweeksline">
-		<form name="isoweeks" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcISO();">
+		<form name="isoweeks" autocomplete="off" method="post" action="JavaScript:calcISO();">
 		<td>Semaines ISO : </td>
 		<td> 
-        <select name="day" class="dateconvert" size="1">
+        <select name="day" class="centered" size="1">
 		<option value="1">lundi</option>
         <option value="2">mardi</option>
         <option value="3">mercredi</option>
@@ -666,9 +667,9 @@ function calcISO() {
         <option value="6">samedi</option>
         <option value="7">dimanche</option>
         </select></td>
-        <td><input name="week" type="number" min="1" max="53" class="dateconvert daynum"> </td>
-        <td><input name="year" type="number" min="-271820" max="275760" class="dateconvert yearnum"></td>
-        <td><button name="Compute" value="isoweeks" class="dateconvert">Ok</button> </td>
+        <td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
+        <td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
+        <td><button name="Compute" value="isoweeks" >Ok</button> </td>
 	  </form>
 	</tr>
  </table>
@@ -691,19 +692,19 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	}
 }
 </script>
-<table class="dateconvert" align="center">
-    <form name="daycounter" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
+<table>
+    <form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien : </th><td></td>
-		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="dateconvert"></td>
-		<td><button name="setday" value="julianday" class="dateconvert">Ok</button></td>
+		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="centered"></td>
+		<td><button name="setday" value="julianday">Ok</button></td>
 	</tr>
 	</form>
 </table>
 </section>
 
-<section class="dateconvert">
+<section class="centered">
 <h1>Séries chronologiques</h1>
-	<table class="dateconvert" align="center">
+	<table>
 		<tr>
 			<th>Jour julien : </th>
 			<td id="jdDisplay"></td>
@@ -731,13 +732,13 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</table>
 </section>	
 
-<section class="dateconvert autoscroll">
+<section class="centered autoscroll">
 <h1>Représentation Unicode</h1>
-	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:setDisplay();">
-	<table class="dateconvert" align="center"> <tr>
+	<form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
+	<table> <tr>
 		<th>Format</th>
 			<td>
-			<select name="Presentation" class="dateconvert" size="1">
+			<select name="Presentation" class="centered" size="1">
 				<option value="long">Texte complet</option>
 				<option value="standard" selected>Texte courant</option>
 				<option value="short">Texte abrégé</option>
@@ -749,11 +750,11 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			</td>
 		</tr>
 	</table>
-	<table class="dateconvert" align="center">
+	<table>
 	<tr>
 		<th>Code langue </th>
 			<td>
-			<input name="Language" class="dateconvert" type="text" autocomplete="language" size="5">
+			<input name="Language" class="centered" type="text" autocomplete="language" size="5">
 			</td>
 			<td>Code effectif: </td><td id="langCode"></td>
 		</tr>
@@ -765,11 +766,11 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	  </tr>
 	  </table>
 
-	<table class="dateconvert" align="center">
+	<table>
 		<tr>
 			<th>Calendrier </th>
 			<td>
-			<select name="Calendar" size="1" class="dateconvert">
+			<select name="Calendar" size="1" class="centered">
 				<option value="">par défaut</option>
 				<option value="buddhist">bouddhiste Thaï</option>
 				<option value="chinese">chinois traditionnel</option>
@@ -793,22 +794,22 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			</td>
 		</tr>
 	</table>
-	<table class="dateconvert" align="center">
+	<table>
 		<tr><td>Code calendrier effectif: </td><td id="CalendarCode"></td></tr>
 	</table>
-	<table class="dateconvert" align="center">
+	<table>
 		<tr><th>Zone horaire </th>
-		<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
+		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
 		</tr>
 		<tr><td>Zone effective: </td><td id="timeZone"></td></tr>
 	</table>
 	<table align="center">
 		<tr><td>Exemple: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide: défaut système</td></tr>
-		<tr><td colspan="2"><button class="dateconvert">Modifier les paramètres de représentation</button></td></tr>
+		<tr><td colspan="2"><button>Modifier les paramètres de représentation</button></td></tr>
 	</table>
   	</form>
 	<br>
-	<table class="dateconvert" align="center">
+	<table>
 		<tr><th>Date et heure Unicode</th></tr>
 		<tr><td id="UnicodeString"></td></tr>
 		<tr><th>Date et heure milésiennes</th></tr>
@@ -816,37 +817,37 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</table>
 </section>
 
-<section class="dateconvert">
+<section class="centered">
 <h1>Données lunaires</h1>
 
-<form name="moon" class="dateconvert" method="post" action="JavaScript:void(0);">
- <table class="dateconvert" align="center">
+<form name="moon" method="post" action="JavaScript:void(0);">
+ <table>
  	<tr><th colspan="2">Lune moyenne corrigée</th></tr>
      <tr>
 		<th>Âge lunaire</th>	<th>Reliquat</th> 
 	 </tr>
 	 <tr>
-		<td><input name="age" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
-		<td><input name="residue" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
+		<td><input name="age" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
+		<td><input name="residue" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
- <table class="dateconvert" align="center">
+ <table>
 	<tr><th>Heure lunaire<br>(marées)</th><th>Date lunaire<br>(hauteur de lune)</th></tr>
 	<tr>
-		<td><input name="moontime" value="" type="text" class="dateconvert" disabled="disabled" size="12"> </td>
-		<td><input name="moondate" value="" type="text" class="dateconvert" disabled="disabled" size="8"> </td>
+		<td><input name="moontime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
+		<td><input name="moondate" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
 	</tr>
  </table>
- <table class="dateconvert" align="center">
+ <table>
 	<tr> <th colspan="3">Données draconitiques (éclipses)</th></tr>
 	<tr><th>Angle</th><th>Heure</th><th>Hauteur</th></tr>
 	<tr>
-		<td><input name="angle" value="" type="text" class="dateconvert" disabled="disabled" size="8"> </td>
-		<td><input name="dracotime" value="" type="text" class="dateconvert" disabled="disabled" size="12"> </td>
-		<td><input name="height" value="" type="text" class="dateconvert" disabled="disabled" size="5"> </td>
+		<td><input name="angle" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
+		<td><input name="dracotime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
+		<td><input name="height" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
- <table class="dateconvert" align="center">
+ <table>
     <tr>
 	 <th colspan="4">Calendrier lunaire virtuel à Greenwich</th>
 	</tr>
@@ -858,31 +859,31 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
       </tr>
 	<tr>
 	 <td>An 0:</td>
-	 <td><input name="CElunardate" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
-	 <td><input name="CElunarmonth" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
-	 <td><input name="CElunaryear" value="" type="text" class="dateconvert" disabled="disabled" size="6"></td>
+	 <td><input name="CElunardate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+	 <td><input name="CElunarmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+	 <td><input name="CElunaryear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
 	</tr>
 	<tr>
 	 <td> Hégire:</td>
-	 <td><input name="hegiriandate" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
-	 <td><input name="hegirianmonth" value="" type="text" class="dateconvert" disabled="disabled" size="2"></td>
-	 <td><input name="hegirianyear" value="" type="text" class="dateconvert" disabled="disabled" size="6"></td>
+	 <td><input name="hegiriandate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+	 <td><input name="hegirianmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+	 <td><input name="hegirianyear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
 	</tr>
  </table> 
 </form>
-<table class="dateconvert" align="center">
+<table>
  	<tr><th colspan="2">Estimation de Delta T (secondes)<br>
 		(UTC = Temps Terrestre - Delta T)</th></tr>
      <tr>
-		<form name="deltat" class="dateconvert" method="post" action="JavaScript:void(0);">
+		<form name="deltat"method="post" action="JavaScript:void(0);">
 		<td>Delta T (secondes):</td>
-		<td><input type="text" class="dateconvert" disabled="disabled" size="15" name="delta"> </td>
+		<td><input type="text" class="centered" disabled="disabled" size="15" name="delta"> </td>
 		</form>
 	</tr>
 </table>
 </section>
 
-<section class="dateconvert">
+<section class="centered">
 <h1>Réglages</h1>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
 <script type="text/javascript">
@@ -917,16 +918,16 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	setDisplay();	
 }
 </script>
-<table class="dateconvert" align="center">
+<table>
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>
 </table>
-<table class="dateconvert" align="center">
-	 <form name="gregorianswitch" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
+<table>
+	 <form name="gregorianswitch" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
 	  <tr>
-		<td><input name="day" type="number" value="15" min="1" max="31" class="dateconvert daynum"></td>
+		<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
         <td>
-        <select name="monthname" size="1" class="dateconvert">
+        <select name="monthname" size="1" class="centered">
         <option value="0">janvier</option>
         <option value="1">février</option>
         <option value="2">mars</option>
@@ -940,13 +941,13 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
         <option value="10">novembre</option>
         <option value="11">décembre</option>
 		</select> </td>
-        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="dateconvert yearnum"></td>
-        <td><button class="dateconvert">Ok</button></td>
+        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
+        <td><button>Ok</button></td>
       </tr>
 	</form>
 </table>
-<table class="dateconvert" align="center">
-	<form name="controloptions" class="dateconvert" autocomplete="off" method="post" action="">
+<table>
+	<form name="controloptions" autocomplete="off" method="post" action="">
 	  <tr>
 	    <td><input type="checkbox" name="datevalidity" checked></td>
 		<th>Contrôle de validité des dates saisies</th>
@@ -954,13 +955,13 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	</form>
 </table>
 </section>
-<section class="dateconvert">
+<section class="centered">
 <h1>Liens utiles</h1>
-  <table class="dateconvert" align="center">
+  <table>
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
   </table>
 </section>
-<h3 class="dateconvert">© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<h3 class="centered">© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </body>
 </html>

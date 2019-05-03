@@ -16,22 +16,22 @@
 	<title>Test calendriers Unicode</title>
   </head>
 <body>
-<section class="dateconvert">
-<h1 class="dateconvert">Expression de date<br>et calendriers Unicode</h1>
-<p class="dateconvert">"Locale": code langue et pays,<br>
+<section class="centered">
+<h1>Expression de date<br>et calendriers Unicode</h1>
+<p>"Locale": code langue et pays,<br>
 par exemple "fr" ou "en-US".<br>
 "Zone horaire": ville de référence de fuseau horaire.<br>
 Voir valeurs possibles via liens en bas de page.<br>
 Noms de mois milésiens non définis dans une langue:<br>
 la version longue est affichée en latin.</p>
 </section>
-<section class="dateconvert autoscroll">
-<h2 class="dateconvert">Heure et décalage horaire</h2>
-	<table class="dateconvert" align="center">
-		<form name="TZmode" class="dateconvert" autocomplete="off" method="post" action="JavaScript:setDisplay();">
+<section class="centered autoscroll">
+<h2>Heure et décalage horaire</h2>
+	<table>
+		<form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 			<tr><th colspan="2">Mode</th>
 				<td colspan="4">
-					<select name="TZcontrol" size="1" class="dateconvert">
+					<select name="TZcontrol" size="1" class="centered">
 					<option value="UTC">UTC</option>
 					<option value="TZ" selected>Fuseau système</option>
 					<option value="Fixed">Décalage fixe</option>
@@ -39,19 +39,19 @@ la version longue est affichée en latin.</p>
 			</tr>
 			<tr>
 				<th>Décalage</th> 
-				<td><select name="TZOffsetSign" class="dateconvert" size="2">
+				<td><select name="TZOffsetSign" class="centered" size="2">
 				<option value="1">+</option>
 				<option value="-1">-</option>
 				</select> </td>
-				<td><input name="TZOffset" type="number" min="0" max="1500" class="dateconvert yearnum"></td>
+				<td><input name="TZOffset" type="number" min="0" max="1500" class="centered yearnum"></td>
 				<td>mn</td>
-				<td><input name="TZOffsetSec" type="number" class="dateconvert daynum"></td>
+				<td><input name="TZOffsetSec" type="number" class="centered daynum"></td>
 				<td>s</td>
-				<td><button class="dateconvert">Ok</button></td>
+				<td><button>Ok</button></td>
 			</tr>
 			<tr>
 				<th colspan="2">Décalage système</th>
-				<td colspan="3"><input name="sysTZoffset" type="number" class="dateconvert" disabled="disabled"></td>
+				<td colspan="3"><input name="sysTZoffset" type="number" class="centered" disabled="disabled"></td>
 				<td>mn</td>
 			</tr>
 		</form>
@@ -79,14 +79,14 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-	<table class="dateconvert" align="center">
+	<table>
 	  <tr> 
-		<form name="time" class="dateconvert" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		<form name="time" autocomplete="off" method="post" action="JavaScript:calcTime();">
 		 <th>Heure du mode : </th>
-		 <td><input name="hours" type="number" min="0" max="23" class="dateconvert daynum">h</td>
-		 <td><input name="mins" type="number" min="0" max="59" class="dateconvert daynum">mn</td>
-		 <td><input name="secs" type="number" min="0" max="59" class="dateconvert daynum">s</td>
-		 <td><button class="dateconvert">Ok</button></td>	
+		 <td><input name="hours" type="number" min="0" max="23" class="centered daynum">h</td>
+		 <td><input name="mins" type="number" min="0" max="59" class="centered daynum">mn</td>
+		 <td><input name="secs" type="number" min="0" max="59" class="centered daynum">s</td>
+		 <td><button>Ok</button></td>	
 		</form>
 	  </tr>
 	</table>
@@ -106,19 +106,19 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table class="dateconvert" align="center"> <tr>
+	 <table> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
-		<td colspan=4><form name="Now" class="dateconvert" method="post" action="Javascript:setDateToNow();" >
-		<button class="dateconvert" >Maintenant</button></form></td>
+		<td colspan=4><form name="Now" method="post" action="Javascript:setDateToNow();" >
+		<button>Maintenant</button></form></td>
 	  </tr> </table>
 
-	  <table class="dateconvert" align="center">
+	  <table>
 	  <tr>
 		<th>Cette date à UTC</th>
-		<td><button type="button" name="0h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button type="button" name="12h" class="dateconvert" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		<td><button type="button" name="0h" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button type="button" name="12h" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
 
@@ -146,20 +146,20 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	}
 }
 </script>	 
-	<table class="dateconvert" align="center"> 
+	<table> 
 	  <tr>
-		<form name="timeShift" class="dateconvert" method="post" action="JavaScript:changeAddTime();">
+		<form name="timeShift" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(-1);">-</button></td>
-		<td><input name="shift" type="number" value="60" min="1" class="dateconvert yearnum"></td>
-		<td><button type="button" class="dateconvert symbol" onclick="Javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><input name="shift" type="number" value="60" min="1" class="centered yearnum"></td>
+		<td><button type="button" class="symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
 </section>
 
-<section class="dateconvert autoscroll">
-<h2 class="dateconvert">Date</h2>
+<section class="centered autoscroll">
+<h2>Date</h2>
 <script type="text/javascript">
 function calcMilesian() {
 	var 
@@ -188,7 +188,7 @@ function calcMilesian() {
 		}
 }
 </script>
-	<table class="dateconvert" align="center">
+	<table>
        <tr>
         <th>Jour</th>
         <th>Quant.</th>
@@ -197,11 +197,11 @@ function calcMilesian() {
         <th> </th>
       </tr>
       <tr>
-	    <form name="milesian" class="dateconvert" method="post" action="JavaScript:calcMilesian();">
-        <td><input name="dayofweek" type="text" class="dateconvert" size="12" disabled="disabled" /> </td>
-        <td><input name="day" type="number" min="1" max="31" class="dateconvert daynum"> </td>
+	    <form name="milesian" method="post" action="JavaScript:calcMilesian();">
+        <td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /> </td>
+        <td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
         <td>
-        <select name="monthname" size="1" class="dateconvert">
+        <select name="monthname" size="1" class="centered">
 		<option value="0">1m</option>
         <option value="1">2m</option>
         <option value="2">3m</option>
@@ -215,8 +215,8 @@ function calcMilesian() {
         <option value="10">11m</option>
         <option value="11">12m</option>
 		</select> </td>
-        <td><input name="year" type="number" class="dateconvert yearnum"> </td>
-        <td><button class="dateconvert">Ok</button></td>
+        <td><input name="year" type="number" class="centered yearnum"> </td>
+        <td><button>Ok</button></td>
 		</form>
       </tr>
    </table>
@@ -253,31 +253,31 @@ function setDayOffsetPlus () {setDayOffset(+1)};
 function setDayOffsetMinus () {setDayOffset(-1)};
 // No clock movement function
 </script>
-<table class="dateconvert" align="center">
+<table>
     <tr>
-	    <td><button type="button" class="dateconvert" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
-	<form name="control" class="dateconvert" method="post" action="Javascript:setDayOffset();">
+	    <td><button type="button" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
+	<form name="control" method="post" action="Javascript:setDayOffset();">
 		<td>+/- jours</td>
-		<td><button class="dateconvert symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
-		<td><input name="shift" type="number" value="1" min="0" step="any" class="dateconvert yearnum"></td> 
-		<td><button class="dateconvert symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
+		<td><button class="symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
+		<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
+		<td><button class="symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
     </form></tr>
 </table>
 </section>
-<section class="dateconvert autoscroll">
-<h2 class="dateconvert">Options de présentation</h2>
-  <div class="dateconvert autoscroll">
-	<form name="LocaleOptions" class="dateconvert" method="post" action="JavaScript:putStringOnOptions();">
-	 <table class="dateconvert" align="center"> 
+
+<section class="centered autoscroll">
+<h2>Options de présentation</h2>
+	<form name="LocaleOptions" method="post" action="JavaScript:putStringOnOptions();">
+	 <table> 
 	   <tr>
 		<th colspan="1">Locale: </th>
-		<td colspan="1"><input name="Locale" type="text" autocomplete="language" class="dateconvert" size="5" value=""> </td>
-		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="dateconvert" size="16"></td>
+		<td colspan="1"><input name="Locale" type="text" autocomplete="language" class="centered" size="5" value=""> </td>
+		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="centered" size="16"></td>
 	   </tr>
 	   <tr>
 		<th colspan="1">Calendrier: </th>
 		<td colspan="3">
-			<select name="Calendar" size="1" class="dateconvert">
+			<select name="Calendar" size="1" class="centered">
 			<option value="">par défaut</option>
 			<option value="buddhist">bouddhiste Thaï</option>
 			<option value="chinese">chinois traditionnel</option>
@@ -302,32 +302,32 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	   </tr>
 	   <tr>
 	    <td colspan="1">Calendrier effectif: </td>
-	    <td colspan="3"><input name="Ecalend" type="text" disabled="disabled" class="dateconvert"></td>
+	    <td colspan="3"><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
 	   </tr>
 	   </table>
-		<table class="dateconvert" align="center">
+		<table>
 			<tr><th>Zone horaire </th>
-			<td><input name="TimeZone" type="text" autocomplete="country" class="dateconvert" size="30"> </td>
+			<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
 			</tr>
-			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="dateconvert" size="30"></td></tr>
+			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
 		</table>
-	 <table class="dateconvert" align="center">
+	 <table>
 	   <tr>
 		<th>Jour semaine</th><th>Quantième</th><th>Mois</th><th>Année</th>
 	   </tr>
 	   <tr>
-		<td><select name="Weekday" class="dateconvert" size="1">
+		<td><select name="Weekday" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
 			<option value="long" selected>long</option>
 			</select></td>
-		<td><select name="Day" class="dateconvert" size="1">
+		<td><select name="Day" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
-		<td><select name="Month" class="dateconvert" size="1">
+		<td><select name="Month" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
@@ -335,7 +335,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 			<option value="short">court</option>
 			<option value="long" selected>long</option>
 			</select></td>
-		<td><select name="Year" class="dateconvert" size="1">
+		<td><select name="Year" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
@@ -345,22 +345,22 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 		<th>Heure</th><th>Minute</th><th>Seconde</th><th>Cycle horaire</th>
 	   </tr>
 	   <tr>
-		<td><select name="Hour" class="dateconvert" size="1">
+		<td><select name="Hour" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
-		<td><select name="Minute" class="dateconvert" size="1">
+		<td><select name="Minute" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
-		<td><select name="Second" class="dateconvert" size="1">
+		<td><select name="Second" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
-		<td><select name="Hour12" size="1" class="dateconvert">
+		<td><select name="Hour12" size="1" class="centered">
 			<option value="" selected>usage local</option>
 			<option value="true">12h</option>
 			<option value="false">24h</option>
@@ -368,39 +368,36 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	   </tr>
 	<tr> 
 		<th></th><th>Ere:</th>
-		<td><button class="dateconvert" type="reset">Réinit</button></td> <td></td>
+		<td><button type="reset">Réinit</button></td> <td></td>
 	</tr> 
 	<tr><td></td>
-		<td><select name="Era" class="dateconvert" size="1">
+		<td><select name="Era" class="centered" size="1">
 			<option value="" selected>absent</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
 			<option value="long">long</option>
 			</select></td>
-		<td><button class="dateconvert" >Ok</button></td> <td></td>
+		<td><button>Ok</button></td> <td></td>
 	</tr>
    </table>
   </form> 
- </div>
 </section>
-<section class="dateconvert autoscroll">
-<h2 class="dateconvert">Expressions de date</h2>
-<div class="dateconvert autoscroll">
-	   <table class="dateconvert" align="center">
+<section class="centered autoscroll">
+<h2>Expressions de date</h2>
+   <table>
 	   <tr><th>Unicode: </th><td id="Gstring"></td></tr>
 	   <tr><th>Milésien: </th><td id="Mstring"></td></tr>
 	   <tr><td></td><td id="Gcontrol"></td></tr>
 	   <tr><td></td><td id="Mcontrol"></td></tr>
-	 </table>
-</div>
+	</table>
 </section>
-<section class="dateconvert">
+<section class="centered">
 <h2>Liens utiles</h2>
-  <table class="dateconvert" align="center">
+  <table>
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
   </table>
- <h3 class="dateconvert">© 2017-2018 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+ <h3>© 2017-2018 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 <!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
 <script type="text/javascript" >
 setDateToNow();
