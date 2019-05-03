@@ -7,6 +7,7 @@ Versions
 	M2018-10-26: enhance comments
 	M2018-11-13: JSDoc comments
 	M2019-01-13: Milesian intercalation is same as Gregorian
+	M2019-05-12: Add the the milesiancomputusepact i.e. epact of the gregorian computus one day before 1 1m (not to be recommended)
 Required
 	Package CBCCE.
 Each function returns a compound value with the yearly key figures for one calendar:
@@ -20,7 +21,7 @@ Key figure include:
 	epact: Julian / Gregorian computus epact, Milesian mean moon epact.
 	annualResidue: 29.5 minus epact (Milesian only).
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -96,7 +97,8 @@ function julianSignature (year) {
  * @param {number} year, integer number representing the year investigated
  * @return {Object.<string, number>} signature
  * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
- * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
+ * {number} signature.epact - the age of the moon one day before 1st January, following Gregorian computus, a 0-29 integer.
+ * {number} signature.milesiancomputusepact - the age of the moon one day before 1 1m, following Gregorian computus, a 0-29 integer.
  * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
  * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
  * {boolean} signature.isLong - whether this year is a leap year (366 days long).
@@ -121,6 +123,7 @@ function gregorianSignature (year) {
 			signature = {  // Result for this function
 			doomsday : 0, 	// John Conway's Doomsday or key day for computing weekdays: 0th March.
 			epact : 0, 		// Gregorian computus moon age one day before 1st January.
+			milesiancomputusepact : 0,	// Gregorian computus moon age one day before 1 1m.
 			easterResidue : 0,	 // Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0,	 // Number of days from 21st March to Easter Sunday.
 			isLong : false	// whether this year is 366 days long
@@ -133,6 +136,7 @@ function gregorianSignature (year) {
 	- Math.floor ((8*(4*yearCoeff.quadrisaeculum + yearCoeff.saeculum) + 13) / 25 ) // Proemptose, Zeller computation
 	, 30);
 	signature.epact = positiveModulo (23 - signature.easterResidue, 30);
+	signature.milesiancomputusepact = positiveModulo (12 - signature.easterResidue, 30);
 	signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );
 	signature.easterOffset = 1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
 	signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || yearCoeff.saeculum == 0) ;

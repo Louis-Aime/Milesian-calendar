@@ -6,6 +6,9 @@ Versions
 	M2018-10-26: Enhance comments
 	M2019-01-13: Suppress "Milesian" line, since Milesian figures are like Gregorian,
 		and rework Easter date in milesian
+	M2019-05-12: 
+		Display day of week as a Date-formatted string, instead of a select field
+		Display Roman date with an explicit month indication
 Required
 	MilesianYearSignature
 	MilesianDateProperties
@@ -38,7 +41,10 @@ Inquiries: www.calendriermilesien.org
 *///////////////////////////////////////////////////////////////////////////////
 
 function romanDateFrom21March (offset) {
-	return (offset <= 10) ? (21+offset)+"/03" : (offset - 10)+"/04";
+	let f = new Intl.DateTimeFormat(undefined,{month:"short", day:"numeric"});
+	return (offset <= 10) 
+		? f.format(new Date (1800, 2, (offset + 21))) 
+		: f.format(new Date (1800, 3, (offset - 10)));
 }
 function milesianDateFrom30_3m (offset) {
 	return	(offset <= -30 ? "<1 3m" :
@@ -53,12 +59,19 @@ function milesianDateFrom30_3m (offset) {
 		(offset <= 244 ? (offset - 214) + " 11m" :
 		(offset <= 274 ? (offset - 244) + " 12m" : ">30 12m" ))))))))))) ;
 }
+function displayDOW (Day) { // Yield the string of the day of the week of rank Day
+	return new Intl.DateTimeFormat(undefined, {weekday: "long"}).format (new Date (1970, 0, 4+Day))		
+}
+function displayYeartype (type) {
+	var yearTypes = ["cave (et commune)", "longue (et commune)", "bissextile (et cave)"]
+	return yearTypes [type];
+}
 function computeSignature(year) {
 	var signature = julianSignature (year);
 	// Set gold number
 	document.yearglobal.gold.value = positiveModulo (year, 19) + 1;
 	// Julian figures
-	document.julian.day.value = signature.doomsday;
+	document.julian.day.value = displayDOW (signature.doomsday);
 	document.julian.epact.value = signature.epact;
 	document.julian.residue.value = signature.easterResidue;
 	document.julian.daynumber.value = signature.easterOffset;
@@ -67,7 +80,7 @@ function computeSignature(year) {
 		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian figures
 	signature = gregorianSignature (year);
-	document.gregorian.day.value = signature.doomsday;
+	document.gregorian.day.value = displayDOW (signature.doomsday);
 	document.gregorian.epact.value = signature.epact;
 	document.gregorian.residue.value = signature.easterResidue;
 	document.gregorian.daynumber.value = signature.easterOffset;
@@ -77,8 +90,8 @@ function computeSignature(year) {
 	signature = milesianSignature (year);
 	// Set year type
 	let type = (signature.isLeap ? 2 : 0) + (signature.isLong ? 1 : 0) ;
-	document.yeartype.type.value = type ;
-	document.milesianyearfigures.doomsday.value = signature.doomsday;
+	document.yeartype.type.value = displayYeartype(type) ;
+	document.milesianyearfigures.doomsday.value = displayDOW (signature.doomsday);
 	document.milesianyearfigures.epact.value = signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
 	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});
 }
