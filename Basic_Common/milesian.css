@@ -2,9 +2,17 @@
 p.date {
 	text-align : right
 }
-.dateconvert {
+table {
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
 }
+.dateconvert {				/* classe à éliminer */
+	text-align: center;
+}
+.centered {
+	text-align: center;
+}	
 .daynum {
 	width: 3em;
 }
@@ -18,12 +26,16 @@ input[disabled], select[disabled] {
 	background: white;
 	color: black;
 	border-style: none;
+}       
+.bordered {
+	outline-style: solid;
+	outline-width: thin;
 }
 .outbounds {
 	color : antiquewhite;
 	background : firebrick;
 }
-button.dateconvert {
+button	 {	/* .dateconvert classe à garder pour le bouton uniquement ? */
   background: darkblue;
   color: antiquewhite;
 }
