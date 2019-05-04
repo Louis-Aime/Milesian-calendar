@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> -->
+<html><head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+
+<!-- General packages -->
+	<link href="milesian.css" rel="stylesheet"/>
+	<script type="text/javascript" src="CBCCE.js"></script>
+    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" src="JulianDateProperties.js"></script>
+	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+	<script type="text/javascript" src="UnicodeBasic.js"></script>
+    <script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
+
+<!-- Specific for this page -->
+  <script type="text/javascript" src="LunarDateProperties.js"></script>
+  <script type="text/javascript" src="MilesianYearSignature.js"></script>
+  <script type="text/javascript" src="MilesianYearSignatureDisplay.js"></script>
+
+  <title>Chiffres clés par année</title>
+</head>
+<body>
+<section class="centered">
+<h1>Chiffres clés par année</h1>
+<h2>Semaine et épacte milésienne</h2>
+<table class="centre"> 
+    <tr><form name="year" method="post" autocomplete="off" action="Javascript:setYear(document.year.year.value);" >
+	  <th>Année:</th>
+	  <td><input name="year" type="number" class="yearnum centered" value="2000" min="-271820" max="275760"></td>	
+      <td><button class="textline" name="Compute">Ok</button></td>
+	</form>
+	</tr>
+</table>
+<table class="centre">
+	<tr>
+	  <form name="control" method="post" autocomplete="off" action="Javascript:void()">
+      <th> +/- années:</th>
+	  <td><button type="button" class="textline symbol" onclick="Javascript:setYearOffset(-document.control.shift.value)">-</button></td>
+	  <td><input name="shift" type="number" class="yearnum centered" value="1" min="1" step="1"></td> 
+	  <td><button type="button" class="textline symbol" onclick="Javascript:setYearOffset(document.control.shift.value)">+</button></td>
+    </form></tr>
+</table>
+<table class="centre">
+	<form name="yeartype" method="post">
+	<tr><th>Année : </th>
+	<td> <input name="type" class="centered" disabled="disabled" value="">	</td></tr>
+	</form>	
+</table>
+<table class="centre">
+    <tr><form name="milesianyearfigures" method="post">
+	  <th>Clavedi</th><th>Epacte</th><th>Reliquat</th>
+	</tr><tr>
+	  <th >(dies illa)</th><th>milésienne</th><th>annuel</th>	  
+	</tr>
+	<tr>
+	  <td><input name="doomsday" class="yearnum centered" disabled="disabled" size="5" value=""></td>
+	  <td><input name="epact" class="yearnum centered" disabled="disabled" size="5" value="0"></td>
+	  <td><input name="residue" class="yearnum centered" disabled="disabled" size="2" value="0"></td>
+	</tr></form>
+</table>
+<h2>Pâques julienne et grégorienne</h2>
+<table class="centre">
+	<tr><form name="yearglobal" method="post">
+ 	  <th>Nombre d'or (1 à 19) : </th>
+	  <th><input name="gold" value="0" disabled="disabled" size="2"></th>
+	</form></tr>
+</table>
+<div class="autoscroll">
+<table class="centre">
+	<tr><th>Comput</th><th>Clavedi</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
+	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>romaine</th><th>milésienne</th></tr>
+	<tr>
+		<td>Grégorien</td><form name="gregorian" method="post" action="Javascript:void();">
+		<td><input name="day" class="yearnum centered" disabled="disabled"></td>
+		<td><input class="daynum centered" disabled="disabled" size="5" name="epact" value="0"></td>
+		<td><input class="daynum centered" disabled="disabled" size="5" name="residue" value="0"></td>
+        <td><input class="daynum centered" disabled="disabled" size="5" name="daynumber" value="0"></td>
+		<td><input class="yearnum centered" disabled="disabled" size="8" name="romandate" value="22/03"></td>
+		<td><input class="yearnum centered" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
+	</form></tr>
+	<tr>
+		<td>Julien</td><form name="julian" method="post" action="Javascript:void();">
+		<td><input name="day" class="yearnum centered" disabled="disabled"></td>
+		<td><input class="daynum centered" disabled="disabled" size="5" name="epact" value="0"></td>
+		<td><input class="daynum centered" disabled="disabled" size="5" name="residue" value="0"></td>
+        <td><input class="daynum centered" disabled="disabled" size="5" name="daynumber" value="0"></td>
+		<td><input class="yearnum centered" disabled="disabled" size="8" name="romandate" value="22/03"></td>
+		<td><input class="yearnum centered" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
+	</form></tr>
+</table>
+</div>
+</section>
+<h3 class="centered">© 2017-2019 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<!-- //Preset the fields in the request form to today's date  -->
+<script type="text/javascript"> setYearToNow(); </script>
+</body>
+</html>

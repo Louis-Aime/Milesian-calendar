@@ -2,7 +2,7 @@
 p.date {
 	text-align : right
 }
-table {
+table.centre {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
@@ -32,7 +32,7 @@ input[disabled], select[disabled] {
 	color : antiquewhite;
 	background : firebrick;
 }
-button	 {	/* .dateconvert classe à garder pour le bouton uniquement ? */
+button.textline	 {
   background: darkblue;
   color: antiquewhite;
 }

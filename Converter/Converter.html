@@ -7,7 +7,7 @@
 <!--
 Versions 
 	M2018-11-16 Last completed version
-	M2019-05-12 Suppress deprecated format attributes
+	M2019-05-13 Replace deprecated format attributes by CSS references
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -94,7 +94,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <circle class="clockhand" r="9" />
 </g>
 </svg>
-<table>
+<table class="centre">
     <tr><th id="clockmilesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
@@ -134,11 +134,11 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	setDisplay();	
 }
 </script>
-<table>
+<table class="centre">
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>
 </table>
-<table>
+<table class="centre">
 	 <form name="gregorianswitch" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
 	  <tr>
 		<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
@@ -158,11 +158,11 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
         <option value="11">décembre</option>
 		</select> </td>
         <td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
-        <td><button>Ok</button></td>
+        <td><button class="textline">Ok</button></td>
       </tr>
 	</form>
 </table>
-<table>
+<table class="centre">
 	<form name="controloptions" autocomplete="off" method="post" action="">
 	  <tr>
 	    <td><input type="checkbox" name="datevalidity" checked></td>
@@ -222,23 +222,23 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>	
-<table>
+<table class="centre">
   <tr>
-	<td><button type="button" onclick="Javascript:setDateToToday();">Aujourd'hui</button></td>
+	<td><button class="textline" type="button" onclick="Javascript:setDateToToday();">Aujourd'hui</button></td>
     <form name="control" method="post" action="Javascript:changeDayOffset();">
     <td> +/- jours</td>
-	<td><button type="button" class="symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
+	<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
 	<td><input name="shift" type="number" value="1" min="1" step="1" class="centered yearnum"></td> 
-	<td><button type="button" class="symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
+	<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
     </form>
   </tr>
 </table>
 
-<table>
+<table class="centre">
   <tr>
-	  <td><button type="button" class="symbol" onclick="Javascript:clockSet(-1)"><</button></td>
-	  <td><button type="button" class="symbol" onclick="Javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="symbol" onclick="Javascript:clockSet(1)">></button></td>
+	  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(-1)">&lt;</button></td>
+	  <td><button type="button" class="textline symbol" onclick="Javascript:clockRun(0)">O</button></td>
+	  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(1)">&gt;</button></td>
 	  <form name="run" method="post">
 	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
 	  </form>
@@ -248,8 +248,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 
 <section class="centered autoscroll">
 <h1 >Calendriers pivots</h1>
-<table><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
-<table>
+<table class="centre"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
+<table class="centre">
   <tr>
 	<th>Calendrier</th>
 	<th>Jour</th>
@@ -304,7 +304,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="11">12m</option>
 	</select> </td>
 	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
-	<td><button>Ok</button></td>
+	<td><button class="textline">Ok</button></td>
 	</form>	  
   </tr>
 
@@ -354,7 +354,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="11">décembre</option>
 	</select></td>
 	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
-	<td><button>Ok</button></td>
+	<td><button class="textline">Ok</button></td>
 	</form>
   </tr>	  
 
@@ -403,7 +403,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="11">décembre</option>
 	</select></td>
 	<td><input name="year" type="number" min="-271816" max="275755" class="centered yearnum"></td>
-	<td><button>Ok</button> </td>
+	<td><button class="textline">Ok</button> </td>
 	</form>
   </tr>
 
@@ -453,12 +453,12 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="12">Complément.</option>
 	</select></td>
 	<td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum"></td>
-	<td><button>Ok</button> </td>
+	<td><button class="textline">Ok</button> </td>
 	</form>
   </tr>
 </table>
 
-<table>
+<table class="centre">
   <script type="text/javascript">
 	  function calcISO() {
 		var day =  Math.round (document.isoweeks.day.value);
@@ -507,12 +507,12 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 		</select></td>
 		<td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
 		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
-		<td><button>Ok</button> </td>
+		<td><button class="textline">Ok</button> </td>
 	  </form>
 	</tr>
 </table>
 
-<table>
+<table class="centre">
   <script type="text/javascript">
 	  function calcJulianDay(){ // here, Julian Day is specified as an integer number. Insert with the suitable Date setter.
 		var j = Math.round(document.daycounter.julianday.value); // extract Julian Day, integer value expected.
@@ -531,7 +531,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
     <form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien à 12h UTC : </th><td></td>
 		<td><input name="julianday" type="number" min="-97559413" max="102440588" class="centered juliandaynum"></td>
-		<td><button>Ok</button></td>
+		<td><button class="textline">Ok</button></td>
 	</tr>
 	</form>
 </table>
@@ -539,7 +539,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 <section class="centered">
 <h1>Séries chronologiques à 0h UTC</h1>
 
-	<table>
+	<table class="centre">
 		<tr>
 			<th>Jour julien (12h UTC) : </th>
 			<td id="jdDisplay"></td>
@@ -565,7 +565,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 <section class="centered">
 <h1>Calendriers Unicode</h1>
  <form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
-  <table>
+  <table class="centre">
 		<tr><th>Format</th>
 			<td>
 			<select name="Presentation" class="centered" size="1">
@@ -577,51 +577,51 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 				<option value="numericwoera">Numérique abrégé</option>
 			</select>
 			</td>
-			<td><button>Ok</button></td>			
+			<td><button class="textline">Ok</button></td>			
 		</tr>
   </table>
-  <table>
+  <table class="centre">
 		<tr><th>Code langue</th>
 			<td>
 			<input name="Language" class="centered" type="text" autocomplete="language" size="5">
 			</td>
-			<td><button>Ok</button></td>	
+			<td><button class="textline">Ok</button></td>	
 			<td>Code utilisé: </td><td id="langCode"></td>
 		</tr>
   </table>
  </form>
-<table><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td></tr></table>
+<table class="centre"><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td></tr></table>
 
 <h2>Grégorien et dérivés</h2>
-  <table>
+  <table class="centre">
 	<tr><th>Grégorien : </th><td class="unicodedate" id="gregory"></td></tr>
 	<tr><th>Thaï : </th><td class="unicodedate" id="buddhist"></td></tr>
 	<tr><th>Japonais : </th><td class="unicodedate" id="japanese"></td></tr>
 	<tr><th>Chinois moderne : </th><td class="unicodedate" id="roc"></td></tr>
   </table>
 <h2>Solaires modernes</h2>
-  <table>
+  <table class="centre">
 	<tr><th>Milésien<sup>*</sup> :</th><td class="milesiandate"></td></tr>
    	<tr><th>Persan : </th><td class="unicodedate" id="persian"></td></tr>
 	<tr><th>Indien moderne : </th><td class="unicodedate" id="indian"></td></tr>
   </table>
 <i><sup>*</sup>affichage suivant canevas Unicode, selon navigateur</i>
 <h2>Copte et éthiopiens</h2>
-  <table>
+  <table class="centre">
  	<tr><th>Copte : </th><td class="unicodedate" id="coptic"></td></tr>
 	<tr><th>Ethiopien antique<sup>*</sup> : </th><td class="unicodedate" id="ethioaa"></td></tr>
 	<tr><th>Ethiopien chrétien : </th><td class="unicodedate" id="ethiopic"></td></tr>
    </table>
 <i><sup>*</sup>L'affichage de l'ère est spécifiquement invalidé pour ce calendrier</i>
 <h2>Luni-solaires</h2>
-  <table>
+  <table class="centre">
    	<tr><th>Hébraïque : </th><td class="unicodedate" id="hebrew"></td></tr>
 	<tr><th>Chinois traditionnel : </th><td class="unicodedate" id="chinese"></td></tr>
 	<tr><th>Coréen traditionnel<sup>*</sup> : </th><td class="unicodedate" id="dangi"></td></tr>
   </table>
 <i><sup>*</sup>sous certains navigateurs, remplacé par le coréen moderne</i>
 <h2>Lunaires musulmans</h2>
-  <table>
+  <table class="centre">
    	<tr><th>Standard : </th><td class="unicodedate" id="islamic"></td></tr>
 	<tr><th>Umm al-Qura : </th><td class="unicodedate" id="islamic-umalqura"></td></tr>
 	<tr><th>Tabulaire astronomique : </th><td class="unicodedate" id="islamic-tbla"></td></tr>
@@ -631,7 +631,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 </section>
 <section class="centered">
 <h1>Liens utiles</h1>
-  <table>
+  <table class="centre">
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
   </table>
 </section>

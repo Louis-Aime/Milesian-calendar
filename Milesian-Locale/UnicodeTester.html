@@ -27,7 +27,7 @@ la version longue est affichée en latin.</p>
 </section>
 <section class="centered autoscroll">
 <h2>Heure et décalage horaire</h2>
-	<table>
+	<table class="centre">
 		<form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 			<tr><th colspan="2">Mode</th>
 				<td colspan="4">
@@ -47,7 +47,7 @@ la version longue est affichée en latin.</p>
 				<td>mn</td>
 				<td><input name="TZOffsetSec" type="number" class="centered daynum"></td>
 				<td>s</td>
-				<td><button>Ok</button></td>
+				<td><button class="textline">Ok</button></td>
 			</tr>
 			<tr>
 				<th colspan="2">Décalage système</th>
@@ -79,14 +79,14 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-	<table>
+	<table class="centre">
 	  <tr> 
 		<form name="time" autocomplete="off" method="post" action="JavaScript:calcTime();">
 		 <th>Heure du mode : </th>
 		 <td><input name="hours" type="number" min="0" max="23" class="centered daynum">h</td>
 		 <td><input name="mins" type="number" min="0" max="59" class="centered daynum">mn</td>
 		 <td><input name="secs" type="number" min="0" max="59" class="centered daynum">s</td>
-		 <td><button>Ok</button></td>	
+		 <td><button class="textline">Ok</button></td>	
 		</form>
 	  </tr>
 	</table>
@@ -106,19 +106,19 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table> <tr>
+	 <table class="centre"> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
 		<td colspan=4><form name="Now" method="post" action="Javascript:setDateToNow();" >
-		<button>Maintenant</button></form></td>
+		<button class="textline">Maintenant</button></form></td>
 	  </tr> </table>
 
-	  <table>
+	  <table class="centre">
 	  <tr>
 		<th>Cette date à UTC</th>
-		<td><button type="button" name="0h" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button type="button" name="12h" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		<td><button class="textline" type="button" name="0h" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button class="textline" type="button" name="12h" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
 
@@ -146,13 +146,13 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	}
 }
 </script>	 
-	<table> 
+	<table class="centre"> 
 	  <tr>
 		<form name="timeShift" method="post" action="JavaScript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button type="button" class="symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><button type="button" class="textline symbol" onclick="Javascript:addTime(-1);">-</button></td>
 		<td><input name="shift" type="number" value="60" min="1" class="centered yearnum"></td>
-		<td><button type="button" class="symbol" onclick="Javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="textline symbol" onclick="Javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
@@ -188,7 +188,7 @@ function calcMilesian() {
 		}
 }
 </script>
-	<table>
+	<table class="centre">
        <tr>
         <th>Jour</th>
         <th>Quant.</th>
@@ -216,7 +216,7 @@ function calcMilesian() {
         <option value="11">12m</option>
 		</select> </td>
         <td><input name="year" type="number" class="centered yearnum"> </td>
-        <td><button>Ok</button></td>
+        <td><button class="textline">Ok</button></td>
 		</form>
       </tr>
    </table>
@@ -253,14 +253,14 @@ function setDayOffsetPlus () {setDayOffset(+1)};
 function setDayOffsetMinus () {setDayOffset(-1)};
 // No clock movement function
 </script>
-<table>
+<table class="centre">
     <tr>
-	    <td><button type="button" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
+	    <td><button class="textline" type="button" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
 	<form name="control" method="post" action="Javascript:setDayOffset();">
 		<td>+/- jours</td>
-		<td><button class="symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
+		<td><button class="textline symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
 		<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
-		<td><button class="symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
+		<td><button class="textline symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
     </form></tr>
 </table>
 </section>
@@ -268,15 +268,17 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 <section class="centered autoscroll">
 <h2>Options de présentation</h2>
 	<form name="LocaleOptions" method="post" action="JavaScript:putStringOnOptions();">
-	 <table> 
+	 <table class="centre"> 
 	   <tr>
-		<th colspan="1">Locale: </th>
-		<td colspan="1"><input name="Locale" type="text" autocomplete="language" class="centered" size="5" value=""> </td>
-		<td> Effective:</td><td colspan="1"><input name="Elocale" type="text" disabled="disabled" class="centered" size="16"></td>
+		<th>Locale: </th>
+		<td><input name="Locale" type="text" autocomplete="language" class="centered" size="30" value=""> </td>
 	   </tr>
 	   <tr>
-		<th colspan="1">Calendrier: </th>
-		<td colspan="3">
+		<td>Locale effective: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
+	   </tr>
+	   <tr>
+		<th>Calendrier: </th>
+		<td>
 			<select name="Calendar" size="1" class="centered">
 			<option value="">par défaut</option>
 			<option value="buddhist">bouddhiste Thaï</option>
@@ -301,17 +303,15 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 		</td>
 	   </tr>
 	   <tr>
-	    <td colspan="1">Calendrier effectif: </td>
-	    <td colspan="3"><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
+	    <td>Calendrier effectif: </td>
+	    <td><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
 	   </tr>
-	   </table>
-		<table>
-			<tr><th>Zone horaire </th>
-			<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
-			</tr>
-			<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
+		<tr><th>Zone horaire: </th>
+		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
+		</tr>
+		<tr><td>Zone effective: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
 		</table>
-	 <table>
+	 <table class="centre">
 	   <tr>
 		<th>Jour semaine</th><th>Quantième</th><th>Mois</th><th>Année</th>
 	   </tr>
@@ -368,7 +368,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	   </tr>
 	<tr> 
 		<th></th><th>Ere:</th>
-		<td><button type="reset">Réinit</button></td> <td></td>
+		<td><button class="textline" type="reset">Réinit</button></td> <td></td>
 	</tr> 
 	<tr><td></td>
 		<td><select name="Era" class="centered" size="1">
@@ -377,14 +377,14 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 			<option value="short">court</option>
 			<option value="long">long</option>
 			</select></td>
-		<td><button>Ok</button></td> <td></td>
+		<td><button class="textline">Ok</button></td> <td></td>
 	</tr>
    </table>
   </form> 
 </section>
 <section class="centered autoscroll">
 <h2>Expressions de date</h2>
-   <table>
+   <table class="centre">
 	   <tr><th>Unicode: </th><td id="Gstring"></td></tr>
 	   <tr><th>Milésien: </th><td id="Mstring"></td></tr>
 	   <tr><td></td><td id="Gcontrol"></td></tr>
@@ -393,15 +393,13 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 </section>
 <section class="centered">
 <h2>Liens utiles</h2>
-  <table>
-	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
-	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
+  <table class="centre">
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
+	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
   </table>
- <h3>© 2017-2018 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
-<!-- If XMLHTTPRequest asynchronous used, the next instruction to be put in onload event handler -->
-<script type="text/javascript" >
-setDateToNow();
-</script>
+ <h3>© 2017-2019 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </section>
+<!-- next script to be launched on the IPAOO version -->
+<script type="text/javascript"> setDateToNow(); </script>
 </body>
 </html>
