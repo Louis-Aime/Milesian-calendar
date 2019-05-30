@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC
     "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
     "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
-<html>
+<html lang="fr">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 <!--
@@ -9,6 +9,9 @@ Versions
 	M2018-11-16 Last completed version
 	M2019-05-13 Replace deprecated format attributes by CSS references
 	M2019-05-22 Add a <meta> at end of <head> to enhance display on most mobiles
+	M2019-06-08 
+		Put Copyright in <footer> and initialisation in <body>
+		Put year information at rear of clock
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -56,7 +59,7 @@ Inquiries: www.calendriermilesien.org
 	<title>Convertisseur de dates</title>
 <meta name="viewport" content="width=device-width">
 </head>
-<body>
+<body onload="JavaScript:setDisplay()">
 <!-- script division 
 <script type="text/javascript">
 </script>	
@@ -67,7 +70,7 @@ Inquiries: www.calendriermilesien.org
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
 <!-- Avoid onload if section is on a separate part of page (in certain CMS) -->
-<svg width="300" height="100%" xml:lang="fr" onload="JavaScript:setDisplay()"
+<svg width="300" height="100%" xml:lang="fr" 
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -76,6 +79,9 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
+<!-- the year field -->
+  <text class="clock yeardisplay"
+	x="0" y="+100"></text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
 <rect class="center month day" x="0" y="0" width="0" height="0"/>
 <!-- the month hand -->
@@ -88,9 +94,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   opacity="0.8" >									
 	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
   </g>
-<!-- the year field -->
-  <text class="clock yeardisplay"
-	x="0" y="+100"></text>
 <!-- center circle -->
 <circle class="clockhand" r="9" />
 </g>
@@ -636,6 +639,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
   </table>
 </section>
-<h3 class="centered">© 2018-10 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<footer class="centered">
+<p>© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+</footer>
 </body>
 </html>
