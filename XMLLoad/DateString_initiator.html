@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC
     "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
     "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
-<html>
+<html lang="fr">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<title>Get milesian months' names</title>
@@ -22,13 +22,15 @@ If installed on a separate domain, this domain's server should allow external GE
 <meta name="viewport" content="width=device-width">
 
 </head>
-<body>
+<body onload='initiateMilesianNames ("../xml/milesianMonthNames.xml")'>
 <section class="centered">
 <h1>Chaîne date du jour</h1>	
 <p class="MilesianDateString"></p>
+<!--
 <script type="text/javascript">
 	initiateMilesianNames ("../xml/milesianMonthNames.xml");
 </script>
+-->
 </section>
 </body>
 </html>
