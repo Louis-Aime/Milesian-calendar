@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC
     "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
     "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
-<html>
+<html lang="fr">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 <!--
@@ -11,6 +11,7 @@ Versions
 	M2018-11-10 Add Julian calendar date display
 	M2019-05-13 Replace deprecated format attributes by CSS references
 	M2019-05-22 Add a <meta> at end of <head> to enhance display on most mobiles
+	M2019-06-08 Put Copyright in <footer>, initialisation in <body>, language in html
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -60,12 +61,12 @@ Inquiries: www.calendriermilesien.org
 	<title>Horloge milésienne</title>
 <meta name="viewport" content="width=device-width">	
 </head>
-<body>
+<body onload="JavaScript:setDateToNow()">
 <section class="centered">
 <h1>Horloge milésienne</h1>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
-<svg width="300" height="100%" xml:lang="fr" onload="JavaScript:setDateToNow()"
+<svg width="300" height="100%" xml:lang="fr" 
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -964,6 +965,8 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
   </table>
 </section>
-<h3 class="centered">© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
+<footer class="centered">
+<p>© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+</footer>
 </body>
 </html>
