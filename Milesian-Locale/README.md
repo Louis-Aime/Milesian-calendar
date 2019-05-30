@@ -3,7 +3,7 @@ The content are experimental, and shall be refined until integration to Common L
 
 First objective: set the months names for a set of languages as defined [here](http://www.calendriermilesien.org/mois.html).
 ## MilesianMonthNames.xml : the database of Milesian month names in different languages
-This file is no more used in this implementation. It has been transferred to [Milesian_Datasets](https://github.com/Louis-Aime/Milesian_datasets).
+This file is not used in this implementation. It has been transferred to [XMLLoad](https://github.com/Louis-Aime/Milesian-calendar/tree/master/XMLLoad).
 ## milesianMonthNamesString.js 
 The Milesian month names object stored as a string, and parsed upon initialisation.
 ## UnicodeMilesianFormat.js
