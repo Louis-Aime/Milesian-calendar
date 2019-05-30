@@ -10,7 +10,7 @@ can be handled by simple enhancement of web standard objects, in particular
 
 Learn more about the advantages of the Milesian calendar in the herefore mentionned book and on [http://www.calendriermilesien.org].
 
-English readers are invited to read [The Milesian calendar in short] (4 pages) in the main repository.
+English readers are invited to read [The Milesian calendar in short](https://github.com/Louis-Aime/Milesian-calendar/blob/master/The%20Milesian%20calendar%20in%20short.pdf) (4 pages) available in this repository.
 
 The routines are grouped in subfolders by features.
 * Basic_Common: minimum used by other modules. 
