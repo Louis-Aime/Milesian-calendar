@@ -5,6 +5,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2018-05-22 : incorporated time management tools and secured entries
 	M2018-05-29 : enhanced and simplified control of options
 	M2018-11-16 : adapt to new (bugged) time zone handling
+	M2019-06-08 : change one field
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -136,7 +137,8 @@ function setDisplay () { // Considering that targetDate time has been set to the
  * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
 */
 	TZSettings.msoffset = targetDate.getRealTZmsOffset().valueOf();
-	document.TZmode.sysTZoffset.value = targetDate.getTimezoneOffset();
+	let myElement = document.getElementById("sysTZoffset");
+	myElement.innerHTML = new Intl.NumberFormat().format(targetDate.getTimezoneOffset());
 	let
 		systemSign = (TZSettings.msoffset > 0 ? -1 : 1), // invert sign because of JS convention for time zone
 		absoluteRealOffset = - systemSign * TZSettings.msoffset,

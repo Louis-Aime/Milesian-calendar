@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<html lang="fr">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
 
@@ -17,7 +17,7 @@
 	<title>Test calendriers Unicode</title>
 <meta name="viewport" content="width=device-width">	
 </head>
-<body>
+<body onload="setDateToNow();">
 <section class="centered">
 <h1>Expression de date<br>et calendriers Unicode</h1>
 <p>"Locale": code langue et pays,<br>
@@ -31,7 +31,7 @@ la version longue est affichée en latin.</p>
 <h2>Heure et décalage horaire</h2>
 	<table class="centre">
 		<form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
-			<tr><th colspan="2">Mode</th>
+			<tr><th colspan="2">Mode : </th>
 				<td colspan="4">
 					<select name="TZcontrol" size="1" class="centered">
 					<option value="UTC">UTC</option>
@@ -40,7 +40,7 @@ la version longue est affichée en latin.</p>
 					</select></td>
 			</tr>
 			<tr>
-				<th>Décalage</th> 
+				<th>Décalage : </th> 
 				<td><select name="TZOffsetSign" class="centered" size="2">
 				<option value="1">+</option>
 				<option value="-1">-</option>
@@ -52,9 +52,8 @@ la version longue est affichée en latin.</p>
 				<td><button class="textline">Ok</button></td>
 			</tr>
 			<tr>
-				<th colspan="2">Décalage système</th>
-				<td colspan="3"><input name="sysTZoffset" type="number" class="centered" disabled="disabled"></td>
-				<td>mn</td>
+				<th colspan="2">Décalage système : </th>
+				<td id="sysTZoffset" colspan="1"></td><td>mn</td>
 			</tr>
 		</form>
 	</table>
@@ -399,9 +398,9 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
   </table>
- <h3>© 2017-2019 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></h3>
 </section>
-<!-- next script to be launched on the IPAOO version -->
-<script type="text/javascript"> setDateToNow(); </script>
+<footer class="centered">
+ <p>© 2017-2019 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+</footer>
 </body>
 </html>
