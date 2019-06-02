@@ -9,6 +9,7 @@ Versions
 	M2018-11-06	: manage display of out-of-range date
 	M2018-11-11 : JSDocs comments
 	M2018-11-16 : adapt to time zone computation
+	M2019-06-12 : fix year setting for years 0 to 100
 Required
 	Package CBCCE.
 Contents
@@ -19,7 +20,7 @@ Contents
 	toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-Www-dd
 	toUTCIsoWeekCalDateString : same as above, in UTC time zone.
 */
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2019 - Louis A. de Fouquières
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
@@ -75,9 +76,9 @@ isoWeekCalendar_params = {
 */
 function isoWeekCalendarBase (year) { 			// 
 	let referenceDate = new Date (Date.UTC(year, 0, 4));	// 4th January is always in first ISO week of year.
-	referenceDate.setFullYear(year); 			// Year is always a full year, 98 means 98 years A.D., not 1998.	
+	referenceDate.setUTCFullYear(year); 			// Year is always a full year, 98 means 98 years A.D., not 1998.	
 	return referenceDate.valueOf() 
-		- ((referenceDate.getUTCDay() + 6) % 7)* Chronos.DAY_UNIT // Substract weekday number - 1 (+6) modulo 7 in order to come back to monday
+		- ((referenceDate.getUTCDay() + 6) % 7)* Chronos.DAY_UNIT // Substract weekday number - 1 (+6) modulo 7 in order to come back to last monday
 }
 /** Compose a date object with the figures of the ISO week calendar date in local time. 
  * @method getIsoWeekCalDate
@@ -152,9 +153,9 @@ Date.prototype.setUTCTimeFromIsoWeekCal =
 	  }, isoWeekCalendar_params));
 	return this.valueOf();
 }
-/** Compute a string representing the Republican date (local time) in numeric notation
+/** Compute a string representing the ISO week date (local time) in standardized notation
  * @method toIsoWeekCalDateString
- * @return {string} a date in the form \d m [-]yyy\, example: 1/1/-1780 
+ * @return {string} a date in the form [-]yyy-Www-d  example: 2000-W42-6 
 */
 Date.prototype.toIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-d
 	var dateElements = this.getIsoWeekCalDate();
@@ -165,9 +166,9 @@ Date.prototype.toIsoWeekCalDateString = function () { //return a string with the
 			+ ((absYear < 100) ? "0" : "") + ((absYear < 10) ? "0" : "") + absYear
 			+"-W" + ((dateElements.week < 10) ? "0" : "") + (dateElements.week) + "-"+dateElements.day;	
 }
-/** Compute a string representing the Republican date (UTC time) in numeric notation
+/** Compute a string representing the ISO week date (UTC time) in standardized notation
  * @method toUTCIsoWeekCalDateString
- * @return {string} a date in the form \d m [-]y\, example: 1/1/-1780 
+ * @return {string} a date in the form [-]yyy-Www-d  example: 2000-W42-6 
 */
 Date.prototype.toUTCIsoWeekCalDateString = function () { //return a string with the date elements in IsoWeekCal: #yyy-Www-d expressed at UTC date
 	var dateElements = this.getUTCIsoWeekCalDate();
