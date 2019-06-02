@@ -31,14 +31,10 @@ Note: this stand-alone version is not so nice as the online version, that uses f
  * LightMilesianClock.html: the light milesian clock. display time and day. 
  Use Cadran_milesien_600, MilesianClockOperations, plus .js files of Basic_Common.
  * LightMilesianClock.svg: same as above.
- * MilesianClockDisplay: updating functions for MilesianClock.html,  
- splitted in files of less than 20 kb.
- * MilesianClockOperations.js: the commands of the Milesian Clock hands and text indications
+ * MilesianClockDisplay.js: updating functions for MilesianClock.html. The input functions are in .html,
+ this file only holds display routines.
+ * MilesianClockOperations.js: the commands of the Milesian Clock hands and text indications.
+ * LunarClockOperations.js: the commands for the Moon part of the clock.
+ * Cadran_milesien_600.jpg: the fixed dial of the clock.
+ * Luna_disk.jpg: an image fo the Moon used as background for the Moon part of the clock.
  
- ## MilesianClockOperations.js
- ### setSolarYearClockHands (clock, year = undefined, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false)
- set the hands of a solar clock to the parameters. 
-  * clock: the svg object to modify
-  * year, month, day, hour, minute, second: the day-time element to display.
-  * continuous: if true, the day hand works continuously. 
-  If false or by default, the day hand stays on the same indication for 24 hours. 
