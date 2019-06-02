@@ -63,8 +63,7 @@ Inquiries: www.calendriermilesien.org
 <meta name="viewport" content="width=device-width">	
 </head>
 <body onload="JavaScript:setDateToNow()">
-<section class="centered">
-<h1>Horloge milésienne</h1>
+<section class="centered"><h1>Horloge milésienne</h1>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
 <svg width="300" height="100%" xml:lang="fr" 
@@ -146,8 +145,8 @@ order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
-<section class="centered autoscroll">
-<h1>Heure et fuseau horaire</h1>
+
+<section class="centered autoscroll"><h1>Heure et fuseau horaire</h1>
 
 	<table class="centre">
 		 <form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
@@ -278,8 +277,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	</table>
 </section>
 
-<section class="centered autoscroll">
-<h1>Navigation calendaire</h1>
+<section class="centered autoscroll"><h1>Navigation calendaire</h1>
 <script type="text/javascript">
 	var 
 		dayOffset = 1, // Days (decimal) to add or substract
@@ -349,8 +347,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 </table>
 </section>
 
-<section class="centered autoscroll">
-<h1>Dates selon les calendriers pivots</h1>
+<section class="centered autoscroll"><h1>Dates selon les calendriers pivots</h1>
 
 <table class="centre"><tr><td class="outbounds">Fond brique&nbsp;:</td><td> calendrier non valable à cette date</td></tr></table>
   <table class="centre">
@@ -706,8 +703,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 </table>
 </section>
 
-<section class="centered">
-<h1>Séries chronologiques</h1>
+<section class="centered"><h1>Séries chronologiques</h1>
 	<table class="centre">
 		<tr>
 			<th>Jour julien&nbsp;: </th>
@@ -722,22 +718,25 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			<td id="nasajdDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour Windows&nbsp;: </th>
-			<td id="windowsCountDisplay"></td>
+			<th>Compteur des tableurs&nbsp;: </th>
+			<td id="spreadSheetsCountDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour MacOS&nbsp;: </th>
+			<th>Compteur de date Microsoft&nbsp;: </th>
+			<td id="MicrosoftCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Compteur MacOS&nbsp;: </th>
 			<td id="MacOSCountDisplay"></td>
 		</tr>
 		<tr>
-			<th>Compteur Unix&nbsp;: </th>
+			<th>Compteur Posix&nbsp;: </th>
 			<td id="unixCountDisplay"></td>
 		</tr>
 	</table>
 </section>	
 
-<section class="centered autoscroll">
-<h1>Représentation Unicode</h1>
+<section class="centered autoscroll"><h1>Représentation Unicode</h1>
 	<form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
 	<table class="centre"> <tr>
 		<th>Format&nbsp;: </th>
@@ -821,8 +820,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</table>
 </section>
 
-<section class="centered">
-<h1>Données lunaires</h1>
+<section class="centered"><h1>Données lunaires</h1>
 
 <form name="moon" method="post" action="JavaScript:void(0);">
  <table class="centre">
@@ -887,8 +885,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 </table>
 </section>
 
-<section class="centered">
-<h1>Réglages</h1>
+<section class="centered"><h1>Réglages</h1>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
 <script type="text/javascript">
 function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
@@ -959,13 +956,14 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	</form>
 </table>
 </section>
-<section class="centered">
-<h1>Liens utiles</h1>
+
+<section class="centered"><h1>Liens utiles</h1>
   <table class="centre">
-	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</td></tr>
-	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</td></tr>
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
+	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
   </table>
 </section>
+
 <footer class="centered">
 <p>© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
 </footer>

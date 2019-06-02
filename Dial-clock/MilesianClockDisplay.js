@@ -1,4 +1,4 @@
-/* Milesian Clock and converter functions - part 1
+/* Milesian Clock and converter functions
 Character set is UTF-8.
 These functions are associated with the Milesian clock and converter html page: 
 They use the basic Milesian calendar functions, and the conversion functions of other calendar,
@@ -22,34 +22,14 @@ Associated with:
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
 */
 /*
-Version M2018-01-04 :
-*	Display julio-gregorian date 
-*	Red background when displayed date is outside validity
-Version M2018-02-29
-*	New modes (UTC, time zone or special offset) to manage date and time.
-*	Specify time zone for Unicode part, giving access to numerous "local" times.
-*	Enhance control of calendar validity.
-Version M2018-05-15
-*	Put Unicode and Milesian strings computation in setDisplay. 
-Version M2018-10-26
-*	askedOptions and userOptions variables were mis-declared, due to a ";" instead of ","
-Version M2018-10-29
-*	enhanced management of display parameters
-Version M2018-11-02
-*	Catch out-of-range errors
-*	Catch display error on Unicode Um-al-Qura calendar
-Version M2018-11-03
-*	Display ISO week calendar string
-*	Use date entry validity control option
-*	Adapt TZ offset to min and sec
-Version M2018-11-08
-*	Group remote .js file, insert data entry in other file
-Version M2018-11-27
-* 	Add Lunar clock display
+(See former versions log on GitHub)
 Version M2019-03-04
 * 	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
+Version M2019-06-12
+* 	Enhance marks for non-valid dates of calendars
+*	Change name of chronological counts and add one
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -291,8 +271,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.getCount("modifiedJulianDay").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#nasajdDisplay");
 	myElement.innerHTML = targetDate.getCount("nasaDay").toLocaleString(undefined,{maximumFractionDigits:6});
-	myElement = document.querySelector("#windowsCountDisplay");
-	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement = document.querySelector("#spreadSheetsCountDisplay");
+	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString();
+	myElement = document.querySelector("#MicrosoftCountDisplay");
+	myElement.innerHTML = targetDate.getCount("MSBase").toLocaleString();
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	

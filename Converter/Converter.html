@@ -65,9 +65,7 @@ Inquiries: www.calendriermilesien.org
 <script type="text/javascript">
 </script>	
 -->
-<section class="centered">
-<h1>Convertisseur de dates</h1>
-
+<section class="centered"><h1>Convertisseur de dates</h1>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
 <!-- Avoid onload if section is on a separate part of page (in certain CMS) -->
@@ -104,8 +102,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
 </table>
 </section>
-<section class="centered">
-<h1>Réglages</h1>
+
+<section class="centered"><h1>Réglages</h1>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
 <script type="text/javascript">
 function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
@@ -176,8 +174,8 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	</form>
 </table>
 </section>
-<section class="centered autoscroll">
-<h1 >Navigation temporelle</h1>
+
+<section class="centered autoscroll"><h1 >Navigation temporelle</h1>
 <script type="text/javascript">
 var 
 	dayOffset = 1, // Quantum of days to add or subtract
@@ -251,8 +249,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 </table>
 </section>
 
-<section class="centered autoscroll">
-<h1 >Calendriers pivots</h1>
+<section class="centered autoscroll"><h1 >Calendriers pivots</h1>
 <table class="centre"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
 <table class="centre">
   <tr>
@@ -541,8 +538,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	</form>
 </table>
 </section>
-<section class="centered">
-<h1>Séries chronologiques à 0h UTC</h1>
+
+<section class="centered"><h1>Séries chronologiques à 0h UTC</h1>
 
 	<table class="centre">
 		<tr>
@@ -558,17 +555,17 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			<td id="nasajdDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour Windows&nbsp;: </th>
-			<td id="windowsCountDisplay"></td>
+			<th>Compteur des tableurs&nbsp;: </th>
+			<td id="spreadSheetsCountDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour MacOS&nbsp;: </th>
+			<th>Compteur MacOS&nbsp;: </th>
 			<td id="MacOSCountDisplay"></td>
 		</tr>
 	</table>
 </section>	
-<section class="centered">
-<h1>Calendriers Unicode</h1>
+
+<section class="centered"><h1>Calendriers Unicode</h1>
  <form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
   <table class="centre">
 		<tr><th>Format&nbsp;: </th>
@@ -634,14 +631,15 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<tr><th>Arabie saoudite&nbsp;: </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
   </table>
 </section>
-<section class="centered">
-<h1>Liens utiles</h1>
+
+<section class="centered"><h1>Liens utiles</h1>
   <table class="centre">
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
   </table>
 </section>
+
 <footer class="centered">
-<p>© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+<p>© 2016-2019 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
 </footer>
 </body>
 </html>

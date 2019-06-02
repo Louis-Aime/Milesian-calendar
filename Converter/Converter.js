@@ -55,6 +55,9 @@ Version M2018-11-03
 *	Add validity control of entered dates
 Version M2019-03-04
 *	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
+Version M2019-06-12
+* 	Enhance marks for non-valid dates of calendars
+*	Change name of chronological counts
 */
 /* Copyright Miletus 2017-2018 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -187,8 +190,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.getCount("modifiedJulianDay").toLocaleString();
 	myElement = document.querySelector("#nasajdDisplay");
 	myElement.innerHTML = targetDate.getCount("nasaDay").toLocaleString();
-	myElement = document.querySelector("#windowsCountDisplay");
-	myElement.innerHTML = targetDate.getCount("windowsCount").toLocaleString();
+	myElement = document.querySelector("#spreadSheetsCountDisplay");
+	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString();
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString();
 

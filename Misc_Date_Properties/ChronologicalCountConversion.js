@@ -5,6 +5,9 @@ Versions
 	M2017-12-27 : Initial
 	M2018-10-26 : Enhance comments
 	M2018-11-11 : JSDocs comments
+	M2019-06-12 : 
+		add MSBase value, for Excel spreadsheets and MS databases
+		include out of bounds answer
 Required
 	No dependent file, all constants here (Day_Unit is defined again)
 Contents
@@ -38,7 +41,8 @@ Inquiries: www.calendriermilesien.org
  *		"julianDayAtNight" : 0 on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
  *		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
  *		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
- *		"windowsCount" : 1 on M1900-01-11T00:00:00Z, used on Windows systems
+ *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets
+ *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative.
  *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
  * @return {number} The desired counter, in decimal value
 */
@@ -48,14 +52,24 @@ Date.prototype.getCount = function (countType) {
 		HALF_DAY_UNIT = 43200000,
 		JULIAN_DAY_UTC12_EPOCH_OFFSET = +210866760000000; // Julian Day 0 (12h UTC).
 	let convertMs = JULIAN_DAY_UTC12_EPOCH_OFFSET;	// initiate with Julian day expressed in ms
+	// 1. Compute offset
 	switch (countType) {
 		case "julianDay" : break;
 		case "julianDayAtNight" : convertMs += HALF_DAY_UNIT; break;
 		case "modifiedJulianDay" : convertMs -= 2400000 * DAY_UNIT + HALF_DAY_UNIT; break;
 		case "nasaDay" : convertMs -= 2440000 * DAY_UNIT + HALF_DAY_UNIT; break;
-		case "windowsCount" : convertMs -= 2415018 * DAY_UNIT + HALF_DAY_UNIT; break;
+		case "sheetsCount" : case "MSBase"  : convertMs -= 2415018 * DAY_UNIT + HALF_DAY_UNIT; break;
 		case "macOSCount" :  convertMs -= 2416480 * DAY_UNIT + HALF_DAY_UNIT; break;
 		default : return NaN;
 	}
-	return (this.valueOf() + convertMs) / DAY_UNIT ;
+	// 2. Compute return value, and set to NaN if outside known bounds
+	let count = (this.valueOf() + convertMs) / DAY_UNIT;
+	count = (countType == "MSBase" && count < 0) ? count = 2 * Math.floor(count) - count : count;
+	switch (countType) {
+		case "nasaDay" : if (count < - 32767 || count > 32767) return NaN; break;
+		case "macOSCount" : if (count < 0) return NaN; break ;
+		case "MSBase" : if (count <= -657435 || count > 2958465) return NaN; break;
+		default : 
+	}
+	return count;
 }
