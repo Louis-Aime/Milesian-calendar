@@ -92,7 +92,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let dateComponent = targetDate.getUTCMilesianDate();
 
 	// Set Milesian clock
-	let myElement = document.querySelector("#clock3");
+	let myElement = document.querySelector("#clock3"),
+		myCollection;	// work variable used later
 	setMilesianCalendarClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
 
 	// Update milesian field selector - using Date properties
@@ -126,9 +127,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.gregorian.monthname.value = targetDate.getUTCMonth();
     document.gregorian.day.value = targetDate.getUTCDate();		
 	myElement = document.querySelector("#gregorianline");
-	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
-	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
+	myCollection = myElement.getElementsByClassName("mutable");
+	if (targetDate.valueOf() < gregorianSwitch.valueOf())	// If target date is before Gregorian calendar was enforced 
+		for (let i = 0; i < myCollection.length; i++)		// then mark that calendar was not valid
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds")
+	else 				// else remove mark: display shall be normal
+		for (let i = 0; i < myCollection.length; i++)
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
+	;
 	
     //  Update Julian Calendar - using Date properties 
 	dateComponent = targetDate.getUTCJulianDate();
@@ -142,10 +148,15 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.republican.monthname.value = dateComponent.month;
     document.republican.day.value = dateComponent.date;	
 	myElement = document.querySelector("#republicanline");
+	myCollection = myElement.getElementsByClassName("mutable");
 	if (targetDate.valueOf() >= upperRepublicanDate.valueOf()
 		|| targetDate.valueOf() < lowerRepublicanDate.valueOf() ) 	// If target date is outside period where Republican calendar was enforced 
-		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
-	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
+		for (let i = 0; i < myCollection.length; i++)		// then mark that calendar was not valid
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds")
+	else 				// else remove mark: display shall be normal
+		for (let i = 0; i < myCollection.length; i++)
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
+	;
 
 	//  Update ISO week calendar - using its Date properties
 	dateComponent = targetDate.getUTCIsoWeekCalDate();
@@ -153,9 +164,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.isoweeks.week.value = dateComponent.week;
 	document.isoweeks.day.value = dateComponent.day;	
 	myElement = document.querySelector("#isoweeksline");
-	if (targetDate.valueOf() < gregorianSwitch.valueOf() ) 	// If target date is before gregorian calendar was enforced 
-		myElement.setAttribute("class", "outbounds")	// Set "outbounds" class: display shall change
-	else myElement.removeAttribute("class");			// Else remove class: display shall be normal
+	myCollection = myElement.getElementsByClassName("mutable");
+	if (targetDate.valueOf() < gregorianSwitch.valueOf())	// If target date is before Gregorian calendar was enforced 
+		for (let i = 0; i < myCollection.length; i++)		// then mark that calendar was not valid
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds")
+	else 				// else remove mark: display shall be normal
+		for (let i = 0; i < myCollection.length; i++)
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
+	;
 
 	// Set Julian Day at 12h
    	document.daycounter.julianday.value = targetDate.getJulianDay() + 0.5; // All dates are at 0h, but Julian Day is at 12h

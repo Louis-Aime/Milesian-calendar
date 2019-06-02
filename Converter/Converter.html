@@ -12,6 +12,7 @@ Versions
 	M2019-06-08 
 		Put Copyright in <footer> and initialisation in <body>
 		Put year information at rear of clock
+	M2019-06-10 Enhance display of non-valid dates and of ":"
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -140,7 +141,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </script>
 <table class="centre">
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
-	 <tr><th>(au plus tôt: 15 octobre 1582)</th></tr>
+	 <tr><th>(au plus tôt&nbsp;: 15 octobre 1582)</th></tr>
 </table>
 <table class="centre">
 	 <form name="gregorianswitch" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
@@ -290,7 +291,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </script>  
   <tr>
 	<form name="milesian" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
-	<td>Milésien </td>
+	<td>Milésien&nbsp;: </td>
 	<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
 	<td>
 	<select name="monthname" size="1" class="centered">
@@ -341,9 +342,9 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </script>
   <tr id="gregorianline">
 	<form name="gregorian" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
-	<td>Grégorien </td>
-	<td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
-	<td><select name="monthname" class="centered" size="1">
+	<td class=" mutable">Grégorien&nbsp;: </td>
+	<td><input name="day" type="number" min="1" max="31" class="centered daynum mutable"> </td>
+	<td><select name="monthname" class="centered mutable" size="1">
 	<option value="0">janvier</option>
 	<option value="1">février</option>
 	<option value="2">mars</option>
@@ -357,7 +358,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="10">novembre</option>
 	<option value="11">décembre</option>
 	</select></td>
-	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
+	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum mutable"></td>
 	<td><button class="textline">Ok</button></td>
 	</form>
   </tr>	  
@@ -390,7 +391,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </script>  
   <tr>
 	<form name="julian" autocomplete="off" method="post" action="JavaScript:calcJulian();">
-	<td>Julien </td>
+	<td>Julien&nbsp;: </td>
 	<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
 	<td><select name="monthname" class="centered" size="1">
 	<option value="0">janvier</option>
@@ -439,9 +440,9 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </script>
   <tr id="republicanline">
 	<form name="republican" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
-	<td>Républicain </td>
-	<td><input name="day" type="number" min="1" max="30" class="centered daynum"> </td>
-	<td><select name="monthname" class="centered" size="1">
+	<td class="mutable">Républicain&nbsp;: </td>
+	<td><input name="day" type="number" min="1" max="30" class="centered daynum mutable"> </td>
+	<td><select name="monthname" class="centered mutable" size="1">
 	<option value="0">Vendémiaire</option>
 	<option value="1">Brumaire</option>
 	<option value="2">Frimaire</option>
@@ -456,7 +457,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	<option value="11">Fructidor</option>
 	<option value="12">Complément.</option>
 	</select></td>
-	<td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum"></td>
+	<td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum mutable"></td>
 	<td><button class="textline">Ok</button> </td>
 	</form>
   </tr>
@@ -498,9 +499,9 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	  </tr>
 	<tr id="isoweeksline">
 		<form name="isoweeks" autocomplete="off" method="post" action="JavaScript:calcISO();">
-		<td>Par semaines </td>
+		<td class="mutable">Semaines ISO&nbsp;: </td>
 		<td> 
-		<select name="day" class="centered" size="1">
+		<select name="day" class="centered mutable" size="1">
 		<option value="1">lundi</option>
 		<option value="2">mardi</option>
 		<option value="3">mercredi</option>
@@ -509,8 +510,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 		<option value="6">samedi</option>
 		<option value="7">dimanche</option>
 		</select></td>
-		<td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
-		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
+		<td><input name="week" type="number" min="1" max="53" class="centered daynum mutable"> </td>
+		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum mutable"></td>
 		<td><button class="textline">Ok</button> </td>
 	  </form>
 	</tr>
@@ -533,7 +534,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	  }
   </script>
     <form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
-	<tr><th>Jour julien à 12h UTC : </th><td></td>
+	<tr><th>Jour julien à 12h UTC&nbsp;: </th><td></td>
 		<td><input name="julianday" type="number" min="-97559413" max="102440588" class="centered juliandaynum"></td>
 		<td><button class="textline">Ok</button></td>
 	</tr>
@@ -545,23 +546,23 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 
 	<table class="centre">
 		<tr>
-			<th>Jour julien (12h UTC) : </th>
+			<th>Jour julien (12h UTC)&nbsp;: </th>
 			<td id="jdDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour julien modifié : </th>
+			<th>Jour julien modifié&nbsp;: </th>
 			<td id="mjdDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour julien NASA : </th>
+			<th>Jour julien NASA&nbsp;: </th>
 			<td id="nasajdDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour Windows : </th>
+			<th>Jour Windows&nbsp;: </th>
 			<td id="windowsCountDisplay"></td>
 		</tr>
 		<tr>
-			<th>Jour MacOS : </th>
+			<th>Jour MacOS&nbsp;: </th>
 			<td id="MacOSCountDisplay"></td>
 		</tr>
 	</table>
@@ -570,7 +571,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 <h1>Calendriers Unicode</h1>
  <form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
   <table class="centre">
-		<tr><th>Format</th>
+		<tr><th>Format&nbsp;: </th>
 			<td>
 			<select name="Presentation" class="centered" size="1">
 				<option value="long">Texte complet</option>
@@ -585,52 +586,52 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 		</tr>
   </table>
   <table class="centre">
-		<tr><th>Code langue</th>
+		<tr><th>Code langue&nbsp;: </th>
 			<td>
 			<input name="Language" class="centered" type="text" autocomplete="language" size="5">
 			</td>
 			<td><button class="textline">Ok</button></td>	
-			<td>Code utilisé: </td><td id="langCode"></td>
+			<td>&nbsp;Code utilisé&nbsp;: </td><td id="langCode"></td>
 		</tr>
   </table>
  </form>
-<table class="centre"><tr><td>Exemple: <code>en-gb</code> ou <code>en-us</code>, vide: défaut système</td></tr></table>
+<table class="centre"><tr><td>Exemple&nbsp;: <code>en-gb</code> ou <code>en-us</code>, vide&nbsp;: défaut système</td></tr></table>
 
 <h2>Grégorien et dérivés</h2>
   <table class="centre">
-	<tr><th>Grégorien : </th><td class="unicodedate" id="gregory"></td></tr>
-	<tr><th>Thaï : </th><td class="unicodedate" id="buddhist"></td></tr>
-	<tr><th>Japonais : </th><td class="unicodedate" id="japanese"></td></tr>
-	<tr><th>Chinois moderne : </th><td class="unicodedate" id="roc"></td></tr>
+	<tr><th>Grégorien&nbsp;: </th><td class="unicodedate" id="gregory"></td></tr>
+	<tr><th>Thaï&nbsp;: </th><td class="unicodedate" id="buddhist"></td></tr>
+	<tr><th>Japonais&nbsp;: </th><td class="unicodedate" id="japanese"></td></tr>
+	<tr><th>Chinois moderne&nbsp;: </th><td class="unicodedate" id="roc"></td></tr>
   </table>
 <h2>Solaires modernes</h2>
   <table class="centre">
-	<tr><th>Milésien<sup>*</sup> :</th><td class="milesiandate"></td></tr>
-   	<tr><th>Persan : </th><td class="unicodedate" id="persian"></td></tr>
-	<tr><th>Indien moderne : </th><td class="unicodedate" id="indian"></td></tr>
+	<tr><th>Milésien<sup>*</sup>&nbsp;: </th><td class="milesiandate"></td></tr>
+   	<tr><th>Persan&nbsp;: </th><td class="unicodedate" id="persian"></td></tr>
+	<tr><th>Indien moderne&nbsp;: </th><td class="unicodedate" id="indian"></td></tr>
   </table>
 <i><sup>*</sup>affichage suivant canevas Unicode, selon navigateur</i>
 <h2>Copte et éthiopiens</h2>
   <table class="centre">
- 	<tr><th>Copte : </th><td class="unicodedate" id="coptic"></td></tr>
-	<tr><th>Ethiopien antique<sup>*</sup> : </th><td class="unicodedate" id="ethioaa"></td></tr>
-	<tr><th>Ethiopien chrétien : </th><td class="unicodedate" id="ethiopic"></td></tr>
+ 	<tr><th>Copte&nbsp;: </th><td class="unicodedate" id="coptic"></td></tr>
+	<tr><th>Ethiopien antique<sup>*</sup>&nbsp;: </th><td class="unicodedate" id="ethioaa"></td></tr>
+	<tr><th>Ethiopien chrétien&nbsp;: </th><td class="unicodedate" id="ethiopic"></td></tr>
    </table>
-<i><sup>*</sup>L'affichage de l'ère est spécifiquement invalidé pour ce calendrier</i>
+<i><sup>*</sup>affichage de l'ère spécifiquement invalidé pour ce calendrier</i>
 <h2>Luni-solaires</h2>
   <table class="centre">
-   	<tr><th>Hébraïque : </th><td class="unicodedate" id="hebrew"></td></tr>
-	<tr><th>Chinois traditionnel : </th><td class="unicodedate" id="chinese"></td></tr>
-	<tr><th>Coréen traditionnel<sup>*</sup> : </th><td class="unicodedate" id="dangi"></td></tr>
+   	<tr><th>Hébraïque&nbsp;: </th><td class="unicodedate" id="hebrew"></td></tr>
+	<tr><th>Chinois traditionnel&nbsp;: </th><td class="unicodedate" id="chinese"></td></tr>
+	<tr><th>Coréen traditionnel<sup>*</sup>&nbsp;: </th><td class="unicodedate" id="dangi"></td></tr>
   </table>
 <i><sup>*</sup>sous certains navigateurs, remplacé par le coréen moderne</i>
 <h2>Lunaires musulmans</h2>
   <table class="centre">
-   	<tr><th>Standard : </th><td class="unicodedate" id="islamic"></td></tr>
-	<tr><th>Umm al-Qura : </th><td class="unicodedate" id="islamic-umalqura"></td></tr>
-	<tr><th>Tabulaire astronomique : </th><td class="unicodedate" id="islamic-tbla"></td></tr>
-	<tr><th>Tabulaire civil : </th><td class="unicodedate" id="islamic-civil"></td></tr>
-	<tr><th>Arabie saoudite : </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
+   	<tr><th>Standard&nbsp;: </th><td class="unicodedate" id="islamic"></td></tr>
+	<tr><th>Umm al-Qura&nbsp;: </th><td class="unicodedate" id="islamic-umalqura"></td></tr>
+	<tr><th>Tabulaire astronomique&nbsp;: </th><td class="unicodedate" id="islamic-tbla"></td></tr>
+	<tr><th>Tabulaire civil&nbsp;: </th><td class="unicodedate" id="islamic-civil"></td></tr>
+	<tr><th>Arabie saoudite&nbsp;: </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
   </table>
 </section>
 <section class="centered">
