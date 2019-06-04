@@ -25,7 +25,7 @@ Associated with:
 (See former versions log on GitHub)
 Version M2019-03-04
 * 	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
-Version M2019-06-12
+Version M2019-06-14
 * 	Enhance marks for non-valid dates of calendars
 *	Change name of chronological counts and add one
 */
@@ -272,9 +272,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.querySelector("#nasajdDisplay");
 	myElement.innerHTML = targetDate.getCount("nasaDay").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#spreadSheetsCountDisplay");
-	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString();
+	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MicrosoftCountDisplay");
-	myElement.innerHTML = targetDate.getCount("MSBase").toLocaleString();
+	myElement.innerHTML = targetDate.getCount("MSBase").toLocaleString(undefined,{maximumFractionDigits:6});
 	myElement = document.querySelector("#MacOSCountDisplay");
 	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
 	
