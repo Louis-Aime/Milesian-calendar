@@ -5,9 +5,10 @@ Versions
 	M2017-12-27 : Initial
 	M2018-10-26 : Enhance comments
 	M2018-11-11 : JSDocs comments
-	M2019-06-12 : 
+	M2019-06-14 : 
 		add MSBase value, for Excel spreadsheets and MS databases
-		include out of bounds answer
+		change MacOS display
+		include out of bounds display
 Required
 	No dependent file, all constants here (Day_Unit is defined again)
 Contents
@@ -64,11 +65,11 @@ Date.prototype.getCount = function (countType) {
 	}
 	// 2. Compute return value, and set to NaN if outside known bounds
 	let count = (this.valueOf() + convertMs) / DAY_UNIT;
-	count = (countType == "MSBase" && count < 0) ? count = 2 * Math.floor(count) - count : count;
+	count = ((countType == "MSBase" && count < 0) || (countType == "macOSCount" && count < -1462 )) ? count = 2 * Math.floor(count) - count : count;
 	switch (countType) {
-		case "nasaDay" : if (count < - 32767 || count > 32767) return NaN; break;
-		case "macOSCount" : if (count < 0) return NaN; break ;
-		case "MSBase" : if (count <= -657435 || count > 2958465) return NaN; break;
+		case "nasaDay" : if (count < -32767 || count > 32767) return NaN; break;
+		case "macOSCount" : if (count <= -657435|| count >=	2957004) return NaN; break ;
+		case "MSBase" : if (count <= -657435 || count >= 2958466) return NaN; break;
 		default : 
 	}
 	return count;
