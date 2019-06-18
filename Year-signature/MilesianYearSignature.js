@@ -8,6 +8,7 @@ Versions
 	M2018-11-13: JSDoc comments
 	M2019-01-13: Milesian intercalation is same as Gregorian
 	M2019-05-12: Add the the milesiancomputusepact i.e. epact of the gregorian computus one day before 1 1m (not to be recommended)
+	M2019-06-28: Enhance Milesian epact computation, shall depend on UTC time only.
 Required
 	Package CBCCE.
 Each function returns a compound value with the yearly key figures for one calendar:
@@ -181,7 +182,7 @@ function milesianSignature (year) {
 			yearCoeff = cbcceDecompose (year, yearParams),
 			gold = positiveModulo (year, 19),
 			doomhour = new Date (0);
-		doomhour.setUTCHours (7); doomhour.setUTCMinutes (30); doomhour.setTimeFromMilesian (year, 0, 0); 
+		doomhour.setUTCTimeFromMilesian (year, 0, 0, 7, 30); 
 		signature.doomsday = positiveModulo (2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7);
 		signature.epact = Math.round(doomhour.getCEMoonDate().age*2)/2; 	// Milesian epact is a half-integer 
 		signature.annualResidue = 29.5 - signature.epact;
