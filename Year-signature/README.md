@@ -8,6 +8,6 @@ Demonstrates computations of "key figures" for a year:
 
 See http://www.calendriermilesien.org/calculateur-donnees-annuelles.html for further explanations (in French).
 ## Installation
-1. Extract .js files from Basic_Common into a directory of your computer.
+1. Extract .js files from Basic_Common and Misc_Date_Properties into a directory of your computer.
 1. Extract all .js and .html files of Year-signature into the same directory.
 1. Launch YearSignatureDisplay.html with any web browser except MS Internet Explorer.
