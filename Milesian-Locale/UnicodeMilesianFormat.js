@@ -32,6 +32,8 @@ Versions
 		Add comments about extracted functions
 	M2018-11-24
 		Use toResolvedLocalDate instead of toLocalDate
+	M2019-07-24
+		Set numbering system of Milesian numeric elements to those of asked locale
 Contents
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -41,7 +43,7 @@ Required:
 	UnicodeBasic
 	Intl object with FormatToParts
 */
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -72,19 +74,21 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	var	
+		numberingSystem = this.resolvedOptions().numberingSystem,
 		locale = this.resolvedOptions().locale,	// Fetch the locale from this 
 		lang = locale.includes("-") ? locale.substring (0,locale.indexOf("-")) : locale;	// the pure language identifier, without country
-	// Change the calendar of locale to "gregory"
+	// Change the calendar of locale to "gregory" and add the resolved numbering system
 	locale = (locale.includes("-u-") 
 		? 	(locale.substring(locale.indexOf("-u-")).includes("ca-") 
 				? locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-")))
 				: locale )
 			+ "ca-"
 		: locale + "-u-ca-"
-		) + "gregory" ;
+		) + "gregory-nu-" + numberingSystem;
 	var 
-		figure2 = new Intl.NumberFormat (locale, {minimumIntegerDigits : 2, useGrouping : false}),
-		figure3 = new Intl.NumberFormat (locale, {minimumIntegerDigits : 3, useGrouping : false});
+		figure1 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 1, useGrouping : false}),
+		figure2 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 2, useGrouping : false}),
+		figure3 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 3, useGrouping : false});
 	var 
 		constructOptions = new Intl.DateTimeFormat(locale,this.resolvedOptions()), 
 		referenceOptions = constructOptions.resolvedOptions();
@@ -107,7 +111,7 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 					}
 				case "day": switch (referenceOptions.day) {		// Unicode says "day" where original JS says "date" (in French: "quantième du mois")
 					case "2-digit" : return {type:type, value: figure2.format(milesianComponents.date)}; 
-					default : return {type:type, value: milesianComponents.date}; 
+					default : 		return {type:type, value: figure1.format(milesianComponents.date)}; 
 					} 
 				case "month" : 
 					let Xpath1 = "", node = undefined;	// will be used for searching the month's names in the Locale data registry
