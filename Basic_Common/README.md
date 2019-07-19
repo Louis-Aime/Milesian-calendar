@@ -28,3 +28,9 @@ Package CCBCCE is used.
 ## MilesianAlertMsg
 Object used with "Alert" commands or in string construction of other modules. Error messages in several languages are generated. 
 This module should be re-encoded for sites that do not use the UTF-8 character set.
+
+## RealTZmsOffset.js: a method for precise Timezone offset computation
+The method getRealTZmsOffset computes the real offset between a local hour and UTC in ms. 
+Since local time before TZ were enforced is now taken into account, 
+using TZOffset gives different results in different browsers.
+Hence this method, which mas originally developed with another module, UnicodeBasic.js
