@@ -2,17 +2,19 @@
 	Character set is UTF-8
 Versions
 	The tools were originally developed with UnicodeMilesianFormat tools in 2017.
-	M2018-11-11 separate tools, in order to cater for several independent calendar implementations.
-	M2018-11-16 add a time zone offset computing function and a simple version of toLocalDate
-	M2018-11-24 deprecate toLocalDate
+	M2018-11-11: separate tools, in order to cater for several independent calendar implementations.
+	M2018-11-16: add a time zone offset computing function and a simple version of toLocalDate
+	M2018-11-24: deprecate toLocalDate
+	M2019-07-27: separate getRealTZOffset into ReaTZmsOffset.js
 Contents
-	getRealTZmsOffset : the real time zone offset, in milliseconds, due to a bug in Chrome version of TZOffset.
+	getRealTZmsOffset : moved to RealTZmsOffset.js
 	unicodeCalendarHandled : from a requested calendar, gives the effectively used one.
 	toResolvedLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone.  
 Required
 	Access to "Chronos" object.
+	getRealsTZmsOffset defined elsewhere
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -34,21 +36,6 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 
-/** Compute the system time zone offset at this date, in ms.
- * rationale: with Chrome (and others ?), the TZOffset returned value losses the seconds. 
- * @returns {number} the time zone offset in milliseconds: UTC - local (same sign as TimezoneOffset)
-*/
-Date.prototype.getRealTZmsOffset = function () {	
-/** Gregorian coordinates of the system local date */
-	let localCoord = 
-		{year: this.getFullYear(), month: this.getMonth(), date: this.getDate(), 
-		hours: this.getHours(), minutes: this.getMinutes(), seconds: this.getSeconds(), milliseconds: this.getMilliseconds()};
-/** UTC Date constructed with the local date coordinates */
-	let localDate = new Date (0); 
-	localDate.setUTCFullYear (localCoord.year, localCoord.month, localCoord.date); 
-	localDate.setUTCHours (localCoord.hours, localCoord.minutes, localCoord.seconds, localCoord.milliseconds);
-	return this.valueOf() - localDate.valueOf()
-}
 
 /** Show which calendar is effectively used, in connection with a language, upon request through the Locale u-ca- parameters of Intl.DateTimeFormatate
  * @param {string} calendar: name of asked calendar
