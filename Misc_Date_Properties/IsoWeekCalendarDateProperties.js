@@ -10,8 +10,10 @@ Versions
 	M2018-11-11 : JSDocs comments
 	M2018-11-16 : adapt to time zone computation
 	M2019-06-12 : fix year setting for years 0 to 100
+	M2019-07-27 : adapt to getRealTZmsOffset located in another package
 Required
 	Package CBCCE.
+	getRealTZmsOffset method.
 Contents
 	getIsoWeekCalDate : the day date as a three elements object: .year, .week, .date; .week is 1 to 53. Conversion is in local time.
 	getUTCIsoWeekCalDate : same as above, in UTC time.

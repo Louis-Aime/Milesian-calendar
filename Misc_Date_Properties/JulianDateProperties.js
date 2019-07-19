@@ -12,8 +12,10 @@ Versions
 	M2018-11-16 : adapt to time zone computation
 	M2019-01-06 : reconstruct julian calendar converter using CBCCE
 	M2019-03-04 : replace {... Object} notation that does not fit to MS Edge
+	M2019-07-27 : adapt to getRealTZmsOffset located in another package
 Required
 	Package CBCCE
+	getRealTZmsOffset method.
 Contents
 	getJulianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 	getUTCJulianDate : same as above, in UTC time.

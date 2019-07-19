@@ -8,6 +8,7 @@ Associated with:
 1. Common functions
 *	CBCCE (the Cycle-Based Calendar Computation Engine)
 *	MilesianAlertMsg
+*	getRealTZmsOffset method
 2. For conversions and clock operation
 *	MilesianClockOperations
 *	LunarClockOperation
@@ -28,6 +29,8 @@ Version M2019-03-04
 Version M2019-06-14
 * 	Enhance marks for non-valid dates of calendars
 *	Change name of chronological counts and add one
+Version M2019-07-27
+	No functional change, mention use of getRealTZmsOffset method
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining

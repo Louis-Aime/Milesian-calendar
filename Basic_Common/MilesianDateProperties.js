@@ -9,9 +9,10 @@ Versions
 	M2018-11-11 : JSDoc comments
 	M2018-11-16 : replace getTimezoneOffset with getRealTZmsOffset
 	M2019-01-13 : change intercalation rule to Gregorian
+	M2019-07-27 : adapt to getRealTZmsOffset located in another package
 Required
-	Package CBCCE
-	UnicodeBasic
+	Package CBCCE.
+	getRealTZmsOffset method.
 Contents
 	getMilesianDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 	getUTCMilesianDate : same as above, in UTC time.

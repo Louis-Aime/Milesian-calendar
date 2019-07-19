@@ -8,8 +8,10 @@ Versions
 	M2018-11-10 : new value for draconitic cycle, found in Wikipedia
 	M2018-11-12 : JSdoc comments + add dacronitic routines
 	M2018-11-16 : adapt to TZ in ms rather than in mn
-Required:
+	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+Required
 	Package CBCCE.
+	getRealTZmsOffset method.
 Contents: methods for Date.prototype
 	getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
 		TT is Terrestrial Time, a uniform time scale defined with a second defined independently from Earth movements.

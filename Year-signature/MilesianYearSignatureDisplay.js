@@ -9,10 +9,10 @@ Versions
 	M2019-05-12: 
 		Display day of week as a Date-formatted string, instead of a select field
 		Display Roman date with an explicit month indication
-Required
+	M2019-07-27: update dependencies
+Required (directly)
 	MilesianYearSignature
-	MilesianDateProperties
-	CBCCE
+	MilesianAlertMsg
 Contents
 	Functions called by the MilesianYearSignature.html
 */////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +36,7 @@ claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
-*////////////////////////////////////////////////////////////////////////////////
-/*// Import CBCCE, MilesianDateProperties, and MilesianYearSignature, or make visible.
-*///////////////////////////////////////////////////////////////////////////////
+*/
 
 function romanDateFrom21March (offset) {
 	let f = new Intl.DateTimeFormat(undefined,{month:"short", day:"numeric"});

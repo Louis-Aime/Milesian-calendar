@@ -6,13 +6,15 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2018-05-29 : enhanced and simplified control of options
 	M2018-11-16 : adapt to new (bugged) time zone handling
 	M2019-06-08 : change one field
+	M2019-07-27 : mention getRealTZmsOffset - no functional change
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
 	other routines are copied from MilesianClockDisplay
 Required:
 	MilesianDateProperties.js 
-		CBCCE (necessary for MilesianProperties)
+		CBCCE (necessary for MilesianDateProperties)
+		getRealTZmsOffset method (necessary for MilesianDateProperties)
 	MilesianMonthNames.xml: 
 		or milesianMonthNamesString, a simpler version
 	MilesianAlertMsg.js

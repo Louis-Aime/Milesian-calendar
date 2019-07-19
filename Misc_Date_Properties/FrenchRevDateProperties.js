@@ -8,8 +8,10 @@ Versions
 	M2018-11-06	: manage display of out-of-range date
 	M2018-11-11 : JSDocs comments
 	M2018-11-16 : adapt to time zone computation
+	M2019-07-27 : adapt to getRealTZmsOffset located in another package
 Required
 	Package CBCCE.
+	getRealTZmsOffset method.
 Contents
 	getFrenchRevDate : the day date as a three elements object: .year, .month, .date; .month is 0 to 11. Conversion is in local time.
 	getUTCFrenchRevDate : same as above, in UTC time.

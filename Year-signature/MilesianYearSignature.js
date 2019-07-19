@@ -9,8 +9,10 @@ Versions
 	M2019-01-13: Milesian intercalation is same as Gregorian
 	M2019-05-12: Add the the milesiancomputusepact i.e. epact of the gregorian computus one day before 1 1m (not to be recommended)
 	M2019-06-28: Enhance Milesian epact computation, shall depend on UTC time only.
+	M2019-07-27: Update dependencies, no new code
 Required
 	Package CBCCE.
+	MilesianDateProperties (UTC only).
 Each function returns a compound value with the yearly key figures for one calendar:
 	julianSignature: for the Julian calendar,
 	gregorianSignature: for the Gregorian calendar,
