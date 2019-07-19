@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Version M2019-07-28 -->
 <html lang="fr">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -6,20 +7,22 @@
 <!-- General packages -->
 	<link href="milesian.css" rel="stylesheet"/>
 	<script type="text/javascript" src="CBCCE.js"></script>
+	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
-    <script type="text/javascript" src="MilesianAlertMsg.js"></script>
- 	<script type="text/javascript" src="UnicodeBasic.js"></script>
- 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
- 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	<script type="text/javascript" src="RealTZmsOffset.js"></script>
+
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+	<script type="text/javascript" src="UnicodeBasic.js"></script>
+	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 
 <!-- Specific for this page -->
 	<script type="text/javascript" src="UnicodeTester.js"></script>	
+
 	<title>Test calendriers Unicode</title>
 <meta name="viewport" content="width=device-width">	
 </head>
 <body onload="setDateToNow();">
-<section class="centered">
-<h1>Expression de date<br>et calendriers Unicode</h1>
+<section class="centered"><h1>Expression de date<br>et calendriers Unicode</h1>
 <p>"Locale"&nbsp;: code langue et pays,<br>
 par exemple "fr" ou "en-US".<br>
 "Zone horaire"&nbsp;: ville de référence de fuseau horaire.<br>
@@ -27,8 +30,7 @@ Voir valeurs possibles via liens en bas de page.<br>
 Noms de mois milésiens non définis dans une langue:<br>
 la version longue est affichée en latin.</p>
 </section>
-<section class="centered autoscroll">
-<h2>Heure et décalage horaire</h2>
+<section class="centered autoscroll"><h2>Heure et décalage horaire</h2>
 	<table class="centre">
 		<form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
 			<tr><th colspan="2">Mode&nbsp;: </th>
@@ -159,8 +161,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	</table>
 </section>
 
-<section class="centered autoscroll">
-<h2>Date</h2>
+<section class="centered autoscroll"><h2>Date</h2>
 <script type="text/javascript">
 function calcMilesian() {
 	var 
@@ -266,8 +267,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 </table>
 </section>
 
-<section class="centered autoscroll">
-<h2>Options de présentation</h2>
+<section class="centered autoscroll"><h2>Options de présentation</h2>
 	<form name="LocaleOptions" method="post" action="JavaScript:putStringOnOptions();">
 	 <table class="centre"> 
 	   <tr>
@@ -383,8 +383,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
    </table>
   </form> 
 </section>
-<section class="centered autoscroll">
-<h2>Expressions de date</h2>
+<section class="centered autoscroll"><h2>Expressions de date</h2>
    <table class="centre">
 	   <tr><th>Unicode&nbsp;: </th><td id="Gstring"></td></tr>
 	   <tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
@@ -392,8 +391,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	   <tr><td></td><td id="Mcontrol"></td></tr>
 	</table>
 </section>
-<section class="centered">
-<h2>Liens utiles</h2>
+<section class="centered"><h2>Liens utiles</h2>
   <table class="centre">
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
