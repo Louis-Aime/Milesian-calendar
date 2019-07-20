@@ -11,10 +11,7 @@ The Milesian month names object stored as a string, and parsed upon initialisati
 ## UnicodeBasics.js
 A basic access routines that the user misses when developping an additionnal calendar
 ### getRealTZmsOffset
-Get the real and complete ttime zone offset, in ms, at a given date-time.
-This is necessary since the browser now give a "local" time for ancien dates, before national the time zone system was in place,
-which is not an integer number of minutes.
-The standard getTimeZoneOffset method does not give the same results, depending on browsers.
+This method is no longer here, as it is not functionally related to date displaying
 ### unicodeCalendarHandled (calendar)
 If user specifies calendar, which calendar will he get after system negotiation
 ### toResolvedLocalDate
