@@ -314,15 +314,9 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 		</table>
 	 <table class="centre">
 	   <tr>
-		<th>Jour semaine</th><th>Quantième</th><th>Mois</th><th>Année</th>
+		<th>Quantième</th><th>Mois</th><th>Année</th>
 	   </tr>
 	   <tr>
-		<td><select name="Weekday" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="narrow">étroit</option>
-			<option value="short">court</option>
-			<option value="long" selected>long</option>
-			</select></td>
 		<td><select name="Day" class="centered" size="1">
 			<option value="">absent</option>
 			<option value="numeric" selected>numérique</option>
@@ -343,7 +337,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 			</select></td>
 	   </tr>
 	   <tr>
-		<th>Heure</th><th>Minute</th><th>Seconde</th><th>Cycle horaire</th>
+		<th>Heure</th><th>Minute</th><th>Seconde</th>
 	   </tr>
 	   <tr>
 		<td><select name="Hour" class="centered" size="1">
@@ -361,23 +355,31 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 			<option value="numeric" selected>numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
-		<td><select name="Hour12" size="1" class="centered">
-			<option value="" selected>usage local</option>
-			<option value="true">12h</option>
-			<option value="false">24h</option>
-			</select></td>
 	   </tr>
 	<tr> 
-		<th></th><th>Ere</th>
-		<td><button class="textline" type="reset">Réinit</button></td> <td></td>
+		<th>Jour semaine</th><th>Ere</th><th>Cycle horaire</th>
 	</tr> 
-	<tr><td></td>
+	<tr>
+		<td><select name="Weekday" class="centered" size="1">
+			<option value="">absent</option>
+			<option value="narrow">étroit</option>
+			<option value="short">court</option>
+			<option value="long" selected>long</option>
+			</select></td>
 		<td><select name="Era" class="centered" size="1">
 			<option value="" selected>absent</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
 			<option value="long">long</option>
 			</select></td>
+		<td><select name="Hour12" size="1" class="centered">
+			<option value="" selected>usage local</option>
+			<option value="true">12h</option>
+			<option value="false">24h</option>
+			</select></td>
+	</tr>
+	<tr>
+		<td colspan="2"><button class="textline" type="reset">Réinit</button></td>
 		<td><button class="textline">Ok</button></td> <td></td>
 	</tr>
    </table>
