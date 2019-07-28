@@ -1,4 +1,4 @@
-# Milesian Locale: compute Milesian date string following CLDR project model.
+# Milesian Locale: compute Milesian date string following Unicode CLDR project model.
 The content are experimental, and shall be refined until integration to Common Locale Data Repository (CLDR) is possible.
 First objective: set the months names for a set of languages as defined [here](http://www.calendriermilesien.org/mois.html).
 
@@ -10,8 +10,6 @@ The Milesian month names object stored as a string, and parsed upon initialisati
 
 ## UnicodeBasics.js
 A basic access routines that the user misses when developping an additionnal calendar
-### getRealTZmsOffset
-This method is no longer here, as it is not functionally related to date displaying
 ### unicodeCalendarHandled (calendar)
 If user specifies calendar, which calendar will he get after system negotiation
 ### toResolvedLocalDate
@@ -31,7 +29,7 @@ see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Ob
 for details on Locale and Options passed to Intl.DateTimeFormat ()
 
 ## UnicodeTester.html, UnicodeTester.js
-A simple demonstration page that uses the abone functions 
+A simple demonstration page that uses the above functions 
 and enables it to understand how Unicode calendars are displayed
 
 ## Installation
