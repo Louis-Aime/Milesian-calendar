@@ -31,6 +31,8 @@ Version M2019-06-14
 *	Change name of chronological counts and add one
 Version M2019-07-27
 	No functional change, mention use of getRealTZmsOffset method
+Version M2019-08-06
+	Change access to the lunar part of the clock
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -319,7 +321,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Update lunar parameters - using targetDate
 	dateComponent = targetDate.getCEMoonDate();
-	setMoonPhase(document.querySelector("#moon"),dateComponent.age*Math.PI*2/29.5305888310185);
+	myElement = document.getElementById("clock2"); 
+	setMoonPhase(myElement.querySelector(".moon"),dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
 	document.moon.angle.value = targetDate.getDraconiticAngle().toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
