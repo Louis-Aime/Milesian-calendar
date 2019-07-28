@@ -1,6 +1,6 @@
 # Misc_Date_Properties
 These modules define additional methods to the JS object Date, 
-which enables you to easily handle calendars or cycles that are not (yet) available from the LCDR project.
+which enables you to easily handle calendars or cycles that are not (yet) available from the Unicode CLDR project.
 They all use packages of Basic_Commmon.
 
 ## LunarDateProperties.js: get information about mean lunar cycle
