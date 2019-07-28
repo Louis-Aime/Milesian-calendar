@@ -14,8 +14,8 @@ Other js necessary
 1. Common functions
 *	CBCCE (the Cycle-Based Calendar Computation Engine)
 *	MilesianAlertMsg
+*	RealTZmsOffset
 2. For conversions
-*	MilesianClockOperations
 *	MilesianDateProperties
 *	JulianDateProperties
 *	FrenchRevDateProperties
@@ -25,9 +25,10 @@ Other js necessary
 3. For clock operation
 *	MilesianClockOperations
 4. For display, using Unicode standards
+*	UnicodeBasic
 *	UnicodeMilesianFormat (used to be: UnicodeMilesian, and even before: toMilesianLocaleDateString)
+*	UnicodeJulianFormat
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
-*	RomanMonthNames
 */
 /*
 Version M2018-01-04 :
@@ -58,8 +59,10 @@ Version M2019-03-04
 Version M2019-06-12
 * 	Enhance marks for non-valid dates of calendars
 *	Change name of chronological counts
+Version M2019-08-06
+	Display integer moon age
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -98,6 +101,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let myElement = document.querySelector("#clock3"),
 		myCollection;	// work variable used later
 	setMilesianCalendarClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
+	myElement.querySelector(".moonage").innerHTML = targetDate.getCELunarDate().date;
 
 	// Update milesian field selector - using Date properties
 	document.milesian.year.value = dateComponent.year;
