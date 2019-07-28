@@ -14,6 +14,9 @@ Versions
 		Put year information at rear of clock
 	M2019-06-10 Enhance display of non-valid dates and of ":"
 	M2019-07-27 Add reference to getRealTZmsOffset method
+	M2019-08-06 
+		Suppress all xlink:href
+		Display the integer moon age
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -56,6 +59,7 @@ Inquiries: www.calendriermilesien.org
 <!-- Specific scripts -->
 	<script type="text/javascript" src="IsoWeekCalendarDateProperties.js"></script>
 	<script type="text/javascript" src="FrenchRevDateProperties.js"></script>
+	<script type="text/javascript" src="LunarDateProperties.js"></script>
 	<script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="Converter.js"></script>
 
@@ -77,14 +81,19 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="clock3">
 <!-- the dial -->
-<image xlink:href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
 <!-- the year field -->
   <text class="clock yeardisplay"
 	x="0" y="+100"></text>
+<!-- moon age -->
+<text class="centered yeardisplay" x="-40" y="-80">🌙</text><text class="centered yeardisplay moonage" x="20" y="-80">0</text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
 <rect class="center month day" x="0" y="0" width="0" height="0"/>
+<!-- center circle -->
+<circle class="clockhand" r="9" />
+<!-- month and day hands are set at the end, in order to be above the rest of the clock -->
 <!-- the month hand -->
   <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
@@ -95,8 +104,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   opacity="0.8" >									
 	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
   </g>
-<!-- center circle -->
-<circle class="clockhand" r="9" />
 </g>
 </svg>
 <table class="centre">
