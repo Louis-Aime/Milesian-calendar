@@ -3,8 +3,10 @@ Demonstrates computations of "key figures" for a year:
 * doomsday: the weekday that is common to fixed key days in the Milesian and Gregorian calendars;
 * gold number: used for Easter computations;
 * Milesian epact: mean moon age the day before (Milesian) new year; 
-* Easter (lunar) residue: number of days from 21 March (30 3m) to Easter full moon, after Roman computus
-* Easter offset: number of days from 21 March (30 3m) to Easter full moon.
+* dates of solstices and equinoxes for the year;
+* Easter (lunar) residue: number of days from 21 March (30 3m) to Easter full moon, after Roman computus;
+* Easter offset: number of days from 21 March (30 3m) to Easter full moon;
+* Dates of Julian and Gregorian Easter
 
 See http://www.calendriermilesien.org/calculateur-donnees-annuelles.html for further explanations (in French).
 ## Installation
