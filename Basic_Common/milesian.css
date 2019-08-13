@@ -46,6 +46,12 @@ button.symbol {
 	stroke-width:4px;
 	stroke-linecap:round;
 }
+.seasonmark {
+	fill:forestgreen; 
+	stroke:darkgreen; 
+	stroke-width:1px;
+	stroke-linecap:round;
+}
 .motto {
 	font-family:Serif;
 	font-size:18px;

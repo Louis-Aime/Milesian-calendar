@@ -24,6 +24,8 @@ Other js necessary
 *	ChronologicalCountConversion
 3. For clock operation
 *	MilesianClockOperations
+*	SeasonOnClock
+*	Seasons
 4. For display, using Unicode standards
 *	UnicodeBasic
 *	UnicodeMilesianFormat (used to be: UnicodeMilesian, and even before: toMilesianLocaleDateString)
@@ -61,6 +63,8 @@ Version M2019-06-12
 *	Change name of chronological counts
 Version M2019-08-06
 	Display integer moon age
+Version M2019-08-22
+	Display seasons' mark on clock dial
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -102,6 +106,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		myCollection;	// work variable used later
 	setMilesianCalendarClockHands (myElement, dateComponent.year, dateComponent.month, dateComponent.date);
 	myElement.querySelector(".moonage").innerHTML = targetDate.getCELunarDate().date;
+	setSeasonsOnClock (myElement, dateComponent.year);
 
 	// Update milesian field selector - using Date properties
 	document.milesian.year.value = dateComponent.year;
