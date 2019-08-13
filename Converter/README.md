@@ -1,6 +1,7 @@
 # Converter
-A light version of the Milesian clock:
+A calendar converter that uses the Milesian clock dial:
 * Date conversion only (no time of day nor time zone issues)
+* Display marks of the solstices and equinoxes on the dial
 * Display conversion into all Unicode calendar supported with browsers
 
 # Contents
