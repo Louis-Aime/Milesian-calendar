@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> -->
-<!-- Version M2019-07-27 -->
+<!-- Version M2019-08-22 -->
 <html lang="fr">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -12,17 +12,16 @@
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
 	<script type="text/javascript" src="RealTZmsOffset.js"></script>
 <!-- Specific for this page -->
+  <script type="text/javascript" src="Seasons.js"></script>
   <script type="text/javascript" src="LunarDateProperties.js"></script>
   <script type="text/javascript" src="MilesianYearSignature.js"></script>
   <script type="text/javascript" src="MilesianYearSignatureDisplay.js"></script>
 
-  <title>Chiffres clés par année</title>
+  <title>Chiffres clés d'année milésienne</title>
 <meta name="viewport" content="width=device-width">	
 </head>
 <body onload="setYearToNow();">
-<section class="centered">
-<h1>Chiffres clés par année</h1>
-<h2>Semaine et épacte milésienne</h2>
+<section class="centered"><h1>Chiffres clés d'année milésienne</h1>
 <table class="centre"> 
     <tr><form name="year" method="post" autocomplete="off" action="Javascript:setYear(document.year.year.value);" >
 	  <th>Année&nbsp;: </th>
@@ -41,24 +40,26 @@
     </form></tr>
 </table>
 <table class="centre">
-	<form name="yeartype" method="post">
-	<tr><th>Année</th>
-	<td> <input name="type" class="centered" disabled="disabled" value="">	</td></tr>
+	<form name="milesianyearfigures" method="post">
+	<tr><th>Année</th> <td><input name="type" class="centered" disabled="disabled" value=""></td></tr>
+	<tr><th>Clavedi</th> <td><input name="doomsday" class="yearnum centered" disabled="disabled" size="5" value=""></td> </tr>
+	<tr><th>Epacte</th> <td><input name="epact" class="yearnum centered" disabled="disabled" size="5" value="0"></td> </tr>
+	<tr><th>Reliquat</th> <td><input name="residue" class="yearnum centered" disabled="disabled" size="2" value="0"></td> </tr>
 	</form>	
 </table>
+</section>
+<section class="centered"><h2>Saisons boréales</h2>
 <table class="centre">
-    <tr><form name="milesianyearfigures" method="post">
-	  <th>Clavedi</th><th>Epacte</th><th>Reliquat</th>
-	</tr><tr>
-	  <th >(dies illa)</th><th>milésienne</th><th>annuel</th>	  
-	</tr>
-	<tr>
-	  <td><input name="doomsday" class="yearnum centered" disabled="disabled" size="5" value=""></td>
-	  <td><input name="epact" class="yearnum centered" disabled="disabled" size="5" value="0"></td>
-	  <td><input name="residue" class="yearnum centered" disabled="disabled" size="2" value="0"></td>
-	</tr></form>
+<form name="seasons" method="post">
+	<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="18" name="winter1" value=""></td></tr>
+	<tr><th>Équinoxe de printemps</th><td><input class="centered" disabled="disabled" size="18" name="spring" value=""></td></tr>
+	<tr><th>Solstice d'été</th><td><input class="centered" disabled="disabled" size="18" name="summer" value=""></td></tr>
+	<tr><th>Équinoxe d'automne</th><td><input class="centered" disabled="disabled" size="18" name="autumn" value=""></td></tr>
+	<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="18" name="winter2" value=""></td></tr>
+</form>
 </table>
-<h2>Pâques julienne et grégorienne</h2>
+</section>
+<section class="centered"><h2>Pâques julienne et grégorienne</h2>
 <table class="centre">
 	<tr><form name="yearglobal" method="post">
  	  <th>Nombre d'or (1 à 19)&nbsp;: </th>

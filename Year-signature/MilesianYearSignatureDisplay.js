@@ -10,13 +10,15 @@ Versions
 		Display day of week as a Date-formatted string, instead of a select field
 		Display Roman date with an explicit month indication
 	M2019-07-27: update dependencies
+	M2019-08-23: add seasons' computation
 Required (directly)
 	MilesianYearSignature
 	MilesianAlertMsg
+	Seasons
 Contents
 	Functions called by the MilesianYearSignature.html
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -86,13 +88,36 @@ function computeSignature(year) {
 	document.gregorian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
 	// Milesian rule + Gregorian modified comput
 	signature = milesianSignature (year);
-	// Set year type
+	// Set year type and milesian year figure
 	let type = (signature.isLeap ? 2 : 0) + (signature.isLong ? 1 : 0) ;
-	document.yeartype.type.value = displayYeartype(type) ;
+	document.milesianyearfigures.type.value = displayYeartype(type) ;
 	document.milesianyearfigures.doomsday.value = displayDOW (signature.doomsday);
 	document.milesianyearfigures.epact.value = signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
 	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});
-}
+	// Seasons
+	let twoDigitForm = new Intl.NumberFormat(undefined, {minimumIntegerDigits : '2'}); // timeZone : "UTC", hour : "2-digit", minute : "2-digit"});
+	let wdate = new Date (tropicEvent(year,0));
+	let outBounds = (year < -5000 || year > 9000);
+	document.seasons.winter1.value = outBounds 
+				? "-- -- -- -- --" 
+				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
+	wdate.setTime(tropicEvent(year,1));
+	document.seasons.spring.value = outBounds 
+				? "-- -- -- -- --" 
+				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
+	wdate.setTime(tropicEvent(year,2));
+	document.seasons.summer.value = outBounds 
+				? "-- -- -- -- --" 
+				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
+	wdate.setTime(tropicEvent(year,3));
+	document.seasons.autumn.value = outBounds 
+				? "-- -- -- -- --" 
+				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
+	wdate.setTime(tropicEvent(year,4));
+	document.seasons.winter2.value = outBounds 
+				? "-- -- -- -- --" 
+				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
+	}
 function setYear(year) {
 	year = Math.round(year);	// Force to integer value
 	if (isNaN (year)) alert (milesianAlertMsg("nonInteger") + '"' + document.year.year.value + '"')
