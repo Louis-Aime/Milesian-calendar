@@ -21,53 +21,32 @@ In order to demonstrate the routines, you may extract all software and data piec
 
 ## Basic_Common
 Properties and method are added to the standard JS Date object, 
-in order to specify dates with Milesian figure or get the Milesian figure from a Date. 
-The modules are:
-### CBCCE.js
-A computation module for converting from Timestamp to calendar representation and the reverse, with any calendar 
-that can be described in terms of hierarchy of cycles, with an intercalary element (a day, a year, a cycle of years...) 
-inserted or omitted at end of each cycle, under the principle of postfix intercalation. This works for the Milesian calendar. 
-This works too for the julian and gregorian calendars, provided that we let the "roman" year begin on 1 March,
-as it used to be before Julius Caesar's reform, and provided that we use a specific function for decomposition in "roman" months.
-See [*L'Heure Milésienne* by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html) p. 94 for details.
-### MilesianDateProperties.js
-Getters, Setters and simple string generator for the Milesian calendar. 
-Run in a similar way to Date methods, see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date].
-### MilesianAlertMsg.js
-Messages used in "Alert" JS commands. 
-This file, and only this one, should be recoded for sites not using UTF-8 character sets.
+in order to specify dates with Milesian figure or get the Milesian figure from a Date,
+and other small utilities for general calendrical calculations.
+Used by all other modules.
 
 ## Misc_Date_Properties
 Other modules enable Date computation in non-CLDR calendars, or other informations. 
-
+* Julian calendar (not one of Unicode)
+* ISO 8601 week calendar
+* Lunar calendars and data
+* Season computations: solstices and equinoxes
 Require 
 * CBCCE.js.
-### JulianDateProperties.js
-Computation with the Julian calendar, and with the Julian Day Number (see [https://en.wikipedia.org/wiki/Julian_day]).
-### IsoWeekCalendarDateProperties.js
-Computation on the ISO 8601 week calendar, the calendar in weeks resulting from the ISO 8601 norm. 
-In principle, Common Locale Data Repository (CLDR) provide ways to make such computations. This is just a simplier way.
-### LunarDateProperties.js
-Getters of coordinates of a mean moon, of 2 simple lunar calendars, 
-and of an estimate of the "Delta Time" used by astronomers. 
-Enables to anticipate possible eclipses in a similar way to the [Antikythera mechanism](https://en.wikipedia.org/wiki/Antikythera_mechanism)
 
 ## Milesian Locale 
 Format Milesian date string in different languages, following Common Locales Data Repository (CLDR) of Unicode.
 Generate also date string of any calendar and language proposed by Unicode.
 Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
 
-Require
-* Basic_Common files.
-### milesianMonthNamesString
-A stringified version of the milesianMonthNames XML file.
-### UnicodeMilesianFormat
-Functions to format a date as a Milesian date expression
-### UnicodeTester
-HTML and JS files, with a UnicodeTesterDebug variant, to test the generation of date string with Unicode tools.
+A test HTML page is provided.
 
 ## Year-signature
-Compute the key figures associated with a year, including John Conway's doomsday, Milesian epact, and Easter date. 
+Compute the key figures associated with a year:
+* John Conway's doomsday, 
+* Milesian epact and residue
+* Dates of solstices and equinoxes
+* Easter date in Julian and Gregorian 
 
 Require: 
 * Basic_Common
@@ -86,9 +65,16 @@ The package demonstrates also how to convert dates to/from gregorian, julian and
 and to any Unicode calendar, or other "series", and finally giving moon and Delta T coordinates.
 
 ## Converter 
-A simplified version of the Milesian clock, handles dates only.
+A simplified version of the Milesian clock, handles dates only. 
+The dates of solstices and equinoxes are displayed as marks on the dial.                                                                        
 
 Require 
 * Basic_Common
 * Misc_Date_Properties (complete) 
 * Milesian Locale
+
+## XMLLoad
+Routines for loading the Milesian calendar's characteristics from a remote site with XMLHttpRequest.
+
+## Bribes
+Short codes pieces, not used in this packages, but potentially usufull for calendrical computations.
