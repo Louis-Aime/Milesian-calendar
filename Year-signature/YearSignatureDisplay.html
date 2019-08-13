@@ -66,28 +66,36 @@
 	  <th><input name="gold" value="0" disabled="disabled" size="2"></th>
 	</form></tr>
 </table>
-<div class="autoscroll">
+<!-- <div class="autoscroll"> -->
+<div class="centre">
 <table class="centre">
-	<tr><th>Comput</th><th>Clavedi</th><th>Epacte</th><th>Reliquat</th><th>Quant.</th><th>Date</th><th>Date</th></tr>
-	<tr><th></th>      <th></th>          <th>ecclés.</th><th>pascal</th><th>pascal</th><th>romaine</th><th>milésienne</th></tr>
-	<tr>
-		<td>Grégorien</td><form name="gregorian" method="post" action="Javascript:void();">
-		<td><input name="day" class="yearnum centered" disabled="disabled"></td>
-		<td><input class="daynum centered" disabled="disabled" size="5" name="epact" value="0"></td>
-		<td><input class="daynum centered" disabled="disabled" size="5" name="residue" value="0"></td>
-        <td><input class="daynum centered" disabled="disabled" size="5" name="daynumber" value="0"></td>
-		<td><input class="yearnum centered" disabled="disabled" size="8" name="romandate" value="22/03"></td>
-		<td><input class="yearnum centered" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
-	</form></tr>
-	<tr>
-		<td>Julien</td><form name="julian" method="post" action="Javascript:void();">
-		<td><input name="day" class="yearnum centered" disabled="disabled"></td>
-		<td><input class="daynum centered" disabled="disabled" size="5" name="epact" value="0"></td>
-		<td><input class="daynum centered" disabled="disabled" size="5" name="residue" value="0"></td>
-        <td><input class="daynum centered" disabled="disabled" size="5" name="daynumber" value="0"></td>
-		<td><input class="yearnum centered" disabled="disabled" size="8" name="romandate" value="22/03"></td>
-		<td><input class="yearnum centered" disabled="disabled" size="8" name="milesiandate" value="1 4m"></td>
-	</form></tr>
+	<form name="easter" method="post" action="Javascript:void();">
+	<tr><th>Comput</th><th>Grégorien</th><th>Julien</th></tr>
+	<tr><th>Clavedi</th>
+		<td><input name="g_day" class="yearnum centered" disabled="disabled"></td>
+		<td><input name="j_day" class="yearnum centered" disabled="disabled"></td>
+	</tr>
+	<tr><th>Epacte ecclésiastique</th>
+		<td><input name="g_epact" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		<td><input name="j_epact" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		</tr>
+	<tr><th>Reliquat pascal</th>
+		<td><input name="g_residue" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		<td><input name="j_residue" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		</tr>
+	<tr><th>Quantième pascal</th>
+		<td><input name="g_daynumber" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		<td><input name="j_daynumber" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+		</tr>
+	<tr><th>Date romaine</th>
+		<td><input name="g_romandate" class="yearnum centered" disabled="disabled" size="8" value="22/03"></td>
+		<td><input name="j_romandate" class="yearnum centered" disabled="disabled" size="8" value="22/03"></td>
+		</tr>
+	<tr><th>Date milésienne</th>
+		<td><input name="g_milesiandate" class="yearnum centered" disabled="disabled" size="8" value="1 4m"></td>
+		<td><input name="j_milesiandate" class="yearnum centered" disabled="disabled" size="8" value="1 4m"></td>
+		</tr>
+	</form>
 </table>
 </div>
 </section>

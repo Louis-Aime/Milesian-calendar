@@ -68,24 +68,25 @@ function displayYeartype (type) {
 }
 function computeSignature(year) {
 	var signature = julianSignature (year);
+	// Easter figures
 	// Set gold number
 	document.yearglobal.gold.value = positiveModulo (year, 19) + 1;
 	// Julian figures
-	document.julian.day.value = displayDOW (signature.doomsday);
-	document.julian.epact.value = signature.epact;
-	document.julian.residue.value = signature.easterResidue;
-	document.julian.daynumber.value = signature.easterOffset;
-	document.julian.romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.julian.milesiandate.value = milesianDateFrom30_3m(
+	document.easter.j_day.value = displayDOW (signature.doomsday);
+	document.easter.j_epact.value = signature.epact;
+	document.easter.j_residue.value = signature.easterResidue;
+	document.easter.j_daynumber.value = signature.easterOffset;
+	document.easter.j_romandate.value = romanDateFrom21March(signature.easterOffset);
+	document.easter.j_milesiandate.value = milesianDateFrom30_3m(
 		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian figures
 	signature = gregorianSignature (year);
-	document.gregorian.day.value = displayDOW (signature.doomsday);
-	document.gregorian.epact.value = signature.epact;
-	document.gregorian.residue.value = signature.easterResidue;
-	document.gregorian.daynumber.value = signature.easterOffset;
-	document.gregorian.romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.gregorian.milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
+	document.easter.g_day.value = displayDOW (signature.doomsday);
+	document.easter.g_epact.value = signature.epact;
+	document.easter.g_residue.value = signature.easterResidue;
+	document.easter.g_daynumber.value = signature.easterOffset;
+	document.easter.g_romandate.value = romanDateFrom21March(signature.easterOffset);
+	document.easter.g_milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
 	// Milesian rule + Gregorian modified comput
 	signature = milesianSignature (year);
 	// Set year type and milesian year figure
