@@ -27,6 +27,11 @@ Time is as above, date reflects the moon's position on the ecliptic, the same as
 * draconiticHeight : an estimate of th height of the moon (-5° to +5°). When height is around 0 at new or full moon, eclipse is possible.
 
 There is no setter function in this package.
+
+## Seasons.js: compute solstices and equinoxes for a given year
+LunarDateProperties is used
+* tropicEvent: date of one of solstices and equinoxes occuring during a Milesian year,
+including the two winter solstices that occur at the beginning or just before, and at the end or just after a Milesian year.
   
 ## JulianDateProperties.js: Julian calendar and Julian Day properties added to Date object
 Package CBCCE is used.
