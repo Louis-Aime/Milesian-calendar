@@ -10,6 +10,7 @@ Versions
 	M2019-05-12: Add the the milesiancomputusepact i.e. epact of the gregorian computus one day before 1 1m (not to be recommended)
 	M2019-06-28: Enhance Milesian epact computation, shall depend on UTC time only.
 	M2019-07-27: Update dependencies, no new code
+	M2019-10-10: Reduced milesian epact is never 29.5, but rather 0.0
 Required
 	Package CBCCE.
 	MilesianDateProperties (UTC only).
@@ -150,7 +151,7 @@ function gregorianSignature (year) {
  * @param {number} year, integer number representing the year investigated
  * @return {Object.<string, number>} signature
  * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
- * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
+ * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 half-integer.
  * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
  * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
  * {boolean} signature.isLong - whether this year is a leap year (366 days long).
@@ -187,6 +188,7 @@ function milesianSignature (year) {
 		doomhour.setUTCTimeFromMilesian (year, 0, 0, 7, 30); 
 		signature.doomsday = positiveModulo (2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7);
 		signature.epact = Math.round(doomhour.getCEMoonDate().age*2)/2; 	// Milesian epact is a half-integer 
+		if (signature.epact == 29.5) signature.epact = 0;
 		signature.annualResidue = 29.5 - signature.epact;
 		signature.easterResidue = positiveModulo (15 + 19*gold 			// Julian element, minus 
 		+ 3*(yearCoeff.quadrisaeculum) + yearCoeff.saeculum + 2 // Metemptose.
