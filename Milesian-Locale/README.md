@@ -25,17 +25,30 @@ A method to Intl.DateTimeFormat, with the same effect than .format, but yields t
 
 MilesianDateProperties.js is used.
 
+## UnicodeJulianFormat.js
+This package is structured in the same way as UnicodeMilesianFormat.js
+Take benefit of the Unicode calendar environment and propose a Julian calendar string elaboration routine using the CLDR.
+### julianFormatToParts
+A method to Intl.DateTimeFormat, with the same effect than .formatToParts, but the parts will be of the Julian calendar date.
+### julianFormat
+A method to Intl.DateTimeFormat, with the same effect than .format, but yields the string of a Julian calendar date.
+
+JulianDateProperties.js (in Misc_Date_Properties) is used.
+
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] 
-for details on Locale and Options passed to Intl.DateTimeFormat ()
+for details on Locale and Options passed to Intl.DateTimeFormat ().
 
 ## UnicodeTester.html, UnicodeTester.js
 A simple demonstration page that uses the above functions 
-and enables it to understand how Unicode calendars are displayed
+and enables it to understand how Unicode calendars are displayed,
+and to see / control a number of bugs.
 
 ## Installation
 Require:
 * Basic_Common
+* Misc_Date_Properties (only JulianDateProperties.js)
 
 1. Extract Basic_Common into a directory of your computer. You may extract all, it does not matter.
+1. Extract JulianDateProperties.js from Misc_Date_Properties. You may extract all files, it does not matter.
 1. Extract this directory and into the same directory.
 1. Launch "UnicodeTester" in our browser, and enjoy.
