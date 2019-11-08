@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- Version M2019-07-28 -->
+<!-- Version M2019-11-18 : add display of Julian calendar date -->
 <html lang="fr">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -9,11 +9,13 @@
 	<script type="text/javascript" src="CBCCE.js"></script>
 	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" src="JulianDateProperties.js"></script>
 	<script type="text/javascript" src="RealTZmsOffset.js"></script>
 
 	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
 
 <!-- Specific for this page -->
 	<script type="text/javascript" src="UnicodeTester.js"></script>	
@@ -28,7 +30,8 @@ par exemple "fr" ou "en-US".<br>
 "Zone horaire"&nbsp;: ville de référence de fuseau horaire.<br>
 Voir valeurs possibles via liens en bas de page.<br>
 Noms de mois milésiens non définis dans une langue:<br>
-la version longue est affichée en latin.</p>
+la version longue est affichée en latin.<br>
+Affichage en calendrier julien, avec ère si nécessaire.</p>
 </section>
 <section class="centered autoscroll"><h2>Heure et décalage horaire</h2>
 	<table class="centre">
@@ -272,7 +275,7 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	 <table class="centre"> 
 	   <tr>
 		<th>Locale&nbsp;: </th>
-		<td><input name="Locale" type="text" autocomplete="language" class="centered" size="30" value=""> </td>
+		<td><input name="Locale" type="text" autocomplete="language" class="centered" size="30"> </td>
 	   </tr>
 	   <tr>
 		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
@@ -387,10 +390,9 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 </section>
 <section class="centered autoscroll"><h2>Expressions de date</h2>
    <table class="centre">
-	   <tr><th>Unicode&nbsp;: </th><td id="Gstring"></td></tr>
-	   <tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
-	   <tr><td></td><td id="Gcontrol"></td></tr>
-	   <tr><td></td><td id="Mcontrol"></td></tr>
+		<tr><th>Unicode&nbsp;: </th><td id="Gstring"></td></tr>
+		<tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
+		<tr><th>Julien&nbsp;: </th><td id="Jstring"></td></tr>
 	</table>
 </section>
 <section class="centered"><h2>Liens utiles</h2>

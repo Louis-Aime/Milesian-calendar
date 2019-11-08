@@ -7,6 +7,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2018-11-16 : adapt to new (bugged) time zone handling
 	M2019-06-08 : change one field
 	M2019-07-27 : mention getRealTZmsOffset - no functional change
+	M2019-11-18 : add display of Julian calendar date, with era on demand
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -15,13 +16,15 @@ Required:
 	MilesianDateProperties.js 
 		CBCCE (necessary for MilesianDateProperties)
 		getRealTZmsOffset method (necessary for MilesianDateProperties)
+	JulianDateProperties.js 
 	MilesianMonthNames.xml: 
 		or milesianMonthNamesString, a simpler version
 	MilesianAlertMsg.js
 	UnicodeBasic.js
 	UnicodeMilesianFormat.js
+	UnicodeJulianFormat.js
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -107,8 +110,9 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	document.LocaleOptions.Elocale.value = usedOptions.locale;
 	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
 	
-	// Display Milesian string
+	// Display Milesian and Julian strings
 	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);
+	document.getElementById("Jstring").innerHTML = askedOptions.julianFormat(targetDate);
 
 	// Certain Unicode calendars do not give a proper result: here is the control code.
 	
@@ -185,6 +189,6 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
 	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
 
-	// Write Milesian and Gregorian strings following currently visible options
+	// Write Milesian, Julian and Unicode strings following currently visible options
 	putStringOnOptions();
 }
