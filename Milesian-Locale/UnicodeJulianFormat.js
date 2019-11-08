@@ -7,6 +7,7 @@ Versions
 	M2018-11-11 Initiate from UnicodeMilesianFormat, separate and comment
 	M2018-11-14 instead of alerting, return an error message as result if FormatToParts not implemented
 	M2018-11-24 use toResolvedLocalDate in place of toLocalDate
+	M2019-11-18 make same changes as in UnicodeJulianFormat: add a thisOptions variable, and suppress useless error catching.
 Contents
 	Intl.DateTimeFormat.prototype.julianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.julianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -15,7 +16,7 @@ Required:
 	UnicodeBasic
 	Intl object with FormatToParts
 */
-/* Copyright Miletus 2018 - Louis A. de Fouquières
+/* Copyright Miletus 2018-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -38,6 +39,7 @@ Inquiries: www.calendriermilesien.org
 */
 /** @description FormatToParts that issues parts of a Julian calendar date.
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
+ * @param {boolean} eraIfNeeded - optional, ad era field only if BC; era is then in "narrow" format unless "era" is defined
  * @returns {Object} same object structure than for FormatToParts method.
 */
 Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraIfNeeded = true) { // Give formatted elements of a Julian calendar date.
@@ -45,6 +47,7 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraIfNeede
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	// eraIfNeeded means: put only BC era, in "narrow" option if "era" is undefined.
 	var	
+		thisOptions = this.resolvedOptions(); // This statement aims at controlling whether .resolvedOptions yields suitable values in all cases.
 		locale = this.resolvedOptions().locale,	// Fetch the locale from this 
 		lang = locale.includes("-") ? locale.substring (0,locale.indexOf("-")) : locale;	// the pure language identifier, without country
 	// Change the calendar of locale to "gregory"
@@ -58,37 +61,31 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraIfNeede
 	var 
 		constructOptions = new Intl.DateTimeFormat(locale,this.resolvedOptions()),
 		referenceOptions = constructOptions.resolvedOptions();
-	try	{
-		let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
-		let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
-		var julianComponents = (TZ == undefined
-			? myDate.getJulianDate()	// system local date, expressed in Julian
-			: julianComponents = toResolvedLocalDate(myDate, TZ).getUTCJulianDate() ); // TZ local date.
-		// Here julianComponents holds the local Julian date figures, we replace the Gregorian date, month, year and era components with those.
-		// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
-		// then we insert the right year and era, computed separately.
-		var 
-			gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date)),
-			BC = (julianComponents.year <= 0), 
-			eraOption = (BC ? (referenceOptions.era == undefined ? 'narrow' : referenceOptions.era) : referenceOptions.era);
-		if (eraOption != null) referenceOptions.era = eraOption; // add eraOption if required
-		constructOptions = new Intl.DateTimeFormat(locale,referenceOptions); // Re-construct formatting object
-		referenceComponents = constructOptions.formatToParts (myDate);		// and re-construct array of parts
-		var eraDate = new Date (0); eraDate.setUTCFullYear(julianComponents.year); // Hold the "era" part
-
-		return referenceComponents.map ( ({type, value}) => {
-			switch (type) {
-				case "era" : case "year" : return {type:type, 
-						value: constructOptions.formatToParts(eraDate).find(item => item.type == type).value}
-				case "month" : case "day" : return {type:type, 
-						value: constructOptions.formatToParts(gregDate).find(item => item.type == type).value}
-				default : return {type: type, value: value};
-				}
-			});	// End of mapping function
-		}	// end of try
-	catch (e) {
-		throw e; // Error to be handled by caller, but do not stop working.
-		}
+	let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
+	let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
+	var julianComponents = (TZ == undefined
+		? myDate.getJulianDate()	// system local date, expressed in Julian
+		: julianComponents = toResolvedLocalDate(myDate, TZ).getUTCJulianDate() ); // TZ local date.
+	// Here julianComponents holds the local Julian date figures, we replace the Gregorian date, month, year and era components with those.
+	// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
+	// then we insert the right year and era, computed separately.
+	var 
+		gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date)),
+		BC = (julianComponents.year <= 0), 
+		eraOption = (BC ? (referenceOptions.era == undefined ? 'narrow' : referenceOptions.era) : referenceOptions.era);
+	if (eraOption != null) referenceOptions.era = eraOption; // add eraOption if required
+	constructOptions = new Intl.DateTimeFormat(locale,referenceOptions); // Re-construct formatting object
+	referenceComponents = constructOptions.formatToParts (myDate);		// and re-construct array of parts
+	var eraDate = new Date (0); eraDate.setUTCFullYear(julianComponents.year); // Hold the "era" part
+	return referenceComponents.map ( ({type, value}) => {
+		switch (type) {
+			case "era" : case "year" : return {type:type, 
+					value: constructOptions.formatToParts(eraDate).find(item => item.type == type).value}
+			case "month" : case "day" : return {type:type, 
+					value: constructOptions.formatToParts(gregDate).find(item => item.type == type).value}
+			default : return {type: type, value: value};
+			}
+		});	// End of mapping function
 }
 /** @description a .format method that issues a string representing a Julian calendar date.
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
@@ -100,8 +97,8 @@ Intl.DateTimeFormat.prototype.julianFormat = function (myDate) {
 		let parts = this.julianFormatToParts (myDate); // Compute components
 		return parts.map(({type, value}) => {return value;}).reduce((buf, part)=> buf + part, "");
 		}
-	// FormatToParts does not work -> just return an error message
+	// julianFormatToParts does not work, return error code
 	catch (e) { 
-		return (milesianAlertMsg ('browserError'))
+		return (milesianAlertMsg ('browserError')+": "+e.name)
 	}
 }
