@@ -1,14 +1,15 @@
 /* The Cycle-based Calendar Computation Engine/ CBCCE
 Character set is UTF-8
 
-The functions of this package perform intercalation computations for calendars that set intercalation elements following regular cycles.
+This package holds conversion routines between a time counter and a calendar structured in fixed cycles with postfix intercalation rules.
 This applies to the Milesian calendar, that adds or subtracts intercalary days only at end of cycles (sequences of years, of months etc.).
-This applies also to calendars that shift the long year by one at cyclic periods 
-e.g. the long year comes after 5 years instead of 4 years in certain circumstances.
+This applies also to solar calendars that hold leap years separated by five years instead of four. 
 A possible algorithmic implementation of the French Revolutionary "Franciade" uses such cycles.
 For other calendars, including Gregorian and Julian, this routines may be used to compute
-the rank of a day within a "shifted year" where the intercalary day is at end of year, and then hours, minutes, seconds and milliseconds.
-Computations of months for non-Milesian solar calendars require separate algorithms, as the cycle of month is generally not regular.
+the rank of a day within a "shifted year" where the intercalary day is at end of year, 
+and then hours, minutes, seconds and milliseconds within each day.
+The computations of months and day-of-month for solar calendars with non-postfix intercalation rules 
+require separate algorithms to compute the day counter in the year from the month and day-of-month and the reverse.
 The principles of these routines are explained in "L'heure milésienne", a book by Louis-Aimé de Fouquières, www.calendriermilesien.org.
 
 Contents:
@@ -27,10 +28,13 @@ Versions:
 	Version 3 : M2018-11-02
 		Catch case where the time stamp passed to cbcceDecompose is "NaN"
 	Version 4 : M2018-11-11
-		Extract Day_milliseconds (not used, still available in another file)
+		Extract Day_milliseconds parameter record (not used, still available in another file)
 		JSDoc comments
+	Version 4.1 : M2019-11-30
+		Enhance presentation comments
+		One ";" suppressed for better conformance to language, with no functional effect.
 */
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -67,7 +71,7 @@ Inquiries: www.calendriermilesien.org
  *	], // End of this array, but not end of object
  *	canvas : [ // this last array is the canvas of the decomposition , e.g. "year", "month", "date", with suitable properties at each level.
  *		{ name : #,	// the name of the property at this level, which must match one target property of the coeff component,
- *		init : #, 	// value of this component at epoch, and lowest value (except for the first component), 
+ *		init : #, 	// value of this component at epoch, which is the lowest value (except for the first component), 
  *					// e.g. 0 for month, 1 for date, 0 for hours, minutes, seconds.
  *		} // End of array element (only two properties)
  *	] // End of second array
@@ -98,16 +102,15 @@ var Chronos = {
 function cbcceDecompose (quantity, params) {
   if (!isNaN (quantity)) quantity -= params.timeepoch; // set at initial value the quantity to decompose into cycles. Else leave NaN.
   var result = new Object(); // Construct initial compound result 
-  for (let i = 0; i < params.canvas.length; i++) {	// Define property of result object (a date or date-time)
-    Object.defineProperty (result, params.canvas[i].name, {enumerable : true, writable : true, value : params.canvas[i].init});
-  }
+  for (let i = 0; i < params.canvas.length; i++) 	// Define property of result object (a date or date-time)
+    Object.defineProperty (result, params.canvas[i].name, {enumerable : true, writable : true, value : params.canvas[i].init}); 
   let addCycle = 0; 	// flag that upper cycle has one element more or less (i.e. a 5 years franciade or 13 months luni-solar year)
   for (let i = 0; i < params.coeff.length; ++i) {	// Perform decomposition by dividing by the successive cycle length
     if (isNaN(quantity)) 
 		result[params.coeff[i].target] = NaN	// Case where time stamp is not a number, e.g. out of bounds.
 	else {
 		let r = 0; 		// r is the computed quotient for this level of decomposition
-		if (params.coeff[i].cyclelength == 1) r = quantity; // avoid performing a trivial division by 1.
+		if (params.coeff[i].cyclelength == 1) r = quantity // avoid performing a trivial division by 1.
 		else {		// at each level, search at the same time the quotient (r) and the modulus (quantity)
 		  while (quantity < 0) {
 			--r; 
@@ -132,9 +135,8 @@ function cbcceDecompose (quantity, params) {
 */
 function cbcceCompose (cells, params) { // from an object cells structured as params.canvas, compute the chronological number
 	var quantity = params.timeepoch ; // initialise Unix quantity to computation epoch
-	for (let i = 0; i < params.canvas.length; i++) { // cells value shifted as to have all 0 if at epoch
-		cells[params.canvas[i].name] -= params.canvas[i].init
-	}
+	for (let i = 0; i < params.canvas.length; i++)  // cells value shifted as to have all 0 if at epoch
+		cells[params.canvas[i].name] -= params.canvas[i].init;
 	let currentTarget = params.coeff[0].target; 	// Set to uppermost unit used for date (year, most often)
 	let currentCounter = cells[params.coeff[0].target];	// This counter shall hold the successive remainders
 	let addCycle = 0; 	// This flag says whether there is an additional period at end of cycle, e.g. a 5th year in the Franciade or a 13th month
