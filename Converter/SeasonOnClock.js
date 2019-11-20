@@ -21,13 +21,13 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 /** Mark the dates of solstices and equinox on the dial of the Milesian clock 
- * @since M2019-08-23
- * @param {Object} clock - a graphical object that ;represents the clock, that the routine will set
+ * @since M2019-08-23 (revised for typos M2019-11-30
+ * @param {Object} clock - a graphical object that represents the clock, that the routine will set
  * if existing, these elements shall be set
- *   @member .seasonmark.winter winter solstice
- *	 @member .seasonmark.spring spring equinox
- *	 @member .seasonmark.summer summer solstice
- *	 @member .seasonmark.autumn autumn equinox
+ *  @member .seasonmark.winter winter solstice
+ *  @member .seasonmark.spring spring equinox
+ *  @member .seasonmark.summer summer solstice
+ *  @member .seasonmark.autumn autumn equinox
  * @param {number} year - year for which the seasons are set
  * @return {boolean} true if seasons have been computed, false otherwise.
 */
@@ -46,6 +46,5 @@ function setSeasonsOnClock (clock, year) {
 			theMark.transform.baseVal.getItem(0).setRotate(angle,
 				theCenter.x.baseVal.value,theCenter.y.baseVal.value);
 	}
-	
 	return success;
 }
