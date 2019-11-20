@@ -20,11 +20,11 @@ and convert to any Unicode handled language and calendar.
 
 # Notices
 * MS Internet Explorer does not work at all (does not handle default parameter values)
-* Tested on Firefox, Chrome, Edge and Safari.
-    * Edge does not display the Unicode texts
+* Tested on Firefox, Chrome, MS Edge, Safari, and Samsung Internet
 * It it possible to use several clocks independently.
 * The clocks may handle not only year, month and days, but also time of day: hours, minutes, seconds, and an am/pm indicator. 
   Authors may omit any hand.
+* Developers may add the season's marks (see in Converter package)
 
 How it looks like, and inquiries: http://www.calendriermilesien.org/horloge-milesienne.html
 
