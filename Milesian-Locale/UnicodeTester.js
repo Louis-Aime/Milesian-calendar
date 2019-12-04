@@ -8,6 +8,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2019-06-08 : change one field
 	M2019-07-27 : mention getRealTZmsOffset - no functional change
 	M2019-11-18 : add display of Julian calendar date, with era on demand
+	M2019-12-14 : add handling and display of all format options
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -88,6 +89,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if	(document.LocaleOptions.Minute.value != "")	Options.minute = document.LocaleOptions.Minute.value;
 	if	(document.LocaleOptions.Second.value != "")	Options.second	= document.LocaleOptions.Second.value;
 	if	(document.LocaleOptions.Hour12.value != "")	Options.hour12	= (document.LocaleOptions.Hour12.value == "true");
+	if	(document.LocaleOptions.TimeZoneName.value != "")	Options.timeZoneName	= document.LocaleOptions.TimeZoneName.value;
 	
 	if (timeZone !== "") 
 		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
@@ -106,9 +108,20 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	usedOptions = askedOptions.resolvedOptions();
 	
 	// Display all effective options
-	document.LocaleOptions.ETimeZone.value=usedOptions.timeZone;
 	document.LocaleOptions.Elocale.value = usedOptions.locale;
 	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
+	document.LocaleOptions.ETimeZone.value=usedOptions.timeZone;
+	document.LocaleOptions.Eday.value = usedOptions.day;
+	document.LocaleOptions.Emonth.value = usedOptions.month;
+	document.LocaleOptions.Eyear.value = usedOptions.year;
+	document.LocaleOptions.Ehour.value = usedOptions.hour;
+	document.LocaleOptions.Eminute.value = usedOptions.minute;
+	document.LocaleOptions.Esecond.value = usedOptions.second;
+	document.LocaleOptions.Eweekday.value = usedOptions.weekday;
+	document.LocaleOptions.Eera.value = usedOptions.era;
+	document.LocaleOptions.Ehour12.value = usedOptions.hour12;
+	document.LocaleOptions.Enum.value = usedOptions.numberingSystem;
+	document.LocaleOptions.EtimeZoneName.value = usedOptions.timeZoneName;
 	
 	// Display Milesian and Julian strings
 	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);

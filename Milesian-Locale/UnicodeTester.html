@@ -1,5 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- Version M2019-11-18 : add display of Julian calendar date -->
+<!-- 
+	Version M2019-11-18 : add display of Julian calendar date 
+	Version M2019-12-14 : 
+		add handling and display of all date formatting options
+		reorganize fields order and uniformize fields parameters in order to cater with MS Edge bugs
+-->
 <html lang="fr">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -35,7 +40,7 @@ Affichage en calendrier julien, avec ère si nécessaire.</p>
 </section>
 <section class="centered autoscroll"><h2>Heure et décalage horaire</h2>
 	<table class="centre">
-		<form name="TZmode" autocomplete="off" method="post" action="JavaScript:setDisplay();">
+		<form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
 			<tr><th colspan="2">Mode&nbsp;: </th>
 				<td colspan="4">
 					<select name="TZcontrol" size="1" class="centered">
@@ -87,7 +92,7 @@ function calcTime() { // Here the hours are deemed local hours
 </script>
 	<table class="centre">
 	  <tr> 
-		<form name="time" autocomplete="off" method="post" action="JavaScript:calcTime();">
+		<form name="time" method="post" autocomplete="off" action="javascript:calcTime();">
 		 <th>Heure du mode&nbsp;: </th>
 		 <td><input name="hours" type="number" min="0" max="23" class="centered daynum">h</td>
 		 <td><input name="mins" type="number" min="0" max="59" class="centered daynum">mn</td>
@@ -116,15 +121,14 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
-		<td colspan=4><form name="Now" method="post" action="Javascript:setDateToNow();" >
-		<button class="textline">Maintenant</button></form></td>
+		<td colspan=4><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow();">Maintenant</button></td>
 	  </tr> </table>
 
 	  <table class="centre">
 	  <tr>
 		<th>Cette date à UTC</th>
-		<td><button class="textline" type="button" name="0h" onclick="JavaScript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button class="textline" type="button" name="12h" onclick="JavaScript:setUTCHoursFixed(12)";>12h</button></td>
+		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0h</button></td>
+		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)";>12h</button></td>
 	  </tr>
 	 </table>
 
@@ -154,11 +158,11 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 </script>	 
 	<table class="centre"> 
 	  <tr>
-		<form name="timeShift" method="post" action="JavaScript:changeAddTime();">
+		<form name="timeShift" method="post" action="javascript:addTime();">
 		<td>+/- secondes</td>
-		<td><button type="button" class="textline symbol" onclick="Javascript:addTime(-1);">-</button></td>
+		<td><button class="textline symbol" formaction="javascript:addTime(-1);">-</button></td>
 		<td><input name="shift" type="number" value="60" min="1" class="centered yearnum"></td>
-		<td><button type="button" class="textline symbol" onclick="Javascript:addTime(1);">+</button></td>
+		<td><button class="textline symbol" formaction="javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
@@ -202,7 +206,7 @@ function calcMilesian() {
         <th> </th>
       </tr>
       <tr>
-	    <form name="milesian" method="post" action="JavaScript:calcMilesian();">
+	    <form name="milesian" method="post" action="javascript:calcMilesian();">
         <td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /> </td>
         <td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
         <td>
@@ -254,32 +258,23 @@ function setDayOffset (sign=1) {
 		setDisplay();
 	}
 }
-function setDayOffsetPlus () {setDayOffset(+1)};
-function setDayOffsetMinus () {setDayOffset(-1)};
 // No clock movement function
 </script>
 <table class="centre">
     <tr>
-	    <td><button class="textline" type="button" onclick="JavaScript:setDateToNow();";>Maintenant</button></td>
-	<form name="control" method="post" action="Javascript:setDayOffset();">
+	    <td><button class="textline" type="button" onclick="javascript:setDateToNow();";>Maintenant</button></td>
+	<form name="control" method="post" action="javascript:setDayOffset();">
 		<td>+/- jours</td>
-		<td><button class="textline symbol" formaction="Javascript:setDayOffset(-1);" >-</button></td>
+		<td><button class="textline symbol" formaction="javascript:setDayOffset(-1);" >-</button></td>
 		<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
-		<td><button class="textline symbol" formaction="Javascript:setDayOffset(1);">+</button></td>
+		<td><button class="textline symbol" formaction="javascript:setDayOffset(1);">+</button></td>
     </form></tr>
 </table>
 </section>
 
 <section class="centered autoscroll"><h2>Options de présentation</h2>
-	<form name="LocaleOptions" method="post" action="JavaScript:putStringOnOptions();">
+	<form name="LocaleOptions" method="post" action="javascript:putStringOnOptions();">
 	 <table class="centre"> 
-	   <tr>
-		<th>Locale&nbsp;: </th>
-		<td><input name="Locale" type="text" autocomplete="language" class="centered" size="30"> </td>
-	   </tr>
-	   <tr>
-		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
-	   </tr>
 	   <tr>
 		<th>Calendrier&nbsp;: </th>
 		<td>
@@ -309,6 +304,13 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 	   <tr>
 	    <td>Calendrier effectif&nbsp;: </td>
 	    <td><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
+	   </tr>
+	   <tr>
+		<th>Locale&nbsp;: </th>
+		<td><input name="Locale" autocomplete="language" type="text" class="centered" size="30"> </td>
+	   </tr>
+	   <tr>
+		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
 	   </tr>
 		<tr><th>Zone horaire&nbsp;: </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
@@ -382,8 +384,44 @@ function setDayOffsetMinus () {setDayOffset(-1)};
 			</select></td>
 	</tr>
 	<tr>
-		<td colspan="2"><button class="textline" type="reset">Réinit</button></td>
-		<td><button class="textline">Ok</button></td> <td></td>
+		<th colspan="2">Affichage fuseau horaire</th>
+		<td><select name="TimeZoneName" class="centered" size="1">
+			<option value="" selected>absent</option>
+			<option value="short">court</option>
+			<option value="long">long</option>
+			</select></td>
+	</tr>
+<!-- options de formatage effectives -->
+	<tr><th colspan="3">Options de format effectives</th></tr>
+	   <tr>	<th>Quantième</th><th>Mois</th><th>Année</th></tr>
+	<tr>
+		<td><input name="Eday" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Emonth" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Eyear" type="text" disabled="disabled" class="centered"></td>
+	</tr>
+		<tr><th>Heure</th><th>Minute</th><th>Seconde</th></tr>
+	<tr>
+		<td><input name="Ehour" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Eminute" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Esecond" type="text" disabled="disabled" class="centered"></td>
+	</tr>
+		<tr><th>Jour semaine</th><th>Ere</th><th>12 heures</th></tr>
+	<tr>
+		<td><input name="Eweekday" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Eera" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="Ehour12" type="text" disabled="disabled" class="centered"></td>
+	</tr>
+	</table>
+	<table class="centre">
+		<tr><th>Numération</th><th>Affichage fuseau</th></tr>
+	  <tr>
+		<td><input name="Enum" type="text" disabled="disabled" class="centered"></td>
+		<td><input name="EtimeZoneName" type="text" disabled="disabled" class="centered"></td>
+	  </tr>
+<!-- fin des options de formatage effectives -->
+	<tr>
+		<td><button class="textline" type="reset">Réinit</button></td>
+		<td><button class="textline" >Ok</button></td> <td></td>
 	</tr>
    </table>
   </form> 
