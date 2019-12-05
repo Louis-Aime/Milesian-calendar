@@ -3,7 +3,7 @@
 	Version M2019-11-18 : add display of Julian calendar date 
 	Version M2019-12-14 : 
 		add handling and display of all date formatting options
-		reorganize fields order and uniformize fields parameters in order to cater with MS Edge bugs
+		reorganize fields, avoid a free-text field as first field of any form
 -->
 <html lang="fr">
 <head>
@@ -134,7 +134,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 
 <script type="text/javascript">
 var addedTime = 60; //Global variable, time to add or substract, in decimal seconds.
-function changeAddTime () {
+function changeAddTime() {
 	let secs = +document.timeShift.shift.value; 
 	if (isNaN(secs) || secs <= 0) 
 		alert (milesianAlertMsg("invalidInput"))
@@ -158,11 +158,11 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 </script>	 
 	<table class="centre"> 
 	  <tr>
-		<form name="timeShift" method="post" action="javascript:addTime();">
+		<form name="timeShift" method="post" action="javascript:changeAddTime();">
 		<td>+/- secondes</td>
-		<td><button class="textline symbol" formaction="javascript:addTime(-1);">-</button></td>
-		<td><input name="shift" type="number" value="60" min="1" class="centered yearnum"></td>
-		<td><button class="textline symbol" formaction="javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="textline symbol" onclick="javascript:addTime(-1);">-</button></td>
+		<td><input name="shift" type="number" value="60" min="0" class="centered yearnum"></td>
+		<td><button type="button" class="textline symbol" onclick="javascript:addTime(1);">+</button></td>
 		</form>
 	  </tr>
 	</table>
@@ -261,14 +261,15 @@ function setDayOffset (sign=1) {
 // No clock movement function
 </script>
 <table class="centre">
-    <tr>
-	    <td><button class="textline" type="button" onclick="javascript:setDateToNow();";>Maintenant</button></td>
-	<form name="control" method="post" action="javascript:setDayOffset();">
-		<td>+/- jours</td>
-		<td><button class="textline symbol" formaction="javascript:setDayOffset(-1);" >-</button></td>
+  <tr>
+	<td><button class="textline" type="button" onclick="javascript:setDateToNow();";>Maintenant</button></td>
+	<form name="control" method="post" action="javascript:changeDayOffset();">
+		<th>+/- jours&nbsp;: </th>
+		<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(-1);">-</button></td>
 		<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
-		<td><button class="textline symbol" formaction="javascript:setDayOffset(1);">+</button></td>
-    </form></tr>
+		<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(+1);">+</button></td>
+	</form>
+  </tr>
 </table>
 </section>
 
