@@ -33,6 +33,8 @@ Version M2019-07-27
 	No functional change, mention use of getRealTZmsOffset method
 Version M2019-08-06
 	Change access to the lunar part of the clock
+Version M2019-12-15
+	Display time zone in Unicode date string
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -95,7 +97,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	switch (document.LocaleOptions.Presentation.value) {
 		case "long":
 			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long",
-					hour : "numeric", minute : "numeric", second : "numeric"};
+					hour : "numeric", minute : "numeric", second : "numeric", timeZoneName : "long"};
 			break;
 		case "standard":
 			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric",
@@ -111,7 +113,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 			break;	
 		case "numeric":
 			Options = {weekday : "short", day : "numeric", month : "numeric", year : "numeric", era : "narrow",
-					hour : "2-digit", minute : "2-digit", second : "2-digit"};
+					hour : "2-digit", minute : "2-digit", second : "2-digit", timeZoneName : "short"};
 			break;
 		case "2-digit":
 			Options = {weekday : "narrow", day : "2-digit", month : "2-digit", year : "numeric", 
