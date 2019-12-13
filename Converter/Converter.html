@@ -21,6 +21,8 @@ Versions
 		Add seasons marks
 	M2019-11-30
 		Suppress a deprecated remark about the Korean calendar
+	M2019-12-23
+		Small changes in format and presentation
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -69,6 +71,8 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="SeasonOnClock.js"></script>
 	<script type="text/javascript" src="Converter.js"></script>
 
+	<!-- <script type="text/javascript" src="unicodeChar.js"></script> <!-- Specific for IPAOO: Unicode Moon character -->
+
 	<title>Convertisseur de dates</title>
 <meta name="viewport" content="width=device-width">
 </head>
@@ -99,7 +103,10 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
 	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
 <!-- moon age -->
-<text class="centered yeardisplay" x="-40" y="-80">🌙</text><text class="centered yeardisplay moonage" x="20" y="-80">0</text>
+<text class="centered yeardisplay" x="-40" y="-80">
+🌙<!-- <script type="text/Javascript">	document.write (unicodeChar ('Crescent Moon')); </script> -->
+</text>
+<text class="centered yeardisplay moonage" x="20" y="-80">0</text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
 <rect class="center month day" x="0" y="0" width="0" height="0"/>
 <!-- center circle -->
@@ -195,7 +202,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </table>
 </section>
 
-<section class="centered autoscroll"><h1 >Navigation temporelle</h1>
+<section class="centered autoscroll"><h1>Navigation temporelle</h1>
 <script type="text/javascript">
 var 
 	dayOffset = 1, // Quantum of days to add or subtract
@@ -269,8 +276,9 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 </table>
 </section>
 
-<section class="centered autoscroll"><h1 >Calendriers pivots</h1>
-<table class="centre"><tr><td class="outbounds">Fond brique :</td><td> calendrier non valable à cette date</td></tr></table>
+<section class="centered autoscroll"><h1>Calendriers pivots</h1>
+<div class="centre">Années en notation relative</div>
+<div class="centre"><span class="outbounds">Fond brique&nbsp;:</span>&nbsp;calendrier non valable à cette date</div>
 <table class="centre">
   <tr>
 	<th>Calendrier</th>
@@ -480,8 +488,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </tr>
 </table>
 
-<table class="centre">
-  <script type="text/javascript">
+<script type="text/javascript">
 	  function calcISO() {
 		var day =  Math.round (document.isoweeks.day.value);
 		var week = Math.round (document.isoweeks.week.value);
@@ -506,9 +513,10 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			}
 		}
 	  }
-  </script>
+</script>
+<table class="centre">
 	<tr>
-		<th></th>
+        <th>ISO 8601</th>
 		<th>Jour</th>
 		<th>Semaine</th>
 		<th>Année</th>
@@ -516,9 +524,9 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 	  </tr>
 	<tr id="isoweeksline">
 		<form name="isoweeks" autocomplete="off" method="post" action="JavaScript:calcISO();">
-		<td class="mutable">Semaines ISO&nbsp;: </td>
+		<td>Semaines ISO&nbsp;: </td>
 		<td> 
-		<select name="day" class="centered mutable" size="1">
+		<select name="day" class="centered" size="1">
 		<option value="1">lundi</option>
 		<option value="2">mardi</option>
 		<option value="3">mercredi</option>
@@ -527,15 +535,14 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 		<option value="6">samedi</option>
 		<option value="7">dimanche</option>
 		</select></td>
-		<td><input name="week" type="number" min="1" max="53" class="centered daynum mutable"> </td>
-		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum mutable"></td>
+		<td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
+		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
 		<td><button class="textline">Ok</button> </td>
 	  </form>
 	</tr>
 </table>
 
-<table class="centre">
-  <script type="text/javascript">
+<script type="text/javascript">
 	  function calcJulianDay(){ // here, Julian Day is specified as an integer number. Insert with the suitable Date setter.
 		var j = Math.round(document.daycounter.julianday.value); // extract Julian Day, integer value expected.
 		if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
@@ -549,7 +556,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			}
 		}
 	  }
-  </script>
+</script>
+<table class="centre">
     <form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
 	<tr><th>Jour julien à 12h UTC&nbsp;: </th><td></td>
 		<td><input name="julianday" type="number" min="-97559413" max="102440588" class="centered juliandaynum"></td>
@@ -612,7 +620,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 		</tr>
   </table>
  </form>
-<table class="centre"><tr><td>Exemple&nbsp;: <code>en-gb</code> ou <code>en-us</code>, vide&nbsp;: défaut système</td></tr></table>
+<div class="centre">Exemple&nbsp;: <code>en-gb</code> ou <code>en-us</code>, vide&nbsp;: défaut système</div>
 
 <h2>Grégorien et dérivés</h2>
   <table class="centre">
