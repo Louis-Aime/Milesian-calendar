@@ -9,6 +9,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2019-07-27 : mention getRealTZmsOffset - no functional change
 	M2019-11-18 : add display of Julian calendar date, with era on demand
 	M2019-12-14 : add handling and display of all format options
+	M2019-12-22 : Use an external function of UnicodeBasic to filter bad calendrical computation cases, and add ISO display
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -126,23 +127,15 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	// Display Milesian and Julian strings
 	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);
 	document.getElementById("Jstring").innerHTML = askedOptions.julianFormat(targetDate);
+	
+	// Display ISO8601 string (proleptic gregorian calendar)
+	Locale = (usedOptions.locale.includes("-u-") ?  usedOptions.locale.substring (0,usedOptions.locale.indexOf("-u-")) : usedOptions.locale)
+			+ "-u-ca-iso8601" ; // Build Locale with ISO8601 calendar
+	document.getElementById("Gstring").innerHTML = new Intl.DateTimeFormat(Locale,Options).format(targetDate);
 
 	// Certain Unicode calendars do not give a proper result: here is the control code.
-	
-	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
-	switch (usedOptions.calendar) {	
-		case "hebrew": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
-			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf() 
-			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
-		case "islamic":
-		case "islamic-rgsa": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
-			>= -42521673600000); break; // Computations are false before Haegirian epoch
-		case "islamic-umalqura": valid = (toResolvedLocalDate(targetDate, timeZone).valueOf()
-			>= -6227305142400000); break; // Computations are false before 2 6m -195366
-		}
-		
-	let myElement = document.getElementById("Gstring");
+	let valid = unicodeValidDateinCalendar(targetDate, timeZone, usedOptions.calendar);
+	let myElement = document.getElementById("Ustring");
 	try { myElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.format(targetDate); }
 	catch (e) { myElement.innerHTML = milesianAlertMsg("browserError"); }
 }

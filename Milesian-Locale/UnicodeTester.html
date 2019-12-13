@@ -4,6 +4,8 @@
 	Version M2019-12-14 : 
 		add handling and display of all date formatting options
 		reorganize fields, avoid a free-text field as first field of any form
+	Version M2019-12-24
+		add systematic display of Unicode ISO (Gregorian) string
 -->
 <html lang="fr">
 <head>
@@ -30,15 +32,11 @@
 </head>
 <body onload="setDateToNow();">
 <section class="centered"><h1>Expression de date<br>et calendriers Unicode</h1>
-<p>"Locale"&nbsp;: code langue et pays,<br>
-par exemple "fr" ou "en-US".<br>
-"Zone horaire"&nbsp;: ville de référence de fuseau horaire.<br>
-Voir valeurs possibles via liens en bas de page.<br>
-Noms de mois milésiens non définis dans une langue:<br>
-la version longue est affichée en latin.<br>
-Affichage en calendrier julien, avec ère si nécessaire.</p>
+<div class="centre">Démonstration et test des formats d'affichage de date et d'heure
+selon Unicode, application au calendrier milésien et au calendrier julien
+avec affichage conditionnel de l'ère. Voir infra liens vers les codes reconnus.</div>
 </section>
-<section class="centered autoscroll"><h2>Heure et décalage horaire</h2>
+<section class="centered autoscroll"><h2>Heure et fuseau horaire du système</h2>
 	<table class="centre">
 		<form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
 			<tr><th colspan="2">Mode&nbsp;: </th>
@@ -307,16 +305,16 @@ function setDayOffset (sign=1) {
 	    <td><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
 	   </tr>
 	   <tr>
-		<th>Locale&nbsp;: </th>
+		<th>Code langue-pays&nbsp;: </th>
 		<td><input name="Locale" autocomplete="language" type="text" class="centered" size="30"> </td>
 	   </tr>
 	   <tr>
-		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
+		<td>Code effectif&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
 	   </tr>
-		<tr><th>Zone horaire&nbsp;: </th>
+		<tr><th>Fuseau horaire&nbsp;: </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
 		</tr>
-		<tr><td>Zone effective&nbsp;: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
+		<tr><td>Fuseau effectif&nbsp;: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
 		</table>
 	 <table class="centre">
 	   <tr>
@@ -429,8 +427,9 @@ function setDayOffset (sign=1) {
 </section>
 <section class="centered autoscroll"><h2>Expressions de date</h2>
    <table class="centre">
-		<tr><th>Unicode&nbsp;: </th><td id="Gstring"></td></tr>
+		<tr><th>Unicode&nbsp;: </th><td id="Ustring"></td></tr>
 		<tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
+		<tr><th>ISO8601&nbsp;: </th><td id="Gstring"></td></tr>
 		<tr><th>Julien&nbsp;: </th><td id="Jstring"></td></tr>
 	</table>
 </section>
