@@ -16,6 +16,7 @@ Versions
 	M2019-07-27 Add reference to getRealTZmsOffset method
 	M2019-08-06 Change clock display and references to clock elements, to facilitate multiple clocks
 	M2019-12-15 Display timezone
+	M2019-12-23 Display seasons marks on clock dial, small presentation changes
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -62,6 +63,8 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="ChronologicalCountConversion.js"></script>
 	<script type="text/javascript" src="LunarClockOperation.js"></script>
 	<script type="text/javascript" src="MilesianClockDisplay.js"></script>
+	<script type="text/javascript" src="Seasons.js"></script>
+	<script type="text/javascript" src="SeasonOnClock.js"></script>
 
 	<title>Horloge milésienne</title>
 <meta name="viewport" content="width=device-width">	
@@ -84,6 +87,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- the year field -->
   <text class="clock yeardisplay"
 	x="0" y="+100"></text>
+<!-- seasons' marks -->
+	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
+	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
+	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
+	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
 <!-- center circle -->
 <circle class="clockhand" r="9" />
 <!-- set the secondary time dial which should appear under the month-day hands -->
@@ -354,8 +362,8 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 </section>
 
 <section class="centered autoscroll"><h1>Dates selon les calendriers pivots</h1>
-
-<table class="centre"><tr><td class="outbounds">Fond brique&nbsp;:</td><td> calendrier non valable à cette date</td></tr></table>
+<div class="centre">Années en notation relative</div>
+<div class="centre"><span class="outbounds">Fond brique&nbsp;:</span>&nbsp;calendrier non valable à cette date</div>
   <table class="centre">
       <tr>
         <th>Calendrier</th>
@@ -364,8 +372,6 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
         <th>Année</th>
         <th></th>
       </tr>
-
-	 <tr>
 
 <script type="text/javascript">
 function calcMilesian() {
@@ -405,6 +411,7 @@ function calcMilesian() {
 	}
 }
 </script>
+	<tr>
 	 <form name="milesian" autocomplete="off" method="post" action="javascript:calcMilesian();">
 		<td>Milésien&nbsp;: </td>
         <td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
@@ -426,7 +433,7 @@ function calcMilesian() {
         <td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
         <td><button class="textline">Ok</button></td>
 		</form>
-      </tr>
+	</tr>
 
 <script type="text/javascript">
 function calcGregorian() {
@@ -615,7 +622,6 @@ function calcFrenchRev(){
 </table>
 
 <script type="text/javascript">
-
 function calcISO() {
 	var day =  Math.round (document.isoweeks.day.value);
 	var week = Math.round (document.isoweeks.week.value);
@@ -655,7 +661,7 @@ function calcISO() {
 </script>
   <table class="centre">
      <tr>
-        <th></th>
+        <th>ISO 8601</th>
         <th>Jour</th>
         <th>Semaine</th>
         <th>Année</th>
@@ -663,9 +669,9 @@ function calcISO() {
       </tr>
 	<tr id="isoweeksline">
 		<form name="isoweeks" autocomplete="off" method="post" action="javascript:calcISO();">
-		<td class="mutable">Semaines ISO&nbsp;: </td>
+		<td>Semaines ISO&nbsp;: </td>
 		<td> 
-        <select name="day" class="centered mutable" size="1">
+        <select name="day" class="centered" size="1">
 		<option value="1">lundi</option>
         <option value="2">mardi</option>
         <option value="3">mercredi</option>
@@ -674,8 +680,8 @@ function calcISO() {
         <option value="6">samedi</option>
         <option value="7">dimanche</option>
         </select></td>
-        <td><input name="week" type="number" min="1" max="53" class="centered daynum mutable"> </td>
-        <td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum mutable"></td>
+        <td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
+        <td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
         <td><button class="textline" name="Compute" value="isoweeks" >Ok</button> </td>
 	  </form>
 	</tr>
@@ -701,7 +707,8 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 </script>
 <table class="centre">
     <form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay();">
-	<tr><th>Jour julien&nbsp;: </th><td></td>
+	<tr><th colspan="2">Jour julien</th></tr>
+	<tr>
 		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="centered"></td>
 		<td><button class="textline" name="setday" value="julianday">Ok</button></td>
 	</tr>
@@ -768,12 +775,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			<th>Code effectif&nbsp;: </th><td id="langCode"></td>
 		</tr>
 	</table>
-	<table class="centre">
-	  <tr>
-	  <td>Exemple&nbsp;: <code>en-GB</code> ou <code>en-US</code>, vide&nbsp;: défaut système
-	  </td>
-	  </tr>
-	  </table>
+	<div class="centre">Exemple&nbsp;: <code>en-GB</code> ou <code>en-US</code>, vide&nbsp;: défaut système</div>
 
 	<table class="centre">
 		<tr>
@@ -807,22 +809,20 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 		<tr><th>Code calendrier effectif&nbsp;: </th><td id="CalendarCode"></td></tr>
 	</table>
 	<table class="centre">
-		<tr><th>Zone horaire&nbsp;: </th>
+		<tr><th>Fuseau horaire&nbsp;: </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
 		</tr>
-		<tr><th>Zone effective&nbsp;: </th><td id="timeZone"></td></tr>
+		<tr><th>Fuseau effectif&nbsp;: </th><td id="timeZone"></td></tr>
 	</table>
-	<table class="centre">
-		<tr><td>Exemple&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide&nbsp;: défaut système</td></tr>
-		<tr><td colspan="2"><button class="textline">Modifier les paramètres de représentation</button></td></tr>
-	</table>
+	<div class="centre">Exemple&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide&nbsp;: défaut système</div>
+	<div class="centre"><button class="textline">Modifier les paramètres de représentation</button></div>
   	</form>
 	<br>
 	<table class="centre">
-		<tr><th>Date et heure Unicode</th></tr>
-		<tr><td id="UnicodeString"></td></tr>
-		<tr><th>Date et heure milésiennes</th></tr>
-		<tr><td id="milesianDisplay"></td></tr>
+		<tr><th>Unicode&nbsp;:</th>
+			<td id="UnicodeString"></td></tr>
+		<tr><th>Milésien&nbsp;:</th>
+			<td id="milesianDisplay"></td></tr>
 	</table>
 </section>
 
