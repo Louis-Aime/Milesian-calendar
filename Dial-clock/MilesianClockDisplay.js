@@ -19,6 +19,7 @@ Associated with:
 *	LunarDateProperties
 *	ChronologicalCountConversion
 3. For display, using Unicode standards
+*	UnicodeBasic
 *	UnicodeMilesianFormat (used to be: toMilesianLocaleDateString then UnicodeMilesian)
 *	MilesianMonthNameString (indirectly - or access to the name base in XML)
 */
@@ -35,6 +36,8 @@ Version M2019-08-06
 	Change access to the lunar part of the clock
 Version M2019-12-15
 	Display time zone in Unicode date string
+Version M2019-12-23
+	Use an external function of UnicodeBasic to filter bad calendrical computation cases.
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -176,7 +179,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	var myElement = document.querySelector("#clock2"),	// myElement is a work variable
 		myCollection ;	// Another work variable, used later
 	setMilesianCalendarClockHands (myElement, shiftDate.getUTCMilesianDate().year, shiftDate.getUTCMilesianDate().month, shiftDate.getUTCMilesianDate().date,
-		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() );
+		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() ); // Display date on clock.
+	setSeasonsOnClock (myElement, shiftDate.getUTCMilesianDate().year); // Display also seasons.
 
 	var dateComponent = shiftDate.getUTCMilesianDate();	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
 
@@ -256,6 +260,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.isoweeks.day.value = dateComponent.day;	
 	myElement = document.querySelector("#isoweeksline");
 	myCollection = myElement.getElementsByClassName("mutable");
+	/* As of 2019-12-23: we do not mark this calendar as "not valid", as no confusion is reasonably possible
 	if (shiftDate.valueOf() < gregorianSwitch.valueOf())	// If target date is before Gregorian calendar was enforced 
 		for (let i = 0; i < myCollection.length; i++)		// then mark that calendar was not valid
 			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds")
@@ -263,7 +268,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		for (let i = 0; i < myCollection.length; i++)
 			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
 	;
-
+	*/
+	
 	// Set Julian Day 
    	document.daycounter.julianday.value = targetDate.getJulianDay();
 	
@@ -296,19 +302,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Print Unicode string, following already computed options.
  
-	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
-	// Certain Unicode calendars do not give a proper result: set the flag.
-	switch (userOptions.calendar) {	
-		case "hebrew": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
-			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-		case "indian": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf() 
-			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
-		case "islamic":
-		case "islamic-rgsa": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
-			>= -42521673600000); break; // Computations are false before Haegirian epoch
-		case "islamic-umalqura": valid = (toResolvedLocalDate(targetDate, userOptions.timeZone).valueOf()
-			>= -6227305142400000); break; // Computations are false before 2 6m -195366
-		}
+	let valid = unicodeValidDateinCalendar(targetDate, userOptions.timeZone, userOptions.calendar); // Filter bugged date expressions
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");
 	try { myElement.innerHTML = (valid ? askedOptions.format(targetDate) : milesianAlertMsg("invalidDate")); } // Plutôt que targetDate.toLocaleTimeString(Locale,Options)
