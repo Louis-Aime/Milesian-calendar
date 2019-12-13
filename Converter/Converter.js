@@ -65,6 +65,8 @@ Version M2019-08-06
 	Display integer moon age
 Version M2019-08-22
 	Display seasons' mark on clock dial
+Version M2019-12-23
+	Use an external function of UnicodeBasic to filter bad calendrical computation cases
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -177,6 +179,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.isoweeks.day.value = dateComponent.day;	
 	myElement = document.querySelector("#isoweeksline");
 	myCollection = myElement.getElementsByClassName("mutable");
+	/* As of 2019-12-23: we do not mark this calendar as "not valid", as no confusion is reasonably possible
 	if (targetDate.valueOf() < gregorianSwitch.valueOf())	// If target date is before Gregorian calendar was enforced 
 		for (let i = 0; i < myCollection.length; i++)		// then mark that calendar was not valid
 			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds")
@@ -184,6 +187,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		for (let i = 0; i < myCollection.length; i++)
 			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
 	;
+	*/
 
 	// Set Julian Day at 12h
    	document.daycounter.julianday.value = targetDate.getJulianDay() + 0.5; // All dates are at 0h, but Julian Day is at 12h
@@ -267,22 +271,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			|| displayedCalendar != "gregory"	// ... or at least is not the plain gregory one...
 			|| displayedCalendar != new Intl.DateTimeFormat(Locale).resolvedOptions().calendar )	{ // ... nor the default one for that language
 		//	test validity since a few calendar do not display properly if out of range
-		//	and arrange Options: delete era element for calendar which do not use it.
-			let valid = true;
-			switch (myElements[i].id) {	
-				case "hebrew": valid = (targetDate.valueOf()
-					>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 AM  	
-				case "indian": valid = (targetDate.valueOf() 
-					>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
-				case "islamic":
-				case "islamic-rgsa": valid = (targetDate.valueOf()
-					>= -42521673600000); break; // Computations are false before Haegirian epoch
-				case "islamic-umalqura": valid = (targetDate.valueOf()
-					>= -6227305142400000); break; // Computations are false before 2 6m -195366
-				case "ethiopic": valid = (targetDate.valueOf()
-					>= -235492444800000); break; // Era is given in an ambiguous way for dates before the Amete Alem epoch
-				case "ethioaa": delete Options.era ; break; // suppress era part of Options, since the displayed era is "ERA0"
-				}
+		//	and arrange Options: delete era element for a calendar which does not use it.
+			let valid = unicodeValidDateinCalendar(targetDate, "UTC", myElements[i].id);
+			if (myElements[i].id == "ethioaa") delete Options.era; // suppress era part of Options, since the displayed era is "ERA0"
 			
 			// Write date string. Protect writing process against errors raised by browsers.
 			try {
@@ -290,8 +281,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 				(valid ? new Intl.DateTimeFormat(Locale+"-u-ca-"+myElements[i].id, Options).format(targetDate)  //.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options)
 						: milesianAlertMsg("invalidDate"));
 				}
-			catch (e) {	// Attempt to write time string may fail due to out-of-range error with MS Edge
-				myElements[i].innerHTML = milesianAlertMsg("invalidDate");
+			catch (e) {	// In case the browser raises an error
+				myElements[i].innerHTML = milesianAlertMsg("browserError");
 				}
 			}
 		else myElements[i].innerHTML = "(" + displayedCalendar + ")"; // Calendar displayed is a default one.
