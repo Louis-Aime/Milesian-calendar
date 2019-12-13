@@ -5,14 +5,16 @@ Versions
 	M2018-11-11: separate tools, in order to cater for several independent calendar implementations.
 	M2018-11-16: add a time zone offset computing function and a simple version of toLocalDate
 	M2018-11-24: deprecate toLocalDate
-	M2019-07-27: separate getRealTZOffset into ReaTZmsOffset.js
+	M2019-07-27: separate getRealTZOffset into RealTZmsOffset.js
+	M2019-12-22: simplify since all browser handle DateTimeFormat, and insert a display validity test
 Contents
 	getRealTZmsOffset : moved to RealTZmsOffset.js
 	unicodeCalendarHandled : from a requested calendar, gives the effectively used one.
-	toResolvedLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone.  
+	toResolvedLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
+	unicodeValidDateinCalendar: A filter for calendrical computation bugs in the ICUs
 Required
 	Access to "Chronos" object.
-	getRealsTZmsOffset defined elsewhere
+	getRealsTZmsOffset defined elsewhere.
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -62,20 +64,9 @@ function unicodeCalendarHandled (calendar, locale) {
  * @returns {Date} - the best possible result given the navigator
  */
 function toResolvedLocalDate (myDate, myTZ = "") {
-	var	localTime = new Date (myDate.valueOf() - myDate.getRealTZmsOffset()); //Basic value if no further computation possible
-	// Normally, should get the time zone offset and compute shifted date. Should take one line !! 
-	// Halas, time zone offset is not available. So we have to get it by other ways, depending upon the browser.
-	// if (myTZ == (undefined || "")) return localTime; 
-	if (myTZ == "UTC") return new Date(myDate.valueOf()); // Trivial case: time zone asked is UTC.
-	// First try to resolve time zone option.
-	try {
-	// Before any further action, test format functions
-		var askedOptions = new Intl.DateTimeFormat (); // Default parameters	
-		}
-	catch (e) { // No DateTimeFormat, even with default, use basic local time.
-		return localTime // No way of computing any local time, only system local time available
-	  }
-	// Here a minimum format Option management works.
+	var	localTime = new Date (myDate.valueOf()); // Initiate a draft date.
+	if (myTZ == "UTC") return localTime; // Trivial case: time zone asked is UTC.
+	// Check that given time zone name is valid
 	try {
 		if (myTZ == (null || ""))
 			askedOptions = new Intl.DateTimeFormat ("en-GB")
@@ -85,26 +76,40 @@ function toResolvedLocalDate (myDate, myTZ = "") {
 	catch (e) { // Submitted option is not valid
 		return new Date (NaN)	// myTZ is not empty, but not a valid time zone
 	}
-	// Here askedOptions are set with valid asked timeZone
+	// Here askedOptions is set with valid asked timeZone
 	// Set a format object suitable to extract numeric components from Date string
 	let numericSettings = {weekday: 'long', era: 'short', year: 'numeric',  month: 'numeric',  day: 'numeric',  
 			hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
 	if (!(myTZ == (undefined || ""))) numericSettings.timeZone = myTZ;	
 	var numericOptions = new Intl.DateTimeFormat ("en-GB", numericSettings);
-		
-	try {	// try using formatToParts. If not usable, use localTime previously computed.
-		let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
-		localTime = new Date(0);
-		// Construct a UTC date based on the figures of the local date.
-		localTime.setUTCFullYear (
-			(localTC[8].value == "BC") ? 1-localTC[6].value : localTC[6].value, // year component
-			localTC[4].value-1, localTC[2].value); // month and date components 
-		localTime.setUTCHours(localTC[10].value, localTC[12].value, localTC[14].value); //Hours, minutes and seconds
-		return localTime; // Success
+	let	localTC = numericOptions.formatToParts(myDate); // Local date and time components at myTZ
+	// Construct a UTC date based on the figures of the local date.
+	localTime.setUTCFullYear (
+		(localTC[8].value == "BC") ? 1-localTC[6].value : localTC[6].value, // year component
+		localTC[4].value-1, localTC[2].value); // month and date components 
+	localTime.setUTCHours(localTC[10].value, localTC[12].value, localTC[14].value); //Hours, minutes and seconds
+	return localTime;
+}
+/** With the ICUs, is this date properly displayed with this calendar ? 
+ * The filtering is done after our experience. This routine may change in the time.
+ * Only real computational bugs are filtered, not poor presentations.
+ * @param {Date} myDate - the Date object to display.
+ * @param (String) myTZ - the time zone name used, may be ''
+ * @param {string} myCalendar - the name of the calendar, after Unicode's referential.
+ * @returns {Boolean} - true if the ICU is deemed to give a valid value.
+ */
+function unicodeValidDateinCalendar(myDate, myTZ, myCalendar) {
+	let valid = true; 	// Flag the few cases where calendar computations under Unicode yield a wrong result
+	switch (myCalendar) {	
+		case "hebrew": valid = (toResolvedLocalDate(myDate, myTZ).valueOf()
+			>= -180799776000000); break;	// Computations are false before 1 Tisseri 1 Anno Mundi
+		case "indian": valid = (toResolvedLocalDate(myDate, myTZ).valueOf() 
+			>= -62135596800000); break;	// Computations are false before 01/01/0001 (gregorian)
+		case "islamic":
+		case "islamic-rgsa": valid = (toResolvedLocalDate(myDate, myTZ).valueOf()
+			>= -42521673600000); break; // Computations are false before Haegirian epoch i.e. 27 7m 622
+		case "islamic-umalqura": valid = (toResolvedLocalDate(myDate, myTZ).valueOf()
+			>= -6227305142400000); break; // Computations are false before 2 8m -195366
 		}
-	catch (e) { // can't use formatToParts. This is MS Edge specific. Just use standard TimezoneOffset if TZ was not specified, else return NaN
-		if   (myTZ == undefined || myTZ == "" || myTZ == new Intl.DateTimeFormat().resolvedOptions().timeZone)
-			return localTime 
-		else return new Date (NaN)
-	}
+	return valid
 }
