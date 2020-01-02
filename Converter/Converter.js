@@ -67,6 +67,9 @@ Version M2019-08-22
 	Display seasons' mark on clock dial
 Version M2019-12-23
 	Use an external function of UnicodeBasic to filter bad calendrical computation cases
+Version M2020-01-12
+	Use strict
+	Adapt to new Julian calendar format function
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -90,6 +93,7 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 var 
 	justNow = new Date(),
 	targetDate = new Date(Date.UTC(justNow.getFullYear(),justNow.getMonth(),justNow.getDate(),0,0,0,0)),	// target date will be used to update everything
@@ -126,7 +130,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	myElement = document.getElementById("juliogregdate");
 	if (targetDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		myElement.innerHTML = labelDate.julianFormat(targetDate)
+		myElement.innerHTML 
+			= new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric",era:"short"}).julianFormat(targetDate)
 	else
 		try {myElement.innerHTML = labelDate.format(targetDate);}
 		catch (error) { myElement.innerHTML = milesianAlertMsg ("browserError"); };
