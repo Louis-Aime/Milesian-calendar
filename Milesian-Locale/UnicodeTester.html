@@ -1,11 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <!-- 
-	Version M2019-11-18 : add display of Julian calendar date 
-	Version M2019-12-14 : 
+Versions
+	M2019-11-18 : add display of Julian calendar date 
+	M2019-12-14 : 
 		add handling and display of all date formatting options
 		reorganize fields, avoid a free-text field as first field of any form
-	Version M2019-12-24
+	M2019-12-24
 		add systematic display of Unicode ISO (Gregorian) string
+	M2020-01-11
+		Adapt to flexible layout
 -->
 <html lang="fr">
 <head>
@@ -30,14 +33,22 @@
 	<title>Test calendriers Unicode</title>
 <meta name="viewport" content="width=device-width">	
 </head>
-<body onload="setDateToNow();">
-<section class="centered"><h1>Expression de date<br>et calendriers Unicode</h1>
-<div class="centre">Démonstration et test des formats d'affichage de date et d'heure
-selon Unicode, application au calendrier milésien et au calendrier julien
-avec affichage conditionnel de l'ère. Voir infra liens vers les codes reconnus.</div>
+<body class="centered" onload="setDateToNow();">
+<section class="centered"><h1 class="milesianhead">Expression de date et calendriers Unicode</h1>
+<p class="milesianhead">Démonstration et test des formats d'affichage de date et d'heure
+selon Unicode, avec application&nbsp;:</p>
+<ul class="milesianhead">
+	<li>au calendrier Unicode sélectionné,</li>
+	<li>au calendrier Unicode ISO8601,</li>
+	<li>au calendrier julien avec affichage conditionnel de l'ère,</li>
+	<li>au calendrier milésien.</li>
+</ul>
+<p class="milesianhead">(!) signale une erreur manifeste de représentation.</p>
 </section>
-<section class="centered autoscroll"><h2>Heure et fuseau horaire du système</h2>
-	<table class="centre">
+
+<div class="panel">
+<section class="centered autoscroll"><h2 class="milesianhead">Fuseau, heure, date</h2>
+	<table class="centered">
 		<form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
 			<tr><th colspan="2">Mode&nbsp;: </th>
 				<td colspan="4">
@@ -88,7 +99,7 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-	<table class="centre">
+	<table class="centered">
 	  <tr> 
 		<form name="time" method="post" autocomplete="off" action="javascript:calcTime();">
 		 <th>Heure du mode&nbsp;: </th>
@@ -115,14 +126,14 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table class="centre"> <tr>
+	 <table class="centered"> <tr>
 		<th>UTC :</th>
 		 <td id="UTCdate"></td>
 		 <td id="UTCtime"></td>
 		<td colspan=4><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow();">Maintenant</button></td>
 	  </tr> </table>
 
-	  <table class="centre">
+	  <table class="centered">
 	  <tr>
 		<th>Cette date à UTC</th>
 		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0h</button></td>
@@ -154,7 +165,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	}
 }
 </script>	 
-	<table class="centre"> 
+	<table class="centered"> 
 	  <tr>
 		<form name="timeShift" method="post" action="javascript:changeAddTime();">
 		<td>+/- secondes</td>
@@ -164,9 +175,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 		</form>
 	  </tr>
 	</table>
-</section>
 
-<section class="centered autoscroll"><h2>Date</h2>
 <script type="text/javascript">
 function calcMilesian() {
 	var 
@@ -195,7 +204,7 @@ function calcMilesian() {
 		}
 }
 </script>
-	<table class="centre">
+	<table class="centered">
        <tr>
         <th>Jour</th>
         <th>Quant.</th>
@@ -258,7 +267,7 @@ function setDayOffset (sign=1) {
 }
 // No clock movement function
 </script>
-<table class="centre">
+<table class="centered">
   <tr>
 	<td><button class="textline" type="button" onclick="javascript:setDateToNow();";>Maintenant</button></td>
 	<form name="control" method="post" action="javascript:changeDayOffset();">
@@ -270,22 +279,29 @@ function setDayOffset (sign=1) {
   </tr>
 </table>
 </section>
+<section class="centered"><h3 class="milesianhead">Liens utiles</h3>
+  <table class="centered">
+	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
+	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
+  </table>
+</section>
+</div>
 
-<section class="centered autoscroll"><h2>Options de présentation</h2>
+<section class="panel centered autoscroll"><h2 class="milesianhead">Options de présentation</h2>
 	<form name="LocaleOptions" method="post" action="javascript:putStringOnOptions();">
-	 <table class="centre"> 
+	 <table class="centered"> 
 	   <tr>
 		<th>Calendrier&nbsp;: </th>
 		<td>
 			<select name="Calendar" size="1" class="centered">
 			<option value="">par défaut</option>
 			<option value="buddhist">bouddhiste Thaï</option>
-			<option value="chinese">chinois traditionnel</option>
+			<option value="chinese">chinois luni-solaire</option>
 			<option value="coptic">copte</option>
-			<option value="dangi">coréen traditionnel</option>
-			<option value="ethioaa">éthiopien Amete Alem (5493 A.C.) </option>
-			<option value="ethiopic">éthiopien Amete Mihret (8 A.D.)</option>
-			<option value="gregory">grégorien (proleptique)</option>
+			<option value="dangi">coréen traditionnel dangi</option>
+			<option value="ethioaa">éthiopien Amete Alem (5493 BC) </option>
+			<option value="ethiopic">éthiopien Amete Mihret (8 AD)</option>
+			<option value="gregory">grégorien</option>
 			<option value="hebrew">hébraïque</option>
 			<option value="indian">indien moderne</option>
 			<option value="islamic">islamique standard</option>
@@ -293,12 +309,16 @@ function setDayOffset (sign=1) {
 			<option value="islamic-tbla">islamique tabulaire astronomique</option>
 			<option value="islamic-civil">islamique tabulaire civil</option>
 			<option value="islamic-rgsa">islamique, Arabie saoudite</option>
-			<option value="iso8601">grégorien avec règles ISO 8601</option>
+			<option value="iso8601">ISO 8601 (grégorien normalisé)</option>
 			<option value="japanese">japonais impérial</option>
 			<option value="persian">persan</option>
 			<option value="roc">chinois de république populaire</option>
 			</select> 
 		</td>
+	   </tr>
+	   <tr>
+		<th>Extension Unicode&nbsp;: </th>
+		<td><input name="UnicodeExt" type="text" class="centered"></td>
 	   </tr>
 	   <tr>
 	    <td>Calendrier effectif&nbsp;: </td>
@@ -316,7 +336,7 @@ function setDayOffset (sign=1) {
 		</tr>
 		<tr><td>Fuseau effectif&nbsp;: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
 		</table>
-	 <table class="centre">
+	 <table class="centered">
 	   <tr>
 		<th>Quantième</th><th>Mois</th><th>Année</th>
 	   </tr>
@@ -361,7 +381,7 @@ function setDayOffset (sign=1) {
 			</select></td>
 	   </tr>
 	<tr> 
-		<th>Jour semaine</th><th>Ere</th><th>Cycle horaire</th>
+		<th>Jour semaine</th><th>Ère</th><th>Cycle horaire</th>
 	</tr> 
 	<tr>
 		<td><select name="Weekday" class="centered" size="1">
@@ -383,7 +403,15 @@ function setDayOffset (sign=1) {
 			</select></td>
 	</tr>
 	<tr>
-		<th colspan="2">Affichage fuseau horaire</th>
+		<th>&nbsp;</th><th>Ère actuelle</th><th>Fuseau</th>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><select name="MaskPresentEra" class="centered" size="1">
+			<option value="exceptCurrent">masquée</option>
+			<option value="allEra">affichée</option>
+			</select>
+		</td>
 		<td><select name="TimeZoneName" class="centered" size="1">
 			<option value="" selected>absent</option>
 			<option value="short">court</option>
@@ -404,14 +432,14 @@ function setDayOffset (sign=1) {
 		<td><input name="Eminute" type="text" disabled="disabled" class="centered"></td>
 		<td><input name="Esecond" type="text" disabled="disabled" class="centered"></td>
 	</tr>
-		<tr><th>Jour semaine</th><th>Ere</th><th>12 heures</th></tr>
+		<tr><th>Jour semaine</th><th>Ère</th><th>12 heures</th></tr>
 	<tr>
 		<td><input name="Eweekday" type="text" disabled="disabled" class="centered"></td>
 		<td><input name="Eera" type="text" disabled="disabled" class="centered"></td>
 		<td><input name="Ehour12" type="text" disabled="disabled" class="centered"></td>
 	</tr>
 	</table>
-	<table class="centre">
+	<table class="centered">
 		<tr><th>Numération</th><th>Affichage fuseau</th></tr>
 	  <tr>
 		<td><input name="Enum" type="text" disabled="disabled" class="centered"></td>
@@ -425,22 +453,18 @@ function setDayOffset (sign=1) {
    </table>
   </form> 
 </section>
-<section class="centered autoscroll"><h2>Expressions de date</h2>
-   <table class="centre">
+
+<section class="panel centered autoscroll"><h2 class="milesianhead">Expressions de date</h2>
+   <table class="centered">
 		<tr><th>Unicode&nbsp;: </th><td id="Ustring"></td></tr>
-		<tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
 		<tr><th>ISO8601&nbsp;: </th><td id="Gstring"></td></tr>
 		<tr><th>Julien&nbsp;: </th><td id="Jstring"></td></tr>
+		<tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
 	</table>
 </section>
-<section class="centered"><h2>Liens utiles</h2>
-  <table class="centre">
-	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
-	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
-  </table>
-</section>
+
 <footer class="centered">
- <p>© 2017-2019 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+ <p>© 2017-2020 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
 </footer>
 </body>
 </html>

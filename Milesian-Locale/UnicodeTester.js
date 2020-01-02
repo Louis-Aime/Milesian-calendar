@@ -10,6 +10,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2019-11-18 : add display of Julian calendar date, with era on demand
 	M2019-12-14 : add handling and display of all format options
 	M2019-12-22 : Use an external function of UnicodeBasic to filter bad calendrical computation cases, and add ISO display
+	M2020-01-12 : Use strict and add Unicode extension (possibly other calendar)
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -48,7 +49,7 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 */
-
+"use strict";
 var 
 	targetDate = new Date(),
 	shiftDate = new Date (targetDate.getTime() - targetDate.getRealTZmsOffset()),
@@ -59,6 +60,7 @@ var
 function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control. Called by setDisplay
 	let Locale = document.LocaleOptions.Locale.value;
 	let Calendar = document.LocaleOptions.Calendar.value;
+	let unicodeAskedExtension = document.LocaleOptions.UnicodeExt.value;
 	let timeZone = document.LocaleOptions.TimeZone.value;
 	var askedOptions, usedOptions; 
 
@@ -76,8 +78,12 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	Locale = askedOptions.resolvedOptions().locale;	// Locale is no longer empty
 	Locale = Locale.includes("-u-") ?  Locale.substring (0,Locale.indexOf("-u-")) : Locale; // Remove Unicode extension
 	
-	// Add calendar
-	if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar; 
+	// Add extension and calendar
+	let unicodeExtension = "-u";
+	let extendedLocale = Locale;
+	if (Calendar !== "") unicodeExtension += "-ca-" + Calendar;
+	if (unicodeAskedExtension !== "") unicodeExtension += "-" + unicodeAskedExtension;
+	if (unicodeExtension !== "-u") extendedLocale += unicodeExtension; 
 	
 	// Add presentation options
 	let Options = {};	
@@ -96,14 +102,14 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
 	// Check here that Options with timeZone is valid
 	try {
-		askedOptions = new Intl.DateTimeFormat (Locale, Options);
+		askedOptions = new Intl.DateTimeFormat (extendedLocale, Options);
 		}
 	catch (e) {
 		alert (milesianAlertMsg("invalidCode") + '"' + Options.timeZone + '"');
 		document.LocaleOptions.TimeZone.value = ''; 	// Reset TimeZone indication to empty string
 		timeZone = "";
 		delete Options.timeZone; // Delete property
-		askedOptions = new Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
+		askedOptions = new Intl.DateTimeFormat (extendedLocale, Options);	// Finally the options do not comprise the time zone
 	}
 
 	usedOptions = askedOptions.resolvedOptions();
@@ -124,15 +130,16 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	document.LocaleOptions.Enum.value = usedOptions.numberingSystem;
 	document.LocaleOptions.EtimeZoneName.value = usedOptions.timeZoneName;
 	
-	// Display Milesian and Julian strings
-	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);
-	document.getElementById("Jstring").innerHTML = askedOptions.julianFormat(targetDate);
-	
-	// Display ISO8601 string (proleptic gregorian calendar)
-	Locale = (usedOptions.locale.includes("-u-") ?  usedOptions.locale.substring (0,usedOptions.locale.indexOf("-u-")) : usedOptions.locale)
-			+ "-u-ca-iso8601" ; // Build Locale with ISO8601 calendar
-	document.getElementById("Gstring").innerHTML = new Intl.DateTimeFormat(Locale,Options).format(targetDate);
+	// Display ISO8601 string
+	extendedLocale = Locale + "-u-ca-iso8601" + (unicodeAskedExtension == "" ? "" : "-" + unicodeAskedExtension); // Build Locale with ISO8601 calendar
+	/* Locale = (usedOptions.locale.includes("-u-") ?  usedOptions.locale.substring (0,usedOptions.locale.indexOf("-u-")) : usedOptions.locale)
+			+ "-u-ca-iso8601" ; // Build Locale with ISO8601 calendar */
+	document.getElementById("Gstring").innerHTML = new Intl.DateTimeFormat(extendedLocale,Options).format(targetDate);
 
+	// Display Julian and Milesian strings
+	document.getElementById("Jstring").innerHTML = askedOptions.julianFormat(targetDate,document.LocaleOptions.MaskPresentEra.value);
+	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);
+	
 	// Certain Unicode calendars do not give a proper result: here is the control code.
 	let valid = unicodeValidDateinCalendar(targetDate, timeZone, usedOptions.calendar);
 	let myElement = document.getElementById("Ustring");
