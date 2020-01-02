@@ -13,6 +13,7 @@ Versions
 	M2019-01-06 : reconstruct julian calendar converter using CBCCE
 	M2019-03-04 : replace {... Object} notation that does not fit to MS Edge
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE
 	getRealTZmsOffset method.
@@ -25,7 +26,7 @@ Contents
 	setTimeFromJulianDay (julianDay) : Set time from an integer or a fractionnal Julian day.
 	Deprecated, extracter: setJulianDay (julianDay[, timeZoneOffset]) : set date as specified by integer (or rounded) Julian day, without changing local time.
 */
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -45,6 +46,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /*
  1. Basic tools of this package
 */

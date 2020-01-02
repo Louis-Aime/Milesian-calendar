@@ -11,6 +11,7 @@ Versions
 	M2018-11-16 : adapt to time zone computation
 	M2019-06-12 : fix year setting for years 0 to 100
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE.
 	getRealTZmsOffset method.
@@ -22,7 +23,7 @@ Contents
 	toIsoWeekCalDateString : return a string with the date elements in IsoWeekCal: yyyy-Www-dd
 	toUTCIsoWeekCalDateString : same as above, in UTC time zone.
 */
-/* Copyright Miletus 2016-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
@@ -43,6 +44,7 @@ Contents
 	or the use or other dealings in the software.
 	Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /*
  1. Basic tools of this package
 */

@@ -11,6 +11,7 @@ Versions
 	M2019-06-28: Enhance Milesian epact computation, shall depend on UTC time only.
 	M2019-07-27: Update dependencies, no new code
 	M2019-10-10: Reduced milesian epact is never 29.5, but rather 0.0
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE.
 	MilesianDateProperties (UTC only).
@@ -25,7 +26,7 @@ Key figure include:
 	epact: Julian / Gregorian computus epact, Milesian mean moon epact.
 	annualResidue: 29.5 minus epact (Milesian only).
 */
-/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -46,6 +47,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Positive remainder of a division. 
  * @param {number} dividend - any number.
  * @param {number} divisor - any strictly  positive number. If not stricly positive, result is "undefined".

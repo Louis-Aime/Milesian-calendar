@@ -9,6 +9,7 @@ Versions
 	M2018-11-12 : JSdoc comments + add dacronitic routines
 	M2018-11-16 : adapt to TZ in ms rather than in mn
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE.
 	getRealTZmsOffset method.
@@ -31,8 +32,8 @@ Contents: methods for Date.prototype
 	getDraconiticHeight : a very rough estimate of the height of the moon (-5° to +5°). 
 		When height is around 0 at new or full moon, eclipse is possible.
 	There is no setter function in this package.
-*/////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+*/
+/* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -53,6 +54,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /*
 1. Basic tools of this package
 */

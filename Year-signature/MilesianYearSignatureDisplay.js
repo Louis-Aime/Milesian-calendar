@@ -11,6 +11,7 @@ Versions
 		Display Roman date with an explicit month indication
 	M2019-07-27: update dependencies
 	M2019-08-23: add seasons' computation
+	M2020-01-12 : strict mode
 Required (directly)
 	MilesianYearSignature
 	MilesianAlertMsg
@@ -18,7 +19,7 @@ Required (directly)
 Contents
 	Functions called by the MilesianYearSignature.html
 */////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -39,7 +40,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-
+"use strict";
 function romanDateFrom21March (offset) {
 	let f = new Intl.DateTimeFormat(undefined,{month:"short", day:"numeric"});
 	return (offset <= 10) 

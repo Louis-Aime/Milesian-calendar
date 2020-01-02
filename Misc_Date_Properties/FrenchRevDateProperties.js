@@ -9,6 +9,7 @@ Versions
 	M2018-11-11 : JSDocs comments
 	M2018-11-16 : adapt to time zone computation
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE.
 	getRealTZmsOffset method.
@@ -20,7 +21,7 @@ Contents
 	toIntlFrenchRevDateString : return a string with the date elements in Republican calendar: (day number) / (month number) / (year), month 1 to 12.
 	toUTCIntlFrenchRevDateString : same as above, in UTC time zone.	
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -41,6 +42,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /*
  1. Basic tools of this package
 */

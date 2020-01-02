@@ -9,12 +9,13 @@ Versions
 		add MSBase value, for Excel spreadsheets and MS databases
 		change MacOS display
 		include out of bounds display
+	M2020-01-12 : strict mode
 Required
 	No dependent file, all constants here (Day_Unit is defined again)
 Contents
 	getCount (count), method added to Date.
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -35,6 +36,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Give the decimal value of one the following chronological counters 
  * @method getCount
  * @param {string} the desired counter, one of the following values
