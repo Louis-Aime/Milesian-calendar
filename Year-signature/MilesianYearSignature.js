@@ -145,7 +145,7 @@ function gregorianSignature (year) {
 	signature.milesiancomputusepact = positiveModulo (12 - signature.easterResidue, 30);
 	signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );
 	signature.easterOffset = 1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
-	signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || yearCoeff.saeculum == 0) ;
+	signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || yearCoeff.saeculum == 0) ;
 		// Long if year part in decomposition is 0, and it is not a secular year except a multiple of 400.
 	return signature;
 }
@@ -198,9 +198,9 @@ function milesianSignature (year) {
 		, 30);
 		signature.easterResidue -= Math.floor( (gold + 11*signature.easterResidue) / 319 );
 		signature.easterOffset =  1 + signature.easterResidue + positiveModulo(6 - signature.easterResidue - signature.doomsday, 7);
-		signature.isLeap = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum !== 0));
+		signature.isLeap = yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum != 0));
 		// To check whether milesian year is long, test next year
 		yearCoeff = cbcceDecompose (++year, yearParams);
-		signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum !== 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum !== 0));
+		signature.isLong = yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || (yearCoeff.saeculum == 0 && yearCoeff.quadrisaeculum != 0));
 	return signature;
 }

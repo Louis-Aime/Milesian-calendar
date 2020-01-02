@@ -100,7 +100,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	Locale = Locale.substring (0,Locale.indexOf("-u-"));
 		
 	// Specify calendar
-	if (Calendar !== "") Locale = Locale + "-u-ca-" + Calendar; // No entry error expected
+	if (Calendar != "") Locale = Locale + "-u-ca-" + Calendar; // No entry error expected
 	
 	// Set presentation options from one of the standard presentations listed.
 	switch (document.LocaleOptions.Presentation.value) {
@@ -134,7 +134,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 		}
 	
 	// Add time zone in Options
-	if (timeZone !== "") 
+	if (timeZone != "") 
 		Options.timeZone = timeZone ; 
 	// is timeZone valid ?
 	try {

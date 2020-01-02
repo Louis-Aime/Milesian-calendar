@@ -72,13 +72,13 @@ function setMilesianCalendarClockHands(clock, year = undefined, month = 0, day =
 	for ( let i = 0; i < timeUnits.length; i++ ) {	// for all time units...
 		let theHand = clock.querySelector(".clockhand."+timeUnits[i]);		// Find hand for this unit in this clock
 		let theCenter = clock.querySelector(".center."+timeUnits[i]);		// Find the center of the hand
-		if (theHand !== null) 
+		if (theHand != null) 
 			theHand.transform.baseVal.getItem(0).setRotate(angle[timeUnits[i]],theCenter.x.baseVal.value,theCenter.y.baseVal.value);
 	}
 	let theAmPm = clock.querySelector(".ampm");			// Select the am/pm indicator, check whether existing.
-	if (theAmPm !== null) theAmPm.innerHTML = (hour > 11 ? "pm" : "am");	// hour is 0 to 23. "am" from 0 to 11, "pm" from 12 to 23.
+	if (theAmPm != null) theAmPm.innerHTML = (hour > 11 ? "pm" : "am");	// hour is 0 to 23. "am" from 0 to 11, "pm" from 12 to 23.
 	let theYear = clock.querySelector(".yeardisplay");		// Select the year field, check whether existing.
-	if (theYear !== null) theYear.innerHTML = Number.isInteger(year) ? 
+	if (theYear != null) theYear.innerHTML = Number.isInteger(year) ? 
 		new Intl.NumberFormat (undefined, {minimumIntegerDigits : 3, useGrouping : false}).format(year)
 		: "";
 	return halfDays;	// control the computation parameters with the return value

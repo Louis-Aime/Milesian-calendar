@@ -49,7 +49,7 @@ function setSeasonsOnClock (clock, year) {
 		let m = wdate.getUTCMilesianDate().month;
 		let theMark = clock.querySelector(".seasonmark."+markList[i]);
 		let angle = success ? (m * 30 + Math.floor(m/2) + wdate.getUTCMilesianDate().date) * 60.0 / 61.0 : 0;
-		if (theMark !== null)
+		if (theMark != null)
 			theMark.transform.baseVal.getItem(0).setRotate(angle,
 				theCenter.x.baseVal.value,theCenter.y.baseVal.value);
 	}

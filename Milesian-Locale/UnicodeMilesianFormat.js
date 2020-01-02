@@ -136,7 +136,7 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 					+"']/monthWidth[@type='"+monthWidth
 					+"']/month[@type=" + (milesianComponents.month+1) + "]";
 				node = milesianNames.evaluate(Xpath1, milesianNames, null, XPathResult.STRING_TYPE, null);
-				if (node.stringValue !== "") revis = node.stringValue; // If found, replace Latin name with language specific one.
+				if (node.stringValue != "") revis = node.stringValue; // If found, replace Latin name with language specific one.
 				if (referenceOptions.month == "2-digit" && !isNaN(revis)) revis = figure2.format (revis);
 				return {type:type, value: revis}; 
 			default : return {type: type, value: value};
