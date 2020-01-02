@@ -37,6 +37,9 @@ Versions
 	M2019-11-18
 		Add a line for testing bug of navigators on .resolvedOptions
 		Simplify .milesianFormat function, since it can assumed that FormatToDate routines are available.
+	M2020-01-11
+		Use numbering options specified in Locale, 
+		Use strict mode.
 Contents
 	Intl.DateTimeFormat.prototype.milesianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.milesianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -67,7 +70,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-
+"use strict";
 /** FormatToParts that issues parts of a Milesian date.
  * @method milesianFormatToParts
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
@@ -78,28 +81,20 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	// The resolvedOptions is also required to work properly. A test is done at the beginning.
 	var	
-		thisOptions = this.resolvedOptions(); // This statement aims at controlling whether .resolvedOptions yields suitable values in all cases.
-		numberingSystem = this.resolvedOptions().numberingSystem,
-		locale = this.resolvedOptions().locale,	// Fetch the locale from this 
-		lang = locale.includes("-") ? locale.substring (0,locale.indexOf("-")) : locale;	// the pure language identifier, without country
-	// Change the calendar of locale to "gregory" and add the resolved numbering system
-	locale = (locale.includes("-u-") 
-		? 	(locale.substring(locale.indexOf("-u-")).includes("ca-") 
-				? locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-")))
-				: locale )
-			+ "ca-"
-		: locale + "-u-ca-"
-		) + "gregory-nu-" + numberingSystem;
-	var 
-		figure1 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 1, useGrouping : false}),
-		figure2 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 2, useGrouping : false}),
-		figure3 = new Intl.NumberFormat (lang+"-u-nu-"+numberingSystem, {minimumIntegerDigits : 3, useGrouping : false});
-	var 
-		constructOptions = new Intl.DateTimeFormat(locale,this.resolvedOptions()), 
-		referenceOptions = constructOptions.resolvedOptions();
-	var milesianComponents; 	// To be initiated later
-	let referenceComponents = constructOptions.formatToParts (myDate); // Implementations which do not accept this function will throw an error
-	let TZ = referenceOptions.timeZone;	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
+		thisOptions = this.resolvedOptions(), // This statement aims at controlling whether .resolvedOptions yields suitable values in all cases.
+		langCountry = thisOptions.locale.includes("-u-") ? thisOptions.locale.substring (0,thisOptions.locale.indexOf("-u-")) : thisOptions.locale,
+			// necessary for the search in the small database of calendrical names
+		lang = langCountry.includes("-") ? langCountry.substring (0,langCountry.indexOf("-")) : langCountry,	
+		figure1 = new Intl.NumberFormat (thisOptions.locale, {minimumIntegerDigits : 1, useGrouping : false}),
+		figure2 = new Intl.NumberFormat (thisOptions.locale, {minimumIntegerDigits : 2, useGrouping : false}),
+		figure3 = new Intl.NumberFormat (thisOptions.locale, {minimumIntegerDigits : 3, useGrouping : false}),
+		// Set a locale with the "iso8601" calendar
+		locale = langCountry + "-u-ca-iso8601-nu-" + thisOptions.numberingSystem,
+		constructOptions = new Intl.DateTimeFormat(locale,thisOptions), 
+		referenceOptions = constructOptions.resolvedOptions(),
+		referenceComponents = constructOptions.formatToParts (myDate), // Implementations which do not accept this function will throw an error
+		TZ = referenceOptions.timeZone,	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
+		milesianComponents; 	// To be initiated next
 	if (TZ == undefined) 	milesianComponents = myDate.getMilesianDate()	// system local date, expressed in Milesian
 	else 					milesianComponents = toResolvedLocalDate(myDate, TZ).getUTCMilesianDate(); // TZ local date.
 	// Here milesianComponents holds the local Milesian date figures, we replace the Gregorian day, month and year components with those.
@@ -148,7 +143,6 @@ Intl.DateTimeFormat.prototype.milesianFormatToParts	= function (myDate) {
 			}	// Other values in parts are not changed.
 		});	// End of mapping function
 }
-
 /** a Intl.DateTimeFormat.format method that issues a string representing a Milesian date.
  * @method milesianFormat
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
