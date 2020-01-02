@@ -7,11 +7,15 @@ Versions
 	M2017-12-26: add year indication, and change parameters list
 	M2018-10-26: enhance comments
 	M2018-11-11: Change name, JSDocs comments
+	M2020-01-12: 
+		Display year number with a minimum of 3 digits, 
+		Suppress deprecated SolarYearClockHands
+		Use strict
 Contents
 	setMilesianCalendarClockHands (new name for setSolarYearClockHands)
 	setSolarYearClockHands (deprecated)
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -32,12 +36,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-/** Stub in order to change name
- * @deprecated setSolarYearClockHands
-*/
-function setSolarYearClockHands(clock, year = undefined, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
-	return setMilesianCalendarClockHands(clock, year, month, day, hour, minute, second, continuous)
-}
+"use strict";
 /** Set the hands of a milesian (solar) clock, after the components of a milesian date.
  * @since M2018-11-11
  * @param {Object} clock - a graphical object that represents the clock, that the routine will set
@@ -79,6 +78,8 @@ function setMilesianCalendarClockHands(clock, year = undefined, month = 0, day =
 	let theAmPm = clock.querySelector(".ampm");			// Select the am/pm indicator, check whether existing.
 	if (theAmPm !== null) theAmPm.innerHTML = (hour > 11 ? "pm" : "am");	// hour is 0 to 23. "am" from 0 to 11, "pm" from 12 to 23.
 	let theYear = clock.querySelector(".yeardisplay");		// Select the year field, check whether existing.
-	if (theYear !== null) theYear.innerHTML = Number.isInteger(year) ? year : "" ;
+	if (theYear !== null) theYear.innerHTML = Number.isInteger(year) ? 
+		new Intl.NumberFormat (undefined, {minimumIntegerDigits : 3, useGrouping : false}).format(year)
+		: "";
 	return halfDays;	// control the computation parameters with the return value
 }
