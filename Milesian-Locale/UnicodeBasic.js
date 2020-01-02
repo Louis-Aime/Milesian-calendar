@@ -7,6 +7,7 @@ Versions
 	M2018-11-24: deprecate toLocalDate
 	M2019-07-27: separate getRealTZOffset into RealTZmsOffset.js
 	M2019-12-22: simplify since all browser handle DateTimeFormat, and insert a display validity test
+	M2020-01-10: set strict mode and enhance code
 Contents
 	getRealTZmsOffset : moved to RealTZmsOffset.js
 	unicodeCalendarHandled : from a requested calendar, gives the effectively used one.
@@ -38,7 +39,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 
-
+"use strict";
 /** Show which calendar is effectively used, in connection with a language, upon request through the Locale u-ca- parameters of Intl.DateTimeFormatate
  * @param {string} calendar: name of asked calendar
  * @param {string} locale: the language for which the request is done. If undefined, current locale.
@@ -57,26 +58,27 @@ function unicodeCalendarHandled (calendar, locale) {
 	return 	new Intl.DateTimeFormat(locale).resolvedOptions().calendar;
 	}
 
-/** Construct a date that represents the "best fit" value of the given date shifted to the time zone indicated or resolved in Options. 
+/** Construct a date that represents the "best fit" value of the given date shifted to the named time zone. 
  * The computation of the time zone is that of Unicode, or  the the standard TZOffset if Unicode's is not available.
  * @param {Date} myDate - the Date object to convert, and that shows the moment of time zone offset computation.
  * @param {string} myTZ - the name of the time zone.
- * @returns {Date} - the best possible result given the navigator
+ * @returns {Date} - the best possible result given by the navigator.
  */
 function toResolvedLocalDate (myDate, myTZ = "") {
 	var	localTime = new Date (myDate.valueOf()); // Initiate a draft date.
+	var localOptions;
 	if (myTZ == "UTC") return localTime; // Trivial case: time zone asked is UTC.
 	// Check that given time zone name is valid
 	try {
 		if (myTZ == (null || ""))
-			askedOptions = new Intl.DateTimeFormat ("en-GB")
+			localOptions = new Intl.DateTimeFormat ("en-GB")
 		else
-			askedOptions = new Intl.DateTimeFormat ("en-GB", {timeZone : myTZ}); // Submit specified time zone
+			localOptions = new Intl.DateTimeFormat ("en-GB", {timeZone : myTZ}); // Submit specified time zone
 	}
 	catch (e) { // Submitted option is not valid
-		return new Date (NaN)	// myTZ is not empty, but not a valid time zone
+		return new Date (NaN)	// myTZ is not empty, but the navigator is unable to resolve it as a valid time zone
 	}
-	// Here askedOptions is set with valid asked timeZone
+	// Here localOptions is set with valid asked timeZone
 	// Set a format object suitable to extract numeric components from Date string
 	let numericSettings = {weekday: 'long', era: 'short', year: 'numeric',  month: 'numeric',  day: 'numeric',  
 			hour: 'numeric',  minute: 'numeric',  second: 'numeric', hour12: false};
