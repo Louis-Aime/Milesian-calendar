@@ -1,12 +1,13 @@
 /* Milesian Seasons - Dates of tropical events for a given Milesian year
 	Character set is UTF-8
 	M2019-08-22: first version, extracted from a Fourmilab package
+	M2020-01-12 : strict mode implementation
 Required (directly)
 	LunarDateProperties: method getDeltaT
 Contents
 	The externally used function is tropicEvent
-*/////////////////////////////////////////////////////////////////////////////////////////////
-/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
+*/
+/* Copyright Miletus 2019-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -26,7 +27,12 @@ claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
+
+These functions implement Jean Meeus' method for computing tropical events.
+The code derives from Fourmilab's astro.js file (2015)
+Code has been modified in order to conform with strict mode
 */
+"use strict";
 
 /* Part 1 - utilities */
 
@@ -43,7 +49,7 @@ function dtr(d) {return (d * Math.PI) / 180.0;}
 function dcos(d) {return Math.cos(dtr(d));}
 
 /* Part 2
-Function equinox, implements Jean Meeus method
+Function equinox, implements Jean Meeus' method
 for calculating equinox and solstices of a year
 Extracted from Fourmilab astro functions
 */
@@ -91,14 +97,14 @@ var EquinoxpTerms = new Array(
 	 12, 320.81,  34777.259,
 	  9, 227.73,   1222.114,
 	  8,  15.45,  16859.074
-							);
+							),
 
 JDE0tab1000 = new Array(
    new Array(1721139.29189, 365242.13740,  0.06134,  0.00111, -0.00071),
    new Array(1721233.25401, 365241.72562, -0.05323,  0.00907,  0.00025),
    new Array(1721325.70455, 365242.49558, -0.11677, -0.00297,  0.00074),
    new Array(1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006)
-						);
+						),
 
 JDE0tab2000 = new Array(
    new Array(2451623.80984, 365242.37404,  0.05169, -0.00411, -0.00057),
