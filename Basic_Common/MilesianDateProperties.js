@@ -10,6 +10,7 @@ Versions
 	M2018-11-16 : replace getTimezoneOffset with getRealTZmsOffset
 	M2019-01-13 : change intercalation rule to Gregorian
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
+	M2020-01-12 : strict mode
 Required
 	Package CBCCE.
 	getRealTZmsOffset method.
@@ -21,7 +22,7 @@ Contents
 	toIntlMilesianDateString : return a string with the date elements in Milesian: (day) (month)"m" (year), month 1 to 12.
 	toUTCIntlMilesianDateString : same as above, in UTC time zone.
 */
-/* Copyright Miletus 2016-2019 - Louis A. de FOUQUIERES
+/* Copyright Miletus 2016-2020 - Louis A. de FOUQUIERES
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -42,6 +43,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /*
  1. Basic tool of this package
 */

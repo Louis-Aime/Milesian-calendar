@@ -4,10 +4,11 @@
 Versions
 	M2018-11-24: experimental
 	M2018-11-28: enhancement: fetch centre and radius of SVG moondisk.
+	M2020-01-12: strict mode
 Contents
 	setMoonPhase
 */
-/* Copyright Miletus 2018 - Louis A. de Fouquières
+/* Copyright Miletus 2018-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -28,6 +29,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** set SVG display as to Moon age.
  * @param {Object} moon - SVG object representing a moon defined with a lit image and a "path" shaded part
  * @param {number} phase - Phase, in radians (2 * PI is one lunar cycle)

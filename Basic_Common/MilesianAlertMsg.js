@@ -15,10 +15,11 @@ Versions
 	M2018-11-02
 		New message entry : outOfRange	
 	M2018-11-11 : JSdoc comments, make code simplier
+	M2020-01-12 : strict mode
 Required:
 	No other file required
 */
-/* Copyright Miletus 2017-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -40,6 +41,7 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Gives a string of a message in the language set by Locale.
  * @param {string} inputError - the name of the message
  * available messages: invalidInput, nonNumeric, nonInteger, invalidDate, invalidCode, browserError, outOfRange

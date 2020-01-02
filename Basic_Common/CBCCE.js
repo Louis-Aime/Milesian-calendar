@@ -33,8 +33,10 @@ Versions:
 	Version 4.1 : M2019-11-30
 		Enhance presentation comments
 		One ";" suppressed for better conformance to language, with no functional effect.
+	Version 4.2 : M2020-01-12
+		Strict mode
 */
-/* Copyright Miletus 2016-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -55,6 +57,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Parameter object structure. Replace # with numbers or literals.
  * var decomposeParameterExample = {
  *	timeepoch : #, // origin time in milliseconds (or in the suitable unit) to be used for the decomposition, with respect to 1/1/1970 00:00 UTC.
@@ -159,5 +162,5 @@ function cbcceCompose (cells, params) { // from an object cells structured as pa
 		addCycle = (f == ceiling) ? params.coeff[i].subCycleShift : 0;	// If at end of this cycle, the ceiling of the lower cycle may be increased or decreased.
 		quantity += f * params.coeff[i].cyclelength;				// contribution to quantity at this level.
 	}
-	return quantity ;	
+	return quantity ;
 }

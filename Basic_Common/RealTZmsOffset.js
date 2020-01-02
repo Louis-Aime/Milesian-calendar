@@ -6,12 +6,14 @@ Versions
 		The (only) function is added to UnicodeBasic.js 
 	M2019-07-27
 		Separate getRealTZmsOffset from UnicodeBasic, since this function has nothing to do with display routines.
+	M2020-01-12
+		Strict mode
 Contents
 	getRealTZmsOffset : the real time zone offset, in milliseconds, due to a bug in Chrome version of TZOffset.
 Required
 	Access to "Chronos" object.
 */
-/* Copyright Miletus 2018-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2018-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -32,7 +34,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-
+"use strict";
 /** Compute the system time zone offset at this date, in ms.
  * rationale: with Chrome (and others ?), the TZOffset returned value losses the seconds. 
  * @returns {number} the time zone offset in milliseconds: UTC - local (same sign as TimezoneOffset)

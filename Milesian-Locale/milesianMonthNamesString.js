@@ -14,10 +14,12 @@ Version
 		type format monthWidth numeric differs from type stand-alone.
 	M2018-11-11: Enhance comments, put JSDoc comments.
 	M2019-07-24: Control bidirectionnal issues by inserting Unicode FSI & PDI characters
+	M2020-01-12: strict mode
 */
-/* Copyright Miletus 2016-2018 - Louis A. de Fouquières
+/* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Stringified XML base, consisting in 2 blocks: 
  * ldmlBCP47 declares Milesian calendar general item, 
  * ldml declares language specific names

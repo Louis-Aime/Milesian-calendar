@@ -1,5 +1,11 @@
 /* Season on clock */
-/* Copyright Miletus 2019 - Louis A. de Fouquières
+/* Versions
+	M2019-11-30
+		Initial version
+	M2020-01-12
+		Strict mode
+*/
+/* Copyright Miletus 2019-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -20,6 +26,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 /** Mark the dates of solstices and equinox on the dial of the Milesian clock 
  * @since M2019-08-23 (revised for typos M2019-11-30
  * @param {Object} clock - a graphical object that represents the clock, that the routine will set
