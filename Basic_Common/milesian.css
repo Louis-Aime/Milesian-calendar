@@ -1,15 +1,39 @@
 /* Styles for Milesian calendar applications - in complement with basic styles of Web pages */
-p.date {
-	text-align : right
-}
-table.centre {
+/* 
+Versions 
+	2020-1m-11 - flexible layout of basic panels 
+*/
+
+/* Layout of general elements - most are centered */
+/* .panel is a comprehensive item of one of the Milesian apps
+The .panel section may be suppressed for panels inserted via a CMS */
+.panel {	/*  */
+	display : inline-table; 
+	/* overflow : auto; */
+	/* justify-content: center; */
+	outline:  double;
+	margin: 3px;
+	}
+.centered {
+	text-align: center;
+}	
+table.centered {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
 }
-.centered {
-	text-align: center;
-}	
+.milesianhead {	/* no line spacing for milesian h1 to h6, set as class to avoid interactions */
+	line-height: 1;
+	margin: 0.3em auto;
+}
+/*.autoscroll {	overflow: auto; }  to be deprecated ??*/
+
+/* Display a simple date as a line on a letter */
+p.date {
+	text-align : right
+}
+
+/* Input appearance and field size */
 .daynum {
 	width: 3em;
 }
@@ -39,7 +63,8 @@ button.textline	 {
 button.symbol {
   width: 3em;
 }
-.autoscroll {	overflow: auto; }
+
+/* Elements on clocks */
 .clockhand {
 	fill:orange; 
 	stroke:darkgoldenrod; 
