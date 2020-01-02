@@ -25,21 +25,26 @@ Associated with:
 */
 /*
 (See former versions log on GitHub)
-Version M2019-03-04
-* 	Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
-Version M2019-06-14
-* 	Enhance marks for non-valid dates of calendars
-*	Change name of chronological counts and add one
-Version M2019-07-27
-	No functional change, mention use of getRealTZmsOffset method
-Version M2019-08-06
-	Change access to the lunar part of the clock
-Version M2019-12-15
-	Display time zone in Unicode date string
-Version M2019-12-23
-	Use an external function of UnicodeBasic to filter bad calendrical computation cases.
+Version 
+	M2019-03-04
+* 		Insert error check sequences for "New" dates and formatted dates - used for limitations set by Ms Edge
+	M2019-06-14
+* 		Enhance marks for non-valid dates of calendars
+*		Change name of chronological counts and add one
+	M2019-07-27
+*		No functional change, mention use of getRealTZmsOffset method
+	M2019-08-06
+*		Change access to the lunar part of the clock
+	M2019-12-15
+*		Display time zone in Unicode date string
+	M2019-12-23
+*		Use an external function of UnicodeBasic to filter bad calendrical computation cases.
+	M2020-01-12
+		Use strict
+		Adapt julio-gregorian date display to enhanced julianFormat
+
 */
-/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -61,6 +66,7 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 */
+"use strict";
 var  // set of global variables, used when updating calendar
 	targetDate = new Date(),	// Reference UTC date
 	gregorianSwitch =  		// Date where Gregorian calendar enforced 
@@ -132,13 +138,13 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 		Options.timeZone = timeZone ; 
 	// is timeZone valid ?
 	try {
-		askedOptions = Intl.DateTimeFormat (Locale, Options);
+		askedOptions = new Intl.DateTimeFormat (Locale, Options);
 		}
 	catch (e) {
 		alert (milesianAlertMsg("invalidCode") + '"' + Options.timeZone + '"');
 		document.LocaleOptions.TimeZone.value = '';
 		delete Options.timeZone; // Delete property
-		askedOptions = Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
+		askedOptions = new Intl.DateTimeFormat (Locale, Options);	// Finally the options do not comprise the time zone
 	}
 	userOptions = askedOptions.resolvedOptions();
 }
@@ -195,17 +201,20 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.time.secs.value = dateComponent.seconds;
 
 	// Write date strings near the clock, using Unicode and Unicode-derived routines
-	var labelDate = new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
+	var 
+		labelDate = new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
 	// Write Milesian date string
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
 	myElement.innerHTML = labelDate.milesianFormat (shiftDate);
 	
 	// Display julio-gregorian date. Use standard Unicode or UnicodeJulianFormat. 
-	// Translate to Julian if before date of switch to Gregorian calendar
+	// Translate to Julian if before date of switch to Gregorian calendar.
+	// Mask era unless before Christus.
 
 	myElement = document.getElementById("juliogregdate");
 	if (shiftDate.valueOf() < gregorianSwitch.valueOf()) 	// If target date is before Gregorian calendar was enforced 
-		myElement.innerHTML = labelDate.julianFormat(shiftDate)
+		myElement.innerHTML = 
+			new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric",era:"short"}).julianFormat(shiftDate)
 	else
 		try {myElement.innerHTML = labelDate.format(shiftDate);}
 		catch (error) { myElement.innerHTML = milesianAlertMsg ("browserError"); };

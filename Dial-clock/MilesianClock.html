@@ -17,6 +17,7 @@ Versions
 	M2019-08-06 Change clock display and references to clock elements, to facilitate multiple clocks
 	M2019-12-15 Display timezone
 	M2019-12-23 Display seasons marks on clock dial, small presentation changes
+	M2020-01-10 Use flexible display, change calendar list
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2019 - Louis A. de Fouquières
@@ -69,8 +70,17 @@ Inquiries: www.calendriermilesien.org
 	<title>Horloge milésienne</title>
 <meta name="viewport" content="width=device-width">	
 </head>
-<body onload="javascript:setDateToNow()">
-<section class="centered"><h1>Horloge milésienne</h1>
+<body class="centered" onload="javascript:setDateToNow()">
+<section class="centered"><h1 class="milesianhead">Horloge milésienne</h1>
+<table class="centered milesianhead">
+	<tr>
+		<th id="clockmilesiandate" ></th>	<!-- The string of the Milesian date is inserted here -->
+		<th> - </th>
+		<th id="juliogregdate" ></th> 		<!-- The string for the julio-gregorian date is especially computed then inserted here -->
+	</tr>
+</table>
+</section>
+<section class="panel centered"> <h2 class="milesianhead">Cadran</h2>
 <!-- put svg code inline -->
 <!-- Scalable viewbox, centered in the middle -->
 <svg width="300" height="100%" xml:lang="fr" 
@@ -154,15 +164,12 @@ order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
   </g>
 </g>
 </svg>
-<table class="centre">
-    <tr><th id="clockmilesiandate" ></th> </tr> <!-- The string of the Milesian date is inserted here -->
-	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
-</table>
 </section>
 
-<section class="centered autoscroll"><h1>Heure et fuseau horaire</h1>
+<div class="panel autoscroll">
+<section class="centered"><h2 class="milesianhead">Heure, fuseau, animation </h2>
 
-	<table class="centre">
+	<table class="centered">
 		 <form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
 			<tr><th colspan="2">Mode&nbsp;: </th>
 				<td colspan="4">
@@ -210,7 +217,7 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-	<table class="centre">
+	<table class="centered">
 	  <tr> 
 		<form name="time" autocomplete="off" method="post" action="javascript:calcTime();">
 		 <th>Heure du mode&nbsp;: </th>
@@ -239,7 +246,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	 <table class="centre"> 
+	 <table class="centered"> 
 	  <tr>
 		<th>UTC&nbsp;:</th>
 		 <td id="UTCdate"></td>
@@ -247,7 +254,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		 <td colspan=4><button type="button" class="centered textline" onclick="javascript:setDateToNow();";>Maintenant</button></td>
 	  </tr> </table>
 
-	  <table class="centre">
+	  <table class="centered">
 	  <tr>
 		<th>Cette date à UTC&nbsp;: </th>
 		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0h</button></td>
@@ -279,7 +286,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	}
 }
 </script>
-	<table class="centre"> 
+	<table class="centered"> 
 	  <tr>
 		<form name="timeShift" method="post" action="javascript:changeAddTime();">
 		<th>+/- secondes&nbsp;: </th>
@@ -291,7 +298,7 @@ function addTime (sign = 1) { // addedTime seconds is added or subtracted to or 
 	</table>
 </section>
 
-<section class="centered autoscroll"><h1>Navigation calendaire</h1>
+<section class="centered"><h3 class="milesianhead">Animation</h3>
 <script type="text/javascript">
 	var 
 		dayOffset = 1, // Days (decimal) to add or substract
@@ -337,7 +344,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>
-<table class="centre">
+<table class="centered">
   <tr>
 	<!-- No "today" button -->
 	<form name="control" method="post" action="javascript:changeDayOffset();">
@@ -349,7 +356,7 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </tr>
 </table>
 
-<table class="centre">
+<table class="centered">
   <tr>
 	  <td><button type="button" class="textline symbol" onclick="javascript:clockSet(-1)">&lt;</button></td>
 	  <td><button type="button" class="textline symbol" onclick="javascript:clockRun(0)">O</button></td>
@@ -360,11 +367,12 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
   </tr> 
 </table>
 </section>
+</div>
 
-<section class="centered autoscroll"><h1>Dates selon les calendriers pivots</h1>
-<div class="centre">Années en notation relative</div>
-<div class="centre"><span class="outbounds">Fond brique&nbsp;:</span>&nbsp;calendrier non valable à cette date</div>
-  <table class="centre">
+<section class="centered panel autoscroll"><h2 class="milesianhead">Dates selon les calendriers pivots</h2>
+<div class="centered">Années en notation relative</div>
+<div class="centered"><span class="outbounds">Fond brique&nbsp;:</span>&nbsp;calendrier non valable à cette date</div>
+  <table class="centered">
       <tr>
         <th>Calendrier</th>
         <th>Jour</th>
@@ -659,7 +667,7 @@ function calcISO() {
 	}
 }
 </script>
-  <table class="centre">
+  <table class="centered">
      <tr>
         <th>ISO 8601</th>
         <th>Jour</th>
@@ -705,7 +713,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	}
 }
 </script>
-<table class="centre">
+<table class="centered">
     <form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay();">
 	<tr><th colspan="2">Jour julien</th></tr>
 	<tr>
@@ -716,42 +724,10 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 </table>
 </section>
 
-<section class="centered"><h1>Séries chronologiques</h1>
-	<table class="centre">
-		<tr>
-			<th>Jour julien&nbsp;: </th>
-			<td id="jdDisplay"></td>
-		</tr>
-		<tr>
-			<th>Jour julien modifié&nbsp;: </th>
-			<td id="mjdDisplay"></td>
-		</tr>
-		<tr>
-			<th>Jour julien NASA&nbsp;: </th>
-			<td id="nasajdDisplay"></td>
-		</tr>
-		<tr>
-			<th>Compteur des tableurs&nbsp;: </th>
-			<td id="spreadSheetsCountDisplay"></td>
-		</tr>
-		<tr>
-			<th>Compteur de date Microsoft&nbsp;: </th>
-			<td id="MicrosoftCountDisplay"></td>
-		</tr>
-		<tr>
-			<th>Compteur MacOS&nbsp;: </th>
-			<td id="MacOSCountDisplay"></td>
-		</tr>
-		<tr>
-			<th>Compteur Posix&nbsp;: </th>
-			<td id="unixCountDisplay"></td>
-		</tr>
-	</table>
-</section>	
-
-<section class="centered autoscroll"><h1>Représentation Unicode</h1>
+<section class="centered panel autoscroll"><h2 class="milesianhead">Représentation Unicode</h2>
+	<div>Champ vide&nbsp;= défaut système</div>
 	<form name="LocaleOptions" method="post" action="javascript:setDisplay();">
-	<table class="centre"> <tr>
+	<table class="centered"> <tr>
 		<th>Format&nbsp;: </th>
 			<td>
 			<select name="Presentation" class="centered" size="1">
@@ -766,7 +742,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			</td>
 		</tr>
 	</table>
-	<table class="centre">
+	<table class="centered">
 	<tr>
 		<th>Code langue&nbsp;: </th>
 			<td>
@@ -775,9 +751,9 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			<th>Code effectif&nbsp;: </th><td id="langCode"></td>
 		</tr>
 	</table>
-	<div class="centre">Exemple&nbsp;: <code>en-GB</code> ou <code>en-US</code>, vide&nbsp;: défaut système</div>
+	<div>Exemple&nbsp;: <code>en-GB</code> ou <code>en-US</code></div>
 
-	<table class="centre">
+	<table class="centered">
 		<tr>
 			<th>Calendrier&nbsp;: </th>
 			<td>
@@ -786,10 +762,10 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 				<option value="buddhist">bouddhiste Thaï</option>
 				<option value="chinese">chinois traditionnel</option>
 				<option value="coptic">copte</option>
-				<option value="dangi">coréen traditionnel</option>
+				<option value="dangi">coréen traditionnel dangi</option>
 				<option value="ethioaa">éthiopien base antique</option>
 				<option value="ethiopic">éthiopien base Incarnation</option>
-				<option value="gregory">grégorien (proleptique)</option>
+				<option value="gregory">grégorien</option>
 				<option value="hebrew">hébraïque</option>
 				<option value="indian">indien moderne</option>
 				<option value="islamic">islamique standard</option>
@@ -797,7 +773,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 				<option value="islamic-tbla">islamique tabulaire astronomique</option>
 				<option value="islamic-civil">islamique tabulaire civil</option>
 				<option value="islamic-rgsa">islamique, Arabie saoudite</option>
-				<option value="iso8601">grégorien avec règles ISO 8601</option>
+				<option value="iso8601">ISO 8601 (grégorien normalisé)</option>
 				<option value="japanese">japonais impérial</option>
 				<option value="persian">persan</option>
 				<option value="roc">chinois de république populaire</option>
@@ -805,20 +781,20 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 			</td>
 		</tr>
 	</table>
-	<table class="centre">
+	<table class="centered">
 		<tr><th>Code calendrier effectif&nbsp;: </th><td id="CalendarCode"></td></tr>
 	</table>
-	<table class="centre">
+	<table class="centered">
 		<tr><th>Fuseau horaire&nbsp;: </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
 		</tr>
 		<tr><th>Fuseau effectif&nbsp;: </th><td id="timeZone"></td></tr>
 	</table>
-	<div class="centre">Exemple&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code>, vide&nbsp;: défaut système</div>
-	<div class="centre"><button class="textline">Modifier les paramètres de représentation</button></div>
-  	</form>
-	<br>
-	<table class="centre">
+	<div>Exemple&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code></div>
+	<div><button class="textline">Modifier les paramètres de représentation</button></div>
+	</form>
+	<h3 class="milesianhead">Date formatée</h3>
+	<table class="centered">
 		<tr><th>Unicode&nbsp;:</th>
 			<td id="UnicodeString"></td></tr>
 		<tr><th>Milésien&nbsp;:</th>
@@ -826,28 +802,27 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</table>
 </section>
 
-<section class="centered"><h1>Données lunaires</h1>
+<section class="centered panel autoscroll"><h2 class="milesianhead">Données lunaires</h2>
 
 <form name="moon" method="post" action="javascript:void(0);">
- <table class="centre">
- 	<tr><th colspan="2">Lune moyenne corrigée</th></tr>
-     <tr>
-		<th>Âge lunaire</th>	<th>Reliquat</th> 
+<h3 class="milesianhead">Lune moyenne corrigée</h3>
+ <table class="centered">
+		<th>&nbsp;Âge lunaire&nbsp;</th>	<th>&nbsp;Reliquat&nbsp;</th> 
 	 </tr>
 	 <tr>
 		<td><input name="age" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 		<td><input name="residue" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
- <table class="centre">
+ <table class="centered">
 	<tr><th>Heure lunaire<br>(marées)</th><th>Date lunaire<br>(hauteur de lune)</th></tr>
 	<tr>
 		<td><input name="moontime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
 		<td><input name="moondate" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
 	</tr>
  </table>
- <table class="centre">
-	<tr> <th colspan="3">Données draconitiques (éclipses)</th></tr>
+<h3 class="milesianhead">Données draconitiques (éclipses)</h3>
+ <table class="centered">
 	<tr><th>Angle</th><th>Heure</th><th>Hauteur</th></tr>
 	<tr>
 		<td><input name="angle" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
@@ -855,10 +830,8 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 		<td><input name="height" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 	</tr>
  </table>
- <table class="centre">
-    <tr>
-	 <th colspan="4">Calendrier lunaire virtuel à Greenwich</th>
-	</tr>
+<h3 class="milesianhead">Calendrier lunaire virtuel</h3>
+ <table class="centered">
       <tr>
         <th>Origine</th>
         <th>Jour</th>
@@ -879,9 +852,9 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	</tr>
  </table> 
 </form>
-<table class="centre">
- 	<tr><th colspan="2">Estimation de Delta T (secondes)<br>
-		(UTC = Temps Terrestre - Delta T)</th></tr>
+<h3 class="milesianhead">Estimation de Delta T (secondes)</h3>
+		<p class="milesianhead">(UTC = Temps Terrestre - Delta T)</p>
+<table class="centered">
      <tr>
 		<form name="deltat"method="post" action="javascript:void(0);">
 		<th>Delta T (secondes)&nbsp;: </th>
@@ -891,7 +864,41 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 </table>
 </section>
 
-<section class="centered"><h1>Réglages</h1>
+<section class="centered panel autoscroll"><h2 class="milesianhead">Séries chronologiques</h2>
+	<table class="centered">
+		<tr>
+			<th>Jour julien&nbsp;: </th>
+			<td id="jdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour julien modifié&nbsp;: </th>
+			<td id="mjdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Jour julien NASA&nbsp;: </th>
+			<td id="nasajdDisplay"></td>
+		</tr>
+		<tr>
+			<th>Compteur des tableurs&nbsp;: </th>
+			<td id="spreadSheetsCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Compteur Microsoft&nbsp;: </th>
+			<td id="MicrosoftCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Compteur MacOS&nbsp;: </th>
+			<td id="MacOSCountDisplay"></td>
+		</tr>
+		<tr>
+			<th>Compteur Posix&nbsp;: </th>
+			<td id="unixCountDisplay"></td>
+		</tr>
+	</table>
+</section>	
+
+<div class="panel autoscroll">
+<section class="centered"><h2 class="milesianhead">Réglages</h2>
 <!-- setting date of switch to Gregorian. On load, set to 25 10m 1582, the most ancient date. Modified by initialisation script. -->
 <script type="text/javascript">
 function setGregSwitch() {	// Set date of switch from julian to gregorian calendar to specific value
@@ -925,11 +932,11 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	setDisplay();	
 }
 </script>
-<table class="centre">
+<table class="centered">
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt&nbsp;: 15 octobre 1582)</th></tr>
 </table>
-<table class="centre">
+<table class="centered">
 	 <form name="gregorianswitch" autocomplete="off" method="post" action="javascript:setGregSwitch();">
 	  <tr>
 		<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
@@ -953,7 +960,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
       </tr>
 	</form>
 </table>
-<table class="centre">
+<table class="centered">
 	<form name="controloptions" autocomplete="off" method="post" action="">
 	  <tr>
 	    <td><input type="checkbox" name="datevalidity" checked></td>
@@ -963,15 +970,15 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </table>
 </section>
 
-<section class="centered"><h1>Liens utiles</h1>
-  <table class="centre">
+<section class="centered"><h3 class="milesianhead">Liens utiles</h3>
+  <table class="centered">
 	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
 	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
   </table>
 </section>
-
+</div>
 <footer class="centered">
-<p>© 2016-2018 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+<p>© 2016-2020 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
 </footer>
 </body>
 </html>
