@@ -13,6 +13,7 @@ The .panel section may be suppressed for panels inserted via a CMS */
 	/* justify-content: center; */
 	outline:  double;
 	margin: 3px;
+	text-align: center;
 	}
 .centered {
 	text-align: center;
