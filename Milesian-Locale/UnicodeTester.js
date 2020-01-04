@@ -11,6 +11,9 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2019-12-14 : add handling and display of all format options
 	M2019-12-22 : Use an external function of UnicodeBasic to filter bad calendrical computation cases, and add ISO display
 	M2020-01-12 : Use strict and add Unicode extension (possibly other calendar)
+	M2020-01-14	: 
+		Use milliseconds also
+		Display toISOString()
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -192,6 +195,7 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	document.time.hours.value = shiftDate.getUTCHours();
 	document.time.mins.value = shiftDate.getUTCMinutes();
 	document.time.secs.value = shiftDate.getUTCSeconds();
+	document.time.ms.value = shiftDate.getUTCMilliseconds();
 
 	// Display UTC date & time
 	myElement = document.getElementById("UTCdate");
@@ -200,7 +204,10 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	myElement.innerHTML = 
 	  targetDate.getUTCHours() + "h "
 	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
-	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
+	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s "
+  	  + ((targetDate.getUTCMilliseconds() < 100) ? "0" : "") + ((targetDate.getUTCMilliseconds() < 10) ? "0" : "") + targetDate.getUTCMilliseconds() + "ms";
+	myElement = document.getElementById("ISOdatetime");
+	myElement.innerHTML = targetDate.toISOString();
 
 	// Write Milesian, Julian and Unicode strings following currently visible options
 	putStringOnOptions();
