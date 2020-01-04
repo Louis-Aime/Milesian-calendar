@@ -27,7 +27,7 @@ Versions
 		Adapt to flexible layout
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
-Copyright Miletus 2017-2019 - Louis A. de Fouquières
+Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -79,10 +79,7 @@ Inquiries: www.calendriermilesien.org
 <meta name="viewport" content="width=device-width">
 </head>
 <body class="centered" onload="JavaScript:setDisplay()">
-<!-- script division 
-<script type="text/javascript">
-</script>	
--->
+
 <section class="centered"><h1 class="milesianhead">Convertisseur de dates</h1>
 <table class="centered">
 	<tr>
@@ -136,10 +133,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   </g>
 </g>
 </svg>
-<table class="centered">
-    <tr><th id="clockmilesiandate" ></th>	</tr> <!-- The string of the Milesian date is inserted here -->
-	<tr><th id="juliogregdate" ></th> </tr>	<!-- The string for the julio-gregorian date is especially computed then inserted here -->
-</table>
 </section>
 
 <div class="panel">
@@ -614,7 +607,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 </section>	
 
 <div class="panel">
-	<section class="centered"><h2 class="milesianhead">Calendriers Unicode</h2>
+<section class="centered"><h2 class="milesianhead">Calendriers Unicode</h2>
 	 <form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
 	  <table class="centered">
 			<tr><th>Format&nbsp;: </th>
@@ -642,6 +635,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	  </table>
 	 </form>
 	<div class="centered">Exemple&nbsp;: <code>en-gb</code> ou <code>en-us</code>, vide&nbsp;: défaut système</div>
+</section>
 </div>
 <section class="panel"><h3 class="milesianhead">Grégorien et dérivés</h3>
   <table class="centered">
@@ -657,7 +651,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
    	<tr><th>Persan&nbsp;: </th><td class="unicodedate" id="persian"></td></tr>
 	<tr><th>Indien moderne&nbsp;: </th><td class="unicodedate" id="indian"></td></tr>
   </table>
-<i><sup>*</sup>affichage calculé selon canevas Unicode</i>
+<div><i><sup>*</sup>affichage calculé selon canevas Unicode</i></div>
 </section>
 <section class="panel"><h3 class="milesianhead">Copte et éthiopiens</h3>
   <table class="centered">
@@ -665,7 +659,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	<tr><th>Ethiopien antique<sup>*</sup>&nbsp;: </th><td class="unicodedate" id="ethioaa"></td></tr>
 	<tr><th>Ethiopien chrétien&nbsp;: </th><td class="unicodedate" id="ethiopic"></td></tr>
    </table>
-<i><sup>*</sup>affichage de l'ère spécifiquement invalidé pour ce calendrier</i>
+<div><i><sup>*</sup>affichage de l'ère spécifiquement invalidé pour ce calendrier</i><div>
 </section>
 <section class="panel"><h3 class="milesianhead">Luni-solaires</h3>
   <table class="centered">
@@ -682,7 +676,6 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	<tr><th>Tabulaire civil&nbsp;: </th><td class="unicodedate" id="islamic-civil"></td></tr>
 	<tr><th>Arabie saoudite&nbsp;: </th><td class="unicodedate" id="islamic-rgsa"></td></tr>
   </table>
-</section>
 </section>
 
 <footer class="centered">
