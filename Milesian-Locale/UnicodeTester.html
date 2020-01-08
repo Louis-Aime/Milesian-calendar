@@ -10,7 +10,8 @@ Versions
 	M2020-01-11
 		Adapt to flexible layout
 	M2020-01-14
-		Enhance layout
+	M2020-01-18
+		Enhance layout and display
 -->
 <html lang="fr">
 <head>
@@ -38,13 +39,12 @@ Versions
 <body class="centered" onload="setDateToNow();">
 <section class="centered"><h1 class="milesianhead">Expression de date et calendriers Unicode</h1>
 <p class="milesianhead">Démonstration et test des formats d'affichage de date et d'heure
-selon Unicode, avec application&nbsp;:</p>
-<ul class="milesianhead">
-	<li>au calendrier Unicode sélectionné,</li>
-	<li>au calendrier Unicode ISO8601,</li>
-	<li>au calendrier julien avec affichage conditionnel de l'ère,</li>
-	<li>au calendrier milésien.</li>
-</ul>
+selon Unicode, avec application&nbsp;:
+	<br>au calendrier Unicode sélectionné,
+	<br>au calendrier Unicode ISO8601,
+	<br>au calendrier julien avec masquage conditionnel de l'ère,
+	<br>au calendrier milésien.
+</p>
 <p class="milesianhead">(!) signale une erreur manifeste de représentation.</p>
 </section>
 
@@ -181,18 +181,20 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
+  <form name="time" method="post" autocomplete="off" action="javascript:calcTime();">
 	<table class="centered">
 	  <tr> 
-		<form name="time" method="post" autocomplete="off" action="javascript:calcTime();">
-		 <th>Heure&nbsp;: </th>
+		 <th colspan="5">Heure du fuseau ou du mode</th>
+	   </tr>
+	   <tr>
 		 <td><input name="hours" type="number" min="0" max="23" class="centered daynum">h</td>
 		 <td><input name="mins" type="number" min="0" max="59" class="centered daynum">mn</td>
 		 <td><input name="secs" type="number" min="0" max="59" class="centered daynum">s</td>
 		 <td><input name="ms" type="number" min="0" max="999" class="centered yearnum">ms</td>
 		 <td><button class="textline">Ok</button></td>
-		</form>
 	  </tr>
 	</table>
+  </form>
 </section>
 <section class="centered"><!-- time navigation -->
 <script type="text/javascript">
@@ -231,16 +233,18 @@ function addTime (sign = 1) { // addedTime ms is added or subtracted to or from 
 	</table>
 </section>
 <section class="centered autoscroll"><!-- time zone option -->
+  <form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
 	<table class="centered">
-		<form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
-			<tr><th colspan="2">Mode&nbsp;: </th>
-				<td colspan="4">
+			<tr><th>Mode&nbsp;: </th>
+				<td>
 					<select name="TZcontrol" size="1" class="centered">
 					<option value="UTC">UTC</option>
 					<option value="TZ" selected>Fuseau système</option>
 					<option value="Fixed">Décalage fixe</option>
 					</select></td>
 			</tr>
+	</table>
+	<table class="centered">
 			<tr>
 				<th>Décalage&nbsp;: </th> 
 				<td><select name="TZOffsetSign" class="centered" size="2">
@@ -253,12 +257,14 @@ function addTime (sign = 1) { // addedTime ms is added or subtracted to or from 
 				<td>s</td>
 				<td><button class="textline">Ok</button></td>
 			</tr>
-			<tr>
-				<th colspan="2">Décalage système&nbsp;: </th>
-				<td id="sysTZoffset" colspan="1"></td><td>mn</td>
-			</tr>
-		</form>
 	</table>
+	<table class="centered">
+			<tr>
+				<th>Décalage système&nbsp;: </th>
+				<td id="sysTZoffset"></td><td>mn</td>
+			</tr>
+	</table>
+  </form>
 </section>
 <section class="centered"><!-- setting preselected time -->
 <script type="text/javascript">
@@ -292,8 +298,8 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	  <tr>
 		<td><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow();">Maintenant</button></td>
 		<th> - Même date à</th>
-		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0h</button></td>
-		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)";>12h</button></td>
+		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0 h</button></td>
+		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)";>12 h</button></td>
 		<th>UTC</th>
 	  </tr>
 	 </table>
