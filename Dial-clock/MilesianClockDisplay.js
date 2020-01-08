@@ -42,6 +42,8 @@ Version
 	M2020-01-12
 		Use strict
 		Adapt julio-gregorian date display to enhanced julianFormat
+	M2020-01-18
+		Handle micoseconds
 
 */
 /* Copyright Miletus 2017-2020 - Louis A. de Fouquières
@@ -199,6 +201,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.time.hours.value = dateComponent.hours;
 	document.time.mins.value = dateComponent.minutes;
 	document.time.secs.value = dateComponent.seconds;
+	document.time.ms.value = dateComponent.milliseconds;
 
 	// Write date strings near the clock, using Unicode and Unicode-derived routines
 	var 
@@ -364,9 +367,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = targetDate.toUTCIntlMilesianDateString();
 	myElement = document.getElementById("UTCtime");
 	myElement.innerHTML = 
-	  targetDate.getUTCHours() + "h "
-	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
-	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s";
+	  targetDate.getUTCHours() + " h "
+	  + targetDate.getUTCMinutes() + " mn " 
+	  + targetDate.getUTCSeconds() + " s "
+  	  + targetDate.getUTCMilliseconds() + " ms";
 	// This variant makes a bug with MS Edge, if outside the range of handled values :
 	/*	targetDate.toLocaleTimeString
 		(Locale,{timeZone: "UTC", hour12: false}); */

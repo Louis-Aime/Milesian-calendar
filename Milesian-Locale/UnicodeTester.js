@@ -14,6 +14,8 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2020-01-14	: 
 		Use milliseconds also
 		Display toISOString()
+	M2020-01-18 :
+		Change UTC string: no padding with zeroes, time unit separated.
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -202,10 +204,10 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	myElement.innerHTML = targetDate.toUTCIntlMilesianDateString();
 	myElement = document.getElementById("UTCtime");
 	myElement.innerHTML = 
-	  targetDate.getUTCHours() + "h "
-	  + ((targetDate.getUTCMinutes() < 10) ? "0" : "") + targetDate.getUTCMinutes() + "mn " 
-	  + ((targetDate.getUTCSeconds() < 10) ? "0" : "") + targetDate.getUTCSeconds() + "s "
-  	  + ((targetDate.getUTCMilliseconds() < 100) ? "0" : "") + ((targetDate.getUTCMilliseconds() < 10) ? "0" : "") + targetDate.getUTCMilliseconds() + "ms";
+	  targetDate.getUTCHours() + " h "
+	  + targetDate.getUTCMinutes() + " mn " 
+	  + targetDate.getUTCSeconds() + " s "
+  	  + targetDate.getUTCMilliseconds() + " ms";
 	myElement = document.getElementById("ISOdatetime");
 	myElement.innerHTML = targetDate.toISOString();
 
