@@ -12,6 +12,7 @@ Versions
 	M2019-07-27: update dependencies
 	M2019-08-23: add seasons' computation
 	M2020-01-12 : strict mode
+	M2020-02-01 : comput epact on 1 1m, use year range constraint for milesian epact
 Required (directly)
 	MilesianYearSignature
 	MilesianAlertMsg
@@ -68,6 +69,7 @@ function displayYeartype (type) {
 	return yearTypes [type];
 }
 function computeSignature(year) {
+	var outBounds = (year < -5000 || year > 9000);
 	var signature = julianSignature (year);
 	// Easter figures
 	// Set gold number
@@ -82,6 +84,7 @@ function computeSignature(year) {
 		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian figures
 	signature = gregorianSignature (year);
+	var gregEpact = signature.epact;	// Gregorien epact is used later.
 	document.easter.g_day.value = displayDOW (signature.doomsday);
 	document.easter.g_epact.value = signature.epact;
 	document.easter.g_residue.value = signature.easterResidue;
@@ -94,12 +97,14 @@ function computeSignature(year) {
 	let type = (signature.isLeap ? 2 : 0) + (signature.isLong ? 1 : 0) ;
 	document.milesianyearfigures.type.value = displayYeartype(type) ;
 	document.milesianyearfigures.doomsday.value = displayDOW (signature.doomsday);
-	document.milesianyearfigures.epact.value = signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
-	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});
+	document.milesianyearfigures.epact.value = outBounds
+			? "----" 
+			: signature.epact.toLocaleString(undefined,{minimumFractionDigits:1});
+	document.milesianyearfigures.epact1m.value = (gregEpact < 11 ? 19 + gregEpact : gregEpact - 11);
+//	document.milesianyearfigures.residue.value = signature.annualResidue.toLocaleString(undefined,{minimumFractionDigits:1});
 	// Seasons
 	let twoDigitForm = new Intl.NumberFormat(undefined, {minimumIntegerDigits : '2'}); // timeZone : "UTC", hour : "2-digit", minute : "2-digit"});
 	let wdate = new Date (tropicEvent(year,0));
-	let outBounds = (year < -5000 || year > 9000);
 	document.seasons.winter1.value = outBounds 
 				? "-- -- -- -- --" 
 				: wdate.toUTCIntlMilesianDateString() + " " + twoDigitForm.format(wdate.getUTCHours()) + ":" + twoDigitForm.format(wdate.getUTCMinutes()) ; 
