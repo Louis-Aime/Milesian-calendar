@@ -71,7 +71,7 @@ Values for countType:
 * "modifiedJulianDay" : 2 400 000.5 days later (integer values à 00:00).
 * "nasaDay" : 40 000 days after modified Julian Day.
 * "sheetsCount" : 0 on 30 Dec. 1899 at 00:00.
-* "MSBase" : same as "sheetsCount, and convert to the special Microsoft count with neagive numbers
+* "MSBase" : same as "sheetsCount, and convert to the special Microsoft count with negative numbers
 * "masOSCount" : 0 on 1 Jan. 1904 at 00:00.
 
 
