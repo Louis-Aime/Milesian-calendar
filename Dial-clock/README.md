@@ -9,12 +9,13 @@ The main Milesian clock offer conversion and date display facilities that were i
 1. Extract all files except \*.md from the following directories into a same directory of your computer:
     * Basic_Common 
     * Dial-clock (this directory)
+    * Converter
     * Milesian-Locale
     * Misc_Date_Properties
     * (You may extract all material from all files, this will not disturb) 
-1. Launch "LightMilesianClock" in our browser. You may choose the .svg or the .html version.
+1. Launch "LightMilesianClock" in your browser. You may choose the .svg or the .html version.
 You obtain today's Milesian date. A small dial displays hour and minute. It is updated every 20 seconds.
-1. Launch "MilesianClock" in our browser. It shows today's Milesian date on the dial. 
+1. Launch "MilesianClock" in your browser. It shows today's Milesian date on the dial. 
 You may then change dates, times and time zone, convert from/to several calendars that were ounce used in France, 
 and convert to any Unicode handled language and calendar.
 
@@ -24,7 +25,7 @@ and convert to any Unicode handled language and calendar.
 * It it possible to use several clocks independently.
 * The clocks may handle not only year, month and days, but also time of day: hours, minutes, seconds, and an am/pm indicator. 
   Authors may omit any hand.
-* Developers may add the season's marks (see in Converter package)
+* Season's marks added (see in Converter package)
 
 How it looks like, and inquiries: http://www.calendriermilesien.org/horloge-milesienne.html
 
