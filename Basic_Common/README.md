@@ -7,8 +7,9 @@ A light css for all modules, in particular for the clock.
 ## CBCCE.js, Cycle-Based Calendar Computation Engine : basic tools for calendar computations
 The Compose and Decompose computation principle is explained in *l'Heure Milésienne* (Edilivre) by Louis-Aimé de Fouquières, p. 94 [http://www.calendriermilesien.org/l-heure-milesienne.html].
 However the principles have been extended to handle calendar architectures where at any level the last unit of a cycle may be shorter or longer than the other.
-* cbcceDecompose takes a date-time value in milliseconds and yields an object with the parts of a date following a decomposition canvas.
-* cbcceCompose takes the object and computes the corresponding date-time Unix number of milliseconds since Unix epoch.
+* cbcceDecompose takes a date-time value in milliseconds (or any other unit) 
+and yields an object with the parts of a date following a decomposition canvas.
+* cbcceCompose takes the object and computes the corresponding serial number, e.g. date-time Unix number of milliseconds since Unix epoch.
 * Chronos is a passive object with four usefull values for calendar computations:
     * DAY_UNIT : one day in Unix time units (milliseconds),
     * HOUR_UNIT : one hour in Unix time units,
@@ -30,7 +31,7 @@ Object used with "Alert" commands or in string construction of other modules. Er
 This module should be re-encoded for sites that do not use the UTF-8 character set.
 
 ## RealTZmsOffset.js: a method for precise Timezone offset computation
-The method getRealTZmsOffset computes the real offset between a local hour and UTC in ms. 
+The method getRealTZmsOffset computes the real offset between a local hour and UTC in ms (not in minutes !)
 Since local time before TZ were enforced is now taken into account, 
 using TZOffset gives different results in different browsers.
-Hence this method, which mas originally developed with another module, UnicodeBasic.js
+Hence this method.
