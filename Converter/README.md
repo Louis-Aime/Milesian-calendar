@@ -7,6 +7,7 @@ A calendar converter that uses the Milesian clock dial:
 # Contents
 * Conteverter.html: the page
 * Converter.js: the corresponding .js functions
+* SeasonOnClock.js: display dates of seasons on a clock dial
 
 # Required
 * Basic_Common
