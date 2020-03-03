@@ -12,6 +12,9 @@ Versions
 	M2020-01-14
 	M2020-01-18
 		Enhance layout and display
+	M2020-03-12
+		Test all formatting options, including matchers
+		Separate the experimental era control function
 -->
 <html lang="fr">
 <head>
@@ -29,6 +32,7 @@ Versions
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
+	<script type="text/javascript" src="UnicodeEraControlFormat.js"></script>
 
 <!-- Specific for this page -->
 	<script type="text/javascript" src="UnicodeTester.js"></script>	
@@ -39,11 +43,10 @@ Versions
 <body class="centered" onload="setDateToNow();">
 <section class="centered"><h1 class="milesianhead">Expression de date et calendriers Unicode</h1>
 <p class="milesianhead">Démonstration et test des formats d'affichage de date et d'heure
-selon Unicode, avec application&nbsp;:
-	<br>au calendrier Unicode sélectionné,
-	<br>au calendrier Unicode ISO8601,
-	<br>au calendrier julien avec masquage conditionnel de l'ère,
-	<br>au calendrier milésien.
+selon Unicode&nbsp;:
+	<br>application stricte au calendrier Unicode sélectionné,
+	<br>option d'effacement de l'ère si c'est l'ère actuelle,
+	<br>calendriers non Unicode: julien et milésien.
 </p>
 <p class="milesianhead">(!) signale une erreur manifeste de représentation.</p>
 </section>
@@ -315,6 +318,24 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 
 <section class="panel centered autoscroll"><h2 class="milesianhead">Options de présentation</h2>
 	<form name="LocaleOptions" method="post" action="javascript:putStringOnOptions();">
+	<h3 class="milesianhead">Résolution des options</h3>
+	 <table class="centered">
+		<tr><th>Chaîne locale</th><th>Options</th></tr>
+		<tr>
+			<td><select name="LocaleMatcher" class="centered" size="1">
+				<option value="" selected>par défaut</option>
+				<option value="lookup">lookup BCP</option>
+				<option value="best fit">meilleur choix</option>
+				</select></td>
+			<td><select name="FormatMatcher" class="centered" size="1">
+				<option value="" selected>par défaut</option>
+				<option value="basic">choix de base</option>
+				<option value="best fit">meilleur choix</option>
+				</select></td>
+		</tr>
+				
+		</tr>
+	 </table>	
 	 <table class="centered"> 
 	   <tr>
 		<th>Code langue-pays&nbsp;: </th>
@@ -397,6 +418,33 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		<td><input class="centered juliandaynum" name="Emonth" type="text" disabled="disabled" class="centered"></td>
 		<td><input class="centered juliandaynum" name="Eyear" type="text" disabled="disabled" class="centered"></td>
 	  </tr>
+	</table>
+	<table class="centered">
+	  <tr> 
+		<th></th><th>Jour semaine</th><th>Ère</th>
+	  </tr> 
+	  <tr>
+		<th>Demandé</th>
+		<td><select name="Weekday" class="centered" size="1">
+			<option value="">absent</option>
+			<option value="narrow">étroit</option>
+			<option value="short">court</option>
+			<option value="long" selected>long</option>
+			</select></td>
+		<td><select name="Era" class="centered" size="1">
+			<option value="" >absent</option>
+			<option value="narrow" selected>étroit</option>
+			<option value="short">court</option>
+			<option value="long">long</option>
+			</select></td>
+	  </tr>
+	  <tr>
+		<th>Effectif</th>
+		<td><input class="centered juliandaynum" name="Eweekday" type="text" disabled="disabled" class="centered"></td>
+		<td><input class="centered juliandaynum" name="Eera" type="text" disabled="disabled" class="centered"></td>
+	  </tr>	
+	</table>
+	<table class="centered">
 	  <tr>
 		<th></th><th>Heure</th><th>Minute</th><th>Seconde</th>
 	  </tr>
@@ -424,22 +472,23 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		<td><input class="centered juliandaynum" name="Eminute" type="text" disabled="disabled" class="centered"></td>
 		<td><input class="centered juliandaynum" name="Esecond" type="text" disabled="disabled" class="centered"></td>
 	  </tr>
+	</table>
+	<table class="centered">
 	  <tr> 
-		<th></th><th>Jour semaine</th><th>Ère</th><th>Fuseau</th>
+		<th></th><th colspan="2">12 h</th><th>Cycle horaire</th><th>Fuseau</th>
 	  </tr> 
-	  <tr>
 		<th>Demandé</th>
-		<td><select name="Weekday" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="narrow">étroit</option>
-			<option value="short">court</option>
-			<option value="long" selected>long</option>
+		<td colspan="2"><select name="Hour12" size="1" class="centered">
+			<option value="" selected>usage local</option>
+			<option value="true">12 h</option>
+			<option value="false">24 h</option>
 			</select></td>
-		<td><select name="Era" class="centered" size="1">
+		<td><select name="HourCycle" size="1" class="centered">
 			<option value="" selected>absent</option>
-			<option value="narrow">étroit</option>
-			<option value="short">court</option>
-			<option value="long">long</option>
+			<option value="h11">h11</option>
+			<option value="h12">h12</option>
+			<option value="h23">h23</option>
+			<option value="h24">h24</option>
 			</select></td>
 		<td><select name="TimeZoneName" class="centered" size="1">
 			<option value="" selected>absent</option>
@@ -449,30 +498,17 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	  </tr>
 	  <tr>
 		<th>Effectif</th>
-		<td><input class="centered juliandaynum" name="Eweekday" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Eera" type="text" disabled="disabled" class="centered"></td>
+		<td>12 h</td>
+		<td><input class="centered" name="Ehour12" type="checkbox" disabled="disabled" class="centered"></td>
+		<td><input class="centered juliandaynum" name="EhourCycle" type="text" disabled="disabled" class="centered"></td>
 		<td><input class="centered juliandaynum" name="EtimeZoneName" type="text" disabled="disabled" class="centered"></td>
 	  </tr>
-  </table>
+	</table>
+	<h3 class="milesianhead">Option expérimentale</h3>
 	<table class="centered">
 		<tr>
-			<th>Ère actuelle</th><th>Cycle horaire</th>
-		</tr>
-		<tr>
-			<td><select name="MaskPresentEra" class="centered" size="1">
-				<option value="exceptCurrent">masquée</option>
-				<option value="allEra">affichée</option>
-				</select>
-			</td>
-			<td><select name="Hour12" size="1" class="centered">
-				<option value="" selected>usage local</option>
-				<option value="true">12h</option>
-				<option value="false">24h</option>
-				</select></td>
-		</tr>
-		<tr>
-			<th>Aff. 12h</th>
-			<td><input class="centered juliandaynum" name="Ehour12" type="text" disabled="disabled" class="centered"></td>
+			<th>Effacement de l'ère actuelle</th>
+			<td><input type="checkbox" name="MaskPresentEra" class="centered" checked></td>
 		</tr>
 	</table>
 	<table class="centered"> 
@@ -485,9 +521,16 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 </section>
 
 <section class="panel centered autoscroll"><h2 class="milesianhead">Expressions de date</h2>
-   <table class="centered">
-		<tr><th>Unicode&nbsp;: </th><td id="Ustring"></td></tr>
-		<tr><th>ISO8601&nbsp;: </th><td id="Gstring"></td></tr>
+<h3 class="milesianhead">Expression Unicode brute</h3>
+	<table class="centered">
+		<tr><td id="Ustring"></td></tr>
+	</table>
+<h3 class="milesianhead">Effacement de l'ère actuelle</h3>
+	<table class="centered">
+		<tr><td id="ExtUstring"></td></tr>
+	</table>
+<h3 class="milesianhead">Calendriers non Unicode</h3>
+	<table class="centered">
 		<tr><th>Julien&nbsp;: </th><td id="Jstring"></td></tr>
 		<tr><th>Milésien&nbsp;: </th><td id="Mstring"></td></tr>
 	</table>

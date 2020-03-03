@@ -16,6 +16,9 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 		Display toISOString()
 	M2020-01-18 :
 		Change UTC string: no padding with zeroes, time unit separated.
+	M2020-03-12
+		Test all formatting options
+		Separate experimental era control format option
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -31,6 +34,7 @@ Required:
 	UnicodeBasic.js
 	UnicodeMilesianFormat.js
 	UnicodeJulianFormat.js
+	UnicodeEraControlFormat.js
 */
 /* Copyright Miletus 2017-2019 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -91,7 +95,9 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if (unicodeExtension !== "-u") extendedLocale += unicodeExtension; 
 	
 	// Add presentation options
-	let Options = {};	
+	let Options = {};
+	if	(document.LocaleOptions.LocaleMatcher.value != "")	Options.localeMatcher = document.LocaleOptions.LocaleMatcher.value;
+	if	(document.LocaleOptions.FormatMatcher.value != "")	Options.formatMatcher = document.LocaleOptions.FormatMatcher.value;
 	if	(document.LocaleOptions.Weekday.value != "")	Options.weekday = document.LocaleOptions.Weekday.value;
 	if	(document.LocaleOptions.Day.value != "") 	Options.day = document.LocaleOptions.Day.value;
 	if	(document.LocaleOptions.Month.value != "") 	Options.month = document.LocaleOptions.Month.value;
@@ -101,6 +107,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if	(document.LocaleOptions.Minute.value != "")	Options.minute = document.LocaleOptions.Minute.value;
 	if	(document.LocaleOptions.Second.value != "")	Options.second	= document.LocaleOptions.Second.value;
 	if	(document.LocaleOptions.Hour12.value != "")	Options.hour12	= (document.LocaleOptions.Hour12.value == "true");
+	if	(document.LocaleOptions.HourCycle.value != "")	Options.hourCycle	= document.LocaleOptions.HourCycle.value;
 	if	(document.LocaleOptions.TimeZoneName.value != "")	Options.timeZoneName	= document.LocaleOptions.TimeZoneName.value;
 	
 	if (timeZone !== "") 
@@ -122,34 +129,43 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	// Display all effective options
 	document.LocaleOptions.Elocale.value = usedOptions.locale;
 	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
+	document.LocaleOptions.Enum.value = usedOptions.numberingSystem;
 	document.LocaleOptions.ETimeZone.value=usedOptions.timeZone;
-	document.LocaleOptions.Eday.value = usedOptions.day;
-	document.LocaleOptions.Emonth.value = usedOptions.month;
+	document.LocaleOptions.Ehour12.checked = usedOptions.hour12;
+	document.LocaleOptions.EhourCycle.value = usedOptions.hourCycle;
+	document.LocaleOptions.Eweekday.value = usedOptions.weekday;
+	document.LocaleOptions.Eera.value = usedOptions.era;
 	document.LocaleOptions.Eyear.value = usedOptions.year;
+	document.LocaleOptions.Emonth.value = usedOptions.month;
+	document.LocaleOptions.Eday.value = usedOptions.day;
 	document.LocaleOptions.Ehour.value = usedOptions.hour;
 	document.LocaleOptions.Eminute.value = usedOptions.minute;
 	document.LocaleOptions.Esecond.value = usedOptions.second;
-	document.LocaleOptions.Eweekday.value = usedOptions.weekday;
-	document.LocaleOptions.Eera.value = usedOptions.era;
-	document.LocaleOptions.Ehour12.value = usedOptions.hour12;
-	document.LocaleOptions.Enum.value = usedOptions.numberingSystem;
 	document.LocaleOptions.EtimeZoneName.value = usedOptions.timeZoneName;
 	
-	// Display ISO8601 string
+	// Build "reference" format object with asked options and ISO8601 calendar, and display non-Unicode calendar string
 	extendedLocale = Locale + "-u-ca-iso8601" + (unicodeAskedExtension == "" ? "" : "-" + unicodeAskedExtension); // Build Locale with ISO8601 calendar
-	/* Locale = (usedOptions.locale.includes("-u-") ?  usedOptions.locale.substring (0,usedOptions.locale.indexOf("-u-")) : usedOptions.locale)
-			+ "-u-ca-iso8601" ; // Build Locale with ISO8601 calendar */
-	document.getElementById("Gstring").innerHTML = new Intl.DateTimeFormat(extendedLocale,Options).format(targetDate);
+	let referenceFormat = new Intl.DateTimeFormat(extendedLocale,Options);
+//	document.getElementById("Gstring").innerHTML = referenceFormat.format(targetDate);
 
-	// Display Julian and Milesian strings
-	document.getElementById("Jstring").innerHTML = askedOptions.julianFormat(targetDate,document.LocaleOptions.MaskPresentEra.value);
-	document.getElementById("Mstring").innerHTML = askedOptions.milesianFormat(targetDate);
-	
+	// Display Julian string - with the experimental option
+	document.getElementById("Jstring").innerHTML = referenceFormat.julianFormat(targetDate, document.LocaleOptions.MaskPresentEra.checked);
+
+	//Display Milesian string - with no era.
+	document.getElementById("Mstring").innerHTML = referenceFormat.milesianFormat(targetDate);
+
 	// Certain Unicode calendars do not give a proper result: here is the control code.
-	let valid = unicodeValidDateinCalendar(targetDate, timeZone, usedOptions.calendar);
-	let myElement = document.getElementById("Ustring");
-	try { myElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.format(targetDate); }
-	catch (e) { myElement.innerHTML = milesianAlertMsg("browserError"); }
+	let valid = unicodeValidDateinCalendar(targetDate, timeZone, usedOptions.calendar),
+		myUnicodeElement = document.getElementById("Ustring"),
+		myEraControlElement = document.getElementById("ExtUstring");
+	try { 
+		myUnicodeElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.format(targetDate); 
+		myEraControlElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.conditionalEraFormat(targetDate, document.LocaleOptions.MaskPresentEra.checked);
+		}
+	catch (e) { 
+		myUnicodeElement.innerHTML = milesianAlertMsg("browserError"); 
+		myEraControlElement.innerHTML = milesianAlertMsg("browserError"); 
+		}
 }
 
 function setDisplay () { // Considering that targetDate time has been set to the desired date, this routines updates all form fields.
