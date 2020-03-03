@@ -38,6 +38,11 @@ JulianDateProperties.js (in Misc_Date_Properties) is used.
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString] 
 for details on Locale and Options passed to Intl.DateTimeFormat ().
 
+## UnicodeEraControlFormat.js
+An experimental method for DateTimeFormat.
+It uses an extra Boolean option, "exceptCurrentEra" 
+If the option is set or missing, era is displayed as required following resolved .era option, but only if era of date is not era of today.
+
 ## UnicodeTester.html, UnicodeTester.js
 A simple demonstration page that uses the above functions 
 and enables it to understand how Unicode calendars are displayed,
