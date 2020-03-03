@@ -9,6 +9,7 @@ Versions
 	M2018-11-24 use toResolvedLocalDate in place of toLocalDate
 	M2019-11-18 make same changes as in UnicodeJulianFormat: add a thisOptions variable, and suppress useless error catching.
 	M2020-01-12 use options specified in Locale, use strict mode.
+	M2020-03-12 Optional parameter of julianFormat is boolean
 Contents
 	Intl.DateTimeFormat.prototype.julianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.julianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -41,10 +42,10 @@ Inquiries: www.calendriermilesien.org
 "use strict";
 /** @description FormatToParts that issues parts of a Julian calendar date.
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
- * @param {boolean} eraIfNeeded - optional, ad era field only if BC; era is then in "narrow" format unless "era" is defined
- * @returns {Object} same object structure than for FormatToParts method.
+ * @param {boolean} exceptCurrentEra - optional, suppress era field if era is current era, i.e. for all date from 1 Jan. 1.
+ * @returns {Object} same object structure as for formatToParts method.
 */
-Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, displayEra = "exceptCurrent") { // Give formatted elements of a Julian calendar date.
+Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, exceptCurrentEra = true) { // Give formatted elements of a Julian calendar date.
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	// maskPresentEra: even if era to be displayed, display only for terminated eras.
@@ -65,7 +66,7 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, displayEra
 		// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
 		// then we insert the right year and era, computed separately.
 		gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date));
-	if (displayEra == "exceptCurrent" && (julianComponents.year > 0)) referenceOptions.era = undefined; // suppress era option if required
+	if (exceptCurrentEra && (julianComponents.year > 0)) referenceOptions.era = undefined; // suppress era option if required
 	constructOptions = new Intl.DateTimeFormat(locale,referenceOptions); // Re-construct formatting object
 	referenceComponents = constructOptions.formatToParts (myDate);		// and re-construct array of parts
 	var eraDate = new Date (0); eraDate.setUTCFullYear(julianComponents.year); // Hold the "era" part
@@ -83,10 +84,10 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, displayEra
  * @param {Date object} myDate - the date to display, like for standard FormatToParts method.
  * @returns {string} the date following the Unicode options
 */
-Intl.DateTimeFormat.prototype.julianFormat = function (myDate, displayEra = "exceptCurrent") { 
+Intl.DateTimeFormat.prototype.julianFormat = function (myDate, exceptCurrentEra = true) { 
 	// First, try using FormatToParts
 	try {
-		let parts = this.julianFormatToParts (myDate, displayEra); // Compute components
+		let parts = this.julianFormatToParts (myDate, exceptCurrentEra); // Compute components
 		return parts.map(({type, value}) => {return value;}).reduce((buf, part)=> buf + part, "");
 		}
 	// julianFormatToParts does not work, return error code
