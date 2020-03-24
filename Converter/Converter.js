@@ -70,8 +70,10 @@ Version M2019-12-23
 Version M2020-01-12
 	Use strict
 	Adapt to new Julian calendar format function
+Version M2020-04-03
+	Do not make a special case with calendar ethioaa
 */
-/* Copyright Miletus 2017-2019 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -278,7 +280,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		//	test validity since a few calendar do not display properly if out of range
 		//	and arrange Options: delete era element for a calendar which does not use it.
 			let valid = unicodeValidDateinCalendar(targetDate, "UTC", myElements[i].id);
-			if (myElements[i].id == "ethioaa") delete Options.era; // suppress era part of Options, since the displayed era is "ERA0"
 			
 			// Write date string. Protect writing process against errors raised by browsers.
 			try {
