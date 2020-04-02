@@ -26,8 +26,9 @@ Versions
 	M2020-01-12
 		Adapt to flexible layout
 	M2020-04-03
-	Do not make a special case with calendar ethioaa
-	
+		Do not make a special case with calendar ethioaa
+	M2020-04-12
+		Avoid certain warnings by MS Edge
 Calendar converter page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2020 - Louis A. de Fouquières
@@ -76,7 +77,7 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="SeasonOnClock.js"></script>
 	<script type="text/javascript" src="Converter.js"></script>
 
-	<!-- <script type="text/javascript" src="unicodeChar.js"></script> <!-- Specific for IPAOO: Unicode Moon character -->
+	<!-- <script type="text/javascript" src="unicodeChar.js"></script> Specific for IPAOO: Unicode Moon character -->
 
 	<title>Convertisseur de dates</title>
 <meta name="viewport" content="width=device-width">
@@ -103,36 +104,35 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="clock3">
 <!-- the dial -->
-<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"></image>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
 <!-- the year field -->
-  <text class="clock yeardisplay"6
-	x="0" y="+100"></text>
+  <text class="clock yeardisplay" x="0" y="+100"></text>
 <!-- seasons' marks -->
-	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
+	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
 <!-- moon age -->
 <text class="centered yeardisplay" x="-40" y="-80">
-🌙<!-- <script type="text/Javascript">	document.write (unicodeChar ('Crescent Moon')); </script> -->
+🌙<!-- <script type="text/Javascript">	document.write (unicodeChar ('Crescent Moon')) </script> -->
 </text>
 <text class="centered yeardisplay moonage" x="20" y="-80">0</text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
-<rect class="center month day" x="0" y="0" width="0" height="0"/>
+<rect class="center month day" x="0" y="0" width="0" height="0"></rect>
 <!-- center circle -->
-<circle class="clockhand" r="9" />
+<circle class="clockhand" r="9"></circle>
 <!-- month and day hands are set at the end, in order to be above the rest of the clock -->
 <!-- the month hand -->
   <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
-	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20" />
+	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20"></polygon>
   </g>
 <!-- the day hand -->
   <g class="clockhand day" transform="rotate(0)"
   opacity="0.8" >									
-	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
+	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20"></polygon>
   </g>
 </g>
 </svg>
@@ -189,28 +189,28 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>	
-<table class="centered">
-  <tr>
-	<td><button class="textline" type="button" onclick="Javascript:setDateToToday();">Aujourd'hui</button></td>
-    <form name="control" method="post" action="Javascript:changeDayOffset();">
-    <td> +/- jours</td>
-	<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(-1);">-</button></td>
-	<td><input name="shift" type="number" value="1" min="1" step="1" class="centered yearnum"></td> 
-	<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(+1);">+</button></td>
-    </form>
-  </tr>
-</table>
+<form name="control" method="post" action="Javascript:changeDayOffset()">
+	<table class="centered">
+	  <tr>
+		<td><button class="textline" type="button" onclick="Javascript:setDateToToday()">Aujourd'hui</button></td>
+		<td> +/- jours</td>
+		<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(-1)">-</button></td>
+		<td><input name="shift" type="number" value="1" min="1" step="1" class="centered yearnum"></td> 
+		<td><button type="button" class="textline symbol" onclick="Javascript:setDayOffset(+1)">+</button></td>
+	  </tr>
+	</table>
+</form>
 
-<table class="centered">
-  <tr>
-	  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(-1)">&lt;</button></td>
-	  <td><button type="button" class="textline symbol" onclick="Javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(1)">&gt;</button></td>
-	  <form name="run" method="post">
-	  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
-	  </form>
-  </tr> 
-</table>
+<form name="run" method="post">
+	<table class="centered">
+	  <tr>
+		  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(-1)">&lt;</button></td>
+		  <td><button type="button" class="textline symbol" onclick="Javascript:clockRun(0)">O</button></td>
+		  <td><button type="button" class="textline symbol" onclick="Javascript:clockSet(1)">&gt;</button></td>
+		  <td><input name="speed" type="range" min="10" max="200" onchange="Javascript:clockRun(1)"></td>
+	  </tr> 
+	</table>
+</form>
 </section>
 
 <section class="centered"><h2 class="milesianhead">Réglages</h2>
@@ -251,38 +251,38 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt&nbsp;: 15 octobre 1582)</th></tr>
 </table>
-<table class="centered">
-	 <form name="gregorianswitch" autocomplete="off" method="post" action="JavaScript:setGregSwitch();">
-	  <tr>
-		<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
-        <td>
-        <select name="monthname" size="1" class="centered">
-        <option value="0">janvier</option>
-        <option value="1">février</option>
-        <option value="2">mars</option>
-        <option value="3">avril</option>
-        <option value="4">mai</option>
-        <option value="5">juin</option>
-        <option value="6">juillet</option>
-        <option value="7">août</option>
-        <option value="8">septembre</option>
-        <option value="9">octobre</option>
-        <option value="10">novembre</option>
-        <option value="11">décembre</option>
-		</select> </td>
-        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
-        <td><button class="textline">Ok</button></td>
-      </tr>
-	</form>
-</table>
-<table class="centered">
-	<form name="controloptions" autocomplete="off" method="post" action="">
-	  <tr>
-	    <td><input type="checkbox" name="datevalidity" checked></td>
-		<th>Contrôle de validité des dates saisies</th>
-	  </tr>
-	</form>
-</table>
+<form name="gregorianswitch" autocomplete="off" method="post" action="JavaScript:setGregSwitch()">
+	<table class="centered">
+		<tr>
+			<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
+			<td>
+			<select name="monthname" size="1" class="centered">
+			<option value="0">janvier</option>
+			<option value="1">février</option>
+			<option value="2">mars</option>
+			<option value="3">avril</option>
+			<option value="4">mai</option>
+			<option value="5">juin</option>
+			<option value="6">juillet</option>
+			<option value="7">août</option>
+			<option value="8">septembre</option>
+			<option value="9">octobre</option>
+			<option value="10">novembre</option>
+			<option value="11">décembre</option>
+			</select> </td>
+			<td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
+			<td><button class="textline">Ok</button></td>
+		</tr>
+	</table>
+</form>
+<form name="controloptions" autocomplete="off" method="post" action="">
+	<table class="centered">
+		<tr>
+			<td><input type="checkbox" name="datevalidity" checked></td>
+			<th>Contrôle de validité des dates saisies</th>
+		</tr>
+	</table>
+</form>
 </section>
 
 <section class="centered"><h2 class="milesianhead">Liens utiles</h2>
@@ -330,29 +330,29 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	}
   </script>  
-  <tr>
-	<form name="milesian" autocomplete="off" method="post" action="JavaScript:calcMilesian();">
-	<td>Milésien&nbsp;: </td>
-	<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
-	<td>
-	<select name="monthname" size="1" class="centered">
-	<option value="0">1m</option>
-	<option value="1">2m</option>
-	<option value="2">3m</option>
-	<option value="3">4m</option>
-	<option value="4">5m</option>
-	<option value="5">6m</option>
-	<option value="6">7m</option>
-	<option value="7">8m</option>
-	<option value="8">9m</option>
-	<option value="9">10m</option>
-	<option value="10">11m</option>
-	<option value="11">12m</option>
-	</select> </td>
-	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
-	<td><button class="textline">Ok</button></td>
-	</form>	  
-  </tr>
+	<form name="milesian" autocomplete="off" method="post" action="JavaScript:calcMilesian()">
+	  <tr>
+		<td>Milésien&nbsp;: </td>
+		<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
+		<td>
+		<select name="monthname" size="1" class="centered">
+		<option value="0">1m</option>
+		<option value="1">2m</option>
+		<option value="2">3m</option>
+		<option value="3">4m</option>
+		<option value="4">5m</option>
+		<option value="5">6m</option>
+		<option value="6">7m</option>
+		<option value="7">8m</option>
+		<option value="8">9m</option>
+		<option value="9">10m</option>
+		<option value="10">11m</option>
+		<option value="11">12m</option>
+		</select> </td>
+		<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum"></td>
+		<td><button class="textline">Ok</button></td>
+	  </tr>
+	</form>
 
   <script type="text/javascript">
 	function calcGregorian() {
@@ -381,28 +381,28 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	}
   </script>
-  <tr id="gregorianline">
-	<form name="gregorian" autocomplete="off" method="post" action="JavaScript:calcGregorian();">
-	<td class=" mutable">Grégorien&nbsp;: </td>
-	<td><input name="day" type="number" min="1" max="31" class="centered daynum mutable"> </td>
-	<td><select name="monthname" class="centered mutable" size="1">
-	<option value="0">janvier</option>
-	<option value="1">février</option>
-	<option value="2">mars</option>
-	<option value="3">avril</option>
-	<option value="4">mai</option>
-	<option value="5">juin</option>
-	<option value="6">juillet</option>
-	<option value="7">août</option>
-	<option value="8">septembre</option>
-	<option value="9">octobre</option>
-	<option value="10">novembre</option>
-	<option value="11">décembre</option>
-	</select></td>
-	<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum mutable"></td>
-	<td><button class="textline">Ok</button></td>
+	<form name="gregorian" autocomplete="off" method="post" action="JavaScript:calcGregorian()">
+	  <tr id="gregorianline">
+		<td class=" mutable">Grégorien&nbsp;: </td>
+		<td><input name="day" type="number" min="1" max="31" class="centered daynum mutable"> </td>
+		<td><select name="monthname" class="centered mutable" size="1">
+		<option value="0">janvier</option>
+		<option value="1">février</option>
+		<option value="2">mars</option>
+		<option value="3">avril</option>
+		<option value="4">mai</option>
+		<option value="5">juin</option>
+		<option value="6">juillet</option>
+		<option value="7">août</option>
+		<option value="8">septembre</option>
+		<option value="9">octobre</option>
+		<option value="10">novembre</option>
+		<option value="11">décembre</option>
+		</select></td>
+		<td><input name="year" type="number" min="-271821" max="275760" class="centered yearnum mutable"></td>
+		<td><button class="textline">Ok</button></td>
+	  </tr>	  
 	</form>
-  </tr>	  
 
   <script type="text/javascript">
 	function calcJulian(){
@@ -430,28 +430,28 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	}
   </script>  
-  <tr>
-	<form name="julian" autocomplete="off" method="post" action="JavaScript:calcJulian();">
-	<td>Julien&nbsp;: </td>
-	<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
-	<td><select name="monthname" class="centered" size="1">
-	<option value="0">janvier</option>
-	<option value="1">février</option>
-	<option value="2">mars</option>
-	<option value="3">avril</option>
-	<option value="4">mai</option>
-	<option value="5">juin</option>
-	<option value="6">juillet</option>
-	<option value="7">août</option>
-	<option value="8">septembre</option>
-	<option value="9">octobre</option>
-	<option value="10">novembre</option>
-	<option value="11">décembre</option>
-	</select></td>
-	<td><input name="year" type="number" min="-271816" max="275755" class="centered yearnum"></td>
-	<td><button class="textline">Ok</button> </td>
+	<form name="julian" autocomplete="off" method="post" action="JavaScript:calcJulian()">
+	  <tr>
+		<td>Julien&nbsp;: </td>
+		<td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
+		<td><select name="monthname" class="centered" size="1">
+		<option value="0">janvier</option>
+		<option value="1">février</option>
+		<option value="2">mars</option>
+		<option value="3">avril</option>
+		<option value="4">mai</option>
+		<option value="5">juin</option>
+		<option value="6">juillet</option>
+		<option value="7">août</option>
+		<option value="8">septembre</option>
+		<option value="9">octobre</option>
+		<option value="10">novembre</option>
+		<option value="11">décembre</option>
+		</select></td>
+		<td><input name="year" type="number" min="-271816" max="275755" class="centered yearnum"></td>
+		<td><button class="textline">Ok</button> </td>
+	  </tr>
 	</form>
-  </tr>
 
   <script type="text/javascript">
 	  function calcFrenchRev(){
@@ -479,29 +479,29 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	}
   </script>
-  <tr id="republicanline">
-	<form name="republican" autocomplete="off" method="post" action="JavaScript:calcFrenchRev();">
-	<td class="mutable">Républicain&nbsp;: </td>
-	<td><input name="day" type="number" min="1" max="30" class="centered daynum mutable"> </td>
-	<td><select name="monthname" class="centered mutable" size="1">
-	<option value="0">Vendémiaire</option>
-	<option value="1">Brumaire</option>
-	<option value="2">Frimaire</option>
-	<option value="3">Nivôse</option>
-	<option value="4">Pluviôse</option>
-	<option value="5">Ventôse</option>
-	<option value="6">Germinal</option>
-	<option value="7">Floréal</option>
-	<option value="8">Prairial</option>
-	<option value="9">Messidor</option>
-	<option value="10">Thermidor</option>
-	<option value="11">Fructidor</option>
-	<option value="12">Complément.</option>
-	</select></td>
-	<td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum mutable"></td>
-	<td><button class="textline">Ok</button> </td>
+	<form name="republican" autocomplete="off" method="post" action="JavaScript:calcFrenchRev()">
+	  <tr id="republicanline">
+		<td class="mutable">Républicain&nbsp;: </td>
+		<td><input name="day" type="number" min="1" max="30" class="centered daynum mutable"> </td>
+		<td><select name="monthname" class="centered mutable" size="1">
+		<option value="0">Vendémiaire</option>
+		<option value="1">Brumaire</option>
+		<option value="2">Frimaire</option>
+		<option value="3">Nivôse</option>
+		<option value="4">Pluviôse</option>
+		<option value="5">Ventôse</option>
+		<option value="6">Germinal</option>
+		<option value="7">Floréal</option>
+		<option value="8">Prairial</option>
+		<option value="9">Messidor</option>
+		<option value="10">Thermidor</option>
+		<option value="11">Fructidor</option>
+		<option value="12">Complément.</option>
+		</select></td>
+		<td><input name="year" type="number" min="-273613" max="273969" class="centered yearnum mutable"></td>
+		<td><button class="textline">Ok</button> </td>
+	  </tr>
 	</form>
-  </tr>
 </table>
 
 <script type="text/javascript">
@@ -530,33 +530,33 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	  }
 </script>
-<table class="centered">
-	<tr>
-        <th>ISO 8601</th>
-		<th>Jour</th>
-		<th>Semaine</th>
-		<th>Année</th>
-		<th></th>
-	  </tr>
-	<tr id="isoweeksline">
-		<form name="isoweeks" autocomplete="off" method="post" action="JavaScript:calcISO();">
-		<td>Semaines ISO&nbsp;: </td>
-		<td> 
-		<select name="day" class="centered" size="1">
-		<option value="1">lundi</option>
-		<option value="2">mardi</option>
-		<option value="3">mercredi</option>
-		<option value="4">jeudi</option>
-		<option value="5">vendredi</option>
-		<option value="6">samedi</option>
-		<option value="7">dimanche</option>
-		</select></td>
-		<td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
-		<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
-		<td><button class="textline">Ok</button> </td>
-	  </form>
-	</tr>
-</table>
+<form name="isoweeks" autocomplete="off" method="post" action="JavaScript:calcISO()">
+	<table class="centered">
+		<tr>
+			<th>ISO 8601</th>
+			<th>Jour</th>
+			<th>Semaine</th>
+			<th>Année</th>
+			<th></th>
+		</tr>
+		<tr id="isoweeksline">
+			<td>Semaines ISO&nbsp;: </td>
+			<td> 
+			<select name="day" class="centered" size="1">
+			<option value="1">lundi</option>
+			<option value="2">mardi</option>
+			<option value="3">mercredi</option>
+			<option value="4">jeudi</option>
+			<option value="5">vendredi</option>
+			<option value="6">samedi</option>
+			<option value="7">dimanche</option>
+			</select></td>
+			<td><input name="week" type="number" min="1" max="53" class="centered daynum"> </td>
+			<td><input name="year" type="number" min="-271820" max="275760" class="centered yearnum"></td>
+			<td><button class="textline">Ok</button> </td>
+		</tr>
+	</table>
+</form>
 
 <script type="text/javascript">
 	  function calcJulianDay(){ // here, Julian Day is specified as an integer number. Insert with the suitable Date setter.
@@ -573,14 +573,14 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 		}
 	  }
 </script>
-<table class="centered">
-    <form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay();">
-	<tr><th>Jour julien à 12h UTC&nbsp;: </th><td></td>
-		<td><input name="julianday" type="number" min="-97559413" max="102440588" class="centered juliandaynum"></td>
-		<td><button class="textline">Ok</button></td>
-	</tr>
-	</form>
-</table>
+<form name="daycounter" autocomplete="off" method="post" action="JavaScript:calcJulianDay()">
+	<table class="centered">
+		<tr><th>Jour julien à 12h UTC&nbsp;: </th><td></td>
+			<td><input name="julianday" type="number" min="-97559413" max="102440588" class="centered juliandaynum"></td>
+			<td><button class="textline">Ok</button></td>
+		</tr>
+	</table>
+</form>
 </section>
 
 <section class="panel centered"><h2 class="milesianhead">Séries chronologiques à 0h UTC</h2>
@@ -611,7 +611,7 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 
 <div class="panel">
 <section class="centered"><h2 class="milesianhead">Calendriers Unicode</h2>
-	 <form name="LocaleOptions" method="post" action="JavaScript:setDisplay();">
+	 <form name="LocaleOptions" method="post" action="JavaScript:setDisplay()">
 	  <table class="centered">
 			<tr><th>Format&nbsp;: </th>
 				<td>

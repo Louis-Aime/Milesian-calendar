@@ -19,6 +19,7 @@ Versions
 	M2019-12-23 Display seasons marks on clock dial, small presentation changes
 	M2020-01-10 Use flexible display, change calendar list
 	M2020-01-18 Enhance layout and display (time)
+	M2020-04-12 Avoid certain warnings by MS Edge
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2020 - Louis A. de Fouquières
@@ -90,57 +91,57 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="clock2">
 <!-- the dial -->
-<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"></image>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="-90" >CERTUM MONSTRAT DIEM</text> 
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
-<rect class="center month day" x="0" y="0" width="0" height="0"/>
+<rect class="center month day" x="0" y="0" width="0" height="0"></rect>
 <!-- the year field -->
   <text class="clock yeardisplay"
 	x="0" y="+100"></text>
 <!-- seasons' marks -->
-	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
-	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"  /> </g>
+	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
 <!-- center circle -->
-<circle class="clockhand" r="9" />
+<circle class="clockhand" r="9" ></circle>
 <!-- set the secondary time dial which should appear under the month-day hands -->
 <!-- Hour clock centered at x=-80, y=0 -->
   <g class="timeDial"> <!-- set a container for the time dial -->
-	<circle cx="-80" cy="0" r="60" fill="none" stroke="black" />
-	<rect class="center hour minute second" x="-80" y="0" width="0" height="0"/> <!-- center of the time dial -->
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(30,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(60,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(90,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(120,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(150,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(180,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(210,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(240,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(270,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(300,-80,0)"/>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(330,-80,0)"/>
+	<circle cx="-80" cy="0" r="60" fill="none" stroke="black" ></circle>
+	<rect class="center hour minute second" x="-80" y="0" width="0" height="0"></rect> <!-- center of the time dial -->
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(30,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(60,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(90,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(120,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(150,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(180,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(210,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(240,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(270,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(300,-80,0)"></line>
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(330,-80,0)"></line>
   </g> <!-- end of timeDial -->
 <!-- am/pm indicator -->
   <text class="clock ampm"
 	x="-80" y="30">am</text>
 <!-- hours and minutes hands -->
   <g class="clockhand hour" transform="rotate(0)">
-    <line x1="-80" x2="-80" y1="0" y2="-40" />
+    <line x1="-80" x2="-80" y1="0" y2="-40" ></line>
   </g>
   <g class="clockhand minute" transform="rotate(0)">
-    <line x1="-80" x2="-80" y1="0" y2="-55" />
+    <line x1="-80" x2="-80" y1="0" y2="-55" ></line>
   </g>
 <!-- moon element -->
 <g class="moon" >
 <!-- the moon circle  clipping device, (cx;cy) are coordinates of the center of the moon circle -->
  <defs> <clipPath id="moonclip60"> <!-- id used in this file, only once per web site -->
-  <circle class="moondisk" cx="80" cy="0" r="60"/>
+  <circle class="moondisk" cx="80" cy="0" r="60"></circle>
  </clipPath></defs>
 <!-- moon picture, x and y should be shifted after moonclip60.cx and .cy-->
-<image href="Lunar_disk.jpg" x="19" y ="-62" width="124" height="124" clip-path="url(#moonclip60)"/>
+<image href="Lunar_disk.jpg" x="19" y ="-62" width="124" height="124" clip-path="url(#moonclip60)"></image>
 <!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
 <!-- 
 radius: 2x same, bigger than circle radius
@@ -150,18 +151,18 @@ sweep-flag of 1st arc: 0: round part on left, 1: round part on right
 sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
 order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 -->
-  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
+  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" ></path>
 </g>
 <!-- month and day hands are set at the end, in order to be above the rest of the clock -->
 <!-- the month hand -->
   <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
-	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20" />
+	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20" ></polygon>
   </g>
 <!-- the day hand -->
   <g class="clockhand day" transform="rotate(0)"
   opacity="0.8" >									
-	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
+	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" ></polygon>
   </g>
 </g>
 </svg>
@@ -194,7 +195,7 @@ function calcTime() { // Here the hours are deemed local hours
 	}
 }
 </script>
-  <form name="time" method="post" autocomplete="off" action="javascript:calcTime();">
+  <form name="time" method="post" autocomplete="off" action="javascript:calcTime()">
 	<table class="centered">
 	  <tr> 
 		 <th colspan="5">Heure du fuseau ou du mode</th>
@@ -234,19 +235,19 @@ function addTime (sign = 1) { // addedTime ms is added or subtracted to or from 
 	}
 }
 </script>	 
-<form name="timeShift" method="post" action="javascript:changeAddTime();">
+<form name="timeShift" method="post" action="javascript:changeAddTime()">
 	<table class="centered"> 
 	  <tr>
 		<td>+/- ms</td>
-		<td><button type="button" class="textline symbol" onclick="javascript:addTime(-1);">-</button></td>
+		<td><button type="button" class="textline symbol" onclick="javascript:addTime(-1)">-</button></td>
 		<td><input name="shift" type="number" value="60000" min="1" class="centered juliandaynum"></td>
-		<td><button type="button" class="textline symbol" onclick="javascript:addTime(1);">+</button></td>
+		<td><button type="button" class="textline symbol" onclick="javascript:addTime(1)">+</button></td>
 	  </tr>
 	</table>
 </form>
 </section>
 <section class="centered autoscroll"><!-- time zone option -->
-  <form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay();">
+  <form name="TZmode" autocomplete="off" method="post" action="javascript:setDisplay()">
 	<table class="centered">
 			<tr><th>Mode&nbsp;: </th>
 				<td>
@@ -299,10 +300,10 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 
 	  <table class="centered">
 	  <tr>
-		<td><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow();">Maintenant</button></td>
+		<td><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow()">Maintenant</button></td>
 		<th> - Même date à</th>
-		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)";>0 h</button></td>
-		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)";>12 h</button></td>
+		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)">0 h</button></td>
+		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)">12 h</button></td>
 		<th>UTC</th>
 	  </tr>
 	 </table>
@@ -354,28 +355,28 @@ function clockRun (runSwitch = 0) { // Start or stop automatic clock run
 			: window.setInterval(setDayOffsetMinus, 40000/document.run.speed.value) ; 
 }
 </script>
-<table class="centered">
-  <tr>
-	<!-- No "today" button -->
-	<form name="control" method="post" action="javascript:changeDayOffset();">
-		<th>+/- jours&nbsp;: </th>
-		<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(-1);">-</button></td>
-		<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
-		<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(+1);">+</button></td>
-	</form>
-  </tr>
-</table>
+<form name="control" method="post" action="javascript:changeDayOffset()">
+	<table class="centered">
+		<tr>
+		<!-- No "today" button -->
+			<th>+/- jours&nbsp;: </th>
+			<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(-1)">-</button></td>
+			<td><input name="shift" type="number" value="1" min="0" step="any" class="centered yearnum"></td> 
+			<td><button type="button" class="textline symbol" onclick="javascript:setDayOffset(+1)">+</button></td>
+	  </tr>
+	</table>
+</form>
 
-<table class="centered">
-  <tr>
-	  <td><button type="button" class="textline symbol" onclick="javascript:clockSet(-1)">&lt;</button></td>
-	  <td><button type="button" class="textline symbol" onclick="javascript:clockRun(0)">O</button></td>
-	  <td><button type="button" class="textline symbol" onclick="javascript:clockSet(1)">&gt;</button></td>
-	  <form name="run" method="post">
-	  <td><input name="speed" type="range" min="10" max="200" onchange="javascript:clockRun(1)"></td>
-	  </form>
-  </tr> 
-</table>
+<form name="run" method="post">
+	<table class="centered">
+		<tr>
+			<td><button type="button" class="textline symbol" onclick="javascript:clockSet(-1)">&lt;</button></td>
+			<td><button type="button" class="textline symbol" onclick="javascript:clockRun(0)">O</button></td>
+			<td><button type="button" class="textline symbol" onclick="javascript:clockSet(1)">&gt;</button></td>
+			<td><input name="speed" type="range" min="10" max="200" onchange="javascript:clockRun(1)"></td>
+		</tr> 
+	</table>
+</form>
 </section>
 </div>
 
@@ -430,7 +431,7 @@ function calcMilesian() {
 }
 </script>
 	<tr>
-	 <form name="milesian" autocomplete="off" method="post" action="javascript:calcMilesian();">
+	 <form name="milesian" autocomplete="off" method="post" action="javascript:calcMilesian()">
 		<td>Milésien&nbsp;: </td>
         <td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
         <td>
@@ -493,7 +494,7 @@ function calcGregorian() {
 }
 </script>
       <tr id="gregorianline">
-		<form name="gregorian" autocomplete="off" method="post" action="javascript:calcGregorian();">
+		<form name="gregorian" autocomplete="off" method="post" action="javascript:calcGregorian()">
         <td class="mutable">Grégorien&nbsp;: </td>
         <td><input name="day" type="number" min="1" max="31" class="centered daynum mutable"> </td>
         <td><select name="monthname" class="centered mutable" size="1">
@@ -554,7 +555,7 @@ function calcJulian(){
 }
 </script>
 	 <tr>
-		<form name="julian" autocomplete="off" method="post" action="javascript:calcJulian();">
+		<form name="julian" autocomplete="off" method="post" action="javascript:calcJulian()">
         <td>Julien&nbsp;: </td>
         <td><input name="day" type="number" min="1" max="31" class="centered daynum"></td>
         <td><select name="monthname" class="centered" size="1">
@@ -615,7 +616,7 @@ function calcFrenchRev(){
 }
 </script>
 	 <tr id="republicanline">
-		<form name="republican" autocomplete="off" method="post" action="javascript:calcFrenchRev();">
+		<form name="republican" autocomplete="off" method="post" action="javascript:calcFrenchRev()">
         <td class="mutable">Républicain&nbsp;: </td>
         <td><input name="day" type="number" min="1" max="30" class="centered daynum mutable"> </td>
         <td><select name="monthname" class="centered mutable" size="1">
@@ -686,7 +687,7 @@ function calcISO() {
         <th></th>
       </tr>
 	<tr id="isoweeksline">
-		<form name="isoweeks" autocomplete="off" method="post" action="javascript:calcISO();">
+		<form name="isoweeks" autocomplete="off" method="post" action="javascript:calcISO()">
 		<td>Semaines ISO&nbsp;: </td>
 		<td> 
         <select name="day" class="centered" size="1">
@@ -724,7 +725,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 }
 </script>
 <table class="centered">
-    <form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay();">
+    <form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay()">
 	<tr><th colspan="2">Jour julien</th></tr>
 	<tr>
 		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="centered"></td>
@@ -736,7 +737,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 
 <section class="centered panel autoscroll"><h2 class="milesianhead">Représentation Unicode</h2>
 	<div>Champ vide&nbsp;= défaut système</div>
-	<form name="LocaleOptions" method="post" action="javascript:setDisplay();">
+	<form name="LocaleOptions" method="post" action="javascript:setDisplay()">
 	<table class="centered"> <tr>
 		<th>Format&nbsp;: </th>
 			<td>
@@ -814,7 +815,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 
 <section class="centered panel autoscroll"><h2 class="milesianhead">Données lunaires</h2>
 
-<form name="moon" method="post" action="javascript:void(0);">
+<form name="moon" method="post" action="javascript:void(0)">
 <h3 class="milesianhead">Lune moyenne corrigée</h3>
  <table class="centered">
 	<tr>
@@ -867,7 +868,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 		<p class="milesianhead">(UTC = Temps Terrestre - Delta T)</p>
 <table class="centered">
      <tr>
-		<form name="deltat"method="post" action="javascript:void(0);">
+		<form name="deltat"method="post" action="javascript:void(0)">
 		<th>Delta T (secondes)&nbsp;: </th>
 		<td><input type="text" class="centered" disabled="disabled" size="15" name="delta"> </td>
 		</form>
@@ -947,38 +948,38 @@ function setGregSwitch() {	// Set date of switch from julian to gregorian calend
 	 <tr><th>Date de passage au calendrier grégorien</th></tr>
 	 <tr><th>(au plus tôt&nbsp;: 15 octobre 1582)</th></tr>
 </table>
-<table class="centered">
-	 <form name="gregorianswitch" autocomplete="off" method="post" action="javascript:setGregSwitch();">
-	  <tr>
-		<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
-        <td>
-        <select name="monthname" size="1" class="centered">
-        <option value="0">janvier</option>
-        <option value="1">février</option>
-        <option value="2">mars</option>
-        <option value="3">avril</option>
-        <option value="4">mai</option>
-        <option value="5">juin</option>
-        <option value="6">juillet</option>
-        <option value="7">août</option>
-        <option value="8">septembre</option>
-        <option value="9">octobre</option>
-        <option value="10">novembre</option>
-        <option value="11">décembre</option>
-		</select> </td>
-        <td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
-        <td><button class="textline">Ok</button></td>
-      </tr>
-	</form>
-</table>
-<table class="centered">
-	<form name="controloptions" autocomplete="off" method="post" action="">
-	  <tr>
-	    <td><input type="checkbox" name="datevalidity" checked></td>
-		<th>Contrôle de validité des dates saisies</th>
-	  </tr>
-	</form>
-</table>
+<form name="gregorianswitch" autocomplete="off" method="post" action="javascript:setGregSwitch()">
+	<table class="centered">
+		<tr>
+			<td><input name="day" type="number" value="15" min="1" max="31" class="centered daynum"></td>
+			<td>
+			<select name="monthname" size="1" class="centered">
+			<option value="0">janvier</option>
+			<option value="1">février</option>
+			<option value="2">mars</option>
+			<option value="3">avril</option>
+			<option value="4">mai</option>
+			<option value="5">juin</option>
+			<option value="6">juillet</option>
+			<option value="7">août</option>
+			<option value="8">septembre</option>
+			<option value="9">octobre</option>
+			<option value="10">novembre</option>
+			<option value="11">décembre</option>
+			</select> </td>
+			<td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered yearnum"></td>
+			<td><button class="textline">Ok</button></td>
+		</tr>
+	</table>
+</form>
+<form name="controloptions" autocomplete="off" method="post" action="">
+	<table class="centered">
+		<tr>
+			<td><input type="checkbox" name="datevalidity" checked></td>
+			<th>Contrôle de validité des dates saisies</th>
+		</tr>
+	</table>
+</form>
 </section>
 
 <section class="centered"><h3 class="milesianhead">Liens utiles</h3>
