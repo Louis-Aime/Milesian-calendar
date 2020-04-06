@@ -44,7 +44,8 @@ Version
 		Adapt julio-gregorian date display to enhanced julianFormat
 	M2020-01-18
 		Handle micoseconds
-
+	M2020-04-16
+		Adapt display of Julian day and other series to microseconds
 */
 /* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -282,8 +283,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	;
 	*/
 	
-	// Set Julian Day 
-   	document.daycounter.julianday.value = targetDate.getJulianDay();
+	// Display Julian Day. Try displaying with toLocaleString. If resulting field is empty, insert directly number in field. try-catch is not appropriate.
+	document.daycounter.julianday.value = targetDate.getJulianDay().toLocaleString(undefined,{useGrouping:false,maximumFractionDigits:8});
+	if (document.daycounter.julianday.value == "") document.daycounter.julianday.value = Math.round(targetDate.getJulianDay()*10E7)/10E7;
 	
 	// Chronological fields frame
 	
@@ -291,17 +293,17 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.querySelector("#unixCountDisplay");
 	myElement.innerHTML = targetDate.valueOf().toLocaleString();
 	myElement = document.querySelector("#jdDisplay");
-	myElement.innerHTML = targetDate.getCount("julianDay").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("julianDay").toLocaleString(undefined,{maximumFractionDigits:8});
 	myElement = document.querySelector("#mjdDisplay");
-	myElement.innerHTML = targetDate.getCount("modifiedJulianDay").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("modifiedJulianDay").toLocaleString(undefined,{maximumFractionDigits:8});
 	myElement = document.querySelector("#nasajdDisplay");
-	myElement.innerHTML = targetDate.getCount("nasaDay").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("nasaDay").toLocaleString(undefined,{maximumFractionDigits:8});
 	myElement = document.querySelector("#spreadSheetsCountDisplay");
-	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("sheetsCount").toLocaleString(undefined,{maximumFractionDigits:8});
 	myElement = document.querySelector("#MicrosoftCountDisplay");
-	myElement.innerHTML = targetDate.getCount("MSBase").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("MSBase").toLocaleString(undefined,{maximumFractionDigits:8});
 	myElement = document.querySelector("#MacOSCountDisplay");
-	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:6});
+	myElement.innerHTML = targetDate.getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:8});
 	
 	// Unicode frame 
 	myElement = document.querySelector("#langCode");
