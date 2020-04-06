@@ -1,10 +1,8 @@
 <!DOCTYPE html> 
-<!-- PUBLIC
-    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd"> -->
 <html lang="fr">
 <head>
-	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+	<meta charset="UTF-8">
+	<title>Horloge milésienne</title>
 <!--
 Versions 
 	M2018-11-07 insert js functions in relation with data entries  and clock run
@@ -21,6 +19,11 @@ Versions
 	M2020-01-10 Use flexible display, change calendar list
 	M2020-01-18 Enhance layout and display (time)
 	M2020-04-12 Avoid certain warnings by MS Edge
+	M2020-04-16
+		Normalize head section
+		Link to a HD version of the Milesian clock dial
+-->
+<!--
 Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
 Copyright Miletus 2017-2020 - Louis A. de Fouquières
@@ -45,6 +48,13 @@ or the use or other dealings in the software.
 
 Inquiries: www.calendriermilesien.org
 -->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Horloge milésienne, représentation de la date selon le calendrier milésien
+conversion avec d'autres calendriers et en jour julien, 
+représentation de l'heure selon les fuseaux horaires, 
+restitution de la date et de l'heure milésienne avec les options définies par Unicode">
+	<meta name="keywords" content="Horloge milésienne, conversion de calendrier, jour julien, lune, calendrier milésien">
+	<meta name="viewport" content="width=device-width">	
 
 <!-- General packages -->
 	<link href="milesian.css" rel="stylesheet"/>
@@ -70,8 +80,6 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="Seasons.js"></script>
 	<script type="text/javascript" src="SeasonOnClock.js"></script>
 
-	<title>Horloge milésienne</title>
-<meta name="viewport" content="width=device-width">	
 </head>
 <body class="centered" onload="javascript:setDateToNow()">
 <section class="centered"><h1 class="milesianhead">Horloge milésienne</h1>
@@ -92,57 +100,57 @@ xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="clock2">
 <!-- the dial -->
-<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"></image>
+<image href="Milesian_dial_2936.png" x="-300" y ="-300" width="600" height="599" />
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="-90" >CERTUM MONSTRAT DIEM</text> 
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
-<rect class="center month day" x="0" y="0" width="0" height="0"></rect>
+<rect class="center month day" x="0" y="0" width="0" height="0" />
 <!-- the year field -->
   <text class="clock yeardisplay"
 	x="0" y="+100"></text>
 <!-- seasons' marks -->
-	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
-	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
-	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
-	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288"></polygon> </g>
+	<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288" /> </g>
+	<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288" /> </g>
+	<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288" /> </g>
+	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288" /> </g>
 <!-- center circle -->
-<circle class="clockhand" r="9" ></circle>
+<circle class="clockhand" r="9" />
 <!-- set the secondary time dial which should appear under the month-day hands -->
 <!-- Hour clock centered at x=-80, y=0 -->
   <g class="timeDial"> <!-- set a container for the time dial -->
-	<circle cx="-80" cy="0" r="60" fill="none" stroke="black" ></circle>
-	<rect class="center hour minute second" x="-80" y="0" width="0" height="0"></rect> <!-- center of the time dial -->
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(30,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(60,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(90,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(120,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(150,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(180,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(210,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(240,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(270,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(300,-80,0)"></line>
-	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(330,-80,0)"></line>
+	<circle cx="-80" cy="0" r="60" fill="none" stroke="black" />
+	<rect class="center hour minute second" x="-80" y="0" width="0" height="0" /> <!-- center of the time dial -->
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(30,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(60,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(90,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(120,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(150,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(180,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(210,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(240,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(270,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(300,-80,0)" />
+	<line x1="-80" x2="-80" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(330,-80,0)" />
   </g> <!-- end of timeDial -->
 <!-- am/pm indicator -->
   <text class="clock ampm"
 	x="-80" y="30">am</text>
 <!-- hours and minutes hands -->
   <g class="clockhand hour" transform="rotate(0)">
-    <line x1="-80" x2="-80" y1="0" y2="-40" ></line>
+    <line x1="-80" x2="-80" y1="0" y2="-40"  />
   </g>
   <g class="clockhand minute" transform="rotate(0)">
-    <line x1="-80" x2="-80" y1="0" y2="-55" ></line>
+    <line x1="-80" x2="-80" y1="0" y2="-55"  />
   </g>
 <!-- moon element -->
 <g class="moon" >
 <!-- the moon circle  clipping device, (cx;cy) are coordinates of the center of the moon circle -->
  <defs> <clipPath id="moonclip60"> <!-- id used in this file, only once per web site -->
-  <circle class="moondisk" cx="80" cy="0" r="60"></circle>
+  <circle class="moondisk" cx="80" cy="0" r="60" />
  </clipPath></defs>
 <!-- moon picture, x and y should be shifted after moonclip60.cx and .cy-->
-<image href="Lunar_disk.jpg" x="19" y ="-62" width="124" height="124" clip-path="url(#moonclip60)"></image>
+<image href="Lunar_disk.jpg" x="19" y ="-62" width="124" height="124" clip-path="url(#moonclip60)" />
 <!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
 <!-- 
 radius: 2x same, bigger than circle radius
@@ -152,18 +160,18 @@ sweep-flag of 1st arc: 0: round part on left, 1: round part on right
 sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
 order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
 -->
-  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" ></path>
+  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
 </g>
 <!-- month and day hands are set at the end, in order to be above the rest of the clock -->
 <!-- the month hand -->
   <g class="clockhand month" transform="rotate(0)"
   opacity="0.8">										
-	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20" ></polygon>
+	<polygon points="0,0 12,-20 10,-135 0,-145 -10,-135 -12,-20" />
   </g>
 <!-- the day hand -->
   <g class="clockhand day" transform="rotate(0)"
   opacity="0.8" >									
-	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" ></polygon>
+	<polygon points="0,0 11,-20 8,-190 0,-200 -8,-190 -11,-20" />
   </g>
 </g>
 </svg>
@@ -713,8 +721,8 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
 	if (isNaN (j)) alert (milesianAlertMsg("nonNumeric") + '"' + document.daycounter.julianday.value + '"')
 	else {
-		j =  Math.round ((j * Chronos.DAY_UNIT)/Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT / Chronos.DAY_UNIT ; 
-		// j rounded to represent an integer number of seconds, avoiding rounding up errors.
+		j =  Math.round (j * Chronos.DAY_UNIT) / Chronos.DAY_UNIT ; // /Chronos.SECOND_UNIT) * Chronos.SECOND_UNIT
+		// j rounded to represent an integer number of milliseconds, avoiding rounding up errors.
 		let testDate = new Date (targetDate.valueOf());
 		testDate.setTimeFromJulianDay (j);
 		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
@@ -725,15 +733,15 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	}
 }
 </script>
-<table class="centered">
-    <form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay()">
+<form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay()">
+  <table class="centered">
 	<tr><th colspan="2">Jour julien</th></tr>
 	<tr>
 		<td><input name="julianday" type="number" min="-97559412.5" max="102440587.5" step="any" class="centered"></td>
 		<td><button class="textline" name="setday" value="julianday">Ok</button></td>
 	</tr>
-	</form>
-</table>
+  </table>
+</form>
 </section>
 
 <section class="centered panel autoscroll"><h2 class="milesianhead">Représentation Unicode</h2>

@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<!-- PUBLIC
-    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd"> -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Diem cognosce</title>
 <!-- Versions 
 	M2019-07-27 
 	M2020-04-12 Simplify !DOCTYPE
+	M2020-04-16 Set head section in line with present recommendations
 -->
-<html lang="fr">
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="This clock displays	 the day of the tropical year, using the Milesian calendar">
+	<meta name="keywords" content="Milesian clock, season's clock">
+	<meta name="viewport" content="width=device-width">
 
-<head>
-	<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 	<link href="milesian.css" rel="stylesheet"/>
-	<title>Horloge milésienne</title>
 	<script type="text/javascript" src="CBCCE.js"></script>
 	<script type="text/javascript" src="RealTZmsOffset.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
@@ -20,7 +22,7 @@
 
 <body>
 <div class="centered">	
-<svg id="clock" width="100%" height="100%" xml:lang="fr" onload="JavaScript:setLightClockTicks()"
+<svg id="clock" width="100%" height="100%" onload="JavaScript:setLightClockTicks()"
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -41,7 +43,7 @@ function setLightClockTicks() { // To be inserted on load of light clock
 
 <g id="clock1">
 <!-- the dial -->
-<image href="Cadran_milesien_600.png" x="-300" y ="-300" width="600" height="599"/>
+<image href="Milesian_dial_2936.png" x="-300" y ="-300" width="600" height="599"/>
 <!-- the motto on the dial -->
 <text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
