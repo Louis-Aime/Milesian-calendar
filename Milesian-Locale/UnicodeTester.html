@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<!-- PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> -->
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Test calendriers Unicode</title>
 <!-- 
 Versions
 	M2019-11-18 : add display of Julian calendar date 
@@ -18,11 +21,14 @@ Versions
 		Separate the experimental era control function
 	M2020-04-12
 		Small error in a flag
-		Avoid rejections by MS Edge
+		Avoid certain rejections by MS Edge
+	M2020-04-16
+		Normalize head section
 -->
-<html lang="fr">
-<head>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Test interactif de présentation de date avec les outils Unicode">
+	<meta name="keywords" content="Unicode calendrier, Unicode calendars">
+	<meta name="viewport" content="width=device-width">	
 
 <!-- General packages -->
 	<link href="milesian.css" rel="stylesheet"/>
@@ -39,10 +45,8 @@ Versions
 	<script type="text/javascript" src="UnicodeEraControlFormat.js"></script>
 
 <!-- Specific for this page -->
-	<script type="text/javascript" src="UnicodeTester.js"></script>	
+	<script type="text/javascript" src="UnicodeTester.js"></script>
 
-	<title>Test calendriers Unicode</title>
-<meta name="viewport" content="width=device-width">	
 </head>
 <body class="centered" onload="setDateToNow()">
 <section class="centered"><h1 class="milesianhead">Expression de date et calendriers Unicode</h1>
