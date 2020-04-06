@@ -39,6 +39,6 @@ How it looks like, and inquiries: http://www.calendriermilesien.org/horloge-mile
  this file only holds display routines.
  * MilesianClockOperations.js: the commands of the Milesian Clock hands and text indications.
  * LunarClockOperations.js: the commands for the Moon part of the clock.
- * Cadran_milesien_600.jpg: the fixed dial of the clock.
+ * Milesian_dial_2936.png: the fixed part dial of the clock. In former version, was Cadran_milesien_600.png with a poor definition.
  * Luna_disk.jpg: an image fo the Moon used as background for the Moon part of the clock.
  
