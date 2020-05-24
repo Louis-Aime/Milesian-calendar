@@ -46,6 +46,8 @@ Version
 		Handle micoseconds
 	M2020-04-16
 		Adapt display of Julian day and other series to microseconds
+	M2020-06-03
+		"min" instead of "mn"
 */
 /* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
