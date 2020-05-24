@@ -19,6 +19,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 	M2020-03-12
 		Test all formatting options
 		Separate experimental era control format option
+	M2020-06-03 "min" instead of "mn"
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
