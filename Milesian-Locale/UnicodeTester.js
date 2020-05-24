@@ -221,7 +221,7 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	myElement = document.getElementById("UTCtime");
 	myElement.innerHTML = 
 	  targetDate.getUTCHours() + " h "
-	  + targetDate.getUTCMinutes() + " mn " 
+	  + targetDate.getUTCMinutes() + " min " 
 	  + targetDate.getUTCSeconds() + " s "
   	  + targetDate.getUTCMilliseconds() + " ms";
 	myElement = document.getElementById("ISOdatetime");
