@@ -72,6 +72,8 @@ Version M2020-01-12
 	Adapt to new Julian calendar format function
 Version M2020-04-03
 	Do not make a special case with calendar ethioaa
+Version M2020-04-22
+	Do not use unicodeCalendarHandled() anymore
 */
 /* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -268,29 +270,18 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElements = document.getElementsByClassName('unicodedate'); 	// List of date elements to be computed
 	for (let i = 0; i < myElements.length; i++) {
 		// myElements[i].id is the ID of the Element, which is the Unicode name of the calendar
-
 		// re-initiate Option variable following user's setting
 		let Options = Object.assign({}, userOptions);
-		
-		// Check that browser will display an interesting calendar, considering the language asked
-		let displayedCalendar = unicodeCalendarHandled (myElements[i].id,Locale);
-		if (displayedCalendar == myElements[i].id 	// the displayed calendar is as expected ...
-			|| displayedCalendar != "gregory"	// ... or at least is not the plain gregory one...
-			|| displayedCalendar != new Intl.DateTimeFormat(Locale).resolvedOptions().calendar )	{ // ... nor the default one for that language
-		//	test validity since a few calendar do not display properly if out of range
-		//	and arrange Options: delete era element for a calendar which does not use it.
-			let valid = unicodeValidDateinCalendar(targetDate, "UTC", myElements[i].id);
-			
-			// Write date string. Protect writing process against errors raised by browsers.
-			try {
-				myElements[i].innerHTML = 
-				(valid ? new Intl.DateTimeFormat(Locale+"-u-ca-"+myElements[i].id, Options).format(targetDate)  //.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options)
-						: milesianAlertMsg("invalidDate"));
-				}
-			catch (e) {	// In case the browser raises an error
-				myElements[i].innerHTML = milesianAlertMsg("browserError");
-				}
+		// Check that date display is valid with current calendar
+		let valid = unicodeValidDateinCalendar(targetDate, "UTC", myElements[i].id);
+		// Write date string. Protect writing process against errors raised by browsers.
+		try {
+			myElements[i].innerHTML = 
+			(valid ? new Intl.DateTimeFormat(Locale+"-u-ca-"+myElements[i].id, Options).format(targetDate)  //.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options)
+					: milesianAlertMsg("invalidDate"));
 			}
-		else myElements[i].innerHTML = "(" + displayedCalendar + ")"; // Calendar displayed is a default one.
+		catch (e) {	// In case the browser raises an error
+			myElements[i].innerHTML = milesianAlertMsg("browserError");
+			}
 		}
 }

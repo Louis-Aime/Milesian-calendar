@@ -8,9 +8,10 @@ Versions
 	M2019-07-27: separate getRealTZOffset into RealTZmsOffset.js
 	M2019-12-22: simplify since all browser handle DateTimeFormat, and insert a display validity test
 	M2020-01-10: set strict mode and enhance code
+	M2020-04-22: Deprecate unicodeCalendarHandled (was used in Converter only for MS Edge, before it used Unicode)
 Contents
 	getRealTZmsOffset : moved to RealTZmsOffset.js
-	unicodeCalendarHandled : from a requested calendar, gives the effectively used one.
+	unicodeCalendarHandled (deprecated) : from a requested calendar, gives the effectively used one (was used only for MS Edge)
 	toResolvedLocalDate : return a Date object holding the date shifted by the time zone offset of a given Unicode (IANA) time zone. 
 	unicodeValidDateinCalendar: A filter for calendrical computation bugs in the ICUs
 Required
@@ -38,26 +39,7 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
-
 "use strict";
-/** Show which calendar is effectively used, in connection with a language, upon request through the Locale u-ca- parameters of Intl.DateTimeFormatate
- * @param {string} calendar: name of asked calendar
- * @param {string} locale: the language for which the request is done. If undefined, current locale.
- * @returns {string} the calendar that the implementation selects
-*/
-function unicodeCalendarHandled (calendar, locale) {
-	if (locale == null || locale == "" ) locale = new Intl.DateTimeFormat().resolvedOptions().locale
-	else locale = new Intl.DateTimeFormat(locale).resolvedOptions().locale;
-	locale = (locale.includes("-u-") 
-	? 	(locale.substring(locale.indexOf("-u-")).includes("ca-") 
-			? locale.substring (0,locale.indexOf("ca-",locale.indexOf("-u-")))
-			: locale )
-		+ "ca-"
-	: locale + "-u-ca-"
-	) + calendar ;
-	return 	new Intl.DateTimeFormat(locale).resolvedOptions().calendar;
-	}
-
 /** Construct a date that represents the "best fit" value of the given date shifted to the named time zone. 
  * The computation of the time zone is that of Unicode, or  the the standard TZOffset if Unicode's is not available.
  * @param {Date} myDate - the Date object to convert, and that shows the moment of time zone offset computation.
