@@ -370,7 +370,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.getElementById("UTCtime");
 	myElement.innerHTML = 
 	  targetDate.getUTCHours() + " h "
-	  + targetDate.getUTCMinutes() + " mn " 
+	  + targetDate.getUTCMinutes() + " min " 
 	  + targetDate.getUTCSeconds() + " s "
   	  + targetDate.getUTCMilliseconds() + " ms";
 	// This variant makes a bug with MS Edge, if outside the range of handled values :
