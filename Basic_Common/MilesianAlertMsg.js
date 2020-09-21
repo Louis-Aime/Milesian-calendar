@@ -16,6 +16,7 @@ Versions
 		New message entry : outOfRange	
 	M2018-11-11 : JSdoc comments, make code simplier
 	M2020-01-12 : strict mode
+	M2020-10-01 : set errorMsg as a global object
 Required:
 	No other file required
 */
@@ -42,15 +43,8 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-/** Gives a string of a message in the language set by Locale.
- * @param {string} inputError - the name of the message
- * available messages: invalidInput, nonNumeric, nonInteger, invalidDate, invalidCode, browserError, outOfRange
- * @return {string} the suitable message, in the language set with the locale, or in English
- * languages are : en, fr, de, es, pt.
-*/
-function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
-	var	languages = [ "en", "fr", "de", "es", "pt" ];
-	var errorMsg = {
+const 
+errorMsg = {
 		"invalidInput": {
 			en : "Invalid input ",
 			fr : "Saisie invalide ",
@@ -101,6 +95,15 @@ function milesianAlertMsg (inputError) {	// Prepare an error message in suitable
 			pt	: "Data ou valor fora do intervalo "	
 			}
 		};
+/** Gives a string of a message in the language set by Locale.
+ * @param {string} inputError - the name of the message
+ * available messages: invalidInput, nonNumeric, nonInteger, invalidDate, invalidCode, browserError, outOfRange
+ * @return {string} the suitable message, in the language set with the locale, or in English
+ * languages are : en, fr, de, es, pt.
+*/
+function milesianAlertMsg (inputError) {	// Prepare an error message in suitable language
+	var	languages = [ "en", "fr", "de", "es", "pt" ];
+	// errorMsg is a global object , first index is type of error, second index is language.
 	let usedLang = "en";
 	let lang = new Intl.DateTimeFormat().resolvedOptions().locale.substring(0,2);
 	for (let i = 0; i < languages.length; i++) if (lang == languages[i]) usedLang = lang; // Set usedLang to one of our languages, else to "en".
