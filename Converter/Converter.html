@@ -31,6 +31,8 @@ Versions
 	M2020-04-16
 		Normalize head section
 		Link to a HD version of the Milesian clock dial
+	M2020-10-01
+		Put explicit code point of Crescent Moon character for compatibility with certain CMS
 -->
 <!--
 Calendar converter page, by Louis A. de FOUQUIERES
@@ -63,16 +65,17 @@ jour julien, et restitution selon les calendriers traités par Unicode">
 	<meta name="keywords" content="Convertisseur de date, conversion de calendrier, calendrier milésien">
 	<meta name="viewport" content="width=device-width">
 
-<!-- General packages -->
+<!-- General packages. Next two are UTF-8 sensitive, sometimes need to be copied into a HTML page. -->
+	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
+
 	<link href="milesian.css" rel="stylesheet"/>
 	<script type="text/javascript" src="CBCCE.js"></script>
-	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
 	<script type="text/javascript" src="MilesianDateProperties.js"></script>
 	<script type="text/javascript" src="RealTZmsOffset.js"></script>
 	<script type="text/javascript" src="JulianDateProperties.js"></script>
 	<script type="text/javascript" src="MilesianClockOperations.js"></script>
 
-	<script type="text/javascript" src="milesianMonthNamesString.js"></script>
 	<script type="text/javascript" src="UnicodeBasic.js"></script>
 	<script type="text/javascript" src="UnicodeMilesianFormat.js"></script>
 	<script type="text/javascript" src="UnicodeJulianFormat.js"></script>
@@ -85,8 +88,6 @@ jour julien, et restitution selon les calendriers traités par Unicode">
 	<script type="text/javascript" src="Seasons.js"></script>
 	<script type="text/javascript" src="SeasonOnClock.js"></script>
 	<script type="text/javascript" src="Converter.js"></script>
-
-	<!-- <script type="text/javascript" src="unicodeChar.js"></script> Specific for IPAOO: Unicode Moon character -->
 
 </head>
 
@@ -124,7 +125,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 	<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-288 6,-288 6,-270 0,-265 -6,-270 -6,-288" /></g>
 <!-- moon age -->
 <text class="centered yeardisplay" x="-40" y="-80">
-🌙<!-- <script type="text/Javascript">	document.write (unicodeChar ('Crescent Moon')) </script> -->
+<script type="text/Javascript">	document.write (String.fromCodePoint(0x1F319)) </script> <!-- 🌙 -->
 </text>
 <text class="centered yeardisplay moonage" x="20" y="-80">0</text>
 <!-- main dial: month, day; the rect enables to fetch the center of the dial -->
