@@ -25,6 +25,8 @@ Versions
 	M2020-04-16
 		Normalize head section
 	M2020-06-03 "min" instead of "mn"
+	M2020-10-06
+		Date input in ISO 8601 or Milesian, reorganise display
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
 	<meta name="description" content="Test interactif de présentation de date avec les outils Unicode">
@@ -54,7 +56,7 @@ Versions
 <p class="milesianhead">Démonstration et test des formats d'affichage de date et d'heure
 selon Unicode&nbsp;:
 	<br>application stricte au calendrier Unicode sélectionné,
-	<br>option d'effacement de l'ère si c'est l'ère actuelle,
+	<br>option d'affichage de l'ère si différente de l'actuelle,
 	<br>calendriers non Unicode: julien et milésien.
 </p>
 <p class="milesianhead">(!) signale une erreur manifeste de représentation.</p>
@@ -63,16 +65,39 @@ selon Unicode&nbsp;:
 <section class="panel"><h2 class="milesianhead">Date, heure, fuseau, navigation</h2>
 <section class="centered"><!-- setting date -->
 <script type="text/javascript">
+function calcGregorian() {
+	var 
+	 day =  Math.round (document.gregorian.day.value),
+	 month = document.gregorian.monthname.value-1,
+	 year =  Math.round (document.gregorian.year.value);
+	 // HTML controls tha day, month and year are numbers
+	let testDate = new Date (targetDate.valueOf());
+	switch (TZSettings.mode) {
+		case "TZ": 
+			testDate.setFullYear(year, month, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
+			break;
+		case "UTC" : testDate.setUTCFullYear(year, month, day);
+			break;
+		case "Fixed" : 	
+			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
+			shiftDate.setUTCFullYear (year, month, day); 
+			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
+	} 
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
+	}
+}
 function calcMilesian() {
 	var 
 	 day =  Math.round (document.milesian.day.value),
-	 month = document.milesian.monthname.value,
+	 month = document.milesian.monthname.value-1,
 	 year =  Math.round (document.milesian.year.value);
-	if	( isNaN(day)  || isNaN (year ))
-		alert (milesianAlertMsg("invalidDate") + '"' + document.milesian.day.value + '" "' + document.milesian.year.value + '"')
-	else {
-	  let testDate = new Date (targetDate.valueOf());
-	  switch (TZSettings.mode) {
+	 // HTML controls tha day, month and year are numbers
+	let testDate = new Date (targetDate.valueOf());
+	switch (TZSettings.mode) {
 		case "TZ": testDate.setTimeFromMilesian (year, month, day); // Set date object from milesian date indication, without changing time-in-the-day.
 			break;
 		case "UTC" : testDate.setUTCTimeFromMilesian (year, month, day);
@@ -81,47 +106,46 @@ function calcMilesian() {
 			let shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The shifted date, to be changed.
 			shiftDate.setUTCTimeFromMilesian (year, month, day); 
 			testDate.setTime(shiftDate.getTime() + TZSettings.msoffset);
-		}
-		if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
-		else 
-			// Here, no control of date validity, leave JS recompute the date if day is out of bounds
-			targetDate = new Date (testDate.valueOf());
-			setDisplay();
+	}
+	if (isNaN(testDate.valueOf())) alert (milesianAlertMsg("outOfRange"))
+	else {
+		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
+		targetDate = new Date (testDate.valueOf());
+		setDisplay();
 		}
 }
 </script>
-	<form name="milesian" method="post" action="javascript:calcMilesian()">
 	<table class="centered">
-       <tr>
-        <th>Jour</th>
-        <th>Quant.</th>
-        <th>Mois</th>
-        <th>Année</th>
-        <th> </th>
+	  <tr>
+		<th>Calendrier</th>
+		<th>Année</th>
+		<th>Mois</th>
+		<th>Quant.</th>
+		<th> </th>
+	  </tr>
+	  <tr>
+		<form name="gregorian" method="post" action="javascript:calcGregorian()">
+		<td>ISO 8601</td>
+		<td><input name="year" type="number" class="centered yearnum"> </td>
+		<td><input name="monthname" type="number" min="1" max="12" class="centered daynum"></td>
+		<td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
+		<td><button class="textline">Ok</button></td>
+		</form>
+	  </tr>
+	  <form name="milesian" method="post" action="javascript:calcMilesian()">
+	  <tr>
+		<td>Milésien</td>
+		<td><input name="year" type="number" class="centered yearnum"> </td>
+		<td><input name="monthname" type="number" min="1" max="12" class="centered daynum"></td>
+		<td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
+		<td><button class="textline">Ok</button></td>
       </tr>
-      <tr>
-        <td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /> </td>
-        <td><input name="day" type="number" min="1" max="31" class="centered daynum"> </td>
-        <td>
-        <select name="monthname" size="1" class="centered">
-		<option value="0">1m</option>
-        <option value="1">2m</option>
-        <option value="2">3m</option>
-        <option value="3">4m</option>
-        <option value="4">5m</option>
-        <option value="5">6m</option>
-        <option value="6">7m</option>
-        <option value="7">8m</option>
-        <option value="8">9m</option>
-        <option value="9">10m</option>
-        <option value="10">11m</option>
-        <option value="11">12m</option>
-		</select> </td>
-        <td><input name="year" type="number" class="centered yearnum"> </td>
-        <td><button class="textline">Ok</button></td>
-      </tr>
-	</table>
+	  <tr>
+		<td colspan="2">Jour de semaine</td>
+		<td colspan="2"><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /></td>
+	  </tr>
 	</form>
+	</table>
 </section>
 <section class="centered"><!-- date navigation -->
 <script type="text/javascript">
@@ -295,33 +319,28 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	}
 }
 </script>
-	<table class="centered"> <tr>
-		<th>UTC&nbsp;:</th>
-		 <td id="UTCdate"></td>
-		 <td id="UTCtime"></td>
-	  </tr> 
-	  <tr>
-		<th>ISO&nbsp;:</th>
-			<td colspan="2" id="ISOdatetime"></td>
-	  </tr>
-	</table>
-
 	  <table class="centered">
 	  <tr>
-		<td><button class="textline" type="button" name="Now" onclick="javascript:setDateToNow()">Maintenant</button></td>
-		<th> - Même date à</th>
+		<th>Même date à</th>
 		<td><button class="textline" type="button" name="0h" onclick="javascript:setUTCHoursFixed(0)">0 h</button></td>
 		<td><button class="textline" type="button" name="12h" onclick="javascript:setUTCHoursFixed(12)">12 h</button></td>
 		<th>UTC</th>
 	  </tr>
 	 </table>
 </section>
-
-<section class="centered"><h3 class="milesianhead">Liens utiles</h3>
-  <table class="centered">
-	<tr><td><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a></td></tr>
-	<tr><td><a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a></td></tr>
-  </table>
+<section class="centered"><!-- display normalised strings  -->
+	<table class="centered">
+		<tr><th colspan="5">Date complète UTC</th></tr>
+		<tr>
+			<th>ISO 8601&nbsp;:</th>
+			<td colspan="2" id="ISOdatetime"></td>
+		</tr>
+		<tr>
+			<th>Milésien&nbsp;:</th>
+			<td id="UTCdate"></td>
+			<td id="UTCtime"></td>
+		</tr> 
+	</table>
 </section>
 </section>
 
@@ -515,8 +534,13 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	<h3 class="milesianhead">Option expérimentale</h3>
 	<table class="centered">
 		<tr>
-			<th>Effacement de l'ère actuelle</th>
-			<td><input type="checkbox" name="MaskPresentEra" class="centered" checked></td>
+			<th>Affichage de l'ère</th>
+			<td><select name="eraDisplay" class="centered" size="1">
+				<option value="" selected>défaut</option>
+				<option value="never">jamais</option>
+				<option value="always">toujours</option>
+				<option value="past">antérieure</option>
+			</select></td>
 		</tr>
 	</table>
 	<table class="centered"> 
@@ -533,7 +557,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	<table class="centered">
 		<tr><td id="Ustring"></td></tr>
 	</table>
-<h3 class="milesianhead">Effacement de l'ère actuelle</h3>
+<h3 class="milesianhead">Contrôle affichage de l'ère</h3>
 	<table class="centered">
 		<tr><td id="ExtUstring"></td></tr>
 	</table>
@@ -545,7 +569,10 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 </section>
 
 <footer class="centered">
- <p>© 2017-2020 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+ <p>Références&nbsp;: 
+	<a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a>, 
+	<a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a>
+ <br>© 2017-2020 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
 </footer>
 </body>
 </html>

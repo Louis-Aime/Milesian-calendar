@@ -20,6 +20,7 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 		Test all formatting options
 		Separate experimental era control format option
 	M2020-06-03 "min" instead of "mn"
+	M2020-10-06 date input also 8601
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -72,7 +73,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	let Calendar = document.LocaleOptions.Calendar.value;
 	let unicodeAskedExtension = document.LocaleOptions.UnicodeExt.value;
 	let timeZone = document.LocaleOptions.TimeZone.value;
-	var askedOptions, usedOptions; 
+	var askedOptions, usedOptions, eraDisplay; 
 
 	// Test specified Locale
 	try {
@@ -96,7 +97,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if (unicodeExtension !== "-u") extendedLocale += unicodeExtension; 
 	
 	// Add presentation options
-	let Options = {};
+	let Options = {}; 
 	if	(document.LocaleOptions.LocaleMatcher.value != "")	Options.localeMatcher = document.LocaleOptions.LocaleMatcher.value;
 	if	(document.LocaleOptions.FormatMatcher.value != "")	Options.formatMatcher = document.LocaleOptions.FormatMatcher.value;
 	if	(document.LocaleOptions.Weekday.value != "")	Options.weekday = document.LocaleOptions.Weekday.value;
@@ -110,6 +111,9 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if	(document.LocaleOptions.Hour12.value != "")	Options.hour12	= (document.LocaleOptions.Hour12.value == "true");
 	if	(document.LocaleOptions.HourCycle.value != "")	Options.hourCycle	= document.LocaleOptions.HourCycle.value;
 	if	(document.LocaleOptions.TimeZoneName.value != "")	Options.timeZoneName	= document.LocaleOptions.TimeZoneName.value;
+	
+	eraDisplay = undefined;
+	if	(document.LocaleOptions.eraDisplay.value != "")	eraDisplay	= document.LocaleOptions.eraDisplay.value;
 	
 	if (timeZone !== "") 
 		Options.timeZone = timeZone ; // Object.defineProperty(Options, "timeZone", {enumerable : true, writable : true, value : timeZone});
@@ -150,7 +154,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 //	document.getElementById("Gstring").innerHTML = referenceFormat.format(targetDate);
 
 	// Display Julian string - with the experimental option
-	document.getElementById("Jstring").innerHTML = referenceFormat.julianFormat(targetDate, document.LocaleOptions.MaskPresentEra.checked);
+	document.getElementById("Jstring").innerHTML = referenceFormat.julianFormat(targetDate, eraDisplay);
 
 	//Display Milesian string - with no era.
 	document.getElementById("Mstring").innerHTML = referenceFormat.milesianFormat(targetDate);
@@ -161,7 +165,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 		myEraControlElement = document.getElementById("ExtUstring");
 	try { 
 		myUnicodeElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.format(targetDate); 
-		myEraControlElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.conditionalEraFormat(targetDate, document.LocaleOptions.MaskPresentEra.checked);
+		myEraControlElement.innerHTML = (valid ? "" : "(!) ") + askedOptions.conditionalEraFormat(targetDate, eraDisplay);
 		}
 	catch (e) { 
 		myUnicodeElement.innerHTML = milesianAlertMsg("browserError"); 
@@ -200,10 +204,15 @@ function setDisplay () { // Considering that targetDate time has been set to the
 
 	shiftDate = new Date (targetDate.getTime() - TZSettings.msoffset);	// The UTC representation of targetDate date is the local date of TZ
 	
-	// Initiate milesian string with present time and date
+	// Initiate Gregorian form with present local date
     document.milesian.year.value = shiftDate.getUTCMilesianDate().year; // uses the local variable - not UTC
-    document.milesian.monthname.value = shiftDate.getUTCMilesianDate().month ; // Month value following JS habits: 0 to 11.
+    document.milesian.monthname.value = shiftDate.getUTCMilesianDate().month + 1 ; // Display month value in 1..12 range.
     document.milesian.day.value = shiftDate.getUTCMilesianDate().date;
+
+	// Initiate Milesian form with present local date
+    document.gregorian.year.value = shiftDate.getUTCFullYear(); // uses the local variable - not UTC
+    document.gregorian.monthname.value = shiftDate.getUTCMonth() + 1 ; // Display month value in 1..12 range.
+    document.gregorian.day.value = shiftDate.getUTCDate();
 	try {
 		document.milesian.dayofweek.value = (new Intl.DateTimeFormat("fr-FR", {weekday : "long", timeZone : "UTC"})).format(shiftDate);
 		}
