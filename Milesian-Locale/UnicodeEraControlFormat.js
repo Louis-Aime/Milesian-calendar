@@ -7,6 +7,8 @@ That is, if date is in same era as today, the era part is not displayed.
 Versions
 	M2020-03-12 Initial version
 		Version note: at this time, for most calendar era is displayed even if .era is not set.
+	M2020-10-06
+		In this version, we delete the era part, since deleting the era option is not sufficient
 Contents
 	Intl.DateTimeFormat.prototype.conditionalEraFormat : : return a string with date and time, according to DateTimeFormat, but hidding era if necessary.
 Required:
@@ -34,21 +36,36 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-/** @description a .format method that issues a string representing a Japanese calendar date.
+/** @description a .format method with an experimental eraDisplay option 
  * @param {Date object} myDate - the date to display, like for standard Intl.DateTimeFormat.format method.
- * @param (Boolean) exceptCurrentEra - if set, then era shall not be displayed if it is the same as today's date.
+ * @param (string) eraDisplay - "never": era not displayed; "always": era displayed (short by default), "past": era displayed only if different from today's date.
  * @returns {string} the date following the Unicode options, except for the display of era.
 */
-Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, exceptCurrentEra = true) { 
+Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDisplay = "past") { 
 	var
 		myOptions = this.resolvedOptions();
-	if (exceptCurrentEra && myOptions.era != null) {
-		let 
-			myComponents = this.formatToParts(myDate),
-			todaysComponents = this.formatToParts(new Date());
+	if (eraDisplay == "past") {
+		let testingOptions = Object.create(myOptions);
+		testingOptions.era = "short"; // force era option
+		let eraFormat = new Intl.DateTimeFormat( testingOptions.locale, testingOptions),
+			myComponents = eraFormat.formatToParts (myDate), 
+			todaysComponents = eraFormat.formatToParts (new Date());
 		for (let i = 0; i <  myComponents.length; i++) {
-			if (myComponents[i].type == "era" && myComponents[i].value == todaysComponents[i].value) delete myOptions.era;
+			if (myComponents[i].type == "era") eraDisplay = (myComponents[i].value == todaysComponents[i].value ? "never" : "always");
 		}
-		return new Intl.DateTimeFormat(myOptions.locale, myOptions).format(myDate)
-	} else return this.format(myDate);
-}	
+	}
+	switch (eraDisplay) {
+		case "never" : delete myOptions.era ; break;
+		case "always" : if (myOptions.era == undefined) myOptions.era = "short"; break;
+	} // nothing done if other value
+
+	// return new Intl.DateTimeFormat(myOptions.locale, myOptions).format(myDate) // this would works if undefined 'era' would protect from displaying era
+	let myDateParts = new Intl.DateTimeFormat(myOptions.locale, myOptions).formatToParts(myDate).map ( ({type, value}) => {
+		switch (type) {
+			case "era" : return (eraDisplay == "always" ? {type:type, value: value} : {type:type, value: ""}); // we have to insist...
+			default : return {type: type, value: value};
+		}
+	}) // end of mapping function
+	return myDateParts.map(({type, value}) => {return value;}).reduce((buf, part)=> buf + part, "");
+	// End of section replacing return new Intl.DateTimeFormat(myOptions.locale, myOptions).format(myDate)
+} 
