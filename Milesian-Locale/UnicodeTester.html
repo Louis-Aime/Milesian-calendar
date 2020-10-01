@@ -27,6 +27,8 @@ Versions
 	M2020-06-03 "min" instead of "mn"
 	M2020-10-07
 		Date input in ISO 8601 or Milesian, use new options of Unicode, reorganise display
+	M2020-10-11 
+		handleseparately "calendar" option from "u-ca" part of Locale
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
 	<meta name="description" content="Test interactif de présentation de date avec les outils Unicode">
@@ -375,6 +377,17 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		<td><input name="Locale" autocomplete="language" type="text" class="centered" size="30"> </td>
 	   </tr>
 	   <tr>
+		<th>Extension Unicode&nbsp;: </th>
+		<td><input name="UnicodeExt" type="text" class="centered" size="30"></td>
+	   </tr>
+	   <tr>
+		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
+	   </tr>
+	   <tr>
+	   <tr>
+	    <td>Système de numération&nbsp;: </td>
+	    <td><input name="Enum" type="text" disabled="disabled" class="centered"></td>
+	   </tr>
 		<th>Calendrier&nbsp;: </th>
 		<td>
 			<select name="Calendar" size="1" class="centered">
@@ -401,19 +414,8 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		</td>
 	   </tr>
 	   <tr>
-		<th>Extension Unicode&nbsp;: </th>
-		<td><input name="UnicodeExt" type="text" class="centered" size="30"></td>
-	   </tr>
-	   <tr>
-		<td>Locale effective&nbsp;: </td><td colspan="3"><input name="Elocale" type="text" disabled="disabled" class="centered" size="30"></td>
-	   </tr>
-	   <tr>
 	    <td>Calendrier effectif&nbsp;: </td>
 	    <td><input name="Ecalend" type="text" disabled="disabled" class="centered"></td>
-	   </tr>
-	   <tr>
-	    <td>Système de numération&nbsp;: </td>
-	    <td><input name="Enum" type="text" disabled="disabled" class="centered"></td>
 	   </tr>
 		<tr><th>Fuseau horaire&nbsp;: </th>
 		<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
@@ -558,7 +560,7 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	</table>
 	<table class="centered">
 	  <tr> 
-		<th></th><th colspan="2">12 h</th><th>Cycle horaire</th>
+		<th></th><th colspan="2">12 h</th><th>Cycle horaire</th><th>am/pm</th>
 	  </tr> 
 	  <tr>
 		<th>Demandé</th>
@@ -574,12 +576,19 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 			<option value="h23">h23</option>
 			<option value="h24">h24</option>
 			</select></td>
+		<td><select name="AmPm" size="1" class="centered">
+			<option value="" selected>absent</option>
+			<option value="narrow">étroit</option>
+				<option value="short">court</option>
+				<option value="long">long</option>
+			</select></td>
 	  </tr>
 	  <tr>
 		<th>Effectif</th>
 		<td>12 h</td>
 		<td><input class="centered" name="Ehour12" type="checkbox" disabled="disabled"></td>
 		<td><input class="centered juliandaynum" name="EhourCycle" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="EAmPm" type="text" disabled="disabled"></td>
 	  </tr>
 	</table>
 </section>

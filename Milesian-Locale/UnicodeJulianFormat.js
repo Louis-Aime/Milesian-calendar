@@ -50,14 +50,16 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraDisplay
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
 	// eraDisplay is recomputed following other display options: even if era to be displayed, display only for terminated eras.
+
+	// Build a DateTimeFormat object with iso8601 calendar
 	var	
 		myOptions = this.resolvedOptions();
-		delete myOptions.calendar; // the calendar option supersedes the locale
+		myOptions.calendar = "iso8601"; // the calendar option supersedes the locale
 	var	langCountry = myOptions.locale.includes("-u-") ? myOptions.locale.substring (0,myOptions.locale.indexOf("-u-")) : myOptions.locale,
 		// lang = langCountry.includes("-") ? langCountry.substring (0,langCountry.indexOf("-")) : langCountry,	// not used
 		// Set a locale with the "iso8601" calendar
-		locale = langCountry + "-u-ca-iso8601-nu-" + myOptions.numberingSystem, 
-		constructOptions = new Intl.DateTimeFormat(locale,myOptions),
+		// locale = langCountry + "-u-nu-" + myOptions.numberingSystem, not useful
+		constructOptions = new Intl.DateTimeFormat(langCountry,myOptions),
 		referenceOptions = constructOptions.resolvedOptions(),
 		referenceComponents = constructOptions.formatToParts (myDate), // Implementations which do not accept this function will throw an error
 		TZ = referenceOptions.timeZone,	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
@@ -67,7 +69,7 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraDisplay
 		// Here julianComponents holds the local Julian date figures, we replace the Gregorian date, month, year and era components with those.
 		// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
 		// then we insert the right year and era, computed separately.
-		gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date));
+		gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date)); // leap year, so that 29 Feb. is possible.
 
 	// Establish effective eraDisplay
 	if (myOptions.year == undefined && myOptions.dateStyle == undefined) eraDisplay = "never"; // no attempt to display era if no option requires it
@@ -79,7 +81,7 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraDisplay
 
 	// Build display string
 
-	constructOptions = new Intl.DateTimeFormat(locale,referenceOptions); // Re-construct formatting object
+	constructOptions = new Intl.DateTimeFormat(langCountry,referenceOptions); // Re-construct formatting object
 	referenceComponents = constructOptions.formatToParts (myDate);		// and re-construct array of parts
 
 	var eraDate = new Date (0); eraDate.setUTCFullYear(julianComponents.year); // Hold the "era" part

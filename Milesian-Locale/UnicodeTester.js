@@ -21,6 +21,8 @@ Versions: preceding versions were a personal makeup page, under the name writeMi
 		Separate experimental era control format option
 	M2020-06-03 "min" instead of "mn"
 	M2020-10-07 date input also 8601; use new options of Unicode
+	M2020-10-11 handleseparately "calendar" option from "u-ca" part of Locale
+	M2020-10-11 handleseparately "calendar" option from "u-ca" part of Locale, handle "am/pm"
 Contents: general structure is as MilesianClock.
 	setDisplay: modify displayed page after a change
 	putStringOnOptions : specifically modify date strings. Called by setDisplay.
@@ -70,7 +72,7 @@ var
 
 function putStringOnOptions() { // get Locale, calendar indication and Options given on page, print String; No control. Called by setDisplay
 	let Locale = document.LocaleOptions.Locale.value;
-	let Calendar = document.LocaleOptions.Calendar.value;
+//	let Calendar = document.LocaleOptions.Calendar.value;
 	let unicodeAskedExtension = document.LocaleOptions.UnicodeExt.value;
 	var askedOptions, usedOptions, eraDisplay; 
 
@@ -88,18 +90,19 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	Locale = askedOptions.resolvedOptions().locale;	// Locale is no longer empty
 	Locale = Locale.includes("-u-") ?  Locale.substring (0,Locale.indexOf("-u-")) : Locale; // Remove Unicode extension
 	
-	// Add extension and calendar
+	// Add extension
 	let unicodeExtension = "-u";
 	let extendedLocale = Locale;
-	if (Calendar !== "") unicodeExtension += "-ca-" + Calendar;
+//	if (Calendar !== "") unicodeExtension += "-ca-" + Calendar;
 	if (unicodeAskedExtension !== "") unicodeExtension += "-" + unicodeAskedExtension;
 	if (unicodeExtension !== "-u") extendedLocale += unicodeExtension; 
 	
 	// Add presentation options
 	let Options = {}; 
 	if	(document.LocaleOptions.LocaleMatcher.value != "")	Options.localeMatcher = document.LocaleOptions.LocaleMatcher.value;
-	if	(document.LocaleOptions.TimeZone.value != "")	Options.timeZone = document.LocaleOptions.TimeZone.value;
 	if	(document.LocaleOptions.FormatMatcher.value != "")	Options.formatMatcher = document.LocaleOptions.FormatMatcher.value;
+	if	(document.LocaleOptions.TimeZone.value != "")	Options.timeZone = document.LocaleOptions.TimeZone.value;
+	if	(document.LocaleOptions.Calendar.value != "")	Options.calendar = document.LocaleOptions.Calendar.value;
 	if	(document.LocaleOptions.DateStyle.value != "") 	Options.dateStyle = document.LocaleOptions.DateStyle.value;
 	if	(document.LocaleOptions.TimeStyle.value != "") 	Options.timeStyle = document.LocaleOptions.TimeStyle.value;
 	if	(document.LocaleOptions.Weekday.value != "")	Options.weekday = document.LocaleOptions.Weekday.value;
@@ -114,6 +117,7 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	if	(document.LocaleOptions.TimeZoneName.value != "")	Options.timeZoneName	= document.LocaleOptions.TimeZoneName.value;
 	if	(document.LocaleOptions.Hour12.value != "")	Options.hour12	= (document.LocaleOptions.Hour12.value == "true");
 	if	(document.LocaleOptions.HourCycle.value != "")	Options.hourCycle	= document.LocaleOptions.HourCycle.value;
+	if	(document.LocaleOptions.AmPm.value != "")	Options.dayPeriod	= document.LocaleOptions.AmPm.value;
 	
 	eraDisplay = undefined;
 	if	(document.LocaleOptions.eraDisplay.value != "")	eraDisplay	= document.LocaleOptions.eraDisplay.value;
@@ -133,11 +137,10 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	document.LocaleOptions.Elocale.value = usedOptions.locale;
 	document.LocaleOptions.Ecalend.value = usedOptions.calendar;
 	document.LocaleOptions.Enum.value = usedOptions.numberingSystem;
+	document.LocaleOptions.EtimeZoneName.value = usedOptions.timeZoneName;
 	document.LocaleOptions.EdateStyle.value = usedOptions.dateStyle;
 	document.LocaleOptions.EtimeStyle.value = usedOptions.timeStyle ;
 	document.LocaleOptions.ETimeZone.value = usedOptions.timeZone;
-	document.LocaleOptions.Ehour12.checked = usedOptions.hour12;
-	document.LocaleOptions.EhourCycle.value = usedOptions.hourCycle;
 	document.LocaleOptions.Eweekday.value = usedOptions.weekday;
 	document.LocaleOptions.Eera.value = usedOptions.era;
 	document.LocaleOptions.Eyear.value = usedOptions.year;
@@ -147,7 +150,9 @@ function putStringOnOptions() { // get Locale, calendar indication and Options g
 	document.LocaleOptions.Eminute.value = usedOptions.minute;
 	document.LocaleOptions.Esecond.value = usedOptions.second;
 	document.LocaleOptions.Emsdigits.value = usedOptions.fractionalSecondDigits;
-	document.LocaleOptions.EtimeZoneName.value = usedOptions.timeZoneName;
+	document.LocaleOptions.Ehour12.checked = usedOptions.hour12;
+	document.LocaleOptions.EhourCycle.value = usedOptions.hourCycle;
+	document.LocaleOptions.EAmPm.value = usedOptions.dayPeriod;
 	
 	// Build "reference" format object with asked options and ISO8601 calendar, and display non-Unicode calendar string
 	extendedLocale = Locale + "-u-ca-iso8601" + (unicodeAskedExtension == "" ? "" : "-" + unicodeAskedExtension); // Build Locale with ISO8601 calendar
