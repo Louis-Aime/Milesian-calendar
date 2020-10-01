@@ -7,8 +7,9 @@ That is, if date is in same era as today, the era part is not displayed.
 Versions
 	M2020-03-12 Initial version
 		Version note: at this time, for most calendar era is displayed even if .era is not set.
-	M2020-10-06
-		In this version, we delete the era part, since deleting the era option is not sufficient
+	M2020-10-07
+		Delete the era field rather than  deleting the era option because ICU creates a default era option.
+		If effective year is not to be displayed, eraDisplay option is set to "never"
 Contents
 	Intl.DateTimeFormat.prototype.conditionalEraFormat : : return a string with date and time, according to DateTimeFormat, but hidding era if necessary.
 Required:
@@ -44,10 +45,13 @@ Inquiries: www.calendriermilesien.org
 Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDisplay = "past") { 
 	var
 		myOptions = this.resolvedOptions();
+	if (myOptions.year == undefined) eraDisplay = "never"; // if for any reason year is not displayed, era won't either - we do not handle dateStyle values
 	if (eraDisplay == "past") {
-		let testingOptions = Object.create(myOptions);
-		testingOptions.era = "short"; // force era option
-		let eraFormat = new Intl.DateTimeFormat( testingOptions.locale, testingOptions),
+		// let testingLocale = myOptions.locale; // testingOptions = Object.create(myOptions);
+		// delete testingOptions.dateStyle; // remove dateStyle if this was set
+		// testingOptions.year = "numeric"; // put a complete version of year
+		// testingOptions.era = "short"; // force era option
+		var eraFormat = new Intl.DateTimeFormat(myOptions.locale, { year : "numeric", era : "short" } ),
 			myComponents = eraFormat.formatToParts (myDate), 
 			todaysComponents = eraFormat.formatToParts (new Date());
 		for (let i = 0; i <  myComponents.length; i++) {
@@ -56,7 +60,7 @@ Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDispla
 	}
 	switch (eraDisplay) {
 		case "never" : delete myOptions.era ; break;
-		case "always" : if (myOptions.era == undefined) myOptions.era = "short"; break;
+		case "always" : if (myOptions.year !== undefined && myOptions.era == undefined) myOptions.era = "short"; break;
 	} // nothing done if other value
 
 	// return new Intl.DateTimeFormat(myOptions.locale, myOptions).format(myDate) // this would works if undefined 'era' would protect from displaying era

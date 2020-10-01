@@ -7,10 +7,10 @@ Versions
 	M2018-11-11 Initiate from UnicodeMilesianFormat, separate and comment
 	M2018-11-14 instead of alerting, return an error message as result if FormatToParts not implemented
 	M2018-11-24 use toResolvedLocalDate in place of toLocalDate
-	M2019-11-18 make same changes as in UnicodeJulianFormat: add a thisOptions variable, and suppress useless error catching.
+	M2019-11-18 make same changes as in UnicodeJulianFormat: add a thisOptions variable (now myOptions), and suppress useless error catching.
 	M2020-01-12 use options specified in Locale, use strict mode.
 	M2020-03-12 Optional parameter of julianFormat is boolean
-	M2020-10-06 eraDisplay option instead of exceptCurrentEra
+	M2020-10-07 eraDisplay option instead of exceptCurrentEra, adapt to new dateStyle option
 Contents
 	Intl.DateTimeFormat.prototype.julianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.julianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -49,31 +49,39 @@ Inquiries: www.calendriermilesien.org
 Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraDisplay = "past") { // Give formatted elements of a Julian calendar date.
 	// This function works only if .formatToParts is provided, else an error is thrown.
 	// .formatToParts helps it to have the same order and separator as with a Gregorian date expression.
-	// maskPresentEra: even if era to be displayed, display only for terminated eras.
+	// eraDisplay is recomputed following other display options: even if era to be displayed, display only for terminated eras.
 	var	
-		thisOptions = this.resolvedOptions(), // This statement aims at controlling whether .resolvedOptions yields suitable values in all cases.
-		langCountry = thisOptions.locale.includes("-u-") ? thisOptions.locale.substring (0,thisOptions.locale.indexOf("-u-")) : thisOptions.locale,
+		myOptions = this.resolvedOptions();
+		delete myOptions.calendar; // the calendar option supersedes the locale
+	var	langCountry = myOptions.locale.includes("-u-") ? myOptions.locale.substring (0,myOptions.locale.indexOf("-u-")) : myOptions.locale,
 		// lang = langCountry.includes("-") ? langCountry.substring (0,langCountry.indexOf("-")) : langCountry,	// not used
 		// Set a locale with the "iso8601" calendar
-		locale = langCountry + "-u-ca-iso8601-nu-" + thisOptions.numberingSystem, 
-		constructOptions = new Intl.DateTimeFormat(locale,this.resolvedOptions()),
+		locale = langCountry + "-u-ca-iso8601-nu-" + myOptions.numberingSystem, 
+		constructOptions = new Intl.DateTimeFormat(locale,myOptions),
 		referenceOptions = constructOptions.resolvedOptions(),
 		referenceComponents = constructOptions.formatToParts (myDate), // Implementations which do not accept this function will throw an error
 		TZ = referenceOptions.timeZone,	// Used time zone. In some cases, "undefined" is given, meaning system time zone.
 		julianComponents = (TZ == undefined
 			? myDate.getJulianDate()	// system local date, expressed in Julian
-			: julianComponents = toResolvedLocalDate(myDate, TZ).getUTCJulianDate() ), // TZ local date.
+			: toResolvedLocalDate(myDate, TZ).getUTCJulianDate() ), // TZ local date.
 		// Here julianComponents holds the local Julian date figures, we replace the Gregorian date, month, year and era components with those.
 		// The trick is this: we construct the date and month with the Gregorian date that uses the Julian figures,
 		// then we insert the right year and era, computed separately.
 		gregDate = new Date (Date.UTC(2000, julianComponents.month, julianComponents.date));
+
+	// Establish effective eraDisplay
+	if (myOptions.year == undefined && myOptions.dateStyle == undefined) eraDisplay = "never"; // no attempt to display era if no option requires it
 	if (eraDisplay == "past") eraDisplay = ( julianComponents.year > 0 ? "never" : "always" );
 	switch (eraDisplay) {
-		case "always" : if (referenceOptions.era == undefined) referenceOptions.era = "short"; break;
-		case "never" : referenceOptions.era = undefined; break;
-	}
+		case "never" : delete referenceOptions.era ; break;
+		case "always" : if (referenceOptions.year !== undefined && referenceOptions.era == undefined) referenceOptions.era = "short"; break;
+	} // nothing done if other value
+
+	// Build display string
+
 	constructOptions = new Intl.DateTimeFormat(locale,referenceOptions); // Re-construct formatting object
 	referenceComponents = constructOptions.formatToParts (myDate);		// and re-construct array of parts
+
 	var eraDate = new Date (0); eraDate.setUTCFullYear(julianComponents.year); // Hold the "era" part
 	return referenceComponents.map ( ({type, value}) => {
 		switch (type) {
@@ -98,6 +106,7 @@ Intl.DateTimeFormat.prototype.julianFormat = function (myDate, eraDisplay = "pas
 		}
 	// julianFormatToParts does not work, return error code
 	catch (e) { 
-		return (milesianAlertMsg ('browserError')+": "+e.name)
+		alert (e.message + "\n" + e.fileName + " line " + e.lineNumber);
+		return (milesianAlertMsg ('browserError'))
 	}
 }
