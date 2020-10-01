@@ -74,6 +74,8 @@ Version M2020-04-03
 	Do not make a special case with calendar ethioaa
 Version M2020-04-22
 	Do not use unicodeCalendarHandled() anymore
+Version M2020-10-11
+	Use conditionalEraFormat function
 */
 /* Copyright Miletus 2017-2020 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -230,6 +232,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		askedOptions = new Intl.DateTimeFormat();
 		} 
 	let userOptions = askedOptions.resolvedOptions();
+	let eraDisplay = "past" ; // by default
 	Locale = userOptions.locale; 
 	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
 	Locale = Locale.substring (0,Locale.indexOf("-u-"));
@@ -241,6 +244,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	switch (document.LocaleOptions.Presentation.value) {
 		case "long" :
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
+			eraDisplay = "always";
 			break;
 		case "standard":
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", timeZone : "UTC"};
@@ -250,6 +254,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			break;
 		case "narrow":
 			userOptions = {weekday : "narrow", day : "numeric", month: "narrow", year : "2-digit", timeZone : "UTC"};
+			eraDisplay = "never";
 			break;	
 		case "numeric" : 
 			userOptions = {weekday : "short", day : "numeric", month: "numeric", year : "numeric", era : "short", timeZone : "UTC"}; 
@@ -276,8 +281,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		let valid = unicodeValidDateinCalendar(targetDate, "UTC", myElements[i].id);
 		// Write date string. Protect writing process against errors raised by browsers.
 		try {
+			Options.calendar = myElements[i].id; // assign suitable calendar
 			myElements[i].innerHTML = 
-			(valid ? new Intl.DateTimeFormat(Locale+"-u-ca-"+myElements[i].id, Options).format(targetDate)  //.toLocaleDateString(Locale+"-u-ca-"+myElements[i].id,Options)
+			(valid ? new Intl.DateTimeFormat(Locale, Options).conditionalEraFormat(targetDate, eraDisplay)  // .format with conditional Era display. 
 					: milesianAlertMsg("invalidDate"));
 			}
 		catch (e) {	// In case the browser raises an error
