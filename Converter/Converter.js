@@ -232,7 +232,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		askedOptions = new Intl.DateTimeFormat();
 		} 
 	let userOptions = askedOptions.resolvedOptions();
-	let eraDisplay = "past" ; // by default
 	Locale = userOptions.locale; 
 	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
 	Locale = Locale.substring (0,Locale.indexOf("-u-"));
@@ -243,8 +242,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	switch (document.LocaleOptions.Presentation.value) {
 		case "long" :
-			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", timeZone : "UTC"}; 
-			eraDisplay = "always";
+			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", eraDisplay : "always", timeZone : "UTC"}; 
 			break;
 		case "standard":
 			userOptions = {weekday : "long", day : "numeric", month: "long", year : "numeric", timeZone : "UTC"};
@@ -253,8 +251,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			userOptions = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short", timeZone : "UTC"};
 			break;
 		case "narrow":
-			userOptions = {weekday : "narrow", day : "numeric", month: "narrow", year : "2-digit", timeZone : "UTC"};
-			eraDisplay = "never";
+			userOptions = {weekday : "narrow", day : "numeric", month: "narrow", year : "2-digit", eraDisplay : "never", timeZone : "UTC"};
 			break;	
 		case "numeric" : 
 			userOptions = {weekday : "short", day : "numeric", month: "numeric", year : "numeric", era : "short", timeZone : "UTC"}; 
@@ -283,7 +280,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		try {
 			Options.calendar = myElements[i].id; // assign suitable calendar
 			myElements[i].innerHTML = 
-			(valid ? new Intl.DateTimeFormat(Locale, Options).conditionalEraFormat(targetDate, eraDisplay)  // .format with conditional Era display. 
+			(valid ? new Intl.DateTimeFormat(Locale, Options).conditionalEraFormat(targetDate, userOptions.eraDisplay)  // .format with conditional Era display. 
 					: milesianAlertMsg("invalidDate"));
 			}
 		catch (e) {	// In case the browser raises an error

@@ -109,12 +109,12 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	
 	// Set presentation options from one of the standard presentations listed.
 	switch (document.LocaleOptions.Presentation.value) {
-		case "long":
-			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long",
+		case "long": 
+			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long", eraDisplay : "always",
 					hour : "numeric", minute : "numeric", second : "numeric", timeZoneName : "long"};
 			break;
 		case "standard":
-			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric",
+			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", eraDisplay : "past",
 					hour : "numeric", minute : "numeric"};
 			break;
 		case "short":
@@ -122,7 +122,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 					hour : "numeric"};
 			break;
 		case "narrow":
-			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", 
+			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", era : "narrow", eraDisplay : "always",
 					hour : "2-digit", minute : "2-digit", second : "2-digit"};
 			break;	
 		case "numeric":
@@ -134,7 +134,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 					hour : "2-digit", minute : "2-digit"};
 			break;
 		case "year-2-digit":
-			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "2-digit", 
+			Options = {weekday : undefined, day : "2-digit", month : "2-digit", year : "2-digit", eraDisplay : "never",
 					hour : "2-digit"};
 		}
 	
@@ -321,7 +321,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let valid = unicodeValidDateinCalendar(targetDate, userOptions.timeZone, userOptions.calendar); // Filter bugged date expressions
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");
-	try { myElement.innerHTML = (valid ? askedOptions.format(targetDate) : milesianAlertMsg("invalidDate")); } // Plutôt que targetDate.toLocaleTimeString(Locale,Options)
+	try { myElement.innerHTML = (valid ? askedOptions.conditionalEraFormat(targetDate,Options.eraDisplay) : milesianAlertMsg("invalidDate")); }
 	catch (e) { myElement.innerHTML = milesianAlertMsg("invalidDate"); }
 
 	//	Milesian date string following options. Catch error if navigator fails, in this case write without time part.
