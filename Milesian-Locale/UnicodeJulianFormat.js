@@ -11,6 +11,7 @@ Versions
 	M2020-01-12 use options specified in Locale, use strict mode.
 	M2020-03-12 Optional parameter of julianFormat is boolean
 	M2020-10-07 eraDisplay option instead of exceptCurrentEra, adapt to new dateStyle option
+	M2020-10-11 simplify handling of calendar options
 Contents
 	Intl.DateTimeFormat.prototype.julianFormatToParts  : return elements of string with date and time, according to DateTimeFormat.
 	Intl.DateTimeFormat.prototype.julianFormat : : return a string with date and time, according to DateTimeFormat.
@@ -56,9 +57,6 @@ Intl.DateTimeFormat.prototype.julianFormatToParts = function (myDate, eraDisplay
 		myOptions = this.resolvedOptions();
 		myOptions.calendar = "iso8601"; // the calendar option supersedes the locale
 	var	langCountry = myOptions.locale.includes("-u-") ? myOptions.locale.substring (0,myOptions.locale.indexOf("-u-")) : myOptions.locale,
-		// lang = langCountry.includes("-") ? langCountry.substring (0,langCountry.indexOf("-")) : langCountry,	// not used
-		// Set a locale with the "iso8601" calendar
-		// locale = langCountry + "-u-nu-" + myOptions.numberingSystem, not useful
 		constructOptions = new Intl.DateTimeFormat(langCountry,myOptions),
 		referenceOptions = constructOptions.resolvedOptions(),
 		referenceComponents = constructOptions.formatToParts (myDate), // Implementations which do not accept this function will throw an error

@@ -48,18 +48,13 @@ Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDispla
 	var
 		myOptions = this.resolvedOptions();
 	if (myOptions.year == undefined) eraDisplay = "never"; // if for any reason year is not displayed, era won't either - we do not handle dateStyle values
-	if (eraDisplay == "past") {
-		// let testingLocale = myOptions.locale; // testingOptions = Object.create(myOptions);
-		// delete testingOptions.dateStyle; // remove dateStyle if this was set
-		// testingOptions.year = "numeric"; // put a complete version of year
-		// testingOptions.era = "short"; // force era option
+	if (eraDisplay == "past") { // decide if era shall be displayed
 		var eraFormat = new Intl.DateTimeFormat(myOptions.locale, { calendar : myOptions.calendar, year : "numeric", era : "short" } ),
 			myComponents = eraFormat.formatToParts (myDate), 
 			todaysComponents = eraFormat.formatToParts (new Date());
-		for (let i = 0; i <  myComponents.length; i++) {
+		for (let i = 0; i <  myComponents.length; i++) 
 			if (myComponents[i].type == "era") eraDisplay = (myComponents[i].value == todaysComponents[i].value ? "never" : "always");
 		}
-	}
 	switch (eraDisplay) {
 		case "never" : delete myOptions.era ; break;
 		case "always" : if (myOptions.year !== undefined && myOptions.era == undefined) myOptions.era = "short"; break;
