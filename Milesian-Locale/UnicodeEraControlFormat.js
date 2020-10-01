@@ -10,6 +10,8 @@ Versions
 	M2020-10-07
 		Delete the era field rather than  deleting the era option because ICU creates a default era option.
 		If effective year is not to be displayed, eraDisplay option is set to "never"
+	M2020-10-11
+		Bug: use the suitable calendar to compare eras.
 Contents
 	Intl.DateTimeFormat.prototype.conditionalEraFormat : : return a string with date and time, according to DateTimeFormat, but hidding era if necessary.
 Required:
@@ -51,7 +53,7 @@ Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDispla
 		// delete testingOptions.dateStyle; // remove dateStyle if this was set
 		// testingOptions.year = "numeric"; // put a complete version of year
 		// testingOptions.era = "short"; // force era option
-		var eraFormat = new Intl.DateTimeFormat(myOptions.locale, { year : "numeric", era : "short" } ),
+		var eraFormat = new Intl.DateTimeFormat(myOptions.locale, { calendar : myOptions.calendar, year : "numeric", era : "short" } ),
 			myComponents = eraFormat.formatToParts (myDate), 
 			todaysComponents = eraFormat.formatToParts (new Date());
 		for (let i = 0; i <  myComponents.length; i++) {
@@ -66,7 +68,7 @@ Intl.DateTimeFormat.prototype.conditionalEraFormat = function (myDate, eraDispla
 	// return new Intl.DateTimeFormat(myOptions.locale, myOptions).format(myDate) // this would works if undefined 'era' would protect from displaying era
 	let myDateParts = new Intl.DateTimeFormat(myOptions.locale, myOptions).formatToParts(myDate).map ( ({type, value}) => {
 		switch (type) {
-			case "era" : return (eraDisplay == "always" ? {type:type, value: value} : {type:type, value: ""}); // we have to insist...
+			case "era" : return (eraDisplay == "always" ? {type: type, value: value} : {type:type, value: ""}); // we have to insist...
 			default : return {type: type, value: value};
 		}
 	}) // end of mapping function
