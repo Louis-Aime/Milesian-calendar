@@ -25,8 +25,8 @@ Versions
 	M2020-04-16
 		Normalize head section
 	M2020-06-03 "min" instead of "mn"
-	M2020-10-06
-		Date input in ISO 8601 or Milesian, reorganise display
+	M2020-10-07
+		Date input in ISO 8601 or Milesian, use new options of Unicode, reorganise display
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
 	<meta name="description" content="Test interactif de présentation de date avec les outils Unicode">
@@ -50,6 +50,7 @@ Versions
 <!-- Specific for this page -->
 	<script type="text/javascript" src="UnicodeTester.js"></script>
 
+<meta name="viewport" content="width=device-width">	
 </head>
 <body class="centered" onload="setDateToNow()">
 <section class="centered"><h1 class="milesianhead">Expression de date et calendriers Unicode</h1>
@@ -346,7 +347,13 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 
 <section class="panel centered autoscroll"><h2 class="milesianhead">Options de présentation</h2>
 	<form name="LocaleOptions" method="post" action="javascript:putStringOnOptions()">
-	<h3 class="milesianhead">Résolution des options</h3>
+	<table class="centered"> 
+	<tr>
+		<td><button class="textline" type="reset">Aucune option</button></td>
+		<td><button class="textline" >Ok</button></td> <td></td>
+	</tr>
+   </table>
+<section class="centered"><h3 class="milesianhead">Résolution des options</h3>
 	 <table class="centered">
 		<tr><th>Chaîne locale</th><th>Options</th></tr>
 		<tr>
@@ -413,6 +420,37 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		</tr>
 		<tr><td>Fuseau effectif&nbsp;: </td><td><input name="ETimeZone" type="text" disabled="disabled" class="centered" size="30"></td></tr>
 		</table>
+</section>
+<section class="centered"><h3 class="milesianhead">Options en styles</h3>
+	 <table class="centered">
+	  <tr>
+		<th></th><th>Style date</th><th>Style heure</th>
+	  </tr>
+	  <tr>
+		<th>Demandé</th>
+		<td><select name="DateStyle" class="centered" size="1">
+			<option value="" selected>absent</option>
+			<option value="short">court</option>
+			<option value="medium">moyen</option>
+			<option value="long">long</option>
+			<option value="full">complet</option>
+			</select></td>
+		<td><select name="TimeStyle" class="centered" size="1">
+			<option value="" selected>absent</option>
+			<option value="short">court</option>
+			<option value="medium">moyen</option>
+			<option value="long">long</option>
+			<option value="full">complet</option>
+			</select></td>
+	  </tr>
+	  <tr>
+		<th>Effectif</th>
+		<td><input class="centered juliandaynum" name="EdateStyle" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="EtimeStyle" type="text" disabled="disabled"></td>
+	  </tr>
+	</table>
+</section>
+<section class="centered"><h3 class="milesianhead">Options détaillées</h3>
 	 <table class="centered">
 	  <tr>
 		<th></th><th>Quantième</th><th>Mois</th><th>Année</th>
@@ -420,29 +458,29 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	  <tr>
 		<th>Demandé</th>
 		<td><select name="Day" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="numeric" selected>numérique</option>
+			<option value="" selected>absent</option>
+			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
 		<td><select name="Month" class="centered" size="1">
-			<option value="">absent</option>
+			<option value="" selected>absent</option>
 			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
-			<option value="long" selected>long</option>
+			<option value="long">long</option>
 			</select></td>
 		<td><select name="Year" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="numeric" selected>numérique</option>
+			<option value="" selected>absent</option>
+			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
 	   </tr>
 	  <tr>
 		<th>Effectif</th>
-		<td><input class="centered juliandaynum" name="Eday" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Emonth" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Eyear" type="text" disabled="disabled" class="centered"></td>
+		<td><input class="centered juliandaynum" name="Eday" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="Emonth" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="Eyear" type="text" disabled="disabled"></td>
 	  </tr>
 	</table>
 	<table class="centered">
@@ -452,22 +490,22 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	  <tr>
 		<th>Demandé</th>
 		<td><select name="Weekday" class="centered" size="1">
-			<option value="">absent</option>
+			<option value="" selected>absent</option>
 			<option value="narrow">étroit</option>
 			<option value="short">court</option>
-			<option value="long" selected>long</option>
+			<option value="long">long</option>
 			</select></td>
 		<td><select name="Era" class="centered" size="1">
-			<option value="" >absent</option>
-			<option value="narrow" selected>étroit</option>
+			<option value="" selected>absent</option>
+			<option value="narrow">étroit</option>
 			<option value="short">court</option>
 			<option value="long">long</option>
 			</select></td>
 	  </tr>
 	  <tr>
 		<th>Effectif</th>
-		<td><input class="centered juliandaynum" name="Eweekday" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Eera" type="text" disabled="disabled" class="centered"></td>
+		<td><input class="centered juliandaynum" name="Eweekday" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="Eera" type="text" disabled="disabled"></td>
 	  </tr>	
 	</table>
 	<table class="centered">
@@ -477,36 +515,55 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 	  <tr>
 		<th>Demandé</th>
 		<td><select name="Hour" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="numeric" selected>numérique</option>
+			<option value="" selected>absent</option>
+			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
 		<td><select name="Minute" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="numeric" selected>numérique</option>
+			<option value="" selected>absent</option>
+			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
 		<td><select name="Second" class="centered" size="1">
-			<option value="">absent</option>
-			<option value="numeric" selected>numérique</option>
+			<option value="" selected>absent</option>
+			<option value="numeric">numérique</option>
 			<option value="2-digit">2 chiffres</option>
 			</select></td>
 	  </tr>
 	  <tr>
 		<th>Effectif</th>
-		<td><input class="centered juliandaynum" name="Ehour" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Eminute" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="Esecond" type="text" disabled="disabled" class="centered"></td>
+		<td><input class="centered juliandaynum" name="Ehour" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="Eminute" type="text" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="Esecond" type="text" disabled="disabled"></td>
 	  </tr>
 	</table>
 	<table class="centered">
+		<tr>
+			<th></th><th>Fractions de secondes</th><th>Fuseau</th>
+		</tr>
+		<tr>
+			<th>Demandé</th>
+			<td><input class="centered juliandaynum" name="Msdigits" type="number" min="0" max="3"></td>
+			<td><select name="TimeZoneName" class="centered" size="1">
+				<option value="" selected>absent</option>
+				<option value="short">court</option>
+				<option value="long">long</option>
+				</select></td>
+		</tr>
+		<tr>
+			<th>Effectif</th>
+			<td><input class="centered juliandaynum" name="Emsdigits" type="text" disabled="disabled"></td>
+			<td><input class="centered juliandaynum" name="EtimeZoneName" type="text" disabled="disabled"></td>
+		</tr>
+	</table>
+	<table class="centered">
 	  <tr> 
-		<th></th><th colspan="2">12 h</th><th>Cycle horaire</th><th>Fuseau</th>
+		<th></th><th colspan="2">12 h</th><th>Cycle horaire</th>
 	  </tr> 
 	  <tr>
 		<th>Demandé</th>
 		<td colspan="2"><select name="Hour12" size="1" class="centered">
-			<option value="" selected>usage local</option>
+			<option value="" selected>défaut</option>
 			<option value="true">12 h</option>
 			<option value="false">24 h</option>
 			</select></td>
@@ -517,21 +574,16 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 			<option value="h23">h23</option>
 			<option value="h24">h24</option>
 			</select></td>
-		<td><select name="TimeZoneName" class="centered" size="1">
-			<option value="" selected>absent</option>
-			<option value="short">court</option>
-			<option value="long">long</option>
-			</select></td>
 	  </tr>
 	  <tr>
 		<th>Effectif</th>
 		<td>12 h</td>
-		<td><input class="centered" name="Ehour12" type="checkbox" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="EhourCycle" type="text" disabled="disabled" class="centered"></td>
-		<td><input class="centered juliandaynum" name="EtimeZoneName" type="text" disabled="disabled" class="centered"></td>
+		<td><input class="centered" name="Ehour12" type="checkbox" disabled="disabled"></td>
+		<td><input class="centered juliandaynum" name="EhourCycle" type="text" disabled="disabled"></td>
 	  </tr>
 	</table>
-	<h3 class="milesianhead">Option expérimentale</h3>
+</section>
+<section class="centered"><h3 class="milesianhead">Options expérimentales</h3>
 	<table class="centered">
 		<tr>
 			<th>Affichage de l'ère</th>
@@ -542,13 +594,9 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 				<option value="past">antérieure</option>
 			</select></td>
 		</tr>
+		<tr><td colspan="2">Ne marche pas avec les options en styles</td></tr>
 	</table>
-	<table class="centered"> 
-	<tr>
-		<td><button class="textline" type="reset">Réinit</button></td>
-		<td><button class="textline" >Ok</button></td> <td></td>
-	</tr>
-   </table>
+</section>
   </form>
 </section>
 
