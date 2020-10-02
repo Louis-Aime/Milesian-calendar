@@ -238,7 +238,7 @@ function setDisplay () { // Considering that targetDate time has been set to the
 	document.time.secs.value = shiftDate.getUTCSeconds();
 	document.time.ms.value = shiftDate.getUTCMilliseconds();
 
-	// Display UTC date & time
+	// Display UTC date & time in Milesian, ISO, and Posix number
 	myElement = document.getElementById("UTCdate");
 	myElement.innerHTML = targetDate.toUTCIntlMilesianDateString();
 	myElement = document.getElementById("UTCtime");
@@ -249,6 +249,8 @@ function setDisplay () { // Considering that targetDate time has been set to the
   	  + targetDate.getUTCMilliseconds() + " ms";
 	myElement = document.getElementById("ISOdatetime");
 	myElement.innerHTML = targetDate.toISOString();
+	myElement = document.getElementById("Posixnumber");
+	myElement.innerHTML = targetDate.valueOf();
 
 	// Write Milesian, Julian and Unicode strings following currently visible options
 	putStringOnOptions();
