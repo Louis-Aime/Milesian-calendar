@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Chiffres clés d'année milésienne</title>
+<!-- Versions 
+	M2020-01-11 Flexible layout
+	M2020-02-01 Gregorian epact on 1 1m
+	M2020-04-12 Details to avoid warning messages from MS Edge
+	M2020-04-16 Normalize head section
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Caractéristiques d'une année milésienne ou grégorienne, 
+chiffres clés pour le calcul de Pâques dans les calendriers grégorien et julien.">
+	<meta name="keywords" content="Année, année milésienne, clavedi, jour de semaine, épacte, Pâques">
+	<meta name="viewport" content="width=device-width">	
+
+<!-- General packages -->
+	<link href="milesian.css" rel="stylesheet"/>
+	<script type="text/javascript" src="CBCCE.js"></script>
+	<script type="text/javascript" src="MilesianAlertMsg.js"></script>
+	<script type="text/javascript" src="MilesianDateProperties.js"></script>
+	<script type="text/javascript" src="RealTZmsOffset.js"></script>
+
+<!-- Specific for this page -->
+  <script type="text/javascript" src="Seasons.js"></script>
+  <script type="text/javascript" src="LunarDateProperties.js"></script>
+  <script type="text/javascript" src="MilesianYearSignature.js"></script>
+  <script type="text/javascript" src="MilesianYearSignatureDisplay.js"></script>
+
+<meta name="viewport" content="width=device-width">	
+</head>
+<body class="centered" onload="setYearToNow()">
+<section class="centered"><h1 class="milesianhead">Chiffres clés d'année milésienne</h1>
+</section>
+<section class="centered panel"><h2 class="milesianhead">Année milésienne</h2>
+  <form name="year" method="post" autocomplete="off" action="Javascript:setYear(document.year.year.value)">
+	<table class="centered"> 
+	  <tr>
+		<th>Année&nbsp;: </th>
+		<td><input name="year" type="number" class="yearnum centered" value="2000" min="-271820" max="275760"></td>	
+		<td><button class="textline" name="Compute">Ok</button></td>
+	  </tr>
+	</table>
+  </form>
+  <form name="control" method="post" autocomplete="off" action="Javascript:void()">
+	<table class="centered">
+	  <tr>
+		<th> +/- années&nbsp;: </th>
+		<td><button type="button" class="textline symbol" onclick="Javascript:setYearOffset(-document.control.shift.value)">-</button></td>
+		<td><input name="shift" type="number" class="yearnum centered" value="1" min="1" step="1"></td> 
+		<td><button type="button" class="textline symbol" onclick="Javascript:setYearOffset(document.control.shift.value)">+</button></td>
+	  </tr>
+	</table>
+  </form>
+  <form name="milesianyearfigures" method="post">
+	<table class="centered">
+		<tr><th>Clavedi</th> <td><input name="doomsday" class="yearnum centered" disabled="disabled" size="5" value=""></td> </tr>
+		<tr><th>Année</th> <td><input name="type" class="centered" disabled="disabled" value=""></td></tr>
+		<tr><th>Épacte milésienne</th> <td><input name="epact" class="yearnum centered" disabled="disabled" size="5" value="0"></td> </tr>
+		<tr><th>Épacte de comput au 1 1m</th> <td><input name="epact1m" class="yearnum centered" disabled="disabled" size="2" value="0"></td> </tr>
+	</table>
+  </form>
+</section>
+<section class="centered panel"><h2 class="milesianhead">Saisons boréales</h2>
+  <form name="seasons" method="post">
+	<table class="centered">
+		<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="18" name="winter1" value=""></td></tr>
+		<tr><th>Équinoxe de printemps</th><td><input class="centered" disabled="disabled" size="18" name="spring" value=""></td></tr>
+		<tr><th>Solstice d'été</th><td><input class="centered" disabled="disabled" size="18" name="summer" value=""></td></tr>
+		<tr><th>Équinoxe d'automne</th><td><input class="centered" disabled="disabled" size="18" name="autumn" value=""></td></tr>
+		<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="18" name="winter2" value=""></td></tr>
+	</table>
+  </form>
+</section>
+<section class="centered panel"><h2 class="milesianhead">Pâques julienne et grégorienne</h2>
+  <form name="yearglobal" method="post">
+	<table class="centered">
+	  <tr>
+		<th>Nombre d'or (1 à 19)&nbsp;: </th>
+		<th><input name="gold" value="0" disabled="disabled" size="2"></th>
+	  </tr>
+	</table>
+  </form>
+<!-- <div class="autoscroll"> -->
+<div class="centered">
+  <form name="easter" method="post" action="Javascript:void()">
+	<table class="centered">
+		<tr><th>Comput</th><th>Grégorien</th><th>Julien</th></tr>
+		<tr><th>Clavedi</th>
+			<td><input name="g_day" class="yearnum centered" disabled="disabled"></td>
+			<td><input name="j_day" class="yearnum centered" disabled="disabled"></td>
+		</tr>
+		<tr><th>Épacte ecclésiastique</th>
+			<td><input name="g_epact" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			<td><input name="j_epact" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			</tr>
+		<tr><th>Reliquat pascal</th>
+			<td><input name="g_residue" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			<td><input name="j_residue" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			</tr>
+		<tr><th>Quantième pascal</th>
+			<td><input name="g_daynumber" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			<td><input name="j_daynumber" class="daynum centered" disabled="disabled" size="5" value="0"></td>
+			</tr>
+		<tr><th>Date romaine</th>
+			<td><input name="g_romandate" class="yearnum centered" disabled="disabled" size="8" value="22/03"></td>
+			<td><input name="j_romandate" class="yearnum centered" disabled="disabled" size="8" value="22/03"></td>
+			</tr>
+		<tr><th>Date milésienne</th>
+			<td><input name="g_milesiandate" class="yearnum centered" disabled="disabled" size="8" value="1 4m"></td>
+			<td><input name="j_milesiandate" class="yearnum centered" disabled="disabled" size="8" value="1 4m"></td>
+			</tr>
+	</table>
+  </form>
+</div>
+</section>
+<footer class="centered">
+<p>© 2017-2020 <a href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* Styles for Milesian calendar applications - in complement with basic styles of Web pages */
+/* 
+Versions 
+	2020-1m-11 - flexible layout of basic panels 
+*/
+
+/* Layout of general elements - most are centered */
+/* .panel is a comprehensive item of one of the Milesian apps
+The .panel section may be suppressed for panels inserted via a CMS */
+.panel {	/*  */
+	display : inline-table; 
+	/* overflow : auto; */
+	/* justify-content: center; */
+	outline:  double;
+	margin: 3px;
+	text-align: center;
+	}
+.centered {
+	text-align: center;
+}	
+table.centered {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+.milesianhead {	/* no line spacing for milesian h1 to h6, set as class to avoid interactions */
+	line-height: 1;
+	margin: 0.3em auto;
+}
+/*.autoscroll {	overflow: auto; }  to be deprecated ??*/
+
+/* Display a simple date as a line on a letter */
+p.date {
+	text-align : right
+}
+
+/* Input appearance and field size */
+.daynum {
+	width: 3em;
+}
+.yearnum {
+	width: 5em;
+}
+.juliandaynum {
+	width : 7em;
+}
+input[disabled], select[disabled] {
+	background: white;
+	color: black;
+	border-style: none;
+}       
+.bordered {
+	outline-style: solid;
+	outline-width: thin;
+}
+.outbounds {
+	color : antiquewhite;
+	background : firebrick;
+}
+button.textline	 {
+  background: darkblue;
+  color: antiquewhite;
+}
+button.symbol {
+  width: 3em;
+}
+
+/* Elements on clocks */
+.clockhand {
+	fill:orange; 
+	stroke:darkgoldenrod; 
+	stroke-width:4px;
+	stroke-linecap:round;
+}
+.seasonmark {
+	fill:forestgreen; 
+	stroke:darkgreen; 
+	stroke-width:1px;
+	stroke-linecap:round;
+}
+.motto {
+	font-family:Serif;
+	font-size:18px;
+	text-anchor:middle;
+}
+.clock {
+	font-family	: Sans-Serif;
+	text-anchor	: middle;
+}
+.ampm {
+	font-family	: Sans-Serif;
+	font-size	: 24px;
+}
+.yeardisplay {
+	font-size	: 42px;
+}
+.shaded {
+	fill 	: dimgray;
+	opacity : 0.7
+}
+.lit {
+	fill 	: blanchedalmond
+}
