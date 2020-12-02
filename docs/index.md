@@ -27,3 +27,9 @@ These clocks stick to the system's time.
 [Milesian clock, HTML page](https://Louis-Aime.github.io/Milesian-calendar/LightMilesianClock.html)
 
 [Milesian clock, SVG file](https://Louis-Aime.github.io/Milesian-calendar/LightMilesianClock.svg)
+
+## DataString_initiator
+
+A simple try of fetching the Private Locale Data Repository from a remote site. The application only writes today's date in milesian.
+
+[Today's local date string in Milesian](https://Louis-Aime.github.io/Milesian-calendar/DateString_initiator.html)
