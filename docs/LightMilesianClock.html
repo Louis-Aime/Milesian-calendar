@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Diem cognosce</title>
-<!-- Versions 
+<!-- Versions M2021-01-09 Adapt to new architecture
+
 	M2019-07-27 
 	M2020-04-12 Simplify !DOCTYPE
 	M2020-04-16 Set head section in line with present recommendations
@@ -13,34 +14,39 @@
 	<meta name="keywords" content="Milesian clock, season's clock">
 	<meta name="viewport" content="width=device-width">
 
-	<link href="milesian.css" rel="stylesheet"/>
-	<script type="text/javascript" src="CBCCE.js"></script>
-	<script type="text/javascript" src="RealTZmsOffset.js"></script>
-	<script type="text/javascript" src="MilesianDateProperties.js"></script>
-	<script type="text/javascript" src="MilesianClockOperations.js"></script>
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="chronos.js"></script>
+	<script type="text/javascript" src="dateextended.js"></script>
+	<script type="text/javascript" src="calendars.js"></script>
+	<script type="text/javascript" src="calendarclock.js"></script>
+	<script type="text/javascript">
+	var lightClock = {
+		timeOutId1 : null,					// Tick generator identifier
+		lightMilesian : null,
+		clockDial : null,
+		targetDate : null
+		}
+	function setLightClockToNow() {	// Set clock to present date and time
+		lightClock.targetDate = new ExtDate(lightClock.lightMilesian); // targeDate is today and now.	
+		lightClock.clockDial.setHands (lightClock.targetDate.year(), lightClock.targetDate.month(), lightClock.targetDate.day(),
+			lightClock.targetDate.getHours(), lightClock.targetDate.getMinutes(), lightClock.targetDate.getSeconds() ); // Display date on clock.
+	}
+	function setLightClockTicks() { // To be inserted on load of the clock
+		lightClock.lightMilesian = new MilesianCalendar ("milesianclock");
+		lightClock.clockDial = new SolarClock (document.querySelector("#clock1")); // Construct clock object, after HTML clock elements are identified.
+		setLightClockToNow();		// Initial setting
+		// lightClock.clockDial.setSeasons (lightClock.targetDate.year());	// Compute seasons at initialisation only.
+		lightClock.timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
+	}
+	</script>
 </head>
 
 <body>
 <div class="centered">	
-<svg id="clock" width="100%" height="100%" onload="JavaScript:setLightClockTicks()"
+<svg width="100%" height="100%" onload="JavaScript:setLightClockTicks()"
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
-
-<script type="text/javascript">
-var timeOutId1;					// Tick generator identifier
-function setLightClockToNow() {	// Set clock to present date and time
-    let targetDate = new Date(); // targeDate is today and now.
-	let theClock = window.document.querySelector("#clock1"); 	// This object is the clock below. Do not call before clock loaded.
-	setMilesianCalendarClockHands (theClock, targetDate.getMilesianDate().year, targetDate.getMilesianDate().month, targetDate.getMilesianDate().date,
-		targetDate.getHours(), targetDate.getMinutes(), targetDate.getSeconds() ); 
-}
-function setLightClockTicks() { // To be inserted on load of light clock
-	setLightClockToNow();		// Initial setting
-	timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
-}
-</script>
-
 <g id="clock1">
 <!-- the dial -->
 <image href="Milesian_dial_2936.png" x="-300" y ="-300" width="600" height="599"/>
@@ -51,6 +57,7 @@ function setLightClockTicks() { // To be inserted on load of light clock
 <!-- the year field -->
   <text class="clock yeardisplay"
 	x="0" y="+100"></text>
+<!-- no seasons' mark -->
 <!-- center circle -->
 <circle class="clockhand" r="9" />
 <!-- set the secondary time dial which sould appear under the month-day hands -->

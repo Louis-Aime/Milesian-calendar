@@ -1,20 +1,25 @@
-/* monthNamesString 
-Charset UTF-8.
+/* pldr.js  Private Locale Data Register as a DOM
+Charset UTF-8. This file contains non-ANSI characters.
 Contents:
-	pldr: stringified version of an XML document organising the Milesian calendar data for the Unicode tools 
-	milesianNames: a DOM object parsed from pldr.
+	pldr: stringified version of an XML document organising non built-in calendar data for the Unicode tools 
+	pldrDOM: a DOM object parsed from pldr.
 Notes:
 	1. If this file is used for Web site, consider changing "const" to "var" in order to avoid constant redeclaration error,
-	and consider re-encoding it after the site's reference character set.
-	2. milesianNames must be declared after pldr.
-Version
-	M2017: Build month names in Latin (default), fr, en, de, es, pt
+	2. pldrDOM must be declared after pldr.
+	3. With certain CMS, this file could not be exposed as a module. pldrDOM has to be made visible from a web page.
+*/
+/* Version	M2020-12-27 no export
+	M2020612-08 use export
+	M2020-11-18:	No "numeric" monthWidth in stand-alone monthContext, formatToParts shall build 1 or 2 digit numbers
+	M2020-10-28: adapted and names changed for the new packaged version of calendar routines
+	M2020-01-12: strict mode
+	M2019-07-24: Control bidirectionnal issues by inserting Unicode FSI & PDI characters
+	M2018-11-11: Enhance comments, put JSDoc comments.
 	M2018-06-04
 		Build an original narrow type
 		type format monthWidth numeric differs from type stand-alone.
-	M2018-11-11: Enhance comments, put JSDoc comments.
-	M2019-07-24: Control bidirectionnal issues by inserting Unicode FSI & PDI characters
-	M2020-01-12: strict mode
+	M2017: Build month names in Latin (default), fr, en, de, es, pt
+
 */
 /* Copyright Miletus 2016-2020 - Louis A. de Fouquières
 Inquiries: www.calendriermilesien.org
@@ -24,7 +29,7 @@ Inquiries: www.calendriermilesien.org
  * ldmlBCP47 declares Milesian calendar general item, 
  * ldml declares language specific names
 */
-const pldr =
+const pldrstring =
 '<?xml version="1.0" encoding="UTF-8" ?>\
 <!-- Milesian month names definition - non language-specific section  -->\
 <!-- <!DOCTYPE ldmlBCP47 SYSTEM "../../common/dtd/ldmlBCP47.dtd"> -->\
@@ -120,20 +125,6 @@ const pldr =
 			<month type="10" draft="unconfirmed">⁨10m⁩</month>\
 			 <month type="11" draft="unconfirmed">⁨11m⁩</month>\
 			 <month type="12" draft="unconfirmed">⁨12m⁩</month>\
-		</monthWidth>\
-		<monthWidth type="numeric"> <!-- "stand-alone" suggest "isolated", in this case the real month number is given -->\
-			 <month type="1" draft="unconfirmed">1</month>\
-			 <month type="2" draft="unconfirmed">2</month>\
-			 <month type="3" draft="unconfirmed">3</month>\
-			 <month type="4" draft="unconfirmed">4</month>\
-			 <month type="5" draft="unconfirmed">5</month>\
-			 <month type="6" draft="unconfirmed">6</month>\
-			 <month type="7" draft="unconfirmed">7</month>\
-			 <month type="8" draft="unconfirmed">8</month>\
-			 <month type="9" draft="unconfirmed">9</month>\
-			 <month type="10" draft="unconfirmed">10</month>\
-			 <month type="11" draft="unconfirmed">11</month>\
-			 <month type="12" draft="unconfirmed">12</month>\
 		</monthWidth>\
 		<monthWidth type="narrow"> <!-- same unambiguous coding system with only one letter -->\
 			 <month type="1" draft="unconfirmed">⁨P⁩</month>\
@@ -393,6 +384,7 @@ const pldr =
   </ldml>\
 </pldr>'
 
-/** The milesian elements held in pldr, parsed as a DOM.
+/** The pldrstring parsed to a DOM.
 */
-var milesianNames = new DOMParser().parseFromString(pldr, "application/xml");
+var pldrDOM = new DOMParser().parseFromString(pldrstring, "application/xml");
+//export { pldrDOM as default }
