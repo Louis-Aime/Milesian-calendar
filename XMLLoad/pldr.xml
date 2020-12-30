@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Milesian month names definition - non language-specific section  -->
+<!-- definition of private calendar elements 
+All elements in <pldr> (Private Locale Data Registry)
+Non language-specific section is <ldmlBCP47>
+Language-specifif is <ldml>
+-->
 <!-- <!DOCTYPE ldmlBCP47 SYSTEM "../../common/dtd/ldmlBCP47.dtd"> -->
-<pldr> <!-- Private locale data registry - for makeup -->
+<pldr>
  <ldmlBCP47>
   <calendar type="milesian"> <!-- name will have to be registred -->
     <months>
