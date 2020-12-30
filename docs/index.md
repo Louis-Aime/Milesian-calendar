@@ -1,35 +1,19 @@
 # The Milesian Calendar laboratory
 The applications developped from the concept of Milesian calendar may be seen here. All files are grouped in this sub-repertory.
+In this version (30 Dec. 2020) there is only one milesian clock, and one test page for Unicode / ECMA new developements.
+
 ## The Milesian clock
-Read the date and the time in this new calendar, convert from other calendars used in France, get the mean moon's coordinates.(https://<user>.github.io/<repository>/
+Read thereal  date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in Gregorian, Milesian and Julian calendars.
 
-[Link to the Milesian clock](https://Louis-Aime.github.io/Milesian-calendar/MilesianClock.html)
+[Link to the Milesian clock](https://Louis-Aime.github.io/Milesian-calendar/milesianclock.html)
 
-## The Milesian converter
-Convert any date from any calendar used in France until now, including the French Revolutionary, to any date of the most known calendar in the world.
+## Calendrical computations and Date object extension by Miletus
+Demonstration and test of extensions.
 
-[Link to the Milesian converter](https://Louis-Aime.github.io/Milesian-calendar/Converter.html)
+[Link to the demo extension](https://Louis-Aime.github.io/Milesian-calendar/dateextendtest-fr.html)
 
-## The annual figures
-Get the essential calendar figures for any year: doomsday, epact, date of Easter, seasons. 
-
-[Link to the annual figures](https://Louis-Aime.github.io/Milesian-calendar/YearSignatureDisplay.html)
-
-## Unicode tester
-Demonstration and test of all calendars developed by Unicode.
-
-[Link to the Unicode tester](https://Louis-Aime.github.io/Milesian-calendar/UnicodeTester.html)
-
-## Two light Milesian clocks
+## The light Milesian clock
 
 These clocks stick to the system's time.
 
-[Milesian clock, HTML page](https://Louis-Aime.github.io/Milesian-calendar/LightMilesianClock.html)
-
-[Milesian clock, SVG file](https://Louis-Aime.github.io/Milesian-calendar/LightMilesianClock.svg)
-
-## DataString_initiator
-
-A simple try of fetching the Private Locale Data Repository from a remote site. The application only writes today's date in milesian.
-
-[Today's local date string in Milesian](https://Louis-Aime.github.io/Milesian-calendar/DateString_initiator.html)
+[Milesian clock, HTML page](https://Louis-Aime.github.io/Milesian-calendar/lightmilesianclock.html)
