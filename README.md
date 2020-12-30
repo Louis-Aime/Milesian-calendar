@@ -1,82 +1,55 @@
 # Milesian-calendar
-Computations and conversion routines demonstrating the Milesian calendar.
+Computations and conversion routines using the Milesian calendar.
 
-**Version note: after a large amount of works, most essential routine are "modularized". Subrepositories are no longer used. Present file needs update.**
+**Version note: after a large amount of works, most essential routine are "modularized". Subrepositories are no longer used.**
 
-Objective: demonstrate that the Milesian calendar as defined in
+Reference:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
-can be handled by simple enhancement of web standard objects, in particular
-* JS Date object,
-* Unicode international routines: Locale and Options for toDateString,
+
+The former by simple enhancement of web standard objects, in particular
+* JS environment,
+* Unicode international routines
 * Graphic tools for displaying and using analog clocks.
 
 Learn more about the advantages of the Milesian calendar in the herefore mentionned book and on [http://www.calendriermilesien.org].
 
 English readers are invited to read [The Milesian calendar in short](https://github.com/Louis-Aime/Milesian-calendar/blob/master/The%20Milesian%20calendar%20in%20short.pdf) (4 pages) available in this repository.
 
-The routines are grouped in subfolders by features.
-* Basic_Common: minimum used by other modules. 
-* The subfolders with .html files are "demonstrators". They require the contents of other subfolders. 
-* Each subfloder holds a README files describing the contents and the necessary associated files.
+Subfolder _docs_ is a demonstration implementation, use https://louis-aime.github.io/Milesian-calendar/
 
-In order to demonstrate the routines, you may extract all software and data pieces in a same diretory, and launch the .html files.
+Subfolder _XMLLoad_ is a variant for loading the _pldr_ (private locale data registry) from a remote source.
 
-## Basic_Common
-Properties and method are added to the standard JS Date object, 
-in order to specify dates with Milesian figure or get the Milesian figure from a Date,
-and other small utilities for general calendrical calculations.
-Used by all other modules.
+You may download all files from this folder and test by launching any html file in any browser.
 
-## Misc_Date_Properties
+## Basic calendrical computations.
+ * chronos.js: base calendrical computations in order to define calendars, includes the "Cycle Based Calendar Computation Engine", and a class for computations on weeks.
+ * dateextended.js: extension of Date and of Intl.DateTimeFormat.
+ * pldr.js: private extension of Unicode's CLDR.
+ 
+## Calendar definition
+calendars.js: classes defining several calendars not defined in Unicode:
+ * the Milesian calendar,
+ * the Julian calendar,
+ * the Western generic calendar: Julian until some date on or after ISO 1582-10-15, Gregorian afterwards. Switching date is specified at construction,
+ * IsoWeek: the week coordinates after ISO8601 standard.
+
+calendarinstant.js: instantiation of those class.
+
+## Complement around calendars
 Other modules enable Date computation in non-CLDR calendars, or other informations. 
-* Julian calendar (not one of Unicode)
-* ISO 8601 week calendar
-* Lunar calendars and data
-* Season computations: solstices and equinoxes
-Require 
-* CBCCE.js.
+* Lunar data,
+* Season computations: solstices and equinoxes,
+* Conversion to and from day counters,
+* Year signature : John Conway's doomsday, Gregorian epact, Easter in Julian and Gregorian calendars
 
-## Milesian Locale 
-Format Milesian date string in different languages, following Common Locales Data Repository (CLDR) of Unicode.
-Generate also date string of any calendar and language proposed by Unicode.
-Note that differences among navigators and bugs in Unicode-provided algorithms are visible.
+## Utilities for calendar and clock computations
+ * calendarclock.js: handling a year clock
+ 
+## Demo pages
+ * Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
+ * Ligne Milesian clock: a tiny version
+ * Dateextendtest: test pages for extension of JS tools.
+ 
+ ## XMLLoad
+ In XMLLoad subfolder. To be used as a variant. Enable reading calendar data from an external site with XMLHttpRequet
 
-A test HTML page is provided.
-
-## Year-signature
-Compute the key figures associated with a year:
-* John Conway's doomsday, 
-* Milesian epact and residue
-* Dates of solstices and equinoxes
-* Easter date in Julian and Gregorian 
-
-Require: 
-* Basic_Common
-* Misc_Date_Properties: only LunarDateProperties.js is used.
-
-## Dial-clock
-The "Milesian clock".
-
-Require 
-* Basic_Common
-* Misc_Date_Properties (complete) 
-* Milesian Locale
-
-This is a "Milesian clock", with month, day, hour and minute hands. Seconds are also possible. 
-The package demonstrates also how to convert dates to/from gregorian, julian and Milesian calendars, Julian Day, 
-and to any Unicode calendar, or other "series", and finally giving moon and Delta T coordinates.
-
-## Converter 
-A simplified version of the Milesian clock, handles dates only. 
-The dates of solstices and equinoxes are displayed as marks on the dial.                                                                        
-
-Require 
-* Basic_Common
-* Misc_Date_Properties (complete) 
-* Milesian Locale
-
-## XMLLoad
-Routines for loading the Milesian calendar's characteristics from a remote site with XMLHttpRequest.
-
-## Bribes
-Short codes pieces, not used in this packages, but potentially usufull for calendrical computations.
