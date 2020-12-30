@@ -1,6 +1,8 @@
 # Milesian-calendar
 Computations and conversion routines demonstrating the Milesian calendar.
 
+**Version note: after a large amount of works, most essential routine are "modularized". Subrepositories are no longer used. Present file needs update.**
+
 Objective: demonstrate that the Milesian calendar as defined in
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
 can be handled by simple enhancement of web standard objects, in particular
