@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>DOM from XML</title>
+<!-- Version M2021-01-10 rewrite in a more general case
+	Version M2020-12-12 Add MilesianAlertMsg
+	Version M2019-07-27 
+	Version M2020-04-12 simplify !DOCTYPE
+	Version M2020-04-16 normalize <meta>
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="HTML basic code to insert as a widget or somewhere in the application
+on an always-used page or any page that wants to use XML external data.UPDATE URI IN LAST SCRIPT.
+If installed on a separate domain, this domain's server should allow external GET access">
+	<meta name="keywords" content="DOM, XML">
+	<meta name="viewport" content="width=device-width">
+
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+
+	<script type="text/javascript" src="chronos.js"></script>
+	<script type="text/javascript" src="dateextended.js"></script>
+	<script type="text/javascript" src="calendars.js"></script>
+	<script type="text/javascript" src="domxmlload.js"></script> <!-- variant to: pldr.js -->
+	<script type="text/javascript">
+	var
+		milesianFramework = {
+			calendar : {},
+			acc : {},
+			fetcher : new XMLHttpRequest();
+			function (resource) {
+				
+				milesianFramework.acc = new DOMFromXML (milesianFramework.creator,resource);
+			},
+			intiate : function () {
+				milesianFramework.calendar = new MilesianCalendar ("milesian", milesianFramework.acc.DOM);
+			}
+		}
+	</script>
+</head>
+<body onload='milesianFramework.fetcher("./pldr.xml")'>
+<section class="centered">
+<h1>Tester chargement de pldr</h1>	
+</section>
+</body>
+</html>
