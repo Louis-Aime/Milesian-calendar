@@ -20,7 +20,7 @@ Instructions
 		All HMTL objects with "MilesianDateString" in their class attribute hold today's Milesian date string as textContent
 		methods added to Intl.DateTimeFormat are able to compute any Milesian date string of any date and with any Locale and Option
 */
-/* Version M2021-01-10 - simplify and make it reusable
+/* Version M2021-01-11 - simplify and make it reusable
 	M2018-11-11: JSDoc Comments
 	M2018-10-29: Comments updates, put console display in comments
 	M2018-05-21: adapted to new Milesian date formatter (methods added to Intl.DateTimeFormat)
@@ -51,20 +51,15 @@ Inquiries: www.calendriermilesien.org
 /** On initializing this class, a call to the specified resource is fired. Once finished, the .DOM fields holds the fetched data.
 */
 class DOMFromXML {
-	DOM = {}
-	XMLRequest = {}
 	constructor (callback, XMLResource) {
-		this.XMLRequest = new XMLHttpRequest();	// Request object. Cannot be reinitiated. State can be read from another script.
-		var myRequest = this.XMLRequest;
-		this.XMLRequest.addEventListener ("load", // load external file into a DOM variable
+		var XMLRequest = new XMLHttpRequest();	// Request object. Cannot be reinitiated. State can be read from another script.
+		XMLRequest.addEventListener ("load", // load external file into a DOM parameter that is passed through the callback
 			function (event) {
-				this.DOM = myRequest.responseXML;
-				// console.log (XMLResource + " loaded.");
-				callback();
-				// Fire whatever is usefull here, e.g.: write something with elements fetched from external dataset, or write to console;
+				let DOM = XMLRequest.responseXML;
+				callback(DOM);		// Callback does whatever is usefull here, e.g.: write something with elements fetched from external dataset, or write to console;
 			})
-		this.XMLRequest.open("GET", XMLResource);
-		this.XMLRequest.send();
+		XMLRequest.open("GET", XMLResource);
+		XMLRequest.send();
 	}
 }
 	

@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
-	<title>DOM from XML</title>
-<!-- Version M2021-01-10 rewrite in a more general case
+	<title>pldr DOM from XML</title>
+<!-- Version M2021-01-11 rewrite in a more general case
 	Version M2020-12-12 Add MilesianAlertMsg
 	Version M2019-07-27 
 	Version M2020-04-12 simplify !DOCTYPE
@@ -21,23 +21,44 @@ If installed on a separate domain, this domain's server should allow external GE
 	<script type="text/javascript" src="chronos.js"></script>
 	<script type="text/javascript" src="dateextended.js"></script>
 	<script type="text/javascript" src="calendars.js"></script>
-	<script type="text/javascript" src="domxmlload.js"></script> <!-- variant to: pldr.js -->
+	<script type="text/javascript" src="domxmlload.js"></script>
+
+<!--
 	<script type="text/javascript">
 	var
-		milesianFramework = {
+		milesianFramework = {	// Embedding object. Change "pldrLoaded" function as required.
 			calendar : {},
-			acc : {},
-			fetcher : function (resource) {
-				acc = new DOMFromXML (milesianFramework.creator,resource);
-			},
-			creator : function () {
-				milesianFramework.calendar = new MilesianCalendar ("milesian", milesianFramework.acc.DOM);
+			pldrLoaded : function () {
+				milesianFramework.calendar = new MilesianCalendar("milesian", this.responseXML); // here 'this' represents the request (fetcher)
+				document.getElementById("mdate").innerHTML = new ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},milesianFramework.calendar).format(new  Date());
+				// console.log ("Milesian calendar initialised")
+				},
+			fetcher : new XMLHttpRequest()
 			}
-		}
+	milesianFramework.fetcher.addEventListener ("load", milesianFramework.pldrLoaded);
+	milesianFramework.fetcher.open("GET", "./pldr.xml");
+	milesianFramework.fetcher.send();
+	</script>
+-->
+	<script type="text/javascript">
+	var
+		milesianFramework = {	// Embedding object. Change "pldrLoaded" function as required.
+		calendar : {},
+		pldrLoaded : function (DOM) {
+			milesianFramework.calendar = new MilesianCalendar("milesian", DOM); // here 'this' represents the request (fetcher)
+			document.getElementById("mdate").innerHTML = new ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},milesianFramework.calendar).format(new  Date());
+			// console.log ("Milesian calendar initialised")
+			},
+		},
+		fetcher = new DOMFromXML(milesianFramework.pldrLoaded, "./pldr.xml") // the fetcher function must be outside the "milesianFramework" definition.
+		
+	</script>
+
 </head>
-<body onload='milesianFramework.fetcher("./milesianmonthnames.xml")'>
-<section class="centered">
-<h1>Tester chargement de pldr</h1>	
-</section>
+<body>
+	<section class="centered"><h1>Chargement de pldr puis impression</h1>
+		<p id="mdate", class="centered">
+		</p>
+	</section>
 </body>
 </html>
