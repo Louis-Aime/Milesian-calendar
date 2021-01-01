@@ -181,15 +181,15 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			  <tr id="gregorianline">
 				<form name="gregorian"> <!-- action set to void(), no method indicated (used to be "post") -->
 				<td>iso8601</td>
-				<td class="mutable"><input name="year" type="number" class="centered digit4"> </td>
-				<td class="mutable"><input name="monthname" type="number" min="1" max="12" class="centered digit2"></td>
-				<td class="mutable"><input name="day" type="number" min="1" max="31" class="centered digit2"> </td>
+				<td><input name="year" type="number" class="centered digit4"> </td>
+				<td><input name="monthname" type="number" min="1" max="12" class="centered digit2"></td>
+				<td><input name="day" type="number" min="1" max="31" class="centered digit2"> </td>
 				<td><button class="textline">Ok</button></td>
 				</form>
 			  </tr>
 			  <form name="custom">
 			  <tr id="customline">
-				<td class="mutable"><select name="calend" size="1" class="centered">
+				<td><select name="calend" size="1" class="centered mutable">
 					<option value="milesian" selected>milésien</option>
 					<option value="julian">julien</option>
 					<option value="vatican">Vatican</option>
@@ -198,9 +198,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 					<option value="english">Royaume-Uni</option>
 					<option value="frenchrev">Révolutionnaire</option>
 					</select></td>
-				<td class="mutable"><input name="year" type="number" class="centered digit4"> </td>
-				<td class="mutable"><input name="monthname" type="number" min="1" max="13" class="centered digit2"></td>
-				<td class="mutable"><input name="day" type="number" min="1" max="31" class="centered digit2"> </td>
+				<td><input name="year" type="number" class="centered digit4 mutable"> </td>
+				<td><input name="monthname" type="number" min="1" max="13" class="centered digit2 mutable"></td>
+				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable"> </td>
 				<td><button class="textline">Ok</button></td>
 			  </tr>
 			</form>
@@ -282,15 +282,13 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<form name="run" method="post">
 			<table class="centered">
 				<tr>
-					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;</button></td>
-					<td><button name="stop" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(0)">O</button></td>
-					<td><button name="forw" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(1)">&gt;</button></td>
-					<td><input name="speed" type="range" min="10" max="200" onchange="javascript:clockAnimate.clockRun(1)"></td>
+					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;&lt;</button></td>
+					<td><button name="off" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(0)">■</button></td>
+					<td><button name="on" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(1)">►</button></td>
+					<td><button name="forw" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(1)">&gt;&gt;</button></td>
 				</tr> 
 				<tr>
-					<td><button name="off" type="button" class="textline symbol" onclick="javascript:clockAnimate.off()">■</button></td>
-					<td>Actuel</td>
-					<td><button name="on" type="button" class="textline symbol" onclick="javascript:clockAnimate.on()">►</button></td>
+					<td colspan="4"><input name="speed" type="range" min="10" max="200" onchange="javascript:clockAnimate.clockRun(2)"></td>
 				</tr>
 			</table>
 		</form>

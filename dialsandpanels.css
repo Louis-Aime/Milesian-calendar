@@ -80,6 +80,10 @@ button.textline {
   background: darkblue;
   color: antiquewhite;
 }
+.seton {
+  background: darkgreen;
+  color: antiquewhite;
+}
 button.symbol {
   width: 3em;
 }

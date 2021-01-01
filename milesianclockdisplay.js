@@ -112,26 +112,42 @@ var clockAnimate = {
 	setDayOffsetMinus : function () {clockAnimate.setDayOffset(-1)},
 	clockSet : function(direction = 1) {
 		clockAnimate.clockDirection = direction;
-		clockAnimate.clockRun (1);
+		clockAnimate.clockRun (2);
 		},
 	clockRun : function(runSwitch = 0) { // Start or stop automatic clock run
-		clockAnimate.off(); // Always begin with unswitching, in case of an anterior wrong call.
-		if (runSwitch == 1) // Set the runabout to desired speed
-			clockAnimate.clockPeriod = clockAnimate.clockDirection == 1
-				? window.setInterval(clockAnimate.setDayOffsetPlus, 40000/document.run.speed.value)
-				: window.setInterval(clockAnimate.setDayOffsetMinus, 40000/document.run.speed.value) ; 
+		 // Begin with setting everything to off
+		clockAnimate.off();
+		document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("seton","textline"));
+		document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("seton","textline"));
+		document.run.back.setAttribute("class", document.run.back.getAttribute("class").replace("seton","textline"));
+		document.run.forw.setAttribute("class", document.run.forw.getAttribute("class").replace("seton","textline"))
+		switch (runSwitch) {
+			case 2 : // quick runabout mode
+				// Set the runabout to desired speed
+				clockAnimate.clockPeriod = clockAnimate.clockDirection == 1
+					? window.setInterval(clockAnimate.setDayOffsetPlus, 40000/document.run.speed.value)
+					: window.setInterval(clockAnimate.setDayOffsetMinus, 40000/document.run.speed.value) ; 
+				// change button color
+				if (clockAnimate.clockDirection == 1) document.run.forw.setAttribute("class", document.run.forw.getAttribute("class").replace("textline","seton"))
+				else document.run.back.setAttribute("class", document.run.back.getAttribute("class").replace("textline","seton"));
+				break;
+			case 1 : // run to indicate date and time
+				clockAnimate.on(); 
+				document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("textline","seton"));
+				break;
+			case 0 : // keep stopped
+				document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("textline","seton"));
+				break; 
+			default : throw new Error ("Invalid option " + runSwitch);
+		}
 	},
 	on : function () {
 		window.clearInterval(clockAnimate.clockPeriod);
 		setDateToNow();
-		clockAnimate.clockPeriod = window.setInterval(setDateToNow , 10000);	// Update every 10 s
-		document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("textline","outbounds"));
-		document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("outbounds","textline"))
+		clockAnimate.clockPeriod = window.setInterval(setDateToNow , 5000);	// Update every 5 s
 	},
 	off : function () {
 		window.clearInterval(clockAnimate.clockPeriod);
-		document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("textline","outbounds"));
-		document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("outbounds","textline"))
 	}
 }
 /**	Time shift routines as a module (timeShift + myTimeShift)
@@ -544,7 +560,7 @@ window.onload = function () {
 	register.milesianClock = new SolarClock( document.querySelector("#clock2") );
 	register.askedOptions = new Intl.DateTimeFormat(undefined,register.Options);
 	register.userOptions = register.askedOptions.resolvedOptions();
-	clockAnimate.on();
+	clockAnimate.clockRun(1);
 
 	document.getElementById("customCalend").addEventListener("click", function (event) {
 		event.preventDefault();
@@ -552,7 +568,7 @@ window.onload = function () {
 	})
 	document.gregorian.addEventListener("submit", function (event) {
 		event.preventDefault();
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		calcGregorian()
 	})
 	document.custom.addEventListener("submit", function (event) {
@@ -565,33 +581,33 @@ window.onload = function () {
 		clockAnimate.changeDayOffset()
 	})
 	document.control.now.addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		setDateToNow()
 	})
 	document.control.minus.addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		clockAnimate.setDayOffset(-1)
 	})
 	document.control.plus.addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		clockAnimate.setDayOffset(+1)
 	})
 	document.time.addEventListener("submit", function (event) {
 		event.preventDefault();
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		calcTime()
 	})
 	document.timeShift.addEventListener("submit", function (event) {
 		event.preventDefault();
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		myTimeShift.changeAddTime()
 	})
 	document.timeShift.minus.addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		myTimeShift.addTime(-1)
 	})
 	document.timeShift.plus.addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		myTimeShift.addTime(+1)
 	}) 
 	document.TZmode.addEventListener("submit", function (event) {
@@ -600,11 +616,11 @@ window.onload = function () {
 		setDisplay();
 	})
 	document.getElementById("h0").addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		setUTCHoursFixed(0)
 	})
 	document.getElementById("h12").addEventListener("click", function (event) {
-		clockAnimate.off();
+		clockAnimate.clockRun(0);
 		setUTCHoursFixed(12)
 	})
 	document.LocaleOptions.addEventListener ("submit", function (event) {
