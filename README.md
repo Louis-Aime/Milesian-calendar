@@ -1,7 +1,9 @@
 # Milesian-calendar
 Computations and conversion routines using the Milesian calendar.
 
-**Version note: after a large amount of works, most essential routine are "modularized". Subrepositories are no longer used.**
+Applications are usable through [these GItHub pages](https://louis-aime.github.io/Milesian-calendar/).
+
+**Version note: after a large amount of works, most essential routine are "modularized". GitHub Subfolders are no longer used.**
 
 Reference:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
@@ -15,11 +17,7 @@ Learn more about the advantages of the Milesian calendar in the herefore mention
 
 English readers are invited to read [The Milesian calendar in short](https://github.com/Louis-Aime/Milesian-calendar/blob/master/The%20Milesian%20calendar%20in%20short.pdf) (4 pages) available in this repository.
 
-Subfolder _docs_ is a demonstration implementation, use https://louis-aime.github.io/Milesian-calendar/
-
-Subfolder _XMLLoad_ is a variant for loading the _pldr_ (private locale data registry) from a remote source.
-
-You may download all files from this folder and test by launching any html file in any browser.
+You may download these files from the Release manager and test by launching any html file in any browser (except pldr_loader)
 
 ## Basic calendrical computations.
  * chronos.js: base calendrical computations in order to define calendars, includes the "Cycle Based Calendar Computation Engine", and a class for computations on weeks.
@@ -50,6 +48,6 @@ Other modules enable Date computation in non-CLDR calendars, or other informatio
  * Ligne Milesian clock: a tiny version
  * Dateextendtest: test pages for extension of JS tools.
  
- ## XMLLoad
- In XMLLoad subfolder. To be used as a variant. Enable reading calendar data from an external site with XMLHttpRequet
+ ## PLDR Loader
+ pldr_loader.html and domxmlload.js are example of usage if pldr is on a remote server. It is loaded with XMLHttpRequet.
 
