@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version M2021-01-09 - Adapt to Chronos and new modules architecture
+/* Version M2021-01-15 Display seasons and year figures using timezone mode and system language
+	M2021-01-09 - Adapt to Chronos and new modules architecture
 		Use 11 dependant .js files instead of 14
 		Group year signature figures
 		Add wallclock indication
@@ -184,7 +185,7 @@ var register = { // set of global variables, used when updating calendar
 		customCalendar : milesian,	// initialisation
 		lowerRepublicanDate : new Date (Date.UTC(1792, 8, 22, 0, 0, 0, 0)),	// Origin date for the French Republican calendar
 		upperRepublicanDate : new Date (Date.UTC(1806, 0, 1, 0, 0, 0, 0)), // Upper limit of the Republican calendar
-		TZSettings : {mode : "TZ", msoffset : 0},	
+		TZSettings : {mode : "", msoffset : 0},	
 		Options : {weekday : "long", day : "numeric", month: "long", year : "numeric", 
 						hour : "numeric", minute : "numeric", second : "numeric"}, 	
 		askedOptions : {},	// new Intl.DateTimeFormat(undefined,Options), 	
@@ -209,7 +210,7 @@ function calcGregorian() {
 	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);  // change custom calendar
 	let testDate = new Date (register.targetDate.valueOf());
 	switch (register.TZSettings.mode) {
-		case "TZ": 
+		case "": 
 			testDate.setFullYear(year, month-1, day); 	// Set date object from calendar date indication, without changing time-in-the-day.
 			break;
 		case "UTC" : testDate.setUTCFullYear(year, month-1, day);
@@ -232,7 +233,7 @@ function calcCustom() {
 	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);	// global variable
 	// let testDate = new ExtDate (register.customCalendar, year, month, day);
 	switch (register.TZSettings.mode) {
-		case "TZ":  // Set date object from custom calendar date indication, and with time of day of currently displayed date.
+		case "":  // Set date object from custom calendar date indication, and with time of day of currently displayed date.
 			testDate = new ExtDate (register.customCalendar, year, month, day, register.targetDate.getHours(), register.targetDate.getMinutes(), register.targetDate.getSeconds(), register.targetDate.getMilliseconds())
 			break;
 		case "UTC" : // // Set date object from custom calendar date indication, and with UTC time of day of currently displayed date.
@@ -350,7 +351,7 @@ function calcTime() { // Here the hours are deemed local hours
 	 else {
 	  let testDate = new ExtDate (register.customCalendar,register.targetDate.valueOf());
 	  switch (register.TZSettings.mode) {
-		case "TZ" : testDate.setHours(hours, mins, secs, ms); break;
+		case "" : testDate.setHours(hours, mins, secs, ms); break;
 		case "UTC" : testDate.setUTCHours(hours, mins, secs, ms); break;
 /*		case "Fixed" : 
 			testDate = new Date(ExtDate.fullUTC (document.gregorian.year.value, document.gregorian.monthname.value, document.gregorian.day.value));
@@ -367,11 +368,10 @@ function calcTime() { // Here the hours are deemed local hours
 function getMode() {
 	// Initiate Time zone mode for the "local" time from main display
 	register.TZSettings.mode = document.TZmode.TZcontrol.value;
-	register.TZDisplay = register.TZSettings.mode == "UTC" ? "UTC" : "";
+	return register.TZSettings.mode
 	/** register.TZSettings.msoffset is JS time zone offset in milliseconds (UTC - local time)
 	 * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
 	*/
-
 }
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 
@@ -393,7 +393,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	switch (register.TZSettings.mode) {
 		case "UTC" : 
 			register.TZSettings.msoffset = 0; // Set offset to 0, but leave time zone offset on display
-		case "TZ" : 
+		case "" : 
 			document.querySelector("#realTZOffset").innerHTML = (systemSign == 1 ? "+ ":"- ") + absoluteTZmin + " min " + absoluteTZsec + " s";
 	}
 	
@@ -550,10 +550,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Update Delta T (seconds)
 	document.deltat.delta.value = (Lunar.getDeltaT(register.targetDate)/Milliseconds.SECOND_UNIT);
 	
-	// Yearly figures
-	document.getElementById ("seasonsyear").innerHTML = 
-		document.yearglobal.year.value = document.gregorian.year.value;
-	computeSignature(document.gregorian.year.value);
+	// Yearly figures. Take milesian year.
+	let milesianYear = new ExtDate(milesian, register.targetDate.valueOf()).fullYear(register.TZSettings.TZmode);
+	document.getElementById ("seasonsyear").innerHTML = milesianYear;
+	computeSignature(milesianYear, "", register.TZSettings.mode);
 
 }
 window.onload = function () {
