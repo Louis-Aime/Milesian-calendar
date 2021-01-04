@@ -7,7 +7,8 @@ Required (directly)
 Contents
 	Functions called by the MilesianYearSignature.html
 */
-/* Version M2020-12-29	New signature routines
+/* Version M2021-01-14 Tailor to language and time zone
+	M2020-12-29	New signature routines
 	M2020-02-01 : comput epact on 1 1m, use year range constraint for milesian epact
 	M2020-01-12 : strict mode
 	M2019-08-23: add seasons' computation
@@ -61,15 +62,18 @@ function milesianDateFrom30_3m (offset) {
 		(offset <= 244 ? (offset - 214) + " 11m" :
 		(offset <= 274 ? (offset - 244) + " 12m" : ">30 12m" ))))))))))) ;
 }
-function displayDOW (Day) { // Yield the string of the day of the week of rank Day
-	return new Intl.DateTimeFormat(undefined, {weekday: "long"}).format (new Date (1970, 0, 4+Day))		
+function displayDOW (Day, lang) { // Yield the string of the day of the week of rank Day
+	if (lang == "") lang = undefined;
+	return new Intl.DateTimeFormat(lang, {weekday: "long"}).format (new Date (1970, 0, 4+Day))		
 }
 /* function displayYeartype (type) {
 	var yearTypes = ["cave (et commune)", "longue (et commune)", "bissextile (et cave)"]
 	return yearTypes [type];
 }*/
-function computeSignature(year) {
-	var outBounds = (year < -5000 || year > 9000);
+function computeSignature(year, lang, timeZone) {
+	if (lang == "") lang = undefined;
+	if (timeZone == "") timeZone = undefined;
+	// Begin with common and Julian calendar figures
 	var signature = julianSignature (year), m_signature = milesianSignature (year);
 	// All figures the specified year
 	// Set gold number
@@ -95,7 +99,9 @@ function computeSignature(year) {
 	document.details.g_romandate.value = romanDateFrom21March(signature.easterOffset);
 	document.details.g_milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
 	// Seasons
-	let seasonDisplay = new ExtDateTimeFormat (undefined, {year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"},milesian);
+	let seasonDisplay = new ExtDateTimeFormat (lang, {
+		timeZone: timeZone,
+		year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"},milesian);
 	try {
 		document.seasons.winter1.value = seasonDisplay.format (Seasons.tropicEvent(year,0)); 
 		document.seasons.spring.value = seasonDisplay.format (Seasons.tropicEvent(year,1)); 
@@ -103,7 +109,7 @@ function computeSignature(year) {
 		document.seasons.autumn.value = seasonDisplay.format (Seasons.tropicEvent(year,3)); 
 		document.seasons.winter2.value = seasonDisplay.format (Seasons.tropicEvent(year,4)); 
 	}
-	catch (e) {
+	catch (e) {		// seasons coulf not be computed, main reason is: year out of computational range
 		document.seasons.winter1.value = 
 		document.seasons.spring.value = 
 		document.seasons.summer.value = 
