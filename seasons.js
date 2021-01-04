@@ -138,7 +138,7 @@ const Seasons = {
 		}
 		return JDE0 + ((S * 0.00001) / deltaL);
 	},
-	/* Part 3 - the tropicEvent function - Result in ms from Posix Epoch
+	/* Part 3 - the tropicEvent function: dates of solstices and equinoxes of a given year, from winter to winter.
 	*/
 	/** Compute the tropical event of a Milesian year, result as an ExtDate element.
 	 * @param {number} year: the Milesian year
