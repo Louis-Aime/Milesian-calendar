@@ -7,7 +7,8 @@ Required (directly)
 Contents
 	Functions called by the MilesianYearSignature.html
 */
-/* Version M2021-01-14 Tailor to language and time zone
+/* Version	M2021-01-24 Missing year field in year panel
+	M2021-01-14 Tailor to language and time zone
 	M2020-12-29	New signature routines
 	M2020-02-01 : comput epact on 1 1m, use year range constraint for milesian epact
 	M2020-01-12 : strict mode
@@ -75,7 +76,8 @@ function computeSignature(year, lang, timeZone) {
 	if (timeZone == "") timeZone = undefined;
 	// Begin with common and Julian calendar figures
 	var signature = julianSignature (year), m_signature = milesianSignature (year);
-	// All figures the specified year
+	// The specified year
+	document.yearglobal.year.value = year;
 	// Set gold number
 	document.yearglobal.gold.value = signature.goldNumber;
 	// Julian figures
