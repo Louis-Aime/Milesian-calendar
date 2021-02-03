@@ -18,13 +18,13 @@ If installed on a separate domain, this domain's server should allow external GE
 	<meta name="viewport" content="width=device-width">
 
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-	<script type="text/javascript" src="fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
+	<script type="text/javascript" src="/calendrical-javascript/fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
 
 <script type="text/javascript">
 	const smallmilprint = {
 		init : async function initial () {
-			this.modules = await import ('./aggregate.js');
-			let pldrString = await import ('./pldr.js');
+			this.modules = await import ('./calendrical-javascript/aggregate.js');
+			let pldrString = await import ('./calendrical-javascript/pldr.js');
 			let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
 					.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
 					.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
