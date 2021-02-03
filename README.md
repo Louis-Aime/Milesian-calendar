@@ -1,9 +1,9 @@
 # Milesian-calendar
 Computations and conversion routines using the Milesian calendar.
 
-Applications are usable through [these GItHub pages](https://louis-aime.github.io/Milesian-calendar/).
+Applications are usable through [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
 
-**Version note: after a large amount of works, most essential routine are "modularized". GitHub Subfolders are no longer used.**
+**Version note: this version uses Git submodules.**
 
 Reference:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
@@ -20,9 +20,9 @@ English readers are invited to read [The Milesian calendar in short](https://git
 You may download these files from the Release manager and test by launching any html file in any browser (except pldr_loader)
 
 ## Basic calendrical computations and calendar definitions
-The module calendrical-javascript is used, see calendrical-javascript.
+The submodule calendrical-javascript is used, see calendrical-javascript.
 
-The referenced module include: 
+The referenced modules include: 
  * a simple fetcher program: turns an XML file into a DOM: XMLHttpRequest wrapped in a Promise.
  * chronos: basic calendrical computation, including the "Cycle Bases Calendrical Computation Engine, and also safe div and mod computations.
  * dateextended: objects ExtDate and ExtDateTimeFormat, with more possibilities than Date and Intl.DateTimeFormat
@@ -31,8 +31,6 @@ The referenced module include:
    * the Julian calendar,
    * the Western generic calendar: Julian until some date on or after ISO 1582-10-15, Gregorian afterwards. Switching date is specified at construction,
    * IsoWeek: the week coordinates after ISO8601 standard.
-
-calendarinstant.js: instantiation of those class.
 
 ## Complement around calendars
 Other modules enable Date computation in non-CLDR calendars, or other informations. 
@@ -48,4 +46,3 @@ Other modules enable Date computation in non-CLDR calendars, or other informatio
  * Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
  * Ligne Milesian clock: a tiny version
  * load-modules-and-write: test pages for extension of JS tools.
-
