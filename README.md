@@ -19,17 +19,18 @@ English readers are invited to read [The Milesian calendar in short](https://git
 
 You may download these files from the Release manager and test by launching any html file in any browser (except pldr_loader)
 
-## Basic calendrical computations.
- * chronos.js: base calendrical computations in order to define calendars, includes the "Cycle Based Calendar Computation Engine", and a class for computations on weeks.
- * dateextended.js: extension of Date and of Intl.DateTimeFormat.
- * pldr.js: private extension of Unicode's CLDR.
- 
-## Calendar definition
-calendars.js: classes defining several calendars not defined in Unicode:
- * the Milesian calendar,
- * the Julian calendar,
- * the Western generic calendar: Julian until some date on or after ISO 1582-10-15, Gregorian afterwards. Switching date is specified at construction,
- * IsoWeek: the week coordinates after ISO8601 standard.
+## Basic calendrical computations and calendar definitions
+The module calendrical-javascript is used, see calendrical-javascript.
+
+The referenced module include: 
+ * a simple fetcher program: turns an XML file into a DOM: XMLHttpRequest wrapped in a Promise.
+ * chronos: basic calendrical computation, including the "Cycle Bases Calendrical Computation Engine, and also safe div and mod computations.
+ * dateextended: objects ExtDate and ExtDateTimeFormat, with more possibilities than Date and Intl.DateTimeFormat
+ * several "custom" calendar (not Unicode built-in):
+   * the Milesian calendar,
+   * the Julian calendar,
+   * the Western generic calendar: Julian until some date on or after ISO 1582-10-15, Gregorian afterwards. Switching date is specified at construction,
+   * IsoWeek: the week coordinates after ISO8601 standard.
 
 calendarinstant.js: instantiation of those class.
 
@@ -46,8 +47,5 @@ Other modules enable Date computation in non-CLDR calendars, or other informatio
 ## Demo pages
  * Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
  * Ligne Milesian clock: a tiny version
- * Dateextendtest: test pages for extension of JS tools.
- 
- ## PLDR Loader
- pldr_loader.html and domxmlload.js are example of usage if pldr is on a remote server. It is loaded with XMLHttpRequet.
+ * load-modules-and-write: test pages for extension of JS tools.
 
