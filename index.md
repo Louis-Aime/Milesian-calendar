@@ -20,4 +20,4 @@ This simple clocks sticks to the system's time.
 
 This was originally a simple test of fetching the pldr.xml file.
 
-[Load-modules-and-write](https://Louis-Aime.github.io/Milesian-calendar/load-modules-and-writ.html)
+[Load-modules-and-write](https://Louis-Aime.github.io/Milesian-calendar/load-modules-and-write.html)
