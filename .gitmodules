@@ -1,0 +1,3 @@
+[submodule "calendrical-javascript"]
+	path = calendrical-javascript
+	url = ../calendrical-javascript
