@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version M2021-01-15 Display seasons and year figures using timezone mode and system language
+/* Version M2021-02-15	Use calendrical-javascript modules
+	M2021-01-15 Display seasons and year figures using timezone mode and system language
 	M2021-01-09 - Adapt to Chronos and new modules architecture
 		Use 11 dependant .js files instead of 14
 		Group year signature figures
@@ -79,6 +80,43 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
+var
+	modules,		// all modules here once imported
+	milesian,	// = new MilesianCalendar ("milesian",pldrDOM), // A Milesian calendar with pldr data.
+	julian,		// = new JulianCalendar ("julian"),	// An instantied Julian calendar, no pldr
+	vatican,	// = new WesternCalendar ("vatican", "1582-10-15"),
+	french,		// = new WesternCalendar ("french", "1582-12-20"),
+	german,		// = new WesternCalendar ("german", "1700-03-01"),
+	english,	// = new WesternCalendar ("english","1752-09-14"),
+	frenchRev,	// = new FrenchRevCalendar ("frenchrev"),
+	calendars;
+
+async function initial () {
+	modules = await import ('./aggregate-all.js');
+	let pldrString = await import ('./pldr.js');
+	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
+			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
+			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
+	milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
+	julian = new modules.JulianCalendar ("julian");	// An instantied Julian calendar, no pldr
+	vatican = new modules.WesternCalendar ("vatican", "1582-10-15");
+	french = new modules.WesternCalendar ("french", "1582-12-20");
+	german = new modules.WesternCalendar ("german", "1700-03-01");
+	english = new modules.WesternCalendar ("english","1752-09-14");
+	frenchRev = new modules.FrenchRevCalendar ("frenchrev");
+	calendars = [milesian, julian, vatican, french, german, english, frenchRev];
+	register.targetDate = new modules.ExtDate(milesian);
+	register.shiftDate = new modules.ExtDate ( milesian, register.targetDate.getTime() - register.targetDate.getRealTZmsOffset() );
+	register.customCalendar = milesian;
+	register.askedOptions = new Intl.DateTimeFormat(undefined,register.Options);
+	register.userOptions = register.askedOptions.resolvedOptions();
+	register.milesianClock = new modules.SolarClock( document.querySelector("#clock2") );
+	clockAnimate.clockRun(1);
+
+	setDateToNow ();	// initiate after all modules are loaded
+}
+initial ();
+
 /** clockAnimate : package for clock animation
 */
 var clockAnimate = {
@@ -99,13 +137,13 @@ var clockAnimate = {
 		clockAnimate.changeDayOffset();	// Force a valid value in field
 		let dayOffset = document.control.shift.value;	// fetch value from form
 		let testDate = new Date(register.targetDate.valueOf());
-		testDate.setTime (testDate.getTime()+sign*dayOffset*Milliseconds.DAY_UNIT);
+		testDate.setTime (testDate.getTime()+sign*dayOffset*modules.Milliseconds.DAY_UNIT);
 		if (isNaN(testDate.valueOf())) { 
 			alert ("Date out of range");
 			clockAnimate.clockRun(0);
 			}
 		else {
-			register.targetDate = new ExtDate(register.customCalendar, testDate.valueOf()); // register is global variable
+			register.targetDate = new modules.ExtDate(register.customCalendar, testDate.valueOf()); // register is global variable
 			setDisplay();
 		}
 	},
@@ -193,12 +231,12 @@ var register = { // set of global variables, used when updating calendar
 		milesianClock : undefined
 	}; 
 function setDateToNow(){ // set current target date new to current custom calendar and to Now
-	register.targetDate = new ExtDate(register.customCalendar); 
+	register.targetDate = new modules.ExtDate(register.customCalendar); 
 	setDisplay ();
 }
 function setCalend() {	// set current custom calend to new value and compute fields
 	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);  // change custom calendar
-	register.targetDate = new ExtDate(register.customCalendar, register.targetDate.valueOf());	// set custom calendar if changed, and set date.
+	register.targetDate = new modules.ExtDate(register.customCalendar, register.targetDate.valueOf());	// set custom calendar if changed, and set date.
 	setDisplay();
 }
 function calcGregorian() {
@@ -219,7 +257,7 @@ function calcGregorian() {
 	if (isNaN(testDate.valueOf())) alert ("Out of range")
 	else {
 		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
-		register.targetDate = new ExtDate(register.customCalendar, testDate.valueOf());	// set custom calendar if changed, and set date.
+		register.targetDate = new modules.ExtDate(register.customCalendar, testDate.valueOf());	// set custom calendar if changed, and set date.
 		setDisplay();
 	}
 }
@@ -231,20 +269,20 @@ function calcCustom() {
 	 testDate;
 	 // HTML controls that day, month and year are numbers
 	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);	// global variable
-	// let testDate = new ExtDate (register.customCalendar, year, month, day);
+	// let testDate = new modules.ExtDate (register.customCalendar, year, month, day);
 	switch (register.TZSettings.mode) {
 		case "":  // Set date object from custom calendar date indication, and with time of day of currently displayed date.
-			testDate = new ExtDate (register.customCalendar, year, month, day, register.targetDate.getHours(), register.targetDate.getMinutes(), register.targetDate.getSeconds(), register.targetDate.getMilliseconds())
+			testDate = new modules.ExtDate (register.customCalendar, year, month, day, register.targetDate.getHours(), register.targetDate.getMinutes(), register.targetDate.getSeconds(), register.targetDate.getMilliseconds())
 			break;
 		case "UTC" : // // Set date object from custom calendar date indication, and with UTC time of day of currently displayed date.
-			testDate = new ExtDate (register.customCalendar, year, month, day, register.targetDate.getUTCHours(), register.targetDate.getUTCMinutes(), register.targetDate.getUTCSeconds(), register.targetDate.getUTCMilliseconds())
+			testDate = new modules.ExtDate (register.customCalendar, year, month, day, register.targetDate.getUTCHours(), register.targetDate.getUTCMinutes(), register.targetDate.getUTCSeconds(), register.targetDate.getUTCMilliseconds())
 			// testDate.setTime (testDate.valueOf - testDate.getRealTZmsOffset ())
 			break;
 	}
 	if (isNaN(testDate.valueOf())) alert ("Out of range")
 	else {
 		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
-		register.targetDate = new ExtDate(register.customCalendar, testDate.valueOf());	// set custom calendar if changed, and set date.
+		register.targetDate = new modules.ExtDate(register.customCalendar, testDate.valueOf());	// set custom calendar if changed, and set date.
 		setDisplay();
 		}
 }
@@ -254,11 +292,11 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
 	if (isNaN (j)) alert ("Non numeric value" + ' "' + document.daycounter.julianday.value + '"')
 	else {
-		let jd = new ExtCountDate ("julianDay","iso8601",0);
+		let jd = new modules.ExtCountDate ("julianDay","iso8601",0);
 		jd.setFromCount(j);
 		if (isNaN(jd.valueOf())) alert ("Date out of range")
 		else {
-			register.targetDate = new ExtDate (register.customCalendar,jd.valueOf());
+			register.targetDate = new modules.ExtDate (register.customCalendar,jd.valueOf());
 			setDisplay();
 		}
 	}
@@ -349,18 +387,18 @@ function calcTime() { // Here the hours are deemed local hours
 		alert ("Invalid date " + '"' + document.time.hours.value + '" "' + document.time.mins.value + '" "' 
 		+ document.time.secs.value + '.' + document.time.ms.value + '"')
 	 else {
-	  let testDate = new ExtDate (register.customCalendar,register.targetDate.valueOf());
+	  let testDate = new modules.ExtDate (register.customCalendar,register.targetDate.valueOf());
 	  switch (register.TZSettings.mode) {
 		case "" : testDate.setHours(hours, mins, secs, ms); break;
 		case "UTC" : testDate.setUTCHours(hours, mins, secs, ms); break;
 /*		case "Fixed" : 
-			testDate = new Date(ExtDate.fullUTC (document.gregorian.year.value, document.gregorian.monthname.value, document.gregorian.day.value));
+			testDate = new Date(modules.ExtDate.fullUTC (document.gregorian.year.value, document.gregorian.monthname.value, document.gregorian.day.value));
 			testDate.setUTCHours(hours, mins, secs, ms); 
 			testDate.setTime(testDate.getTime() + register.TZSettings.msoffset);
 */		}
 		if (isNaN(testDate.valueOf())) alert ("Out of range")
 		else {
-			register.targetDate = new ExtDate (register.customCalendar,testDate.valueOf());
+			register.targetDate = new modules.ExtDate (register.customCalendar,testDate.valueOf());
 			setDisplay();
 		}
 	}
@@ -387,8 +425,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let
 		systemSign = (register.TZSettings.msoffset > 0 ? -1 : 1), // invert sign because of JS convention for time zone
 		absoluteRealOffset = - systemSign * register.TZSettings.msoffset,
-		absoluteTZmin = Math.floor (absoluteRealOffset / Milliseconds.MINUTE_UNIT),
-		absoluteTZsec = Math.floor ((absoluteRealOffset - absoluteTZmin * Milliseconds.MINUTE_UNIT) / Milliseconds.SECOND_UNIT);
+		absoluteTZmin = Math.floor (absoluteRealOffset / modules.Milliseconds.MINUTE_UNIT),
+		absoluteTZsec = Math.floor ((absoluteRealOffset - absoluteTZmin * modules.Milliseconds.MINUTE_UNIT) / modules.Milliseconds.SECOND_UNIT);
 
 	switch (register.TZSettings.mode) {
 		case "UTC" : 
@@ -406,7 +444,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Initiate milesian clock and milesian string with present time and date
 	var myElement = document.querySelector("#clock2"),	// myElement is a work variable
 		myCollection ;	// Another work variable, used later
-	shiftDate = new ExtDate (milesian, shiftDate.valueOf());
+	shiftDate = new modules.ExtDate (milesian, shiftDate.valueOf());
 	register.milesianClock.setHands (shiftDate.year("UTC"), shiftDate.month("UTC"), shiftDate.day("UTC"),
 		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() ); // Display date on clock.
 	register.milesianClock.setSeasons (shiftDate.year("UTC")); // Display also seasons.
@@ -431,7 +469,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		labelDate = new Intl.DateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"});
 	// Write Milesian date string
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
-	myElement.innerHTML = new ExtDateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"},milesian).format (shiftDate);
+	myElement.innerHTML = new modules.ExtDateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"},milesian).format (shiftDate);
 	
 	// Date conversion frame - other calendars than the Milesian
 	
@@ -441,7 +479,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.gregorian.day.value = shiftDate.getUTCDate();		
 
     //  Update custom calendar
-	dateComponent = new ExtDate (register.customCalendar, shiftDate.valueOf()).getFields("UTC");
+	dateComponent = new modules.ExtDate (register.customCalendar, shiftDate.valueOf()).getFields("UTC");
     document.custom.year.value = register.customCalendar.fullYear(dateComponent);
     document.custom.monthname.value = dateComponent.month;
     document.custom.day.value = dateComponent.day;
@@ -459,7 +497,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 
 	// Chronological fields frame
 	// Display Julian Day field.
-	let JD = new ExtCountDate ("julianDay","iso8601",register.targetDate.valueOf()).getCount();
+	let JD = new modules.ExtCountDate ("julianDay","iso8601",register.targetDate.valueOf()).getCount();
 	document.daycounter.julianday.value = 
 		JD.toLocaleString(undefined,{useGrouping:false, maximumFractionDigits:8}); 
 	if (document.daycounter.julianday.value == "") // Because bug in Chromium
@@ -467,15 +505,15 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Display other chronological counts
 	document.querySelector("#unixCountDisplay").innerHTML = register.targetDate.valueOf().toLocaleString();
 	document.querySelector("#mjdDisplay").innerHTML = 
-		new ExtCountDate ("modifiedJulianDay","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("modifiedJulianDay","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	document.querySelector("#nasajdDisplay").innerHTML = 
-		new ExtCountDate ("nasaDay","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("nasaDay","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	document.querySelector("#spreadSheetsCountDisplay").innerHTML = 
-		new ExtCountDate ("sheetsCount","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("sheetsCount","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	document.querySelector("#MicrosoftCountDisplay").innerHTML = 
-		new ExtCountDate ("MSBase","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("MSBase","iso8601",register.targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	document.querySelector("#MacOSCountDisplay").innerHTML = 
-		new ExtCountDate ("macOSCount","iso8601",register.targetDate.valueOf()).getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("macOSCount","iso8601",register.targetDate.valueOf()).getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:8});
 	
 	// Unicode frame 
 	// Display Locale (language code only) as obtained after negotiation process
@@ -487,17 +525,17 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Print Unicode string, following already computed options.
  
-	let valid = ExtDateTimeFormat.unicodeValidDateinCalendar(register.targetDate, register.userOptions.timeZone, register.userOptions.calendar); // Filter bugged date expressions
+	let valid = modules.ExtDateTimeFormat.unicodeValidDateinCalendar(register.targetDate, register.userOptions.timeZone, register.userOptions.calendar); // Filter bugged date expressions
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");
 	try { myElement.innerHTML = valid 
-		? new ExtDateTimeFormat(register.userOptions.locale, register.Options).format(register.targetDate) 
+		? new modules.ExtDateTimeFormat(register.userOptions.locale, register.Options).format(register.targetDate) 
 		: "Unicode error"; }
 	catch (e) { myElement.innerHTML = e.message; }
 
 	//	Custom calendar date string following options. Catch error if navigator fails, in this case write without time part.
 	myElement = document.getElementById("CustomString");
-	try	{ myElement.innerHTML = new ExtDateTimeFormat(register.userOptions.locale, register.Options, register.customCalendar).format(register.targetDate); } 
+	try	{ myElement.innerHTML = new modules.ExtDateTimeFormat(register.userOptions.locale, register.Options, register.customCalendar).format(register.targetDate); } 
 	catch (e) { myElement.innerHTML = "ExtDateTimeFormat error: " + e; }
 
 	//  Update week properties of custom calendar, using custom week properties
@@ -516,51 +554,47 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Lunar data frame
 
 	// Update lunar parameters - using register.targetDate
-	dateComponent = Lunar.getCEMoonDate( register.targetDate );
+	dateComponent = modules.Lunar.getCEMoonDate( register.targetDate );
 	register.milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
-	document.moon.angle.value = Lunar.getDraconiticAngle(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
-	document.moon.height.value = Lunar.getDraconiticHeight(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
-	dateComponent = Lunar.getLunarDateTime( register.targetDate );
+	document.moon.angle.value = modules.Lunar.getDraconiticAngle(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
+	document.moon.height.value = modules.Lunar.getDraconiticHeight(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
+	dateComponent = modules.Lunar.getLunarDateTime( register.targetDate );
 	document.moon.moondate.value = dateComponent.day + " " 
 				+  (dateComponent.month) + "m";
 	try {
-		document.moon.dracotime.value = new Date(shiftDate.valueOf() + Lunar.getDraconiticSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
+		document.moon.dracotime.value = new Date(shiftDate.valueOf() + modules.Lunar.getDraconiticSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	}
 	catch (error) {
 		document.moon.dracotime.value = "--:--:--";
 	}
 	try {
-		document.moon.moontime.value = new Date(shiftDate.valueOf() + Lunar.getLunarSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
+		document.moon.moontime.value = new Date(shiftDate.valueOf() + modules.Lunar.getLunarSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	}
 	catch (error) {
 		document.moon.moontime.value = "--:--:--";
 	}
 
-	dateComponent = Lunar.getCELunarDate(shiftDate);				
+	dateComponent = modules.Lunar.getCELunarDate(shiftDate);				
 	document.mooncalend.CElunardate.value = 	dateComponent.day;
 	document.mooncalend.CElunarmonth.value = 	dateComponent.month;
 	document.mooncalend.CElunaryear.value = 	dateComponent.year;
-	dateComponent = Lunar.getHegirianLunarDate(shiftDate);	
+	dateComponent = modules.Lunar.getHegirianLunarDate(shiftDate);	
 	document.mooncalend.hegiriandate.value = 	dateComponent.day;
 	document.mooncalend.hegirianmonth.value = dateComponent.month;
 	document.mooncalend.hegirianyear.value = 	dateComponent.year;
 	
 	// Update Delta T (seconds)
-	document.deltat.delta.value = (Lunar.getDeltaT(register.targetDate)/Milliseconds.SECOND_UNIT);
+	document.deltat.delta.value = (modules.Lunar.getDeltaT(register.targetDate)/modules.Milliseconds.SECOND_UNIT);
 	
 	// Yearly figures. Take milesian year.
-	let milesianYear = new ExtDate(milesian, register.targetDate.valueOf()).fullYear(register.TZSettings.TZmode);
+	let milesianYear = new modules.ExtDate(milesian, register.targetDate.valueOf()).fullYear(register.TZSettings.TZmode);
 	document.getElementById ("seasonsyear").innerHTML = milesianYear;
 	computeSignature(milesianYear, "", register.TZSettings.mode);
 
 }
-window.onload = function () {
-	register.milesianClock = new SolarClock( document.querySelector("#clock2") );
-	register.askedOptions = new Intl.DateTimeFormat(undefined,register.Options);
-	register.userOptions = register.askedOptions.resolvedOptions();
-	clockAnimate.clockRun(1);
+window.onload = function () {	// Global initialisations done by async initial ()
 
 	document.getElementById("customCalend").addEventListener("click", function (event) {
 		event.preventDefault();

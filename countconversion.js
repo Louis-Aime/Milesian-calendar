@@ -1,12 +1,16 @@
 /* Chronological count conversion
 	Character set is UTF-8
-	This package, to be manually imported, converts the standard Unix time counter into several well-known day counters
-Required
-	No dependent file, all constants here (Day_Unit is defined again)
+	This module converts a legacy date-time counter into several well-known day counters
 Contents
-	getCount (count), method added to Date.
+	export class ExtCountDate with new methods
+		getCount ()
+		setFromCount (count)
+Required
+	Milliseconds in chronos.js
+	Dateextended in dateextended.js
 */
-/* Version	M2021-01-07 adapt to new chronos, propose a setFromCount method.
+/* Version M2021-02-15	Use as module, with calendrical-javascript modules
+	M2021-01-07 adapt to new chronos, propose a setFromCount method.
 	M2020-12-28	ExtCountDate as a class
 	M2020-01-12 : strict mode
 	M2019-06-14 : 
@@ -39,6 +43,8 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
+import { Milliseconds } from './chronos.js';
+import { ExtDate } from './dateextended.js';
 /** Extend the ExtDate object to days counter with special behavior or contraints
  * @param {string} the desired counter, one of the following values
  * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
@@ -48,9 +54,8 @@ Inquiries: www.calendriermilesien.org
  *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets
  *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative.
  *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
-
 */
-class ExtCountDate extends ExtDate {
+export class ExtCountDate extends ExtDate {
 	constructor (countType, ...myArguments) {
 		super (...myArguments);
 		this.countType = countType;
@@ -94,4 +99,3 @@ class ExtCountDate extends ExtDate {
 		return this.setTime( Math.round(count * Milliseconds.DAY_UNIT)  - this.countOffset )
 	}
 }
-// export {ExtCountDate}

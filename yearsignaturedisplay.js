@@ -7,7 +7,8 @@ Required (directly)
 Contents
 	Functions called by the MilesianYearSignature.html
 */
-/* Version	M2021-01-24 Missing year field in year panel
+/* Version M2021-02-15	Use calendrical-javascript modules and application-specific modules
+	M2021-01-24 Missing year field in year panel
 	M2021-01-14 Tailor to language and time zone
 	M2020-12-29	New signature routines
 	M2020-02-01 : comput epact on 1 1m, use year range constraint for milesian epact
@@ -22,7 +23,7 @@ Contents
 	M2018-10-26: Enhance comments
 	M2017-01-09: Display Gold number 1 to 19, not 0 to 18.
 */
-/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -44,6 +45,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
+// Modules are loaded in "main" program under the "modules" wrapper.
 function romanDateFrom21March (offset) {
 	let f = new Intl.DateTimeFormat(undefined,{month:"short", day:"numeric"});
 	return (offset <= 10) 
@@ -75,7 +77,7 @@ function computeSignature(year, lang, timeZone) {
 	if (lang == "") lang = undefined;
 	if (timeZone == "") timeZone = undefined;
 	// Begin with common and Julian calendar figures
-	var signature = julianSignature (year), m_signature = milesianSignature (year);
+	var signature = modules.julianSignature (year), m_signature = modules.milesianSignature (year);
 	// The specified year
 	document.yearglobal.year.value = year;
 	// Set gold number
@@ -90,7 +92,7 @@ function computeSignature(year, lang, timeZone) {
 	document.details.j_milesiandate.value = milesianDateFrom30_3m(
 		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian and Milesian figures
-	signature = gregorianSignature (year);
+	signature = modules.gregorianSignature (year);
 	document.details.g_type.value = signature.isLeap ? "bissextile" : "commune";
 	document.details.m_type.value = m_signature.isLeap ? "abondante" : "cave" ;
 	document.details.g_day.value = displayDOW (signature.doomsday);
@@ -101,15 +103,15 @@ function computeSignature(year, lang, timeZone) {
 	document.details.g_romandate.value = romanDateFrom21March(signature.easterOffset);
 	document.details.g_milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
 	// Seasons
-	let seasonDisplay = new ExtDateTimeFormat (lang, {
+	let seasonDisplay = new modules.ExtDateTimeFormat (lang, {
 		timeZone: timeZone,
 		year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"},milesian);
 	try {
-		document.seasons.winter1.value = seasonDisplay.format (Seasons.tropicEvent(year,0)); 
-		document.seasons.spring.value = seasonDisplay.format (Seasons.tropicEvent(year,1)); 
-		document.seasons.summer.value = seasonDisplay.format (Seasons.tropicEvent(year,2)); 
-		document.seasons.autumn.value = seasonDisplay.format (Seasons.tropicEvent(year,3)); 
-		document.seasons.winter2.value = seasonDisplay.format (Seasons.tropicEvent(year,4)); 
+		document.seasons.winter1.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,0)); 
+		document.seasons.spring.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,1)); 
+		document.seasons.summer.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,2)); 
+		document.seasons.autumn.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,3)); 
+		document.seasons.winter2.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,4)); 
 	}
 	catch (e) {		// seasons coulf not be computed, main reason is: year out of computational range
 		document.seasons.winter1.value = 
@@ -138,6 +140,6 @@ function setYearOffset(shift) {
 		}
 }
 function setYearToNow(){ // Self explanatory
-    let targetDate = new ExtDate(milesian); // Now in Milesian.
+    let targetDate = new modules.ExtDate(milesian); // Now in Milesian.
 	setYear(targetDate.year());
 }

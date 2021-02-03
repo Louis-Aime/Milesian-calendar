@@ -7,7 +7,8 @@ Contents
 		setMilesianCalendarClockHands (deprecated)
 		setSolarYearClockHands (deprecated)
 */
-/* Version M2020-12-30
+/* Version	M2021-02-15	Use as module, with calendrical-javascript modules
+	M2020-12-30
 		Group routines in a same module
 		Define clock as class
 		Month is 1 .. 12, not 0 .. 11
@@ -45,7 +46,11 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-class SolarClock {
+import { ExtDate } from './dateextended.js'
+import { Seasons } from './seasons.js';
+import {MilesianCalendar} from './calendars.js';
+const milesian = new MilesianCalendar ("seasmilesian");
+export class SolarClock {
 	constructor (clock) {
 		this.clock = clock;	// The dial and the elements to be moved
 	}
@@ -114,7 +119,7 @@ class SolarClock {
 			success = true;
 		try {
 			for (let i = 0; i < markList.length ; i++) {
-				let wdate = Seasons.tropicEvent(year,i);
+				let wdate = new ExtDate (milesian,Seasons.tropicEvent(year,i));
 				let m = wdate.month()-1;
 				let theMark = this.clock.querySelector(".seasonmark."+markList[i]);
 				let angle = (m * 30 + Math.floor(m/2) + wdate.day()) * 60.0 / 61.0;
@@ -163,12 +168,3 @@ class SolarClock {
 		return moon.querySelector(".moonphase").setAttribute("d",pathstring);
 	}
 }
-/*	Adaptation guide
-*/
-/*
-function setMilesianCalendarClockHands(clock, year = undefined, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false) 
-	= clock.setHands (year = undefined, month = 0, day = 1, hour = 24, minute = 0, second = 0, continuous = false)
-}
-function setSeasonsOnClock (clock, year) = clock.setSeasons (year)
-function setMoonPhase (moon, phase)
-*/

@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version M2021-01-09 modular architecture of called routines
+<!-- Version M2021-02-14 semi-modular architecture of called routines
+	M2021-01-09 modular architecture of called routines
 	M2021-01-07 Adapt to newer Chronos
 	M2020-10-26
 		Add CalendricalBasics
@@ -51,7 +52,7 @@ claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 
-Inquiries: www.calendriermilesien.org
+Inquiries: www.calendriermilesien.org 
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
 	<meta name="description" content="Horloge milésienne, représentation de la date selon le calendrier milésien
@@ -63,16 +64,14 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 
 <!-- Page environment -->
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-	<script type="text/javascript" src="chronos.js"></script>
+
+<!--	<script type="text/javascript" src="chronos.js"></script>
 	<script type="text/javascript" src="dateextended.js"></script>
-	<script type="text/javascript" src="pldr.js"></script> <!-- must be defined ealier than referring calendars -->
+	<script type="text/javascript" src="pldr.js"></script> 
 	<script type="text/javascript" src="calendars.js"></script>
-	<script type="text/javascript" src="calendarinstant.js"></script>
-	<script type="text/javascript" src="countconversion.js"></script>
-	<script type="text/javascript" src="lunar.js"></script>
-	<script type="text/javascript" src="seasons.js"></script>
-	<script type="text/javascript" src="yearsignature.js"></script>
-	<script type="text/javascript" src="calendarclock.js"></script>
+	<script type="text/javascript" src="calendarinstant.js"></script> -->
+
+	<script type="text/javascript" src="fetchdom.js"></script>
 
 	<script type="text/javascript" src="milesianclockdisplay.js"></script>
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>

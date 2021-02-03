@@ -5,11 +5,12 @@ Required (directly)
 Contents
 	The externally used function is tropicEvent
 */
-/* Version M2020-12-29 Adapted to new Chronos and Lunar
+/* Version M2021-02-14	Use calendrical-javascript modules 
+	M2020-12-29 Adapted to new Chronos and Lunar
 	M2020-01-12 : strict mode implementation
 	M2019-08-22: first version, extracted from a Fourmilab package
 */
-/* Copyright Miletus 2019-2020 - Louis A. de Fouquières
+/* Copyright Miletus 2019-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -35,7 +36,9 @@ The code derives from Fourmilab's astro.js file (2015)
 Code has been modified in order to conform with strict mode
 */
 "use strict";
-const Seasons = {
+import { Chronos } from './chronos.js';
+import { Lunar } from './lunar.js';
+export const Seasons = {
 	/* Part 1 - utilities
 	*/
 	LOWER_YEAR : -3000,	// The lower year for seasons' computations
@@ -140,10 +143,10 @@ const Seasons = {
 	},
 	/* Part 3 - the tropicEvent function: dates of solstices and equinoxes of a given year, from winter to winter.
 	*/
-	/** Compute the tropical event of a Milesian year, result as an ExtDate element.
+	/** Compute the tropical event of a Milesian year, result as an modules.ExtDate element.
 	 * @param {number} year: the Milesian year
 	 * @param {number} which: 0->Winter solstice at beginning of year, 1->Spring equinox, 2->Summer solstice, 3->Autumn equinox, 4->Winter solstice at end of year any other value -> Error
-	 * @return {ExtDate} the date of the event (correction with a Delta T estimate).
+	 * @return {modules.ExtDate} the date of the event (correction with a Delta T estimate).
 	*/
 	tropicEvent (year, which) {
 		var JDE;
@@ -152,7 +155,7 @@ const Seasons = {
 		if (which == 0) JDE = this.equinox (year-1,3)
 			else JDE = this.equinox(year, which-1);
 		let wdate = new Date(Math.round((JDE - 2440587.5)*86400000));
-		return new ExtDate (milesian, wdate.valueOf() - Lunar.getDeltaT(wdate));
+		return new Date (wdate.valueOf() - Lunar.getDeltaT(wdate));
 	}
 }
-// export (Seasons)
+

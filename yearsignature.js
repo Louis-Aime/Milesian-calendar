@@ -3,7 +3,7 @@
 	This set of functions, to be manually imported, computes year key figures.
 Required
 	Chronos
-	milesian calendar
+	(the Milesian calendar, as a reckoning system, is not required)
 Each function returns a compound value with the yearly key figures for one calendar:
 	julianSignature: for the Julian calendar,
 	gregorianSignature: for the Gregorian calendar,
@@ -13,9 +13,9 @@ Key figure include:
 	easterResidue: number of days from 21st March (30th 3m for Milesian) to the computus Spring full moon.
 	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 	epact: Julian / Gregorian computus epact, Milesian mean moon epact.
-	annualResidue: 29.5 minus epact (Milesian only).
 */
-/* Version	M2020-12-29 
+/* Version M2021-02-15	Use as module, with calendrical-javascript modules
+	M2020-12-29 
 		Use Chronos.mod
 		Derive Milesian signature from Gregorian figures, no more half-integer epact.
 	M2020-01-12 : strict mode
@@ -29,7 +29,7 @@ Key figure include:
 	M2017-12-26
 	M2017-06-04
 */
-/* Copyright Miletus 2017-2020 - Louis A. de Fouquières
+/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -51,6 +51,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
+import { Chronos } from './chronos.js';
 /** key figures of a year of the Julian calendar
  * @param {number} year, integer number representing the year investigated
  * @return {Object.<string, number>} signature
@@ -77,7 +78,7 @@ const
 				{name : "annum", init : 0}
 			]
 		});
-function julianSignature (year) {
+export function julianSignature (year) {
 	const calend = new Chronos (
 		 { 	// Decompose a Julian year figure //yearParams =
 			timeepoch : 0, 
@@ -118,7 +119,7 @@ function julianSignature (year) {
  * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
  * {boolean} signature.isLong - whether this year is a leap year (366 days long).
 */
-function gregorianSignature (year) {
+export function gregorianSignature (year) {
 	var
 		yearCoeff = gregCalend.getObject (year),
 		signature = {
@@ -153,7 +154,7 @@ function gregorianSignature (year) {
  * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
  * {boolean} signature.isLong - whether this year is a leap year (366 days long).
 */
-function milesianSignature (year) {
+export function milesianSignature (year) {
 	var
 		yearCoeff = gregCalend.getObject (year),
 		signature = gregorianSignature (year); // initiate with Gregorian version

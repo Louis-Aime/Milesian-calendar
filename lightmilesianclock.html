@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Diem cognosce</title>
-<!-- Versions M2021-01-09 Adapt to new architecture
-
+<!-- Versions M2021-02-15 Adapt to modular architecture
+	M2021-01-09 Adapt to new architecture
 	M2019-07-27 
 	M2020-04-12 Simplify !DOCTYPE
 	M2020-04-16 Set head section in line with present recommendations
@@ -15,11 +15,21 @@
 	<meta name="viewport" content="width=device-width">
 
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-	<script type="text/javascript" src="chronos.js"></script>
-	<script type="text/javascript" src="dateextended.js"></script>
-	<script type="text/javascript" src="calendars.js"></script>
-	<script type="text/javascript" src="calendarclock.js"></script>
+	<script type="text/javascript" src="fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
+
 	<script type="text/javascript">
+	async function initial () {
+		modules = await import ('./aggregate-all.js');
+		let pldrString = await import ('./pldr.js');
+		let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
+				.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
+				.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
+		lightClock.lightMilesian = new modules.MilesianCalendar ("milesianClock",pldrDOM);
+		lightClock.clockDial = new modules.SolarClock (document.querySelector("#clock1")); // Construct clock object, after HTML clock elements are identified.
+		setLightClockToNow();		// Initial setting
+		// lightClock.clockDial.setSeasons (lightClock.targetDate.year());	// Compute seasons at initialisation only.
+		lightClock.timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
+		}
 	var lightClock = {
 		timeOutId1 : null,					// Tick generator identifier
 		lightMilesian : null,
@@ -27,23 +37,16 @@
 		targetDate : null
 		}
 	function setLightClockToNow() {	// Set clock to present date and time
-		lightClock.targetDate = new ExtDate(lightClock.lightMilesian); // targeDate is today and now.	
+		lightClock.targetDate = new modules.ExtDate(lightClock.lightMilesian); // targeDate is today and now.	
 		lightClock.clockDial.setHands (lightClock.targetDate.year(), lightClock.targetDate.month(), lightClock.targetDate.day(),
 			lightClock.targetDate.getHours(), lightClock.targetDate.getMinutes(), lightClock.targetDate.getSeconds() ); // Display date on clock.
-	}
-	function setLightClockTicks() { // To be inserted on load of the clock
-		lightClock.lightMilesian = new MilesianCalendar ("milesianclock");
-		lightClock.clockDial = new SolarClock (document.querySelector("#clock1")); // Construct clock object, after HTML clock elements are identified.
-		setLightClockToNow();		// Initial setting
-		// lightClock.clockDial.setSeasons (lightClock.targetDate.year());	// Compute seasons at initialisation only.
-		lightClock.timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
 	}
 	</script>
 </head>
 
 <body>
 <div class="centered">	
-<svg width="100%" height="100%" onload="JavaScript:setLightClockTicks()"
+<svg width="100%" height="100%" onload="JavaScript:initial()"
 viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Load pldr and write a date</title>
+<!--Version M2021-02-14 Adapt to modules and to fetchdom.js
+	Version M2021-01-11 rewrite in a more general case
+	Version M2020-12-12 Add MilesianAlertMsg
+	Version M2019-07-27 
+	Version M2020-04-12 simplify !DOCTYPE
+	Version M2020-04-16 normalize <meta>
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="HTML basic code to insert as a widget or somewhere in the application
+on an always-used page or any page that wants to use XML external data.UPDATE URI IN LAST SCRIPT.
+If installed on a separate domain, this domain's server should allow external GET access">
+	<meta name="keywords" content="DOM, XML">
+	<meta name="viewport" content="width=device-width">
+
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
+
+<script type="text/javascript">
+	const smallmilprint = {
+		init : async function initial () {
+			this.modules = await import ('./aggregate.js');
+			let pldrString = await import ('./pldr.js');
+			let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
+					.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
+					.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
+			this.milesian = new this.modules.MilesianCalendar ("milesian",pldrDOM);
+			document.getElementById("mdate").innerHTML = new this.modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},this.milesian).format(new  Date());
+			}
+		}
+	smallmilprint.init();
+</script>
+
+</head>
+<body>
+	<section class="centered"><h1>Chargement de pldr puis impression</h1>
+		<p id="mdate", class="centered">
+		</p>
+	</section>
+</body>
+</html>
