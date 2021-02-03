@@ -51,7 +51,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Chronos } from './chronos.js';
+import { Chronos } from '/calendrical-javascript/chronos.js';
 /** key figures of a year of the Julian calendar
  * @param {number} year, integer number representing the year investigated
  * @return {Object.<string, number>} signature

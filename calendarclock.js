@@ -46,9 +46,9 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { ExtDate } from './dateextended.js'
+import { ExtDate } from '/calendrical-javascript/dateextended.js'
 import { Seasons } from './seasons.js';
-import {MilesianCalendar} from './calendars.js';
+import {MilesianCalendar} from '/calendrical-javascript/calendars.js';
 const milesian = new MilesianCalendar ("seasmilesian");
 export class SolarClock {
 	constructor (clock) {

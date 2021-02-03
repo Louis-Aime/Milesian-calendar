@@ -68,9 +68,9 @@ Inquiries: www.calendriermilesien.org
 	class MilesianCalendar
 */
 "use strict";
-import {Chronos, Milliseconds} from './chronos.js';
-import {ExtDate} from './dateextended.js';
-import {MilesianCalendar} from './calendars.js';
+import {Chronos, Milliseconds} from '/calendrical-javascript/chronos.js';
+import {ExtDate} from '/calendrical-javascript/dateextended.js';
+import {MilesianCalendar} from '/calendrical-javascript/calendars.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */

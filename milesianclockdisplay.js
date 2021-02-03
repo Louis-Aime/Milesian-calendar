@@ -93,7 +93,7 @@ var
 
 async function initial () {
 	modules = await import ('./aggregate-all.js');
-	let pldrString = await import ('./pldr.js');
+	let pldrString = await import ('/calendrical-javascript/pldr.js');
 	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
 			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
 			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 

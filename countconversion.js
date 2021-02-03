@@ -43,8 +43,8 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Milliseconds } from './chronos.js';
-import { ExtDate } from './dateextended.js';
+import { Milliseconds } from '/calendrical-javascript/chronos.js';
+import { ExtDate } from '/calendrical-javascript/dateextended.js';
 /** Extend the ExtDate object to days counter with special behavior or contraints
  * @param {string} the desired counter, one of the following values
  * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)

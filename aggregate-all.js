@@ -1,7 +1,7 @@
 /* aggregation module for Milesian-calendar: all entries collected and reexported from here */
-export * from "./chronos.js";
-export * from "./dateextended.js";
-export * from "./calendars.js";
+export * from "./calendrical-javascript/chronos.js";
+export * from "./calendrical-javascript/dateextended.js";
+export * from "./calendrical-javascript/calendars.js";
 export * from "./seasons.js";
 export * from "./calendarclock.js";
 export * from "./countconversion.js";

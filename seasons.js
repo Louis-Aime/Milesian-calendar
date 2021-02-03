@@ -36,7 +36,7 @@ The code derives from Fourmilab's astro.js file (2015)
 Code has been modified in order to conform with strict mode
 */
 "use strict";
-import { Chronos } from './chronos.js';
+import { Chronos } from '/calendrical-javascript/chronos.js';
 import { Lunar } from './lunar.js';
 export const Seasons = {
 	/* Part 1 - utilities
