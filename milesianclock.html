@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version M2021-02-14 semi-modular architecture of called routines
+<!-- Version	M2021-03-11 Enhance display of Delta T
+	M2021-02-14 semi-modular architecture of called routines
 	M2021-01-09 modular architecture of called routines
 	M2021-01-07 Adapt to newer Chronos
 	M2020-10-26
@@ -427,16 +428,12 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	 </table>
 	 </form>
 
-	<h3 class="panelhead">Estimation de Delta T (secondes)</h3>
-			<p class="panelhead">(UTC = Temps Terrestre - Delta T)</p>
-	<table class="centered">
-		 <tr>
-			<form name="deltat"method="post" action="javascript:void(0)">
-			<th>Delta T (secondes)&nbsp;: </th>
-			<td><input type="text" class="centered" disabled="disabled" size="15" name="delta"> </td>
-			</form>
-		</tr>
-	</table>
+	<h3 class="panelhead">Composante quadratique de Delta T</h3>
+		<p class="panelhead">(Temps UTC = Temps Terrestre - Delta T)</p>
+	<span class="centered">
+			<span id="deltatsec"></span> s, soit&nbsp;
+			<span id="deltathms"></span>
+	</span>
 	</div>
 
 	<div class="panel autoscroll"><h2 class="panelhead">Saisons</h2>

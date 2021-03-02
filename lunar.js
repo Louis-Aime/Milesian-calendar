@@ -21,11 +21,12 @@ Contents:
 		getDraconiticAngle : Angle between Draco and moon in degrees
 		getDraconiticSunTimeAngle : Angle between Draco and the sun, in milliseconds
 		getDraconiticTime : local time where ascending node is at place of sun the same day
-		getDraconiticHeight : a very rough estimate of the height of the moon (-5° to +5°). 
+		getDraconiticHeight : a very rough estimate of the height of the moon (-5,145° to +5,145°). 
 			When height is around 0 at new or full moon, eclipse is possible.
 		There is no setter function in this package.
 */
-/* Version M2021-02-15	Use as module, with calendrical-javascript modules
+/* Version	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021, and draconitic data
+	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-06 adapt to new chronos
 	M2020-12-29 Embedd in one object
 	M2020-12-29 
@@ -193,10 +194,10 @@ export const Lunar = {
 	 * return {number} Delta T. Unit is milliseconds, result reflects an integer signed number of seconds
 	*/
 	getDeltaT (theDate) { 
-		const JULIAN_CENTURY_UNIT = 36525 * 86400000;	
-		var origin = new Date (1820, 0, 1); // 1 January 1820
-		let century = (theDate.getTime() - origin.getTime()) / JULIAN_CENTURY_UNIT;
-		return Math.round(century*century*32 - 20) * Milliseconds.SECOND_UNIT; // Result as an integer number of seconds.	
+		const JULIAN_CENTURY_UNIT = 36525 * 86400000,
+			ORIGIN = new Date (1825, 0, 1); // 1 January 1825
+		let century = (theDate.getTime() - ORIGIN.getTime()) / JULIAN_CENTURY_UNIT;
+		return Math.round(century*century*31.4 - 10) * Milliseconds.SECOND_UNIT; // Result as an integer number of seconds.	
 	},
 	/* 3.2. Class instantiations
 	*/
@@ -299,15 +300,14 @@ export const Lunar = {
 		 (Milliseconds.DAY_UNIT * this.Draco.astroDate (theDate).phase / MoonData.Draconitic_Params.coeff[0].cyclelength)
 		 + this.getLunarSunTimeAngle(theDate)
 	},
-	/** getDraconiticTime was deprecated 
-	*/
 	/** Rough estimation of Draconitic height
 	 * @param (Date) UTC date of computation
 	 * @return {number} a rough estimate of the height of the Moon with respect to the Ecliptic circle, in degrees
 	*/
 	getDraconiticHeight (theDate) { 
+		const MEANINCLINATION = 5.145; 	// mean inclination of the lunar orbit in degrees
 		let alpha = 2*Math.PI* this.Draco.astroDate (theDate).phase / MoonData.Draconitic_Params.coeff[0].cyclelength
-		return 5 * Math.sin (alpha);
+		return MEANINCLINATION * Math.sin (alpha);
 	}
 }
 

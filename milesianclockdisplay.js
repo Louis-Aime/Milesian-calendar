@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version M2021-02-15	Use calendrical-javascript modules
+/* Version M2021-03-11 Enhance display of Delta T
+	M2021-02-15	Use calendrical-javascript modules
 	M2021-01-15 Display seasons and year figures using timezone mode and system language
 	M2021-01-09 - Adapt to Chronos and new modules architecture
 		Use 11 dependant .js files instead of 14
@@ -586,7 +587,14 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.mooncalend.hegirianyear.value = 	dateComponent.year;
 	
 	// Update Delta T (seconds)
-	document.deltat.delta.value = (modules.Lunar.getDeltaT(register.targetDate)/modules.Milliseconds.SECOND_UNIT);
+	let deltaT = modules.Lunar.getDeltaT(register.targetDate)/modules.Milliseconds.SECOND_UNIT,
+		deltaTAbs = Math.abs(deltaT), deltaTSign = Math.sign(deltaT),
+		deltaTAbsDate = new Date (deltaTAbs*1000),
+		deltaTDays = Math.floor (deltaTAbsDate.valueOf() / modules.Milliseconds.DAY_UNIT) ;
+	document.getElementById ("deltatsec").innerHTML = (deltaTSign == -1 ? "-" : "") + deltaTAbs.toLocaleString();
+	document.getElementById ("deltathms").innerHTML = (deltaTSign == -1 ? "-" : "") 
+			+ (deltaTDays >= 1 ? deltaTDays + " jours " : "")
+			+ deltaTAbsDate.getUTCHours() + " h " + deltaTAbsDate.getUTCMinutes() + " min " + deltaTAbsDate.getUTCSeconds() + " s";
 	
 	// Yearly figures. Take milesian year.
 	let milesianYear = new modules.ExtDate(milesian, register.targetDate.valueOf()).fullYear(register.TZSettings.TZmode);
