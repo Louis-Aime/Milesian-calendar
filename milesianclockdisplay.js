@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version M2021-03-11 Enhance display of Delta T
+/* Version	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
+	M2021-03-11 Enhance display of Delta T
 	M2021-02-15	Use calendrical-javascript modules
 	M2021-01-15 Display seasons and year figures using timezone mode and system language
 	M2021-01-09 - Adapt to Chronos and new modules architecture
@@ -526,12 +527,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	
 	// Print Unicode string, following already computed options.
  
-	let valid = modules.ExtDateTimeFormat.unicodeValidDateinCalendar(register.targetDate, register.userOptions.timeZone, register.userOptions.calendar); // Filter bugged date expressions
+	// let valid = modules.ExtDateTimeFormat.unicodeValidDateinCalendar(register.targetDate, register.userOptions.timeZone, register.userOptions.calendar); // Filter bugged date expressions
 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");
-	try { myElement.innerHTML = valid 
-		? new modules.ExtDateTimeFormat(register.userOptions.locale, register.Options).format(register.targetDate) 
-		: "Unicode error"; }
+	try { myElement.innerHTML = new modules.ExtDateTimeFormat(register.userOptions.locale, register.Options).format(register.targetDate); }
 	catch (e) { myElement.innerHTML = e.message; }
 
 	//	Custom calendar date string following options. Catch error if navigator fails, in this case write without time part.
