@@ -117,7 +117,7 @@ var
 	clockAnimate.clockRun(1);
 
 	setDateToNow ();	// initiate after all modules are loaded
-})
+})();
 // initial ();
 
 /** clockAnimate : package for clock animation
