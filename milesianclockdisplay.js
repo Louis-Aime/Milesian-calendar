@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
+/* Version	M2021-07-09 Use IIFE for intial imports
+	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
 	M2021-03-11 Enhance display of Delta T
 	M2021-02-15	Use calendrical-javascript modules
 	M2021-01-15 Display seasons and year figures using timezone mode and system language
@@ -93,7 +94,7 @@ var
 	frenchRev,	// = new FrenchRevCalendar ("frenchrev"),
 	calendars;
 
-async function initial () {
+(async function initial () {
 	modules = await import ('./aggregate-all.js');
 	let pldrString = await import ('/calendrical-javascript/pldr.js');
 	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
@@ -116,8 +117,8 @@ async function initial () {
 	clockAnimate.clockRun(1);
 
 	setDateToNow ();	// initiate after all modules are loaded
-}
-initial ();
+})
+// initial ();
 
 /** clockAnimate : package for clock animation
 */
