@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-03-11 Enhance display of Delta T
+<!-- Version	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
+	M2021-03-11 Enhance display of Delta T
 	M2021-02-14 semi-modular architecture of called routines
 	M2021-01-09 modular architecture of called routines
 	M2021-01-07 Adapt to newer Chronos
@@ -81,7 +82,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 <body class="centered">
 	<section><h1 class="panelhead">Horloge milésienne</h1>
 	</section>
-	<div class="panel"><h2 class="panelhead" id="clockmilesiandate" ></h2>	<!-- The string of the Milesian date is inserted here -->
+	<div class="panel"><h2 class="panelhead" id="clockmilesiandate" >&nbsp;</h2>	<!-- The string of the Milesian date is inserted here -->
 		<!-- put svg code inline -->
 		<!-- Scalable viewbox, centered in the middle -->
 		<svg width="300" height="100%" xml:lang="fr" 
