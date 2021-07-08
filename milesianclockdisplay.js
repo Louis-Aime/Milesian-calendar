@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version	M2021-07-09 Use IIFE for intial imports
+/* Version	M2021-07-18 Fix bug when computing from UTC date-time fields
+	M2021-07-09 Use IIFE for intial imports
 	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
 	M2021-03-11 Enhance display of Delta T
 	M2021-02-15	Use calendrical-javascript modules
@@ -94,7 +95,7 @@ var
 	frenchRev,	// = new FrenchRevCalendar ("frenchrev"),
 	calendars;
 
-(async function initial () {
+(async function () {
 	modules = await import ('./aggregate-all.js');
 	let pldrString = await import ('/calendrical-javascript/pldr.js');
 	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
@@ -118,7 +119,6 @@ var
 
 	setDateToNow ();	// initiate after all modules are loaded
 })();
-// initial ();
 
 /** clockAnimate : package for clock animation
 */
@@ -272,14 +272,15 @@ function calcCustom() {
 	 testDate;
 	 // HTML controls that day, month and year are numbers
 	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);	// global variable
-	// let testDate = new modules.ExtDate (register.customCalendar, year, month, day);
 	switch (register.TZSettings.mode) {
 		case "":  // Set date object from custom calendar date indication, and with time of day of currently displayed date.
-			testDate = new modules.ExtDate (register.customCalendar, year, month, day, register.targetDate.getHours(), register.targetDate.getMinutes(), register.targetDate.getSeconds(), register.targetDate.getMilliseconds())
+			testDate = new modules.ExtDate (register.customCalendar, year, month, day, register.targetDate.getHours(), register.targetDate.getMinutes(), register.targetDate.getSeconds(), register.targetDate.getMilliseconds());
 			break;
 		case "UTC" : // // Set date object from custom calendar date indication, and with UTC time of day of currently displayed date.
-			testDate = new modules.ExtDate (register.customCalendar, year, month, day, register.targetDate.getUTCHours(), register.targetDate.getUTCMinutes(), register.targetDate.getUTCSeconds(), register.targetDate.getUTCMilliseconds())
-			// testDate.setTime (testDate.valueOf - testDate.getRealTZmsOffset ())
+			testDate = new modules.ExtDate (register.customCalendar, year, month, day);
+			testDate.setUTCFullYear (testDate.getFullYear(), testDate.getMonth(), testDate.getDate()); // Ensure passed value are UTC converted
+			testDate.setUTCHours ( register.targetDate.getUTCHours(), register.targetDate.getUTCMinutes(), 
+							register.targetDate.getUTCSeconds(), register.targetDate.getUTCMilliseconds() );
 			break;
 	}
 	if (isNaN(testDate.valueOf())) alert ("Out of range")
