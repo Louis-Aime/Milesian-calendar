@@ -27,7 +27,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version	M2021-07-18 Fix bug when computing from UTC date-time fields
+/* Version	M2021-07-22	external modules directly loaded from GitHub, not from local copy(this may be reverted)
+	M2021-07-18 Fix bug when computing from UTC date-time fields
 	M2021-07-09 Use IIFE for intial imports
 	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
 	M2021-03-11 Enhance display of Delta T
@@ -97,8 +98,8 @@ var
 
 (async function () {
 	modules = await import ('./aggregate-all.js');
-	let pldrString = await import ('/calendrical-javascript/pldr.js');
-	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
+	let pldrString = await import ('https://louis-aime.github.io/calendrical-javascript/pldr.js');
+	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/calendrical-javascript/pldr.xml")
 			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
 			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
 	milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
