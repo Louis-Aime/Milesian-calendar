@@ -5,7 +5,8 @@ Required (directly)
 Contents
 	The externally used function is tropicEvent
 */
-/* Version M2021-02-14	Use calendrical-javascript modules 
+/* Version	M2021-07-26 Adapt to calendrical-javascript
+	M2021-02-14	Use calendrical-javascript modules 
 	M2020-12-29 Adapted to new Chronos and Lunar
 	M2020-01-12 : strict mode implementation
 	M2019-08-22: first version, extracted from a Fourmilab package
@@ -36,7 +37,7 @@ The code derives from Fourmilab's astro.js file (2015)
 Code has been modified in order to conform with strict mode
 */
 "use strict";
-import { Chronos } from '/calendrical-javascript/chronos.js';
+import { Cbcce as Chronos } from '/calendrical-javascript/chronos.js';
 import { Lunar } from './lunar.js';
 export const Seasons = {
 	/* Part 1 - utilities
