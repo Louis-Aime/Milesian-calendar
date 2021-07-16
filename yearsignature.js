@@ -12,7 +12,7 @@ Key figure include:
 	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 	epact: Julian / Gregorian computus epact, Milesian epact as converted from Gregorian epact
 */
-/* Version	M2021-07-25	Update comments
+/* Version	M2021-07-26	Update comments and links
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-29 
 		Use Chronos.mod
@@ -50,7 +50,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Chronos } from '/calendrical-javascript/chronos.js';
+import { Cbcce as Chronos } from '/calendrical-javascript/chronos.js';
 const // Gregorian solar intercalation rule
 	gregCalend = new Chronos (	
 		{ 	// Decompose a year of the Dionysos era
