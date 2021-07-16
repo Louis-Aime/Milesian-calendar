@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
+<!-- Version	M2021-07-25	Control weeks data
+	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
 	M2021-03-11 Enhance display of Delta T
 	M2021-02-14 semi-modular architecture of called routines
 	M2021-01-09 modular architecture of called routines
@@ -73,10 +74,11 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	<script type="text/javascript" src="calendars.js"></script>
 	<script type="text/javascript" src="calendarinstant.js"></script> -->
 
-	<script type="text/javascript" src="./calendrical-javascript/fetchdom.js"></script>
-
 	<script type="text/javascript" src="milesianclockdisplay.js"></script>
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
+	<style>
+		.panel {height: 410px;}
+	</style>
 
 </head>
 <body class="centered">
@@ -190,8 +192,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			  </tr>
 			  <form name="custom">
 			  <tr id="customline">
-				<td><select name="calend" size="1" class="centered mutable">
+				<td><select name="calend" size="1" class="centered">
 					<option value="milesian" selected>milésien</option>
+					<option value="gregorian">grégorien</option>
 					<option value="julian">julien</option>
 					<option value="vatican">Vatican</option>
 					<option value="french">France</option>
@@ -203,6 +206,20 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 				<td><input name="monthname" type="number" min="1" max="13" class="centered digit2 mutable"></td>
 				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable"> </td>
 				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+			  <tr>
+				<form name="week">
+				<th>Semaines</th><td><input name="weekyear" type="number" class="centered digit4"></td>
+				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2"></td>
+				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2"> </td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			  <tr>
+				<td>Jour</td>
+				<td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /></td>
+				<td colspan="2">Semaines</td>
+				<td><input name="weeksinyear" type="number" min="0" max="56" class="centered digit2" disabled="disabled"></td>
 			  </tr>
 			</form>
 			</table>

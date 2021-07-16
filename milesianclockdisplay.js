@@ -99,17 +99,18 @@ var
 (async function () {
 	modules = await import ('./aggregate-all.js');
 	let pldrString = await import ('https://louis-aime.github.io/calendrical-javascript/pldr.js');
-	let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/calendrical-javascript/pldr.xml")
+	let	pldrDOM = await modules.fetchDOM ("https://louis-aime.github.io/calendrical-javascript/pldr.xml")
 			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
 			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
 	milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
+	gregorian = new modules.GregorianCalendar ("gregorian");
 	julian = new modules.JulianCalendar ("julian");	// An instantied Julian calendar, no pldr
 	vatican = new modules.WesternCalendar ("vatican", "1582-10-15");
 	french = new modules.WesternCalendar ("french", "1582-12-20");
 	german = new modules.WesternCalendar ("german", "1700-03-01");
 	english = new modules.WesternCalendar ("english","1752-09-14");
 	frenchRev = new modules.FrenchRevCalendar ("frenchrev");
-	calendars = [milesian, julian, vatican, french, german, english, frenchRev];
+	calendars = [milesian, gregorian, julian, vatican, french, german, english, frenchRev];
 	register.targetDate = new modules.ExtDate(milesian);
 	register.shiftDate = new modules.ExtDate ( milesian, register.targetDate.getTime() - register.targetDate.getRealTZmsOffset() );
 	register.customCalendar = milesian;
@@ -284,6 +285,36 @@ function calcCustom() {
 							register.targetDate.getUTCSeconds(), register.targetDate.getUTCMilliseconds() );
 			break;
 	}
+	if (isNaN(testDate.valueOf())) alert ("Out of range")
+	else {
+		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
+		register.targetDate = new modules.ExtDate(register.customCalendar, testDate.valueOf());	// set custom calendar if changed, and set date.
+		setDisplay();
+		}
+}
+function calcWeek() {
+	var myFields = {
+			weekYear : Math.round (document.week.weekyear.value),
+			weekNumber : Math.round (document.week.weeknumber.value),
+			weekday : Math.round (document.week.weekday.value)
+		}, 
+		testDate= new modules.ExtDate(register.customCalendar, register.targetDate.valueOf());
+	register.customCalendar = calendars.find (item => item.id == document.custom.calend.value);
+	switch (register.TZSettings.mode) {
+		case "":  // Set date object from custom calendar week date indication, and with time of day of currently displayed date.
+			myFields.hours = register.targetDate.getHours();
+			myFields.minutes = register.targetDate.getMinutes();
+			myFields.seconds = register.targetDate.getSeconds();
+			myFields.milliseconds = register.targetDate.getMilliseconds();
+			break;
+		case "UTC" : // // Set date object from custom calendar date indication, and with UTC time of day of currently displayed date.
+			myFields.hours = register.targetDate.getUTCHours();
+			myFields.minutes = register.targetDate.getUTCMinutes();
+			myFields.seconds = register.targetDate.getUTCSeconds();
+			myFields.milliseconds = register.targetDate.getUTCMilliseconds();
+			break;
+	}
+	testDate.setFromWeekFields( myFields, register.TZSettings.mode );
 	if (isNaN(testDate.valueOf())) alert ("Out of range")
 	else {
 		// Here, no control of date validity, leave JS recompute the date if day of month is out of bounds
@@ -476,9 +507,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
 	myElement.innerHTML = new modules.ExtDateTimeFormat (undefined,{timeZone:"UTC",weekday:"long",day:"numeric",month:"long",year:"numeric"},milesian).format (shiftDate);
 	
-	// Date conversion frame - other calendars than the Milesian
-	
-    //  Update Gregorian Calendar - using Date properties
+
+    //  Update iso8601 Calendar - using Date properties
     document.gregorian.year.value = shiftDate.getUTCFullYear();
     document.gregorian.monthname.value = shiftDate.getUTCMonth()+1;
     document.gregorian.day.value = shiftDate.getUTCDate();		
@@ -488,6 +518,18 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.custom.year.value = register.customCalendar.fullYear(dateComponent);
     document.custom.monthname.value = dateComponent.month;
     document.custom.day.value = dateComponent.day;
+	document.week.weekyear.value = register.targetDate.weekYear(register.TZSettings.mode); 
+	document.week.weeknumber.value = register.targetDate.weekNumber(register.TZSettings.mode);
+	document.week.weekday.value = register.targetDate.weekday(register.TZSettings.mode);
+	document.week.weeksinyear.value = register.targetDate.weeksInYear(register.TZSettings.mode);
+
+	document.week.dayofweek.value = 
+			new modules.ExtDateTimeFormat 
+			( register.userOptions.locale == "" ? undefined : register.userOptions.locale,
+				{weekday : "long", 
+				timeZone : register.TZSettings.mode == "" ? undefined : register.TZSettings.mode },
+				register.customCalendar)
+				.format(register.targetDate);
 
 	// Place marks that say that custom calendar was not valid
 	myElement = document.querySelector("#customline");
@@ -529,9 +571,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.querySelector("#timeZone").innerHTML = register.userOptions.timeZone;	// Display time zone as obtained after negotiation process
 	
 	// Print Unicode string, following already computed options.
- 
-	// let valid = modules.ExtDateTimeFormat.unicodeValidDateinCalendar(register.targetDate, register.userOptions.timeZone, register.userOptions.calendar); // Filter bugged date expressions
-	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
+ 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
 	myElement = document.getElementById("UnicodeString");
 	try { myElement.innerHTML = new modules.ExtDateTimeFormat(register.userOptions.locale, register.Options).format(register.targetDate); }
 	catch (e) { myElement.innerHTML = e.message; }
@@ -606,7 +646,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 }
 window.onload = function () {	// Global initialisations done by async initial ()
 
-	document.getElementById("customCalend").addEventListener("click", function (event) {
+	document.custom.calend.addEventListener("blur", function (event) {
 		event.preventDefault();
 		setCalend()
 	})
@@ -619,6 +659,10 @@ window.onload = function () {	// Global initialisations done by async initial ()
 		event.preventDefault();
 		clockAnimate.off();
 		calcCustom()
+	})
+	document.week.addEventListener("submit", function (event) {
+		event.preventDefault();
+		calcWeek()
 	})
 	document.control.addEventListener("submit", function (event) {
 		event.preventDefault();
