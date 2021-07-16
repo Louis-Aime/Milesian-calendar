@@ -25,7 +25,8 @@ Contents:
 			When height is around 0 at new or full moon, eclipse is possible.
 		There is no setter function in this package.
 */
-/* Version	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021, and draconitic data
+/* Version	M2021-07-26 adapt to new module architecture
+	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021, and draconitic data
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-06 adapt to new chronos
 	M2020-12-29 Embedd in one object
@@ -69,8 +70,8 @@ Inquiries: www.calendriermilesien.org
 	class MilesianCalendar
 */
 "use strict";
-import {Chronos, Milliseconds} from '/calendrical-javascript/chronos.js';
-import {ExtDate} from '/calendrical-javascript/dateextended.js';
+import {Cbcce as Chronos, Milliseconds} from '/calendrical-javascript/chronos.js';
+import {default as ExtDate} from '/calendrical-javascript/extdate.js';
 import {MilesianCalendar} from '/calendrical-javascript/calendars.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time

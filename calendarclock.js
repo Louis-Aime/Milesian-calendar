@@ -7,7 +7,8 @@ Contents
 		setMilesianCalendarClockHands (deprecated)
 		setSolarYearClockHands (deprecated)
 */
-/* Version	M2021-02-15	Use as module, with calendrical-javascript modules
+/* Version	M2021-07-26 adapt to calendrical Javascript
+	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-30
 		Group routines in a same module
 		Define clock as class
@@ -46,7 +47,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { ExtDate } from '/calendrical-javascript/dateextended.js'
+import { default as ExtDate } from '/calendrical-javascript/extdate.js'
 import { Seasons } from './seasons.js';
 import {MilesianCalendar} from '/calendrical-javascript/calendars.js';
 const milesian = new MilesianCalendar ("seasmilesian");
