@@ -2,13 +2,14 @@
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
-	<title>Load pldr and write a date</title>
-<!--Version M2021-02-14 Adapt to modules and to fetchdom.js
-	Version M2021-01-11 rewrite in a more general case
-	Version M2020-12-12 Add MilesianAlertMsg
-	Version M2019-07-27 
-	Version M2020-04-12 simplify !DOCTYPE
-	Version M2020-04-16 normalize <meta>
+	<title>Load modules and private XML file, then write a date</title>
+<!--Version	M2021-07-29 fetchDOM is imported, simplify module loader
+	M2021-02-14 Adapt to modules and to fetchdom.js
+	M2021-01-11 rewrite in a more general case
+	M2020-12-12 Add MilesianAlertMsg
+	M2019-07-27 
+	M2020-04-12 simplify !DOCTYPE
+	M2020-04-16 normalize <meta>
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
 	<meta name="description" content="HTML basic code to insert as a widget or somewhere in the application
@@ -18,21 +19,19 @@ If installed on a separate domain, this domain's server should allow external GE
 	<meta name="viewport" content="width=device-width">
 
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-	<script type="text/javascript" src="/calendrical-javascript/fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
 
 <script type="text/javascript">
-	const smallmilprint = {
-		init : async function initial () {
-			this.modules = await import ('./calendrical-javascript/aggregate.js');
-			let pldrString = await import ('./calendrical-javascript/pldr.js');
-			let	pldrDOM = await fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
-					.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
-					.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
-			this.milesian = new this.modules.MilesianCalendar ("milesian",pldrDOM);
-			document.getElementById("mdate").innerHTML = new this.modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},this.milesian).format(new  Date());
-			}
-		}
-	smallmilprint.init();
+var modules, milesian;
+(async function () {
+	modules = await import ('./calendrical-javascript/aggregate.js');
+	//let pldrString = await import ('./calendrical-javascript/pldr.js');
+	let	pldrDOM = await modules.fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
+			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
+			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
+	milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
+	document.getElementById("mdate").innerHTML = 
+		new modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},milesian).format(new  Date());
+	} () )
 </script>
 
 </head>

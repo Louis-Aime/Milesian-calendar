@@ -3,7 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Diem cognosce</title>
-<!-- Versions M2021-02-15 Adapt to modular architecture
+<!-- 
+Versions M2021-07-29 
+		fetchdom.js also a module
+		add seconds hand
+	M2021-02-15 Adapt to modular architecture
 	M2021-01-09 Adapt to new architecture
 	M2019-07-27 
 	M2020-04-12 Simplify !DOCTYPE
@@ -15,7 +19,6 @@
 	<meta name="viewport" content="width=device-width">
 
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-	<script type="text/javascript" src="./calendrical-javascript/fetchdom.js"></script>	<!-- this is not a module, and must be inserted here -->
 
 	<script type="text/javascript">
 	async function initial () {
@@ -24,7 +27,7 @@
 		lightClock.clockDial = new modules.SolarClock (document.querySelector("#clock1")); // Construct clock object, after HTML clock elements are identified.
 		setLightClockToNow();		// Initial setting
 		// lightClock.clockDial.setSeasons (lightClock.targetDate.year());	// Compute seasons at initialisation only.
-		lightClock.timeOutId1 = window.setInterval(setLightClockToNow , 20000);	// Update every 20 s	
+		lightClock.timeOutId1 = window.setInterval(setLightClockToNow , 1000);	// Update every 1 s	
 		}
 	var lightClock = {
 		timeOutId1 : null,					// Tick generator identifier
@@ -80,13 +83,17 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- am/pm indicator -->
   <text class="clock ampm" 
 	x="0" y="-50">am</text>
-<!-- hours and minutes hands -->
+<!-- hours, minutes and seconds hands -->
   <g class="clockhand hour" transform="rotate(0)">
     <line x1="0" x2="0" y1="-80" y2="-120" />
   </g>
   <g class="clockhand minute" transform="rotate(0)">
-    <line x1="0" x2="0" y1="-80" y2="-135" />
+    <line x1="0" x2="0" y1="-80" y2="-130" />
   </g>
+    <g class="clockhand second" transform="rotate(0)">
+    <line stroke-width="1px" x1="0" x2="0" y1="-80" y2="-135" />
+  </g>
+
 <!-- month and day hands are set at the end, in order to be above the rest of the clock -->
 <!-- the month hand -->
   <g class="clockhand month" transform="rotate(0)"

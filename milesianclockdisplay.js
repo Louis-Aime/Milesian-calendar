@@ -27,7 +27,9 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	No code optimisation in this file. Common display function are possible.
 */
-/* Version	M2021-07-22	external modules directly loaded from GitHub, not from local copy(this may be reverted)
+/* Version	M2021-07-22	
+		External modules directly loaded from GitHub, not from local copy (this may be reverted)
+		Clock animated every 1s. 
 	M2021-07-18 Fix bug when computing from UTC date-time fields
 	M2021-07-09 Use IIFE for intial imports
 	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
@@ -188,7 +190,7 @@ var clockAnimate = {
 	on : function () {
 		window.clearInterval(clockAnimate.clockPeriod);
 		setDateToNow();
-		clockAnimate.clockPeriod = window.setInterval(setDateToNow , 5000);	// Update every 5 s
+		clockAnimate.clockPeriod = window.setInterval(setDateToNow , 1000);	// Update every 1 s
 	},
 	off : function () {
 		window.clearInterval(clockAnimate.clockPeriod);
