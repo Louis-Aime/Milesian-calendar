@@ -514,8 +514,8 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
     document.gregorian.day.value = shiftDate.getUTCDate();		
 
     //  Update custom calendar
-	dateComponent = new modules.ExtDate (register.customCalendar, shiftDate.valueOf()).getFields("UTC");
-    document.custom.year.value = register.customCalendar.fullYear(dateComponent);
+	dateComponent = register.targetDate.getFields(register.TZSettings.mode);
+    document.custom.year.value = dateComponent.fullYear;
     document.custom.monthname.value = dateComponent.month;
     document.custom.day.value = dateComponent.day;
 	document.week.weekyear.value = register.targetDate.weekYear(register.TZSettings.mode); 
@@ -585,7 +585,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.getElementById ("weekerror").innerHTML = ""; 
 	try {
 		let weekFields = register.targetDate.getWeekFields(register.userOptions.timeZone);
-		document.getElementById ("weekyear").innerHTML = register.targetDate.fullYear(register.userOptions.timeZone) + weekFields.weekYearOffset; 
+		document.getElementById ("weekyear").innerHTML = weekFields.weekYear; 
 		document.getElementById ("yearweek").innerHTML = weekFields.weekNumber;
 		document.getElementById ("weekday").innerHTML = weekFields.weekday; 	// i'd prefer name
 		document.getElementById ("weeksinyear").innerHTML = "(" + weekFields.weeksInYear + ")";
@@ -629,7 +629,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.mooncalend.hegirianyear.value = 	dateComponent.year;
 	
 	// Update Delta T (seconds)
-	let deltaT = modules.Lunar.getDeltaT(register.targetDate)/modules.Milliseconds.SECOND_UNIT,
+	let deltaT = modules.getDeltaT(register.targetDate)/modules.Milliseconds.SECOND_UNIT,
 		deltaTAbs = Math.abs(deltaT), deltaTSign = Math.sign(deltaT),
 		deltaTAbsDate = new Date (deltaTAbs*1000),
 		deltaTDays = Math.floor (deltaTAbsDate.valueOf() / modules.Milliseconds.DAY_UNIT) ;
