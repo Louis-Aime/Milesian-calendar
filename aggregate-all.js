@@ -1,9 +1,11 @@
-/* aggregation module for Milesian-calendar: all entries collected and reexported from here */
-export * from "https://louis-aime.github.io/calendrical-javascript/chronos.js";
-export { default as ExtDate } from "https://louis-aime.github.io/calendrical-javascript/extdate.js";
-export { default as ExtDateTimeFormat } from "https://louis-aime.github.io/calendrical-javascript/extdatetimeformat.js";
-export * from "https://louis-aime.github.io/calendrical-javascript/calendars.js";
-export { default as fetchDOM } from "https://louis-aime.github.io/calendrical-javascript/fetchdom.js";
+/* Milesian-calendar: all external (and internal) entries collected and reexported from here */
+/* set to github stable submodule architecture - on line is : https://louis-aime.github.io/calendrical-javascript/ */ 
+export * from "./calendrical-javascript/chronos.js";
+export { default as ExtDate } from "./calendrical-javascript/extdate.js";
+export { default as ExtDateTimeFormat } from "./calendrical-javascript/extdatetimeformat.js";
+export * from "./calendrical-javascript/calendars.js";
+export { default as fetchDOM } from "./calendrical-javascript/fetchdom.js";
+export { default as getDeltaT } from "./deltat.js"
 export * from "./seasons.js";
 export * from "./calendarclock.js";
 export * from "./countconversion.js";
