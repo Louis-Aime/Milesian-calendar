@@ -1,11 +1,11 @@
 /* Milesian Seasons - Dates of tropical events for a given Milesian year
 	Character set is UTF-8
 Required (directly)
-	Lunar: getDeltaT
+	getDeltaT
 Contents
 	The externally used function is tropicEvent
 */
-/* Version	M2021-07-26 Adapt to calendrical-javascript
+/* Version	M2021-07-29 Adapt to calendrical-javascript
 	M2021-02-14	Use calendrical-javascript modules 
 	M2020-12-29 Adapted to new Chronos and Lunar
 	M2020-01-12 : strict mode implementation
@@ -37,8 +37,7 @@ The code derives from Fourmilab's astro.js file (2015)
 Code has been modified in order to conform with strict mode
 */
 "use strict";
-import { Cbcce as Chronos } from '/calendrical-javascript/chronos.js';
-import { Lunar } from './lunar.js';
+import { getDeltaT } from './aggregate-all.js';
 export const Seasons = {
 	/* Part 1 - utilities
 	*/
@@ -145,9 +144,16 @@ export const Seasons = {
 	/* Part 3 - the tropicEvent function: dates of solstices and equinoxes of a given year, from winter to winter.
 	*/
 	/** Compute the tropical event of a Milesian year, result as an modules.ExtDate element.
+	by Milesian year, we mean: the year from nothern winter solstice to nothern winter solstice. No explicit date computation is performed.
 	 * @param {number} year: the Milesian year
-	 * @param {number} which: 0->Winter solstice at beginning of year, 1->Spring equinox, 2->Summer solstice, 3->Autumn equinox, 4->Winter solstice at end of year any other value -> Error
-	 * @return {modules.ExtDate} the date of the event (correction with a Delta T estimate).
+	 * @param {number} which: 
+		0->Winter solstice at beginning of year, 
+		1->Spring equinox, 
+		2->Summer solstice, 
+		3->Autumn equinox, 
+		4->Winter solstice at end of year 
+		any other value -> Error
+	 * @return {Date} the date of the event (correction with a Delta T estimate).
 	*/
 	tropicEvent (year, which) {
 		var JDE;
@@ -156,7 +162,7 @@ export const Seasons = {
 		if (which == 0) JDE = this.equinox (year-1,3)
 			else JDE = this.equinox(year, which-1);
 		let wdate = new Date(Math.round((JDE - 2440587.5)*86400000));
-		return new Date (wdate.valueOf() - Lunar.getDeltaT(wdate));
+		return new Date (wdate.valueOf() - getDeltaT(wdate));
 	}
 }
 
