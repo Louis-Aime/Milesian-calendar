@@ -9,7 +9,7 @@ Required
 	Milliseconds
 	ExtDate
 */
-/* Version	M2021-07-26	Adapt to calendrical-javascript
+/* Version	M2021-07-29	Adapt to calendrical-javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-07 adapt to new chronos, propose a setFromCount method.
 	M2020-12-28	ExtCountDate as a class
@@ -44,8 +44,8 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Milliseconds } from '/calendrical-javascript/chronos.js';
-import { default as ExtDate } from '/calendrical-javascript/extdate.js';
+import { Milliseconds } from './aggregate-all.js';
+import { ExtDate } from './aggregate-all.js';
 /** Extend the ExtDate object to days counter with special behavior or contraints
  * @param {string} the desired counter, one of the following values
  * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)

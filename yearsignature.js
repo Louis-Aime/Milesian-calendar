@@ -1,7 +1,7 @@
 /* Year Signature of Julian, Gregorian and Milesian calendars
 	Character set is UTF-8
 Required
-	Chronos
+	Cbcce
 Each function returns a compound value with the yearly key figures for one calendar:
 	julianSignature: for the Julian calendar,
 	gregorianSignature: for the Gregorian calendar,
@@ -12,10 +12,11 @@ Key figure include:
 	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 	epact: Julian / Gregorian computus epact, Milesian epact as converted from Gregorian epact
 */
-/* Version	M2021-07-26	Update comments and links
+/* Version	M2021-07-29 Update external refs
+	M2021-07-26	Update comments and links
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-29 
-		Use Chronos.mod
+		Use Cbcce.mod
 		Derive Milesian signature from Gregorian figures, no more half-integer epact.
 	M2020-01-12 : strict mode
 	M2019-10-10: Reduced milesian epact is never 29.5, but rather 0.0
@@ -50,9 +51,9 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Cbcce as Chronos } from '/calendrical-javascript/chronos.js';
+import { Cbcce } from './aggregate-all.js';
 const // Gregorian solar intercalation rule
-	gregCalend = new Chronos (	
+	gregCalend = new Cbcce (	
 		{ 	// Decompose a year of the Dionysos era
 			timeepoch : 0, 
 			coeff : [
@@ -78,7 +79,7 @@ const // Gregorian solar intercalation rule
  * {boolean} signature.isLeap - whether this year is a leap year (366 days long).
 */
 export function julianSignature (year) {
-	const calend = new Chronos (
+	const calend = new Cbcce (
 		 { 	// Decompose a Julian year figure
 			timeepoch : 0, 
 			coeff : [
@@ -94,8 +95,8 @@ export function julianSignature (year) {
 		yearCoeff = calend.getObject (year),
 		signature = {  // Result for this function
 			// John Conway's Doomsday or key day for computing weekdays: 0th March.
-			doomsday : Chronos.mod(-2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
-			gold : Chronos.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
+			doomsday : Cbcce.mod(-2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
+			gold : Cbcce.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
 			goldNumber : 1,					// The displayed gold number, 1..19, computed later
 			epact : 0, 		// Julian computus moon age one day before 1st January, after Dionysos' computus
 			easterResidue : 0, 	// Number of days from 21st March to computus 14th moon day.
@@ -103,9 +104,9 @@ export function julianSignature (year) {
 			isLeap : yearCoeff.annum == 0	// whether this year is 366 days long
 		};
 	signature.goldNumber += signature.gold;
-	signature.easterResidue = Chronos.mod (15 + 19*signature.gold, 30);
-	signature.epact = Chronos.mod (23 - signature.easterResidue, 30);
-	signature.easterOffset = 1 + signature.easterResidue + Chronos.mod(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold, 30);
+	signature.epact = Cbcce.mod (23 - signature.easterResidue, 30);
+	signature.easterOffset = 1 + signature.easterResidue + Cbcce.mod(6 - signature.easterResidue - signature.doomsday, 7);
 	return signature;
 }
 /** key figures of a year of the Gregorian calendar
@@ -122,9 +123,9 @@ export function gregorianSignature (year) {
 		yearCoeff = gregCalend.getObject (year),
 		signature = {
 					// John Conway's Doomsday or key day for computing weekdays: weekday of 0th March.
-			doomsday : Chronos.mod(2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
+			doomsday : Cbcce.mod(2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
 					// Gregorian computus moon age one day before 1st January.
-			gold : Chronos.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
+			gold : Cbcce.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
 			goldNumber : 1,					// The displayed gold number, 1..19, computed later
 			epact : 0, 		
 			//milesiancomputusepact : 0,	// Gregorian computus moon age one day before 1 1m.
@@ -133,14 +134,14 @@ export function gregorianSignature (year) {
 			isLeap : yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || yearCoeff.saeculum == 0)	// whether this year is 366 days long
 		};
 	signature.goldNumber += signature.gold;
-	signature.easterResidue = Chronos.mod (15 + 19*signature.gold 	// Julian element
+	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold 	// Julian element
 		+ 3*yearCoeff.quadrisaeculum + yearCoeff.saeculum 	// Metemptose
 		- Math.floor ((8*(4*yearCoeff.quadrisaeculum + yearCoeff.saeculum) + 13) / 25 ) // Proemptose, Zeller computation
 		, 30);
-	signature.epact = Chronos.mod (23 - signature.easterResidue, 30);
-	// signature.milesiancomputusepact = Chronos.mod (12 - signature.easterResidue, 30);
+	signature.epact = Cbcce.mod (23 - signature.easterResidue, 30);
+	// signature.milesiancomputusepact = Cbcce.mod (12 - signature.easterResidue, 30);
 	signature.easterResidue -= Math.floor( (signature.gold + 11*signature.easterResidue) / 319 );
-	signature.easterOffset = 1 + signature.easterResidue + Chronos.mod(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.easterOffset = 1 + signature.easterResidue + Cbcce.mod(6 - signature.easterResidue - signature.doomsday, 7);
 	return signature;
 }
 /** key figures of a year of the Milesian calendar. Mostly Gregorian figures.
@@ -156,7 +157,7 @@ export function milesianSignature (year) {
 	var
 		yearCoeff = gregCalend.getObject (year),
 		signature = gregorianSignature (year); // initiate with Gregorian version
-	signature.epact = Chronos.mod (signature.epact + 19, 30); 
+	signature.epact = Cbcce.mod (signature.epact + 19, 30); 
 	// To check whether milesian year is leap, test next year
 	yearCoeff = gregCalend.getObject (++year);
 	signature.isLeap = yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || yearCoeff.saeculum == 0);

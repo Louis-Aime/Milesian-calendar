@@ -6,7 +6,6 @@ Contents:
 	class moonCalend: a class of calendars that takes Delta T into account.
 		astroDate is a legacy date shifted by Delta T
 	const Lunar: a collection of function and object for computing lunar dates and simplified coordinates.
-		getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
 			TT is Terrestrial Time, a uniform time scale defined with a second defined independently from Earth movements.
 			DeltaT is erratic and difficult to compute, however, the general trend of DeltaT is due to the braking  of the Earth's daily revolution.
 			This estimate of Delta T in seconds from the year expressed in Common Era is: -20 + 32 v², where v = (A – 1820) / 100.
@@ -25,13 +24,14 @@ Contents:
 			When height is around 0 at new or full moon, eclipse is possible.
 		There is no setter function in this package.
 */
-/* Version	M2021-07-26 adapt to new module architecture
+/* Version	M2021-07-29 import getDeltaT (through aggregates)
+	M2021-07-26 adapt to new module architecture
 	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021, and draconitic data
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-06 adapt to new chronos
 	M2020-12-29 Embedd in one object
 	M2020-12-29 
-		Use new Chronos object
+		Use new Chronos object (now Cbcce)
 		Use ExtDate object
 	M2020-01-12 : strict mode
 	M2019-07-27 : adapt to getRealTZmsOffset located in another package
@@ -65,23 +65,25 @@ Inquiries: www.calendriermilesien.org
 */
 /* Requires: 
 	Milliseconds object
-	class Chronos, 
+	class Cbcce, 
 	class ExtDate,
 	class MilesianCalendar
+	getDeltaT function
 */
 "use strict";
-import {Cbcce as Chronos, Milliseconds} from '/calendrical-javascript/chronos.js';
-import {default as ExtDate} from '/calendrical-javascript/extdate.js';
-import {MilesianCalendar} from '/calendrical-javascript/calendars.js';
+import { getDeltaT } from './aggregate-all.js';
+import {Cbcce, Milliseconds} from './aggregate-all.js';
+import {ExtDate} from './aggregate-all.js';
+import {MilesianCalendar} from './aggregate-all.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
 class moonCalend {		// an adjustement to Terrestrial Time (TT) is applied
 	constructor (params) {
-		this.clockwork = new Chronos ( params )
+		this.clockwork = new Cbcce ( params )
 	}
 	astroDate = function (theDate) { 
-		return this.clockwork.getObject (theDate.getTime() + Lunar.getDeltaT(theDate))
+		return this.clockwork.getObject (theDate.getTime() + getDeltaT(theDate))
 	}
 }
 /*	2. Constant data
@@ -187,27 +189,14 @@ const MoonData = {
 /*	3. The routine grouped in a single object that can become a module.
 */
 export const Lunar = {
-	/* 3.1. Common function, parameters and classes
-	*/
-	/** Compute an estimate of Delta T, defined as: UTC = TT - Delta T. The estimate is only the quadratic part of Delta T.
-	 * @function getDeltaT
-	 * @param {Date} the date where Delta T is estimated (estimation is per exact date, not per year)
-	 * return {number} Delta T. Unit is milliseconds, result reflects an integer signed number of seconds
-	*/
-	getDeltaT (theDate) { 
-		const JULIAN_CENTURY_UNIT = 36525 * 86400000,
-			ORIGIN = new Date (1825, 0, 1); // 1 January 1825
-		let century = (theDate.getTime() - ORIGIN.getTime()) / JULIAN_CENTURY_UNIT;
-		return Math.round(century*century*31.4 - 10) * Milliseconds.SECOND_UNIT; // Result as an integer number of seconds.	
-	},
 	/* 3.2. Class instantiations
 	*/
 	CEMoon : new moonCalend (MoonData.CE_Moon_params), // Lunar year, month (1..12), decimal age.
 	CELunar : new moonCalend (MoonData.CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
 	MoonPhase : new moonCalend (MoonData.Moon_Phase_params), // Lunar month, moon phase in ms.
 	Draco : new moonCalend (MoonData.Draconitic_Params), // Draconitic cycle, Draconitic phase in ms.
-	LunarCalend : new Chronos (MoonData.Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
-	DayMSCalend : new Chronos (MoonData.Day_milliseconds),	// Timestamp <> (Day;  ms)
+	LunarCalend : new Cbcce (MoonData.Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
+	DayMSCalend : new Cbcce (MoonData.Day_milliseconds),	// Timestamp <> (Day;  ms)
 	/* 3.2. User functions (as a guide)
 	*/
 	/** getCEMoonDate: The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
