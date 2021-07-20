@@ -90,6 +90,7 @@ Inquiries: www.calendriermilesien.org
 var
 	modules,		// all modules here once imported
 	milesian,	// = new MilesianCalendar ("milesian",pldrDOM), // A Milesian calendar with pldr data.
+	gregorian,
 	julian,		// = new JulianCalendar ("julian"),	// An instantied Julian calendar, no pldr
 	vatican,	// = new WesternCalendar ("vatican", "1582-10-15"),
 	french,		// = new WesternCalendar ("french", "1582-12-20"),
