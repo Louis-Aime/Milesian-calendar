@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-07-25	Control weeks data
+<!-- Version	M2021-07-29 Reorganise divisions
+	M2021-07-25	Control weeks data
 	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
 	M2021-03-11 Enhance display of Delta T
 	M2021-02-14 semi-modular architecture of called routines
@@ -67,7 +68,6 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 
 <!-- Page environment -->
 	<link href="dialsandpanels.css" rel="stylesheet"/>
-
 	<script type="text/javascript" src="milesianclockdisplay.js"></script>
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
 	<style>
@@ -162,11 +162,26 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		  </g>
 		</g>
 		</svg>
+		<section class="centered">
+		<form name="run" method="post">
+			<table class="centered">
+				<tr>
+					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;&lt;</button></td>
+					<td><button name="off" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(0)">■</button></td>
+					<td><button name="on" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(1)">►</button></td>
+					<td><button name="forw" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(1)">&gt;&gt;</button></td>
+				</tr> 
+				<tr>
+					<td colspan="4"><input name="speed" type="range" min="10" max="200" onchange="javascript:clockAnimate.clockRun(2)"></td>
+				</tr>
+			</table>
+		</form>
+		</section>
 	</div>
 
-	<div class="panel autoscroll"><h2 class="panelhead">Date, heure, animation</h2>
+	<div class="panel autoscroll"><h2 class="panelhead">Contrôle du temps</h2>
 
-		<section class="centered"><!-- setting date -->
+		<section class="centered"><h3 class="panelhead">Calendrier et date</h3>
 			<table class="centered">
 			  <tr>
 				<th><button id="customCalend" class="textline">Calendrier</button></th>
@@ -202,6 +217,8 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 				<td><button class="textline">Ok</button></td>
 			  </tr>
 			</form>
+			</table>
+			<table class="centered">
 			  <tr>
 				<form name="week">
 				<th>Semaines</th><td><input name="weekyear" type="number" class="centered digit4"></td>
@@ -218,7 +235,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			</form>
 			</table>
 		</section>
-		<section class="centered"><!-- date navigation -->
+		<section class="centered"><!-- now, day navigation -->
 		<form name="control">
 		 <table class="centered">
 		  <tr>
@@ -231,12 +248,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		 </table>
 		</form>
 		</section>
-		<section class="centered"><!-- setting time by elements -->
+		<section class="centered"><h3 class="panelhead">Heure et mode local ou UTC</h3>
 		  <form name="time" autocomplete="off">
 			<table class="centered">
-			  <tr> 
-				 <th colspan="5">Heure du fuseau ou du mode</th>
-			   </tr>
 			   <tr>
 				 <td><input name="hours" type="number" min="0" max="23" class="centered digit2">h</td>
 				 <td><input name="mins" type="number" min="0" max="59" class="centered digit2">min</td>
@@ -259,7 +273,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			</table>
 		  </form>
 		</section>
-		<section class="centered autoscroll"><!-- time zone option -->
+		<section class="centered"><!-- time zone option -->
 		  <form name="TZmode" autocomplete="off">
 			<table class="centered">
 					<tr><th>Mode&nbsp;: </th>
@@ -288,22 +302,6 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 				<th>UTC</th>
 			  </tr>
 			 </table>
-		</section>
-		<section class="centered">
-
-		<form name="run" method="post">
-			<table class="centered">
-				<tr>
-					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;&lt;</button></td>
-					<td><button name="off" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(0)">■</button></td>
-					<td><button name="on" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(1)">►</button></td>
-					<td><button name="forw" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(1)">&gt;&gt;</button></td>
-				</tr> 
-				<tr>
-					<td colspan="4"><input name="speed" type="range" min="10" max="200" onchange="javascript:clockAnimate.clockRun(2)"></td>
-				</tr>
-			</table>
-		</form>
 		</section>
 	</div>
 
@@ -399,7 +397,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<h3>Calendrier utilisateur</h3>
 		<p class="centered" id="CustomString"></p>
 		<table class="centered">
-			<tr><th>Année</th><th>semaine</th><th>jour</th><th>(semaines)</th></tr>
+			<tr><th>Année</th><th>semaine</th><th>jour</th><th>(semaines de l'année)</th></tr>
 			<tr>
 				<td id="weekyear"></td><td id="yearweek"></td><td id="weekday"></td><td id="weeksinyear"></td>
 			</tr>
@@ -412,7 +410,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	<div class="panel autoscroll"><h2 class="panelhead">Données lunaires</h2>
 
 	<form name="moon" method="post" action="javascript:void(0)">
-	<h3 class="panelhead">Lune moyenne corrigée</h3>
+	<section><h3 class="panelhead">Lune moyenne corrigée</h3>
 	 <table class="centered">
 		<tr>
 			<th>&nbsp;Âge lunaire&nbsp;</th>	<th>&nbsp;Reliquat&nbsp;</th> 
@@ -429,7 +427,8 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			<td><input name="moondate" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
 		</tr>
 	 </table>
-	<h3 class="panelhead">Données draconitiques (éclipses)</h3>
+	 </section>
+	<section><h3 class="panelhead">Données draconitiques (éclipses)</h3>
 	 <table class="centered">
 		<tr><th>Angle</th><th>Heure</th><th>Hauteur</th></tr>
 		<tr>
@@ -438,17 +437,43 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			<td><input name="height" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
 		</tr>
 	 </table>
+	 </section>
 	 </form>
-
-	<h3 class="panelhead">Composante quadratique de Delta T</h3>
-		<p class="panelhead">(Temps UTC = Temps Terrestre - Delta T)</p>
-	<span class="centered">
-			<span id="deltatsec"></span> s, soit&nbsp;
-			<span id="deltathms"></span>
-	</span>
+	<section><h3 class="panelhead">Calendrier lunaire virtuel</h3>
+	<form name="mooncalend" method="post" action="javascript:void(0)">
+	 <table class="centered">
+		  <tr>
+			<th>Origine</th>
+			<th>Jour</th>
+			<th>Mois</th>
+			<th>Année lunaire</th>
+		  </tr>
+		<tr>
+		 <th>An 0&nbsp;: </th>
+		 <td><input name="CElunardate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="CElunarmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="CElunaryear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
+		</tr>
+		<tr>
+		 <th>Hégire&nbsp;: </th>
+		 <td><input name="hegiriandate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="hegirianmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="hegirianyear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
+		</tr>
+	 </table> 
+	</form>
+	</section>
 	</div>
 
 	<div class="panel autoscroll"><h2 class="panelhead">Saisons</h2>
+		<section><h3 class="panelhead">Composante quadratique de Delta T</h3>
+		<p class="panelhead">(Temps UTC = Temps Terrestre - Delta T)</p>
+		<span class="centered">
+			<span id="deltatsec"></span> s, soit&nbsp;
+			<span id="deltathms"></span>
+			</span>
+		</section>
+
 		<section><h3>Saisons boréales année <span id="seasonsyear"></span></h3>
 		<p class="centered">Heure selon fuseau spécifié dans "Mode"</p>
 		  <form name="seasons" method="post">
@@ -468,7 +493,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<table class="centered">
 		  <tr>
 			<th>Année&nbsp;: </th>
-			<td><input name="year" value="0" disabled="disabled" size="2"><td>
+			<td><input name="year" value="0" disabled="disabled" size="2"></td>
 		  </tr>
 		  <tr>
 			<th>Nombre d'or (1 à 19)&nbsp;: </th>
@@ -557,30 +582,6 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			</tr>
 		</table>
 	</section>	
-	<section><h3 class="panelhead">Calendrier lunaire virtuel</h3>
-	<form name="mooncalend" method="post" action="javascript:void(0)">
-	 <table class="centered">
-		  <tr>
-			<th>Origine</th>
-			<th>Jour</th>
-			<th>Mois</th>
-			<th>Année lunaire</th>
-		  </tr>
-		<tr>
-		 <th>An 0&nbsp;: </th>
-		 <td><input name="CElunardate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
-		 <td><input name="CElunarmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
-		 <td><input name="CElunaryear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
-		</tr>
-		<tr>
-		 <th>Hégire&nbsp;: </th>
-		 <td><input name="hegiriandate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
-		 <td><input name="hegirianmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
-		 <td><input name="hegirianyear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
-		</tr>
-	 </table> 
-	</form>
-	</section>
 	</div>
 
 	<footer>
