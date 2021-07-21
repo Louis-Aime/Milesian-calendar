@@ -549,7 +549,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Display Julian Day field.
 	let JD = new modules.ExtCountDate ("julianDay","iso8601",register.targetDate.valueOf()).getCount();
 	document.daycounter.julianday.value = 
-		JD.toLocaleString(undefined,{useGrouping:false, maximumFractionDigits:8}); 
+		JD.toLocaleString(undefined,{maximumFractionDigits:8}); // JD.toLocaleString(undefined,{useGrouping:false, maximumFractionDigits:8})
 	if (document.daycounter.julianday.value == "") // Because bug in Chromium
 		document.daycounter.julianday.value = Math.round(JD*10E7)/10E7;
 	// Display other chronological counts
