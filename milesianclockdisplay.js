@@ -600,10 +600,12 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Lunar data frame
 
 	// Update lunar parameters - using register.targetDate
+	let lunarDateFormat = new modules.ExtDateTimeFormat (undefined, {year : "numeric", month : "short", day : "numeric"}, milesian);
 	dateComponent = modules.Lunar.getCEMoonDate( register.targetDate );
 	register.milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
+/*
 	document.moon.angle.value = modules.Lunar.getDraconiticAngle(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
 	document.moon.height.value = modules.Lunar.getDraconiticHeight(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
 	dateComponent = modules.Lunar.getLunarDateTime( register.targetDate );
@@ -621,8 +623,18 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	catch (error) {
 		document.moon.moontime.value = "--:--:--";
 	}
-
-	dateComponent = modules.Lunar.getCELunarDate(shiftDate);				
+*/
+//	try {
+		let [caput, cauda, eclipse] = modules.Lunar.getDraconiticNodes (register.targetDate);
+		document.moon.caput.value = lunarDateFormat.format (caput);
+		document.moon.cauda.value = lunarDateFormat.format (cauda);
+		document.moon.eclipseseason.value = eclipse;
+/*	}
+	catch (error) {
+		document.moon.caput.value = error;
+		document.moon.cauda.value = error;
+	} */
+	dateComponent = modules.Lunar.getCELunarDate(shiftDate);
 	document.mooncalend.CElunardate.value = 	dateComponent.day;
 	document.mooncalend.CElunarmonth.value = 	dateComponent.month;
 	document.mooncalend.CElunaryear.value = 	dateComponent.year;
