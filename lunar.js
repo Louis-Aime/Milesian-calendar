@@ -17,14 +17,16 @@ Contents:
 		getHegirianLunarDate : the Hegirian date at 0h UTC at this calendar date. 
 		getLunarTime (timezone offset in milliseconds, the caller's system defautl by default) : gives lunar time (H, m, s). 
 			At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
-		getDraconiticAngle : Angle between Draco and moon in degrees
-		getDraconiticSunTimeAngle : Angle between Draco and the sun, in milliseconds
-		getDraconiticTime : local time where ascending node is at place of sun the same day
-		getDraconiticHeight : a very rough estimate of the height of the moon (-5,145° to +5,145°). 
+		DEPRECATE getDraconiticAngle : Angle between Draco and moon in degrees
+		DEPRECATE getDraconiticSunTimeAngle : Angle between Draco and the sun, in milliseconds
+		DEPRECATE getDraconiticTime : local time where ascending node is at place of sun the same day
+		DEPRECATE getDraconiticHeight : a very rough estimate of the height of the moon (-5,145° to +5,145°). 
 			When height is around 0 at new or full moon, eclipse is possible.
+		getDraconiticNodes : dates in same year where sun is aligned or opposite with lunar nodes.
 		There is no setter function in this package.
 */
-/* Version	M2021-07-29 import getDeltaT (through aggregates)
+/* Version	M2021-08-01 Group lunar data and organise Draconitic data
+	M2021-07-29 import getDeltaT (through aggregates)
 	M2021-07-26 adapt to new module architecture
 	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021, and draconitic data
 	M2021-02-15	Use as module, with calendrical-javascript modules
@@ -40,7 +42,7 @@ Contents:
 	M2018-11-10 : new value for draconitic cycle, found in Wikipedia
 	M2018-10-26 : fix typos
 	M2018-05-28 : enhanced comments and add a more lunar calendar functions
-	M2017-12-26 : replace CalendarCycleComputationEngine with CBCCE.
+	M2017-12-26 : replace names.
 */
 /* Copyright Miletus 2016-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -78,7 +80,7 @@ import {MilesianCalendar} from './aggregate-all.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
-class moonCalend {		// an adjustement to Terrestrial Time (TT) is applied
+class astroCalend {		// Calendrical computations with adjustement to Terrestrial Time (TT). For astronomical cycles.
 	constructor (params) {
 		this.clockwork = new Cbcce ( params )
 	}
@@ -86,10 +88,23 @@ class moonCalend {		// an adjustement to Terrestrial Time (TT) is applied
 		return this.clockwork.getObject (theDate.getTime() + getDeltaT(theDate))
 	}
 }
-/*	2. Constant data
+/*	2. Astronomical data used with the Cycle Based Calendar Computation Engine (CBCCE)
 */
-const MoonData = {
+const CbcceParam = {
 	HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET : 7688, 
+	/** CBCCE parameters for the tropical year. 
+	*/
+	Tropical_year_params : {
+		timeepoch : 945820800000,	// Convention: 1 1m 2000 0 h UTC (22/12/1999). Solstice took place at 7 h 43.
+		coeff : [
+			 {cyclelength : 31556925250, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "year"}, // one tropical year in 2000.
+			 {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"}	// one millisecond
+		],
+		canvas : [
+			{name : "year", init :0},
+			{name : "phase", init : 0}
+		]
+	},
 	/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon years, moon months and fractional moon age.
 	* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
 	*/
@@ -106,7 +121,7 @@ const MoonData = {
 			{name : "month", init : 1},
 			{name : "age", init : 0}
 		]
-	} ,
+	},
 	/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon years, moon months, integer moon age, and milliseconds
 	* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
 	*/
@@ -154,10 +169,10 @@ const MoonData = {
 			{name : "month", init : 1}
 		]
 	}, 
-	/** CBCCE parameters to be used  to estimate the height of the moon. Around 0 at New Moon or Full Moon means possibility of eclipse.
+	/** CBCCE parameters to be used for the Draconitic position of the Moon.
 	 * @todo Find and source a 0 value.
 	*/
-	Draconitic_Params : { //
+	Lunar_Draconitic_Params : { //
 		timeepoch : 993094200000, // An approximate date of mean moon at 0, rising on its draconitic cycle 
 				// Proposition #1 : 993094200000 (2001-06-21T03:30Z) after a paper of Patrick Rocher (IMCCE 2005). This value is estimated form a plot.
 				// Proposition #2 : (tbc)
@@ -171,8 +186,20 @@ const MoonData = {
 			{name : "phase", init : 0}
 			]
 	},
-	/**
-	 * @description conversion from Posix timestamp to days + milliseconds in day, and the reverse, with CBCCE
+	/** CBCCE parameters for the Draconitic cycle with respect to the tropical year
+	*/
+	Solar_Draconitic_Params : { 
+		timeepoch : 1296734400000,	// M2011-02-15 12h An approximate date of caput draconis at winter solstice.
+		coeff : [
+			{cyclelength : 585600065921, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "tropicsaros"}, // one pseudo-saros or one cycle on the ecliptic		
+			{cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"} // one milliseconds		
+			],
+		canvas : [
+			{name : "tropicsaros", init :0},
+			{name : "phase", init : 0}
+			]
+	},
+	/** Conversion from Posix timestamp to days + milliseconds in day, and the reverse, with CBCCE
 	*/
 	Day_milliseconds : { 	// To convert a time or a duration to and from days + milliseconds in day.
 		timeepoch : 0, 
@@ -189,16 +216,23 @@ const MoonData = {
 /*	3. The routine grouped in a single object that can become a module.
 */
 export const Lunar = {
-	/* 3.2. Class instantiations
+	/* 3.1. Class instantiations
 	*/
-	CEMoon : new moonCalend (MoonData.CE_Moon_params), // Lunar year, month (1..12), decimal age.
-	CELunar : new moonCalend (MoonData.CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
-	MoonPhase : new moonCalend (MoonData.Moon_Phase_params), // Lunar month, moon phase in ms.
-	Draco : new moonCalend (MoonData.Draconitic_Params), // Draconitic cycle, Draconitic phase in ms.
-	LunarCalend : new Cbcce (MoonData.Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
-	DayMSCalend : new Cbcce (MoonData.Day_milliseconds),	// Timestamp <> (Day;  ms)
-	/* 3.2. User functions (as a guide)
+	TropicalCalend : new astroCalend (CbcceParam.Tropical_year_params),	// Analyse an instant as coordinates on the tropical year.
+	CEMoon : new astroCalend (CbcceParam.CE_Moon_params), // Lunar year, month (1..12), decimal age.
+	CELunar : new astroCalend (CbcceParam.CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
+	MoonPhase : new astroCalend (CbcceParam.Moon_Phase_params), // Lunar month, moon phase in ms.
+	Draco : new astroCalend (CbcceParam.Lunar_Draconitic_Params), // Draconitic cycle, Draconitic phase in ms.
+	SolarDraco : new astroCalend (CbcceParam.Solar_Draconitic_Params),
+	LunarCalend : new Cbcce (CbcceParam.Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
+	DayMSCalend : new Cbcce (CbcceParam.Day_milliseconds),	// Timestamp <> (Day;  ms)
+	/* 3.2. User functions
 	*/
+	/** getTropicalDate: the date in the tropical cycle
+	*/
+	getTropicalDate (theDate) {
+		return this.TropicalCalend.astroDate (theDate);
+	},
 	/** getCEMoonDate: The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin morning of 3 1m 000
 	 * an adjustement to Terrestrial Time (TT) is applied
@@ -228,7 +262,7 @@ export const Lunar = {
 	getHegirianMoonDate (theDate) {
 		let moonDate = CEMoon.astroDate (theDate);
 		let age = moonDate.age ;
-		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - MoonData.HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
+		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - CbcceParam.HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'age' : age};
 	},
 	/** The lunar "mean" Hegirian calendar date coordinate at this date, 0h UTC. 
@@ -241,7 +275,7 @@ export const Lunar = {
 	getHegirianLunarDate (theDate) { 
 		let moonDate = this.getCELunarDate (theDate); //cbcceDecompose (refDate.getTime()+refDate.getDeltaT(), CE_Lunar_params);
 		let lunarDay = moonDate.day;
-		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - MoonData.HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
+		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - CbcceParam.HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'day' : lunarDay}
 	},
 	/** getLunarTime was deprecated. Take time section of getLunarDateTime. is such that the moon is at the same place in the sky that the sun at this time, the same day; 
@@ -252,7 +286,7 @@ export const Lunar = {
 	*/
 	getLunarSunTimeAngle (theDate) {
 		let msOffset = 
-			- Math.round(Milliseconds.DAY_UNIT * this.MoonPhase.astroDate (theDate).phase / MoonData.Moon_Phase_params.coeff[0].cyclelength);
+			- Math.round(Milliseconds.DAY_UNIT * this.MoonPhase.astroDate (theDate).phase / CbcceParam.Moon_Phase_params.coeff[0].cyclelength);
 		return this.DayMSCalend.getObject (msOffset).milliseconds_in_day ; 
 	},
 	/** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
@@ -270,34 +304,59 @@ export const Lunar = {
 		let dayOffset = (thisAge * yearCycle / sideralMoonCycle) % yearCycle;	
 			// The number of days to add to the date of new moon, to obtain the date where the Sun shall be at the Moon's present position on the Ecliptic
 		let fakeDate = new ExtDate (milesian, theDate.getTime() + Math.round((dayOffset - thisAge) * Milliseconds.DAY_UNIT)).getFields("UTC");
-		let timeOffset = thisAge * Milliseconds.DAY_UNIT * Milliseconds.DAY_UNIT / MoonData.CE_Moon_params.coeff[1].cyclelength;
+		let timeOffset = thisAge * Milliseconds.DAY_UNIT * Milliseconds.DAY_UNIT / CbcceParam.CE_Moon_params.coeff[1].cyclelength;
 		let fakeTime = new ExtDate (milesian, theDate.getTime() - timeZoneOffset - timeOffset).getFields("UTC");
 		return {month: fakeDate.month, day: fakeDate.day, hours : fakeTime.hours, minutes : fakeTime.minutes, seconds : fakeTime.seconds};
 	},
-	/** Draconitic angle between the rising node of the moon and the moon itself
+	/** Draconitic angle between the rising node of the moon and the moon itself // DEPRECATE
 	 * @param (Date) UTC date of computation
 	 * @return {number} angle in decimal degrees
 	*/
 	getDraconiticAngle (theDate) {
-		return 360 * this.Draco.astroDate (theDate).phase / MoonData.Draconitic_Params.coeff[0].cyclelength
+		return 360 * this.Draco.astroDate (theDate).phase / CbcceParam.Lunar_Draconitic_Params.coeff[0].cyclelength
 	},
-	/** Draconitic time angle between the rising node of the moon and the sun
+	/** Draconitic time angle between the rising node of the moon and the sun	// DEPRECATE
 	 * @param (Date) UTC date of computation
 	 * @return {number} delay to add to current time in order to get Draconitic time
 	*/
 	getDraconiticSunTimeAngle (theDate) {
 		return Math.round 
-		 (Milliseconds.DAY_UNIT * this.Draco.astroDate (theDate).phase / MoonData.Draconitic_Params.coeff[0].cyclelength)
+		 (Milliseconds.DAY_UNIT * this.Draco.astroDate (theDate).phase / CbcceParam.Lunar_Draconitic_Params.coeff[0].cyclelength)
 		 + this.getLunarSunTimeAngle(theDate)
 	},
-	/** Rough estimation of Draconitic height
+	/** Rough estimation of Draconitic height // DEPRECATE
 	 * @param (Date) UTC date of computation
 	 * @return {number} a rough estimate of the height of the Moon with respect to the Ecliptic circle, in degrees
 	*/
-	getDraconiticHeight (theDate) { 
+	getDraconiticHeight (theDate) {
 		const MEANINCLINATION = 5.145; 	// mean inclination of the lunar orbit in degrees
-		let alpha = 2*Math.PI* this.Draco.astroDate (theDate).phase / MoonData.Draconitic_Params.coeff[0].cyclelength
+		let alpha = 2*Math.PI* this.Draco.astroDate (theDate).phase / CbcceParam.Lunar_Draconitic_Params.coeff[0].cyclelength
 		return MEANINCLINATION * Math.sin (alpha);
+	},
+	/** Estimate position of caput draconis at this date, and of cauda draconis, as two Milesian dates in same year (time of day is not estimated)
+	 * @param (Date) theDate: from where I want the estimate
+	 * @return (Array) two dates, caput draconis and cauda draconis in same year.
+	*/
+	getDraconiticNodes (theDate) {
+		const 
+			YEAR = CbcceParam.Tropical_year_params.coeff[0].cyclelength,
+			HALF_YEAR = Math.floor (YEAR / 2),
+			DRACO_CYCLE = CbcceParam.Solar_Draconitic_Params.coeff[0].cyclelength,
+			DRACO_RADIUS = 18 * Milliseconds.DAY_UNIT;
+		let 
+			milesianYear = new ExtDate(milesian, theDate.valueOf()).year() + 1,
+			// year = TropicalCalend.astroDate(theDate).year,
+			draco = Lunar.SolarDraco.astroDate(theDate),	// two fields + 'phase'
+			yearPhase = Math.floor (draco.phase * YEAR / DRACO_CYCLE),
+			yearReference = new ExtDate (milesian); // cannot use Temporal.PlainDate.from() yet 
+		yearReference.setFromFields({year : milesianYear, month : 1, day : 5} ,'UTC');	// UTC newyear instant + 5 days is always after solstice
+		let
+			solstitial = Lunar.TropicalCalend.astroDate (yearReference), // distance between newyear + 5 days instant and (mean) solstice.
+			caputDate = new ExtDate (milesian, yearReference.valueOf() - yearPhase - solstitial.phase),
+			caudaOffset = (caputDate.month <= 6 ? HALF_YEAR : - HALF_YEAR),
+			caudaDate = new ExtDate (milesian, caputDate.valueOf() + caudaOffset),
+			eclipseSeason = Math.abs(theDate.valueOf() - caputDate.valueOf()) <= DRACO_RADIUS || Math.abs(theDate.valueOf() - caudaDate.valueOf()) <= DRACO_RADIUS;
+		return [ caputDate, caudaDate, eclipseSeason ]
 	}
 }
 
