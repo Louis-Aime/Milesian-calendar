@@ -93,7 +93,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<!-- the motto on the dial -->
 		<text class="motto" x="0" y="-90" >CERTUM MONSTRAT DIEM</text> 
 		<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
-		<rect class="center month day" x="0" y="0" width="0" height="0" />
+		<rect class="center dragon month day" x="0" y="0" width="0" height="0" />
 		<!-- the year field -->
 		  <text class="clock yeardisplay"
 			x="0" y="+100"></text>
@@ -154,7 +154,13 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		-->
 		  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
 		</g>
-		<!-- month and day hands are set at the end, in order to be above the rest of the clock -->
+		<!-- dragon, month and day hands are set at the end, in order to be above the rest of the clock -->
+		<!-- the dragon hand -->
+		  <g class="clockhand dragon" transform="rotate(0)"
+		  opacity="0.6">										
+			<polygon points="10,0 12,-20 42,-135 0,-150 -42,-135 -12,-20 -10,0" />
+			<polygon points="10,0 12,20 42,135 0,120 -42,135 -12,20 -10,0" />
+		  </g>
 		<!-- the month hand -->
 		  <g class="clockhand month" transform="rotate(0)"
 		  opacity="0.8">										
