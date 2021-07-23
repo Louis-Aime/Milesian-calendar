@@ -483,10 +483,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Initiate milesian clock and milesian string with present time and date
 	var myElement = document.querySelector("#clock2"),	// myElement is a work variable
 		myCollection ;	// Another work variable, used later
+
 	shiftDate = new modules.ExtDate (milesian, shiftDate.valueOf());
-	register.milesianClock.setHands (shiftDate.year("UTC"), shiftDate.month("UTC"), shiftDate.day("UTC"),
-		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds() ); // Display date on clock.
-	register.milesianClock.setSeasons (shiftDate.year("UTC")); // Display also seasons.
+	// Clock was set here. But now we display also the Dragon, computed later.
 
 	var dateComponent = shiftDate.getFields("UTC");	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
 
@@ -600,29 +599,29 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Lunar data frame
 
 	// Update lunar parameters - using register.targetDate
+	let lunarDateFormat = new modules.ExtDateTimeFormat (undefined, {year : "numeric", month : "short", day : "numeric"}, milesian);
 	dateComponent = modules.Lunar.getCEMoonDate( register.targetDate );
 	register.milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
-	document.moon.angle.value = modules.Lunar.getDraconiticAngle(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
-	document.moon.height.value = modules.Lunar.getDraconiticHeight(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
 	dateComponent = modules.Lunar.getLunarDateTime( register.targetDate );
 	document.moon.moondate.value = dateComponent.day + " " 
 				+  (dateComponent.month) + "m";
-	try {
-		document.moon.dracotime.value = new Date(shiftDate.valueOf() + modules.Lunar.getDraconiticSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
-	}
-	catch (error) {
-		document.moon.dracotime.value = "--:--:--";
-	}
 	try {
 		document.moon.moontime.value = new Date(shiftDate.valueOf() + modules.Lunar.getLunarSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	}
 	catch (error) {
 		document.moon.moontime.value = "--:--:--";
 	}
+		let [caput, cauda, eclipse] = modules.Lunar.getDraconiticNodes (register.targetDate);
+		document.moon.caput.value = lunarDateFormat.format (caput);
+		document.moon.cauda.value = lunarDateFormat.format (cauda);
+		myElement = document.getElementById("EclipseField");
+		if (eclipse) myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention","") + " attention")
+			else myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention",""));
+		document.moon.eclipseseason.value = eclipse;
 
-	dateComponent = modules.Lunar.getCELunarDate(shiftDate);				
+	dateComponent = modules.Lunar.getCELunarDate(shiftDate);
 	document.mooncalend.CElunardate.value = 	dateComponent.day;
 	document.mooncalend.CElunarmonth.value = 	dateComponent.month;
 	document.mooncalend.CElunaryear.value = 	dateComponent.year;
@@ -645,6 +644,12 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	let milesianYear = new modules.ExtDate(milesian, register.targetDate.valueOf()).fullYear(register.TZSettings.TZmode);
 	document.getElementById ("seasonsyear").innerHTML = milesianYear;
 	computeSignature(milesianYear, "", register.TZSettings.mode);
+
+	// Finally update and display clock
+	register.milesianClock.setHands (shiftDate.year("UTC"), shiftDate.month("UTC"), shiftDate.day("UTC"),
+		shiftDate.getUTCHours(), shiftDate.getUTCMinutes(), shiftDate.getUTCSeconds(), caput.month(), caput.day() ); // Display date on clock.
+	register.milesianClock.setSeasons (shiftDate.year("UTC")); // Display also seasons.
+
 
 }
 window.onload = function () {	// Global initialisations done by async initial ()

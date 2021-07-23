@@ -1,9 +1,15 @@
 /* Computation of an estimate of Delta T, for astronomical computations with calendars
 Character set is UTF-8
 Contents: 
-		getDeltaT : an estimate of DeltaT, defined as: UTC = TT - DeltaT. UTC is former GMT, 
+	getDeltaT : an estimate of DeltaT, defined as: 
+				UTC = TT - DeltaT. UTC is former GMT.
+		TT is Terrestrial Time, a uniform time scale defined with a second defined independently from Earth movements.
+		DeltaT is erratic and difficult to compute, however, the general trend of DeltaT is due to the braking  of the Earth's daily revolution.
+		This estimate of Delta T in seconds from the year expressed in Common Era is: -20 + 32 v², where v = (A – 1820) / 100.
+		In this version, Delta T is computed from a fractional value of the time. The result is rounded to the nearest second.
 */
-/* Version	M2021-07-29 extracted and isolated from Lunar.js
+/* Version	M2021-08-02	Recover comments describing Delta T that had been lost when splitting.
+	M2021-07-29 extracted and isolated from Lunar.js
 	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021
 */
 /* Copyright Miletus 2016-2021 - Louis A. de Fouquières

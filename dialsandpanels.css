@@ -98,6 +98,12 @@ button.symbol {
 	stroke-width:4px;
 	stroke-linecap:round;
 }
+.dragon {
+	fill:blueviolet; 
+	stroke:darkviolet; 
+	stroke-width:4px;
+	stroke-linecap:round;
+}
 .seasonmark {
 	fill:forestgreen; 
 	stroke:darkgreen; 

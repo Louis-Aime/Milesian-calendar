@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-07-29 Reorganise divisions
+<!-- Version	M2021-08-01 caput and cauda draconis
+	M2021-07-29 Reorganise divisions
 	M2021-07-25	Control weeks data
 	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
 	M2021-03-11 Enhance display of Delta T
@@ -92,7 +93,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<!-- the motto on the dial -->
 		<text class="motto" x="0" y="-90" >CERTUM MONSTRAT DIEM</text> 
 		<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
-		<rect class="center month day" x="0" y="0" width="0" height="0" />
+		<rect class="center dragon month day" x="0" y="0" width="0" height="0" />
 		<!-- the year field -->
 		  <text class="clock yeardisplay"
 			x="0" y="+100"></text>
@@ -153,7 +154,13 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		-->
 		  <path class="shaded moonphase" d="M 80 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
 		</g>
-		<!-- month and day hands are set at the end, in order to be above the rest of the clock -->
+		<!-- dragon, month and day hands are set at the end, in order to be above the rest of the clock -->
+		<!-- the dragon hand -->
+		  <g class="clockhand dragon" transform="rotate(0)"
+		  opacity="0.6">										
+			<polygon points="10,0 12,-20 42,-135 0,-150 -42,-135 -12,-20 -10,0" />
+			<polygon points="10,0 12,20 42,135 0,120 -42,135 -12,20 -10,0" />
+		  </g>
 		<!-- the month hand -->
 		  <g class="clockhand month" transform="rotate(0)"
 		  opacity="0.8">										
@@ -435,11 +442,15 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	 </section>
 	<section><h3 class="panelhead">Données draconitiques (éclipses)</h3>
 	 <table class="centered">
-		<tr><th>Angle</th><th>Heure</th><th>Hauteur</th></tr>
+		<tr><th>Caput</th><th>Cauda</th><th>Saison d'éclipses</th></tr>
 		<tr>
-			<td><input name="angle" value="" type="text" class="centered" disabled="disabled" size="8"> </td>
-			<td><input name="dracotime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
-			<td><input name="height" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
+			<td><input name="caput" value="" type="text" class="centered" disabled="disabled" size="12"></td>
+			<td><input name="cauda" value="" type="text" class="centered" disabled="disabled" size="12"></td>
+			<td id="EclipseField" class="mutable"><select name="eclipseseason" class="centered" disabled="disabled">
+				<option value="false" selected>fermée</option>
+				<option value="true">ouverte</option>
+				</select>
+			</td>
 		</tr>
 	 </table>
 	 </section>
