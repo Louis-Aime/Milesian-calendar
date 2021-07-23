@@ -7,7 +7,8 @@ Contents
 		setMilesianCalendarClockHands (deprecated)
 		setSolarYearClockHands (deprecated)
 */
-/* Version	M2021-07-29 adapt to calendrical Javascript
+/* Version	M2021-08-02	Add a dragon hand
+	M2021-07-29 adapt to calendrical Javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-30
 		Group routines in a same module
@@ -56,7 +57,7 @@ export class SolarClock {
 		this.clock = clock;	// The dial and the elements to be moved
 	}
 	/** Set the hands of a solar calendar clock, after the components of a milesian date.
-	 * @since M2020-12-30
+	 * @since M2021-08-02
 	 * @param {Object} clock - a graphical object that represents the clock, that the routine will set
 	 * if existing, these elements shall be set
 	 *   @member .yearDisplay where the year is displayed
@@ -65,6 +66,7 @@ export class SolarClock {
 	 *   @member .clockhand.hour a hand to be rotated, indicates the hour (12 hours dial)
 	 *   @member .clockhand.minute a hand to be rotated, minutes
 	 *   @member .clockhand.seconds a hand to be rotated, seconds
+	 *   @member .clockhand.dragon a hand to be rotated, represents the dragon i.e. the lunar nodes. 
 	 *   @member .ampm where "am" or "pm" shall be indicated
 	 * @param {number} year - year, displayed as is in .yearDisplay
 	 * @param {number} month - month, 1 (1m) by default
@@ -72,20 +74,25 @@ export class SolarClock {
 	 * @param {number} hour - hour, 0 to 24, 24 by default, which means end of day
 	 * @param {number} minute - minute, 0 to 59, 0 by default
 	 * @param {number} second - second, 0 to 59, 0 by default
-	 * @param {boolean} continous - is set, day and month hands shall move slightly during the day, 
-	 * if unset (default), day and month hands move by one day quantum.
+	 * @param (number) dragonMonth - if defined, the month part of the dragon equivalent date.
+	 * @param (number) dragonDay -b if defined, the day part of the dragon equivalent date.
+	 * @param {boolean} continous - if set, day and month hands shall move continuously during the day, if unset (default), day, month and dragon hands move by one day quantum.
 	 * @return {number} number of half-days since beginning of year.
 	*/
-	setHands(year = undefined, month = 1, day = 1, hour = 24, minute = 0, second = 0, continuous = false) { 
-		var timeUnits = ["month", "day", "hour", "minute", "second"] ;	// the time units enumerated.
-		month--;		// switch month to 0..11
-		let 	halfDays = 60*month + 2*Math.floor(month/2) 
-				+ (continuous ? 2*(day-1) + (hour + minute/60 + second/3600)/12 : 2*day);	
+	setHands(year = undefined, month = 1, day = 1, hour = 24, minute = 0, second = 0, dragonMonth, dragonDay, continuous = false) { 
+		var timeUnits = ["month", "day", "hour", "minute", "second", "dragon"] ;	// the time units enumerated.
+		let 	halfDays = 60*(--month) + 2*Math.floor(month/2) 
+					+ (continuous ? 2*(day-1) + (hour + minute/60 + second/3600)/12 : 2*day),
+				dragon = dragonMonth == undefined || dragonDay == undefined ? 0 :
+						(60 * (--dragonMonth) + 2*Math.floor(dragonMonth/2) + 2*dragonDay) * 360 / 732;
 		// Number of half-days since beginning of year, at beginning of day i.e. at THE END of that day if no hour specified.
 		let	angle =	{				// set of angle values
 			"month" : halfDays * 360 / 732, 			// Angle of month hand with respect to vertical upright
 			"day"	: halfDays * 360 * 12 / 732,		// Angle of day hand with respect to vertical upright
-			"hour"	: hour*30 + minute/2, "minute" : minute*6+second/10, "second" : second*6
+			"hour"	: hour*30 + minute/2, 
+			"minute" : minute*6+second/10, 
+			"second" : second*6,
+			"dragon" : dragon
 		};
 		// Use SVG interfaces to set angles. Forced to use "getItem" instead of a simple [] array call, because of MS Edge (and probably Safari)
 		for ( let i = 0; i < timeUnits.length; i++ ) {	// for all time units...
