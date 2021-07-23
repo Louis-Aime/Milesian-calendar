@@ -608,26 +608,30 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 /*
 	document.moon.angle.value = modules.Lunar.getDraconiticAngle(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});		
 	document.moon.height.value = modules.Lunar.getDraconiticHeight(register.targetDate).toLocaleString(undefined,{maximumFractionDigits:3, minimumFractionDigits:3});
-	dateComponent = modules.Lunar.getLunarDateTime( register.targetDate );
-	document.moon.moondate.value = dateComponent.day + " " 
-				+  (dateComponent.month) + "m";
 	try {
 		document.moon.dracotime.value = new Date(shiftDate.valueOf() + modules.Lunar.getDraconiticSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	}
 	catch (error) {
 		document.moon.dracotime.value = "--:--:--";
 	}
+*/
+	dateComponent = modules.Lunar.getLunarDateTime( register.targetDate );
+	document.moon.moondate.value = dateComponent.day + " " 
+				+  (dateComponent.month) + "m";
 	try {
 		document.moon.moontime.value = new Date(shiftDate.valueOf() + modules.Lunar.getLunarSunTimeAngle(register.targetDate)).toLocaleTimeString(undefined,{timeZone:'UTC'});
 	}
 	catch (error) {
 		document.moon.moontime.value = "--:--:--";
 	}
-*/
+
 //	try {
 		let [caput, cauda, eclipse] = modules.Lunar.getDraconiticNodes (register.targetDate);
 		document.moon.caput.value = lunarDateFormat.format (caput);
 		document.moon.cauda.value = lunarDateFormat.format (cauda);
+		myElement = document.getElementById("EclipseField");
+		if (eclipse) myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention","") + " attention")
+			else myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention",""));
 		document.moon.eclipseseason.value = eclipse;
 /*	}
 	catch (error) {

@@ -81,11 +81,17 @@ const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
 class astroCalend {		// Calendrical computations with adjustement to Terrestrial Time (TT). For astronomical cycles.
+	// UTC time = Terrestrial Time - Delta TT
+	// Here we finish pure calendrical computations with a Delta T correction to obtain TT result
 	constructor (params) {
 		this.clockwork = new Cbcce ( params )
 	}
 	astroDate = function (theDate) { 
 		return this.clockwork.getObject (theDate.getTime() + getDeltaT(theDate))
+	}
+	astroSetInstant = function (theFields) {
+		let instant = this.clockwork.getNumber (theFields);
+		return instant + getDeltaT (new Date(instant))
 	}
 }
 /*	2. Astronomical data used with the Cycle Based Calendar Computation Engine (CBCCE)
@@ -101,7 +107,7 @@ const CbcceParam = {
 			 {cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"}	// one millisecond
 		],
 		canvas : [
-			{name : "year", init :0},
+			{name : "year", init : 2000},
 			{name : "phase", init : 0}
 		]
 	},
@@ -189,9 +195,9 @@ const CbcceParam = {
 	/** CBCCE parameters for the Draconitic cycle with respect to the tropical year
 	*/
 	Solar_Draconitic_Params : { 
-		timeepoch : 1296734400000,	// M2011-02-15 12h An approximate date of caput draconis at winter solstice.
+		timeepoch : 1295524800000,	// M2011-02-01 12h An approximate date of caput draconis at winter solstice.
 		coeff : [
-			{cyclelength : 585600065921, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "tropicsaros"}, // one pseudo-saros or one cycle on the ecliptic		
+			{cyclelength : 587523584705, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "tropicsaros"}, // one pseudo-saros or one cycle on the ecliptic		
 			{cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"} // one milliseconds		
 			],
 		canvas : [
@@ -344,16 +350,26 @@ export const Lunar = {
 			DRACO_CYCLE = CbcceParam.Solar_Draconitic_Params.coeff[0].cyclelength,
 			DRACO_RADIUS = 18 * Milliseconds.DAY_UNIT;
 		let 
-			milesianYear = new ExtDate(milesian, theDate.valueOf()).year() + 1,
+			milesianYear = new ExtDate(milesian, theDate.valueOf()).year("UTC") + 1,
 			// year = TropicalCalend.astroDate(theDate).year,
-			draco = Lunar.SolarDraco.astroDate(theDate),	// two fields + 'phase'
-			yearPhase = Math.floor (draco.phase * YEAR / DRACO_CYCLE),
-			yearReference = new ExtDate (milesian); // cannot use Temporal.PlainDate.from() yet 
-		yearReference.setFromFields({year : milesianYear, month : 1, day : 5} ,'UTC');	// UTC newyear instant + 5 days is always after solstice
-		let
-			solstitial = Lunar.TropicalCalend.astroDate (yearReference), // distance between newyear + 5 days instant and (mean) solstice.
-			caputDate = new ExtDate (milesian, yearReference.valueOf() - yearPhase - solstitial.phase),
-			caudaOffset = (caputDate.month <= 6 ? HALF_YEAR : - HALF_YEAR),
+			draco = Lunar.SolarDraco.astroDate(theDate),	// date in TT, Saros N° + phase within Saros
+			yearPhase = Math.floor (draco.phase * YEAR / DRACO_CYCLE),	// The phase of the Saros date expressed in a tropical year cycle
+			// yearReference = new Date (this.astroCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase);
+			// yearReference.setFromFields({year : milesianYear, month : 1, day : 5} ,'UTC');	// UTC newyear instant + 5 days is always after solstice
+			// solstitial = Lunar.TropicalCalend.astroDate (yearReference), // distance between newyear + 5 days instant and (mean) solstice.
+			caputDate = new ExtDate (milesian, this.TropicalCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+		caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));	// back to UTC scale.
+		// Now check which side and how far caputDate is from theDate, if necessary choose a more suitable.
+		let caputPos = caputDate.valueOf() - theDate.valueOf();
+		if (Math.abs (caputPos) > HALF_YEAR) {
+			milesianYear -= Math.sign (caputPos);	// find milesian year where caput is nearer to theDate
+			caputDate.setTime (this.TropicalCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+			caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));
+			caputPos = caputDate.valueOf() - theDate.valueOf();
+		}
+		// Choose a cauda that wraps theDate with caput
+		let 
+			caudaOffset = (caputPos < 0 ? HALF_YEAR : - HALF_YEAR),
 			caudaDate = new ExtDate (milesian, caputDate.valueOf() + caudaOffset),
 			eclipseSeason = Math.abs(theDate.valueOf() - caputDate.valueOf()) <= DRACO_RADIUS || Math.abs(theDate.valueOf() - caudaDate.valueOf()) <= DRACO_RADIUS;
 		return [ caputDate, caudaDate, eclipseSeason ]
