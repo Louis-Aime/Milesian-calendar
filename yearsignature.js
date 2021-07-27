@@ -12,7 +12,8 @@ Key figure include:
 	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
 	epact: Julian / Gregorian computus epact, Milesian epact as converted from Gregorian epact
 */
-/* Version	M2021-07-29 Update external refs
+/* Version	M2021-08-07	Add dominical letter
+	M2021-07-29 Update external refs
 	M2021-07-26	Update comments and links
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-29 
@@ -68,7 +69,8 @@ const // Gregorian solar intercalation rule
 				{name : "quadriannum", init : 0},
 				{name : "annum", init : 0}
 			]
-		});
+		}),
+	DominicalLetter = ['C','B','A','G','F','E','D'];	// Series of the Dominical Letter, index by Doomsday.
 /** key figures of a year of the Julian calendar
  * @param {number} year of Dionysos era, integer number
  * @return {Object.<string, number>} signature
@@ -96,6 +98,7 @@ export function julianSignature (year) {
 		signature = {  // Result for this function
 			// John Conway's Doomsday or key day for computing weekdays: 0th March.
 			doomsday : Cbcce.mod(-2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
+			dominicalLetter : "",
 			gold : Cbcce.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
 			goldNumber : 1,					// The displayed gold number, 1..19, computed later
 			epact : 0, 		// Julian computus moon age one day before 1st January, after Dionysos' computus
@@ -103,6 +106,7 @@ export function julianSignature (year) {
 			easterOffset : 0, 	// Number of days from 21st March to Easter Sunday.
 			isLeap : yearCoeff.annum == 0	// whether this year is 366 days long
 		};
+	signature.dominicalLetter = DominicalLetter[signature.doomsday];
 	signature.goldNumber += signature.gold;
 	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold, 30);
 	signature.epact = Cbcce.mod (23 - signature.easterResidue, 30);
@@ -125,6 +129,7 @@ export function gregorianSignature (year) {
 					// John Conway's Doomsday or key day for computing weekdays: weekday of 0th March.
 			doomsday : Cbcce.mod(2*(1-yearCoeff.saeculum) - 2*yearCoeff.quadriannum + yearCoeff.annum, 7), 
 					// Gregorian computus moon age one day before 1st January.
+			dominicalLetter : "",
 			gold : Cbcce.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
 			goldNumber : 1,					// The displayed gold number, 1..19, computed later
 			epact : 0, 		
@@ -133,6 +138,7 @@ export function gregorianSignature (year) {
 			easterOffset : 0,	 // Number of days from 21st March to Easter Sunday.
 			isLeap : yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || yearCoeff.saeculum == 0)	// whether this year is 366 days long
 		};
+	signature.dominicalLetter = DominicalLetter[signature.doomsday];
 	signature.goldNumber += signature.gold;
 	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold 	// Julian element
 		+ 3*yearCoeff.quadrisaeculum + yearCoeff.saeculum 	// Metemptose

@@ -7,7 +7,8 @@ Required (directly)
 Contents
 	Functions called by the MilesianYearSignature.html
 */
-/* Version M2021-02-15	Use calendrical-javascript modules and application-specific modules
+/* Version	M2021-08-07	Add dominical letter
+	M2021-02-15	Use calendrical-javascript modules and application-specific modules
 	M2021-01-24 Missing year field in year panel
 	M2021-01-14 Tailor to language and time zone
 	M2020-12-29	New signature routines
@@ -85,6 +86,7 @@ function computeSignature(year, lang, timeZone) {
 	// Julian figures
 	document.details.j_type.value = signature.isLeap ? "bissextile" : "commune";
 	document.details.j_day.value = displayDOW (signature.doomsday);
+	document.details.j_dlet.value = signature.dominicalLetter;
 	document.details.j_epact.value = signature.epact;
 	document.details.j_residue.value = signature.easterResidue;
 	document.details.j_daynumber.value = signature.easterOffset;
@@ -96,6 +98,7 @@ function computeSignature(year, lang, timeZone) {
 	document.details.g_type.value = signature.isLeap ? "bissextile" : "commune";
 	document.details.m_type.value = m_signature.isLeap ? "abondante" : "cave" ;
 	document.details.g_day.value = displayDOW (signature.doomsday);
+	document.details.g_dlet.value = signature.dominicalLetter;
 	document.details.g_epact.value = signature.epact;
 	document.details.m_epact.value = m_signature.epact
 	document.details.g_residue.value = signature.easterResidue;
