@@ -3,7 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-08-05	Dial with day length ratio
+<!-- Version
+	M2021-08-05	
+		Dial with day length ratio
+		Separate Date-calendar from time-time zone
 	M2021-08-01 caput and cauda draconis
 	M2021-07-29 Reorganise divisions
 	M2021-07-25	Control weeks data
@@ -88,7 +91,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
 		xmlns="http://www.w3.org/2000/svg" 
 		xmlns:xlink="http://www.w3.org/1999/xlink">
-		<g id="clock2">
+		<g id="mclock">
 		<!-- the dial -->
 		<image href="milesian_dial.png" x="-300" y ="-300" width="600" height="599" />
 		<!-- the motto on the dial -->
@@ -176,7 +179,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		</svg>
 		</section>
 		<section class="centered">
-		<form name="run" method="post">
+		<form name="run">
 			<table class="centered">
 				<tr>
 					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;&lt;</button></td>
@@ -192,41 +195,29 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		</section>
 	</div>
 
-	<div class="panel autoscroll"><h2 class="panelhead">Contrôle du temps</h2>
+	<div class="panel autoscroll"><h2 class="panelhead">Date et calendrier</h2>
 
-		<section class="centered"><h3 class="panelhead">Calendrier et date</h3>
+		<section class="centered"><h3 class="panelhead">Dates en années algébriques</h3>
 			<table class="centered">
 			  <tr>
 				<th><button id="customCalend" class="textline">Calendrier</button></th>
-				<th>Année</th>
-				<th>Mois</th>
 				<th>Quant.</th>
+				<th>Mois</th>
+				<th>Année</th>
 				<th> </th>
-			  </tr>
-			  <tr id="gregorianline">
-				<form name="gregorian"> <!-- action set to void(), no method indicated (used to be "post") -->
-				<td>iso8601</td>
-				<td><input name="year" type="number" class="centered digit4"> </td>
-				<td><input name="monthname" type="number" min="1" max="12" class="centered digit2"></td>
-				<td><input name="day" type="number" min="1" max="31" class="centered digit2"> </td>
-				<td><button class="textline">Ok</button></td>
-				</form>
 			  </tr>
 			  <form name="custom">
 			  <tr id="customline">
 				<td><select name="calend" size="1" class="centered">
 					<option value="milesian" selected>milésien</option>
-					<option value="gregorian">grégorien</option>
+					<option value="gregorian">iso 8601</option>
 					<option value="julian">julien</option>
-					<option value="vatican">Vatican</option>
-					<option value="french">France</option>
-					<option value="german">Allemagne</option>
-					<option value="english">Royaume-Uni</option>
-					<option value="frenchrev">Révolutionnaire</option>
+					<option value="historic">historique</option>
+					<option value="frenchrev">révolutionnaire</option>
 					</select></td>
-				<td><input name="year" type="number" class="centered digit4 mutable"> </td>
-				<td><input name="monthname" type="number" min="1" max="13" class="centered digit2 mutable"></td>
 				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable"> </td>
+				<td><input name="month" type="number" min="1" max="13" class="centered digit2 mutable"></td>
+				<td><input name="year" type="number" class="centered digit4 mutable"> </td>
 				<td><button class="textline">Ok</button></td>
 			  </tr>
 			</form>
@@ -234,15 +225,18 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			<table class="centered">
 			  <tr>
 				<form name="week">
-				<th>Semaines</th><td><input name="weekyear" type="number" class="centered digit4"></td>
-				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2"></td>
+				<th>Semaines</th>
 				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2"> </td>
+				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2"></td>
+				<td><input name="weekyear" type="number" class="centered digit4"></td>
 				<td><button class="textline">Ok</button></td>
 			  </tr>
+			 </table>
+			<table class="centered">
 			  <tr>
-				<td>Jour</td>
+				<td>Jour de semaine</td>
 				<td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /></td>
-				<td colspan="2">Semaines</td>
+				<td>Semaines dans l'année</td>
 				<td><input name="weeksinyear" type="number" min="0" max="56" class="centered digit2" disabled="disabled"></td>
 			  </tr>
 			</form>
@@ -261,7 +255,53 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		 </table>
 		</form>
 		</section>
-		<section class="centered"><h3 class="panelhead">Heure et mode local ou UTC</h3>
+		<section class="centered"><h4 class="panelhead">Date passage au grégorien</h4>
+			<table class="centered">
+			 <form name="gregorianswitch">
+			  <tr>
+				<td><input name="day" type="number" value="15" min="1" max="31" class="centered digit2"></td>
+				<td>
+				<select name="month" size="1" class="centered">
+				<option value="1">janvier</option>
+				<option value="2">février</option>
+				<option value="3">mars</option>
+				<option value="4">avril</option>
+				<option value="5">mai</option>
+				<option value="6">juin</option>
+				<option value="7">juillet</option>
+				<option value="8">août</option>
+				<option value="9">septembre</option>
+				<option value="10" selected>octobre</option>
+				<option value="11">novembre</option>
+				<option value="12">décembre</option>
+				</select> </td>
+				<td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered digit4"></td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+		</table>
+	<!-- Contrôle validité non utilisé
+		<table class="centered">
+			<form name="controloptions">
+			  <tr>
+				<td><input type="checkbox" name="datevalidity" checked></td>
+				<th>Contrôle de validité des dates saisies</th>
+			  </tr>
+			</form>
+		</table>
+	-->
+		</section>
+		<section><h3 class="panelhead">Affichage selon calendrier utilisateur</h3>
+			<span class="centered" id="CustomString"></span>
+		</section>
+		<section><h3 class="panelhead">Affichage selon calendrier Unicode</h3>
+		<span class="centered" id="UnicodeString"></span>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Heure locale, UTC, instant</h2>
+	
+			<section class="centered"><h3 class="panelhead">Heure et mode local ou UTC</h3>
 		  <form name="time" autocomplete="off">
 			<table class="centered">
 			   <tr>
@@ -287,7 +327,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		  </form>
 		</section>
 		<section class="centered"><!-- time zone option -->
-		  <form name="TZmode" autocomplete="off">
+		  <form name="TZmode">
 			<table class="centered">
 					<tr><th>Mode&nbsp;: </th>
 						<td>
@@ -316,10 +356,46 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			  </tr>
 			 </table>
 		</section>
+	<section class="centered"> <h3 class="panelhead">Séries chronologiques</h3>
+		<form name="daycounter">
+		  <table class="centered">
+			<tr><th colspan="2">Jour julien&nbsp;:</th>
+				<td><input name="julianday" type="number" size="24" min="-97559413" max="102440588" step="any" class="centered"></td>
+				<td><button class="textline" name="setday" value="julianday">Ok</button></td>
+			</tr>
+		  </table>
+		</form>
+		<table class="centered">
+			<tr>
+				<th>Jour julien modifié&nbsp;: </th>
+				<td id="mjdDisplay"></td>
+			</tr>
+			<tr>
+				<th>Jour julien NASA&nbsp;: </th>
+				<td id="nasajdDisplay"></td>
+			</tr>
+			<tr>
+				<th>Compteur des tableurs&nbsp;: </th>
+				<td id="spreadSheetsCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>Compteur Microsoft&nbsp;: </th>
+				<td id="MicrosoftCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>Compteur MacOS&nbsp;: </th>
+				<td id="MacOSCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>Compteur Posix&nbsp;: </th>
+				<td id="unixCountDisplay"></td>
+			</tr>
+		</table>
+	</section>	
 	</div>
 
 	<div class="panel autoscroll"><h2 class="panelhead">Contrôle affichage</h2>
-		<form name="LocaleOptions" method="post" action="javascript:setDisplay()">
+		<form name="LocaleOptions" method="post"> <!-- heavy form, hence post method -->
 		<table class="centered"> 
 			<tr><th>Date</th><th>Heure</th></tr>
 			<tr>
@@ -353,8 +429,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		<tr>
 			<th>Code langue&nbsp;: </th>
 				<td>
-				<input name="Language" class="centered" type="text" autocomplete="language" size="5">
+				<input name="Language" class="centered" type="text" autocomplete="language" size="30">
 				</td>
+			</tr><tr>
 				<th>Code effectif&nbsp;: </th><td id="langCode"></td>
 			</tr>
 		</table>
@@ -406,23 +483,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	 </span>
 	</div>
 
-	<div class="panel autoscroll"><h2 class="panelhead">Affichage</h2>
-		<h3>Calendrier utilisateur</h3>
-		<p class="centered" id="CustomString"></p>
-		<table class="centered">
-			<tr><th>Année</th><th>semaine</th><th>jour</th><th>(semaines de l'année)</th></tr>
-			<tr>
-				<td id="weekyear"></td><td id="yearweek"></td><td id="weekday"></td><td id="weeksinyear"></td>
-			</tr>
-		</table>
-		<div class="centered" id="weekerror"></div>
-		<h3>Calendrier Unicode</h3>
-		<p class="centered" id="UnicodeString"></p>
-	</div>
-
 	<div class="panel autoscroll"><h2 class="panelhead">Données lunaires</h2>
 
-	<form name="moon" method="post" action="javascript:void(0)">
+	<form name="moon">
 	<section><h3 class="panelhead">Lune moyenne corrigée</h3>
 	 <table class="centered">
 		<tr>
@@ -457,7 +520,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	 </section>
 	 </form>
 	<section><h3 class="panelhead">Calendrier lunaire virtuel</h3>
-	<form name="mooncalend" method="post" action="javascript:void(0)">
+	<form name="mooncalend">
 	 <table class="centered">
 		  <tr>
 			<th>Origine</th>
@@ -493,23 +556,23 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 
 		<section><h3>Saisons boréales année <span id="seasonsyear"></span></h3>
 		<p class="centered">Heure selon fuseau spécifié dans "Mode"</p>
-		  <form name="seasons" method="post">
+		  <form name="seasons">
 			<table class="centered">
-				<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
-				<tr><th>Équinoxe de printemps</th><td><input class="centered" disabled="disabled" size="24" name="spring" value=""></td></tr>
-				<tr><th>Solstice d'été</th><td><input class="centered" disabled="disabled" size="24" name="summer" value=""></td></tr>
-				<tr><th>Équinoxe d'automne</th><td><input class="centered" disabled="disabled" size="24" name="autumn" value=""></td></tr>
-				<tr><th>Solstice d'hiver</th><td><input class="centered" disabled="disabled" size="24" name="winter2" value=""></td></tr>
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
+				<tr><th>Équinoxe de printemps</th>	<td><input class="centered" disabled="disabled" size="24" name="spring" value=""></td></tr>
+				<tr><th>Solstice d'été</th>			<td><input class="centered" disabled="disabled" size="24" name="summer" value=""></td></tr>
+				<tr><th>Équinoxe d'automne</th>		<td><input class="centered" disabled="disabled" size="24" name="autumn" value=""></td></tr>
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter2" value=""></td></tr>
 			</table>
 		  </form>
 		</section>
 	</div>
 
 	<div class="centered panel"><h2 class="panelhead">Chiffres clés annuels</h2>
-	  <form name="yearglobal" method="post">
+	  <form name="yearglobal">
 		<table class="centered">
 		  <tr>
-			<th>Année&nbsp;: </th>
+			<th>Année milésienne en cours&nbsp;: </th>
 			<td><input name="year" value="0" disabled="disabled" size="2"></td>
 		  </tr>
 		  <tr>
@@ -518,7 +581,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		  </tr>
 		</table>
 	  </form>
-	  <form name="details" method="post" action="Javascript:void()">
+	  <form name="details">
 		<table>
 			<tr><th colspan="2" class="onborder">Calendrier</th><th>Grégorien<br>et milésien</th><th>Julien</th></tr>
 			<tr><th class="onborder">Année</th><th class="onborder">romaine</th>
@@ -532,6 +595,10 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			<tr><th class="onborder" colspan="2">Clavedi</th>
 				<td><input name="g_day" class="char8 centered" disabled="disabled"></td>
 				<td><input name="j_day" class="char8 centered" disabled="disabled"></td>
+			</tr>
+			<tr><th class="onborder" colspan="2">Lettre dominicale</th>
+				<td><input name="g_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
+				<td><input name="j_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
 			</tr>
 			<tr><th class="onborder">Épacte</th><th class="onborder">1 jan.</th>
 				<td><input name="g_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
@@ -560,45 +627,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 				</tr>
 		</table>
 	  </form>
-	</div>
-
-	<div class="panel autoscroll"><h2 class="panelhead">Séries chronologiques</h2>
-	<form name="daycounter" autocomplete="off" method="post" action="javascript:calcJulianDay()">
-	  <table class="centered">
-		<tr><th colspan="2">Jour julien</th></tr>
-		<tr>
-			<td><input name="julianday" type="number" size="24" min="-97559413" max="102440588" step="any" class="centered"></td>
-			<td><button class="textline" name="setday" value="julianday">Ok</button></td>
-		</tr>
-	  </table>
-	</form><section>
-		<table class="centered">
-			<tr>
-				<th>Jour julien modifié&nbsp;: </th>
-				<td id="mjdDisplay"></td>
-			</tr>
-			<tr>
-				<th>Jour julien NASA&nbsp;: </th>
-				<td id="nasajdDisplay"></td>
-			</tr>
-			<tr>
-				<th>Compteur des tableurs&nbsp;: </th>
-				<td id="spreadSheetsCountDisplay"></td>
-			</tr>
-			<tr>
-				<th>Compteur Microsoft&nbsp;: </th>
-				<td id="MicrosoftCountDisplay"></td>
-			</tr>
-			<tr>
-				<th>Compteur MacOS&nbsp;: </th>
-				<td id="MacOSCountDisplay"></td>
-			</tr>
-			<tr>
-				<th>Compteur Posix&nbsp;: </th>
-				<td id="unixCountDisplay"></td>
-			</tr>
-		</table>
-	</section>	
+	  <span>En année bissextile, la lettre dominicale ci-dessus est la seconde; la première la suit dans le cycle de A à G.</span>
 	</div>
 
 	<footer>
