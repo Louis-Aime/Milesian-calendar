@@ -5,8 +5,10 @@
 	<title>Horloge milésienne</title>
 <!-- Version
 	M2021-08-05	
-		Dial with day length ratio
-		Separate Date-calendar from time-time zone
+		New dial with day length ratio
+		Separate Date-calendar from time and time zone
+		Astronomic dates may use any calendar
+		Split embedded code
 	M2021-08-01 caput and cauda draconis
 	M2021-07-29 Reorganise divisions
 	M2021-07-25	Control weeks data
@@ -64,15 +66,19 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org 
 -->
 	<meta name="creator" content="Louis-Aimé de Fouquières">
-	<meta name="description" content="Horloge milésienne, représentation de la date selon le calendrier milésien
-conversion avec d'autres calendriers et en jour julien, 
-représentation de l'heure selon les fuseaux horaires, 
-restitution de la date et de l'heure milésienne avec les options définies par Unicode">
-	<meta name="keywords" content="Horloge milésienne, conversion de calendrier, jour julien, lune, éclipses, calendrier milésien">
+	<meta name="description" content="Horloge milésienne, 
+	représentation de la date selon plusieurs calendriers dont le calendrier milésien et des calendriers utilisateurs,
+	conversion entre calendriers et en jour julien, 
+	représentation de l'heure selon les fuseaux horaires ,
+	restitution de la date et de l'heure milésienne selon des options d'affichage avancées,
+	prédiction d'éclipses">
+	<meta name="keywords" content="Horloge milésienne, conversion de calendrier, jour julien, lune, prédiction d'éclipses, calendrier milésien">
 	<meta name="viewport" content="width=device-width">	
 
 <!-- Page environment -->
 	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="milesianclockinitiate.js"></script>
+	<script type="text/javascript" src="milesianclockutilities.js"></script>
 	<script type="text/javascript" src="milesianclockdisplay.js"></script>
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
 	<style>
@@ -197,7 +203,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 
 	<div class="panel autoscroll"><h2 class="panelhead">Date et calendrier</h2>
 
-		<section class="centered"><h3 class="panelhead">Dates en années algébriques</h3>
+		<section><h3 class="panelhead">Dates en années algébriques</h3>
 			<table class="centered">
 			  <tr>
 				<th><button id="customCalend" class="textline">Calendrier</button></th>
@@ -242,7 +248,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 			</form>
 			</table>
 		</section>
-		<section class="centered"><!-- now, day navigation -->
+		<section><!-- now, day navigation -->
 		<form name="control">
 		 <table class="centered">
 		  <tr>
@@ -255,7 +261,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		 </table>
 		</form>
 		</section>
-		<section class="centered"><h4 class="panelhead">Date passage au grégorien</h4>
+		<section><h4 class="panelhead">Calendrier historique&nbsp;: passage au grégorien</h4>
 			<table class="centered">
 			 <form name="gregorianswitch">
 			  <tr>
@@ -291,11 +297,13 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		</table>
 	-->
 		</section>
-		<section><h3 class="panelhead">Affichage selon calendrier utilisateur</h3>
-			<span class="centered" id="CustomString"></span>
-		</section>
-		<section><h3 class="panelhead">Affichage selon calendrier Unicode</h3>
-		<span class="centered" id="UnicodeString"></span>
+		<section><h3 class="panelhead">Affichage selon options</h3>
+			<section><h4 class="panelhead">Calendrier utilisateur (<span id="customcalname"></span>)</h4>
+				<span class="centered" id="CustomString"></span>
+			</section>
+			<section><h4 class="panelhead">Calendrier Unicode (<span id="unicodecalname"></span>)</h4>
+			<span class="centered" id="UnicodeString"></span>
+			</section>
 		</section>
 	</div>
 
@@ -394,96 +402,111 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	</section>	
 	</div>
 
-	<div class="panel autoscroll"><h2 class="panelhead">Contrôle affichage</h2>
-		<form name="LocaleOptions" method="post"> <!-- heavy form, hence post method -->
-		<table class="centered"> 
-			<tr><th>Date</th><th>Heure</th></tr>
+	<div class="panel autoscroll"><h2 class="panelhead">Options d'affichage</h2>
+		<section>
+			<form name="LocaleOptions" method="post"> <!-- heavy form, hence post method -->
+			<table class="centered"> 
+				<tr><th>Date</th><th>Heure</th></tr>
+				<tr>
+					<td>
+					<select name="DatePresentation" class="centered" size="1">
+						<option value="long">Texte complet</option>
+						<option value="standard" selected>Texte courant</option>
+						<option value="short">Texte abrégé</option>
+						<option value="narrow">Texte compact</option>
+						<option value="numeric">Numérique complet</option>
+						<option value="2-digit">Numérique compact</option>
+						<option value="year-2-digit">Année 2 chiffres</option>
+						<option value="none">Vide</option>
+					</select>
+					</td>
+					<td>
+					<select name="TimePresentation" class="centered" size="1">
+						<option value="total">Tout</option>
+						<option value="detail">Détail</option>
+						<option value="second">Seconde</option>
+						<option value="minute" selected>Minute</option>
+						<option value="hour">Heure</option>
+						<option value="hmstz">H:M:S fuseau</option>
+						<option value="hm">H:M</option>
+						<option value="none">Vide</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+			<table class="centered">
 			<tr>
-				<td>
-				<select name="DatePresentation" class="centered" size="1">
-					<option value="long">Texte complet</option>
-					<option value="standard" selected>Texte courant</option>
-					<option value="short">Texte abrégé</option>
-					<option value="narrow">Texte compact</option>
-					<option value="numeric">Numérique complet</option>
-					<option value="2-digit">Numérique compact</option>
-					<option value="year-2-digit">Année 2 chiffres</option>
-					<option value="none">Vide</option>
-				</select>
-				</td>
-				<td>
-				<select name="TimePresentation" class="centered" size="1">
-					<option value="total">Tout</option>
-					<option value="detail">Détail</option>
-					<option value="second">Seconde</option>
-					<option value="minute" selected>Minute</option>
-					<option value="hour">Heure</option>
-					<option value="hmstz">H:M:S fuseau</option>
-					<option value="hm">H:M</option>
-					<option value="none">Vide</option>
-				</select>
-				</td>
-			</tr>
-		</table>
-		<table class="centered">
-		<tr>
-			<th>Code langue&nbsp;: </th>
-				<td>
-				<input name="Language" class="centered" type="text" autocomplete="language" size="30">
-				</td>
-			</tr><tr>
-				<th>Code effectif&nbsp;: </th><td id="langCode"></td>
-			</tr>
-		</table>
-		<div>Exemple&nbsp;: <code>en-GB</code> ou <code>en-US</code></div>
+				<th>Code langue&nbsp;: </th>
+					<td>
+					<input name="Language" class="centered" type="text" autocomplete="language" size="30">
+					</td>
+				</tr><tr>
+					<th>Code effectif&nbsp;: </th><td id="langCode"></td>
+				</tr>
+			</table>
+			<div>Exemples&nbsp;: <code>en-GB</code> ou <code>en-US</code></div>
 
-		<table class="centered">
-			<tr>
-				<th>Calendrier&nbsp;: </th>
-				<td>
-				<select name="Calendar" size="1" class="centered">
-					<option value="">par défaut</option>
-					<option value="buddhist">bouddhiste Thaï</option>
-					<option value="chinese">chinois traditionnel</option>
-					<option value="coptic">copte</option>
-					<option value="dangi">coréen traditionnel dangi</option>
-					<option value="ethioaa">éthiopien base antique</option>
-					<option value="ethiopic">éthiopien base Incarnation</option>
-					<option value="gregory">grégorien</option>
-					<option value="hebrew">hébraïque</option>
-					<option value="indian">indien moderne</option>
-					<option value="islamic">islamique standard</option>
-					<option value="islamic-umalqura">islamique Umm al-Qura</option>
-					<option value="islamic-tbla">islamique tabulaire astronomique</option>
-					<option value="islamic-civil">islamique tabulaire civil</option>
-					<option value="islamic-rgsa">islamique, Arabie saoudite</option>
-					<option value="iso8601">ISO 8601 (grégorien normalisé)</option>
-					<option value="japanese">japonais impérial</option>
-					<option value="persian">persan</option>
-					<option value="roc">chinois de république populaire</option>
-				</select> 
-				</td>
-			</tr>
-		</table>
-		<table class="centered">
-			<tr><th>Code calendrier effectif&nbsp;: </th><td id="CalendarCode"></td></tr>
-		</table>
-		<table class="centered">
-			<tr><th>Fuseau horaire&nbsp;: </th>
-			<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
-			</tr>
-			<tr><th>Fuseau effectif&nbsp;: </th><td id="timeZone"></td></tr>
-		</table>
-		<div>Exemple&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code></div>
-		<div><button class="textline">Modifier les paramètres de représentation</button></div>
-		</form>
-	<h3 class="panelhead">Liens utiles</h3>
-	<span><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a> - 
-		<a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a>
-	 </span>
+			<table class="centered">
+				<tr>
+					<th>Calendrier&nbsp;: </th>
+					<td>
+					<select name="Calendar" size="1" class="centered">
+						<option value="">par défaut</option>
+						<option value="buddhist">bouddhiste Thaï</option>
+						<option value="chinese">chinois traditionnel</option>
+						<option value="coptic">copte</option>
+						<option value="dangi">coréen traditionnel dangi</option>
+						<option value="ethioaa">éthiopien base antique</option>
+						<option value="ethiopic">éthiopien base Incarnation</option>
+						<option value="gregory">grégorien</option>
+						<option value="hebrew">hébraïque</option>
+						<option value="indian">indien moderne</option>
+						<option value="islamic">islamique standard</option>
+						<option value="islamic-umalqura">islamique Umm al-Qura</option>
+						<option value="islamic-tbla">islamique tabulaire astronomique</option>
+						<option value="islamic-civil">islamique tabulaire civil</option>
+						<option value="islamic-rgsa">islamique, Arabie saoudite</option>
+						<option value="iso8601">ISO 8601 (grégorien normalisé)</option>
+						<option value="japanese">japonais impérial</option>
+						<option value="persian">persan</option>
+						<option value="roc">chinois de république populaire</option>
+					</select> 
+					</td>
+				</tr>
+			</table>
+			<table class="centered">
+				<tr><th>Code calendrier effectif&nbsp;: </th><td id="CalendarCode"></td></tr>
+			</table>
+			<table class="centered">
+				<tr><th>Fuseau horaire&nbsp;: </th>
+				<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="30"> </td>
+				</tr>
+				<tr><th>Fuseau effectif&nbsp;: </th><td id="timeZone"></td></tr>
+			</table>
+			<div>Exemples&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code></div>
+			<section><h3 class="panelhead">Affichage des données astronomiques</h3>
+				<div class="centered">
+					<select name="astrocalendar" size="1" class="centered">
+						<option value="milesian" selected>calendrier milésien</option>
+						<option value="custom">calendrier utilisateur sélectionné</option>
+						<option value="unicode">calendrier Unicode sélectionné</option>
+					</select>
+				</div>
+			</section>
+			<div><button class="textline">Valider les options d'affichage</button></div>
+			</form>
+		</section>
+		<section><h3 class="panelhead">Liens utiles</h3>
+			<span><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a> - 
+				<a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a>
+			</span>
+		</section>
 	</div>
 
 	<div class="panel autoscroll"><h2 class="panelhead">Données lunaires</h2>
+	<span>Heure lunaire et calendrier lunaire selon mode système ou UTC,
+		le reste selon options d'affichage.</span>
+
 
 	<form name="moon">
 	<section><h3 class="panelhead">Lune moyenne corrigée</h3>
@@ -545,9 +568,9 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 	</section>
 	</div>
 
-	<div class="panel autoscroll"><h2 class="panelhead">Saisons</h2>
+	<div class="panel autoscroll"><h2 class="panelhead">Données de l'année tropique</h2>
 		<section><h3 class="panelhead">Composante quadratique de Delta T</h3>
-		<p class="panelhead">(Temps UTC = Temps Terrestre - Delta T)</p>
+		<p>Temps UTC = Temps Terrestre - Delta T</p>
 		<span class="centered">
 			<span id="deltatsec"></span> s, soit&nbsp;
 			<span id="deltathms"></span>
@@ -555,7 +578,7 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		</section>
 
 		<section><h3>Saisons boréales année <span id="seasonsyear"></span></h3>
-		<p class="centered">Heure selon fuseau spécifié dans "Mode"</p>
+		<p>Dates et heures selon options d'affichage</p>
 		  <form name="seasons">
 			<table class="centered">
 				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
@@ -568,16 +591,16 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 		</section>
 	</div>
 
-	<div class="centered panel"><h2 class="panelhead">Chiffres clés annuels</h2>
+	<div class="centered panel"><h2 class="panelhead">Chiffres clés calendaires</h2>
 	  <form name="yearglobal">
 		<table class="centered">
 		  <tr>
 			<th>Année milésienne en cours&nbsp;: </th>
-			<td><input name="year" value="0" disabled="disabled" size="2"></td>
+			<td><input name="year" type="number" class="digit4" value="0" disabled="disabled"></td>
 		  </tr>
 		  <tr>
 			<th>Nombre d'or (1 à 19)&nbsp;: </th>
-			<td><input name="gold" value="0" disabled="disabled" size="2"></td>
+			<td><input name="gold" class="digit2" value="0" disabled="disabled"></td>
 		  </tr>
 		</table>
 	  </form>
@@ -617,17 +640,16 @@ restitution de la date et de l'heure milésienne avec les options définies par 
 				<td><input name="g_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				<td><input name="j_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Date romaine</th>
+			<tr><th class="onborder" colspan="2">Chaque calendrier</th>
 				<td><input name="g_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Date milésienne</th>
-				<td><input name="g_milesiandate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
-				<td><input name="j_milesiandate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
+			<tr><th class="onborder" colspan="2">Même calendrier</th>
+				<td><input name="g_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
+				<td><input name="j_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
 				</tr>
 		</table>
 	  </form>
-	  <span>En année bissextile, la lettre dominicale ci-dessus est la seconde; la première la suit dans le cycle de A à G.</span>
 	</div>
 
 	<footer>

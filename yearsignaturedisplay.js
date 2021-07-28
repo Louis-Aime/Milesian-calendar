@@ -1,13 +1,15 @@
 /* Milesian Year Signature Display
 	Character set is UTF-8
 	This package displays annual figures, in relation with YearSignatureDisplay.html
-Required (directly)
-	MilesianYearSignature
-	Seasons
+Required ((deemed imported)
+	yearsignature
+	seasons
+	ExtDateTimeFormat
 Contents
 	Functions called by the MilesianYearSignature.html
 */
-/* Version	M2021-08-07	Add dominical letter
+/* Version	M2021-08-06	Display in different calendars / languages by using global level formatters
+	M2021-08-07	Add dominical letter
 	M2021-02-15	Use calendrical-javascript modules and application-specific modules
 	M2021-01-24 Missing year field in year panel
 	M2021-01-14 Tailor to language and time zone
@@ -46,12 +48,11 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-// Modules are loaded in "main" program under the "modules" wrapper.
+// These routines complement general display routines. Modules are loaded in "main" program under the "modules" wrapper.
 function romanDateFrom21March (offset) {
-	let f = new Intl.DateTimeFormat(undefined,{month:"short", day:"numeric"});
 	return (offset <= 10) 
-		? f.format(new Date (1800, 2, (offset + 21))) 
-		: f.format(new Date (1800, 3, (offset - 10)));
+		? romanDateFormat.format(new Date (1800, 2, (offset + 21))) 
+		: romanDateFormat.format(new Date (1800, 3, (offset - 10)));
 }
 function milesianDateFrom30_3m (offset) {
 	return	(offset <= -30 ? "<1 3m" :
@@ -66,17 +67,24 @@ function milesianDateFrom30_3m (offset) {
 		(offset <= 244 ? (offset - 214) + " 11m" :
 		(offset <= 274 ? (offset - 244) + " 12m" : ">30 12m" ))))))))))) ;
 }
-function displayDOW (Day, lang) { // Yield the string of the day of the week of rank Day
-	if (lang == "") lang = undefined;
-	return new Intl.DateTimeFormat(lang, {weekday: "long"}).format (new Date (1970, 0, 4+Day))		
+/** A "day-month" display function. Display DayMonth located offset day after 21 March, in any language and calendar. 
+	If calendar is not provided, milesian is used.
+*/
+function displayDateFrom21March (offset) {
+	if (offset <= -30) return "<----";
+	if (offset > 274) return "---->";
+	let displayDate = new modules.ExtDate ("iso8601", 2000, 3, 21, 12);
+	displayDate.setDate(displayDate.day() + offset); 
+	return lunarDateFormat.format (displayDate);
+}
+function displayDOW (Day) { // Yield the string of the day of the week of rank Day. This one is limited to built-in calendar (traditional week)
+	return DOWFormat.format (new modules.ExtDate ("iso8601", 1970, 1, 4+Day))
 }
 /* function displayYeartype (type) {
 	var yearTypes = ["cave (et commune)", "longue (et commune)", "bissextile (et cave)"]
 	return yearTypes [type];
 }*/
-function computeSignature(year, lang, timeZone) {
-	if (lang == "") lang = undefined;
-	if (timeZone == "") timeZone = undefined;
+function computeSignature(year) {	// Formaters are external
 	// Begin with common and Julian calendar figures
 	var signature = modules.julianSignature (year), m_signature = modules.milesianSignature (year);
 	// The specified year
@@ -91,8 +99,8 @@ function computeSignature(year, lang, timeZone) {
 	document.details.j_residue.value = signature.easterResidue;
 	document.details.j_daynumber.value = signature.easterOffset;
 	document.details.j_romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.details.j_milesiandate.value = milesianDateFrom30_3m(
-		signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
+	document.details.j_referdate.value = displayDateFrom21March (signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400)); 
+			//milesianDateFrom30_3m(signature.easterOffset -2 +Math.floor(year/100) -Math.floor(year/400));
 	// Gregorian and Milesian figures
 	signature = modules.gregorianSignature (year);
 	document.details.g_type.value = signature.isLeap ? "bissextile" : "commune";
@@ -104,19 +112,17 @@ function computeSignature(year, lang, timeZone) {
 	document.details.g_residue.value = signature.easterResidue;
 	document.details.g_daynumber.value = signature.easterOffset;
 	document.details.g_romandate.value = romanDateFrom21March(signature.easterOffset);
-	document.details.g_milesiandate.value = milesianDateFrom30_3m(signature.easterOffset);
+	document.details.g_referdate.value = displayDateFrom21March (signature.easterOffset)
+			// milesianDateFrom30_3m(signature.easterOffset);
 	// Seasons
-	let seasonDisplay = new modules.ExtDateTimeFormat (lang, {
-		timeZone: timeZone,
-		year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"},milesian);
 	try {
-		document.seasons.winter1.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,0)); 
-		document.seasons.spring.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,1)); 
-		document.seasons.summer.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,2)); 
-		document.seasons.autumn.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,3)); 
-		document.seasons.winter2.value = seasonDisplay.format (modules.Seasons.tropicEvent(year,4)); 
+		document.seasons.winter1.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,0)); 
+		document.seasons.spring.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,1)); 
+		document.seasons.summer.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,2)); 
+		document.seasons.autumn.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,3)); 
+		document.seasons.winter2.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,4)); 
 	}
-	catch (e) {		// seasons coulf not be computed, main reason is: year out of computational range
+	catch (e) {		// seasons could not be computed, main reason is: year out of computational range
 		document.seasons.winter1.value = 
 		document.seasons.spring.value = 
 		document.seasons.summer.value = 
@@ -142,7 +148,7 @@ function setYearOffset(shift) {
 		computeSignature (year);
 		}
 }
-function setYearToNow(){ // Self explanatory
-    let targetDate = new modules.ExtDate(milesian); // Now in Milesian.
-	setYear(targetDate.year());
+function setYearToNow(myCalendar=milesian){ // Self explanatory
+    let targetDate = new modules.ExtDate(myCalendar); 
+	setYear(targetDate.fullYear());
 }
