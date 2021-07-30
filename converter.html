@@ -1,0 +1,278 @@
+<!DOCTYPE html> 
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Convertisseur milésien</title>
+<!-- for versions, see Github.
+Created M2021-08-08 from milesianclock, and from an older version.
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Convertisseur de calendriers, 
+	conversion entre calendriers et en jour julien, 
+	représentation de l'heure selon les fuseaux horaires ,
+	restitution dans les calendriers Unicode et utilisateur">
+	<meta name="keywords" content="Convertisseur de calendriers, conversion de date, calendriers Unicode">
+	<meta name="viewport" content="width=device-width">	
+
+<!-- Page environment -->
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="milesianclockinitiate.js"></script>
+	<script type="text/javascript" src="milesianclockutilities.js"></script>
+	<script type="text/javascript" src="converterdisplay.js"></script>
+	<!-- <script type="text/javascript" src="yearsignaturedisplay.js"></script> -->
+	<script type="text/javascript" src="converteronload.js"></script>
+	<style>
+		.panel {height: 410px;}
+	</style>
+
+</head>
+<body class="centered">
+	<section><h1 class="panelhead">Convertisseur de calendrier</h1>
+	</section>
+	<div class="panel"><h2 class="panelhead" id="clockmilesiandate" >&nbsp;</h2>	<!-- The string of the Milesian date is inserted here -->
+		<!-- put svg code inline -->
+		<!-- Scalable viewbox, centered in the middle -->
+		<section>
+		<svg width="300" height="100%" xml:lang="fr" 
+		viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+		xmlns="http://www.w3.org/2000/svg" 
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+		<g id="convclock">
+		<!-- the dial -->
+		<image href="milesian_dial.png" x="-300" y ="-300" width="600" height="599" />
+		<!-- the motto on the dial -->
+		<text class="motto" x="0" y="36" >CERTUM MONSTRAT DIEM</text> 
+		<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+		<rect class="center dragon month day" x="0" y="0" width="0" height="0" />
+		<!-- the year field -->
+		  <text class="clock yeardisplay"
+			x="0" y="+100"></text>
+		<!-- seasons' marks -->
+			<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+		<!-- moon age -->
+		<text class="centered yeardisplay" x="-40" y="-80">
+		<script type="text/Javascript">	document.write (String.fromCodePoint(0x1F319)); </script>
+		</text>
+		<text class="centered yeardisplay moonage" x="20" y="-80">0</text>
+		<!-- center circle -->
+		<circle class="clockhand" r="9" />
+		<!-- the month hand -->
+		  <g class="clockhand month" transform="rotate(0)"
+		  opacity="0.8">										
+			<polygon points="0,0 12,-20 10,-185 0,-195 -10,-185 -12,-20" />
+		  </g>
+		<!-- the day hand -->
+		  <g class="clockhand day" transform="rotate(0)"
+		  opacity="0.8" >									
+			<polygon points="0,0 11,-20 8,-260 0,-270 -8,-260 -11,-20" />
+		  </g>
+		</g>
+		</svg>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Date et calendrier</h2>
+
+		<section><h3 class="panelhead">Dates en années algébriques</h3>
+			<table class="centered">
+			  <tr>
+				<th><button id="customCalend" class="textline">Calendrier</button></th>
+				<th>Quant.</th>
+				<th>Mois</th>
+				<th>Année</th>
+				<th> </th>
+			  </tr>
+			  <form name="custom">
+			  <tr id="customline">
+				<td><select name="calend" size="1" class="centered">
+					<option value="milesian" selected>milésien</option>
+					<option value="gregorian">iso 8601</option>
+					<option value="julian">julien</option>
+					<option value="historic">historique</option>
+					<option value="frenchrev">révolutionnaire</option>
+					</select></td>
+				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable"> </td>
+				<td><input name="month" type="number" min="1" max="13" class="centered digit2 mutable"></td>
+				<td><input name="year" type="number" class="centered digit4 mutable"> </td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+			</table>
+			<table class="centered">
+			  <tr>
+				<form name="week">
+				<th>Semaines</th>
+				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2"> </td>
+				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2"></td>
+				<td><input name="weekyear" type="number" class="centered digit4"></td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			 </table>
+			<table class="centered">
+			  <tr>
+				<td>Jour de semaine</td>
+				<td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /></td>
+				<td>Semaines dans l'année</td>
+				<td><input name="weeksinyear" type="number" min="0" max="56" class="centered digit2" disabled="disabled"></td>
+			  </tr>
+			</form>
+			</table>
+		</section>
+		<section><!-- now, day navigation -->
+		<form name="control">
+		 <table class="centered">
+		  <tr>
+			<td><button name="now" class="textline" type="button">Aujourd'hui</button></td>
+				<th>+/- jours&nbsp;: </th>
+				<td><button name="minus" type="button" class="textline symbol">-</button></td>
+				<td><input name="shift" type="number" value="1" min="0" step="any" class="centered digit4"></td> 
+				<td><button name="plus" type="button" class="textline symbol">+</button></td>
+		  </tr>
+		 </table>
+		</form>
+		</section>
+		<section><h4 class="panelhead">Calendrier historique&nbsp;: passage au grégorien</h4>
+			<table class="centered">
+			 <form name="gregorianswitch">
+			  <tr>
+				<td><input name="day" type="number" value="15" min="1" max="31" class="centered digit2"></td>
+				<td>
+				<select name="month" size="1" class="centered">
+				<option value="1">janvier</option>
+				<option value="2">février</option>
+				<option value="3">mars</option>
+				<option value="4">avril</option>
+				<option value="5">mai</option>
+				<option value="6">juin</option>
+				<option value="7">juillet</option>
+				<option value="8">août</option>
+				<option value="9">septembre</option>
+				<option value="10" selected>octobre</option>
+				<option value="11">novembre</option>
+				<option value="12">décembre</option>
+				</select> </td>
+				<td><input name="year" type="number" value="1582" min="1582" max="275760" class="centered digit4"></td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+		</table>
+	<!-- Contrôle validité non utilisé
+		<table class="centered">
+			<form name="controloptions">
+			  <tr>
+				<td><input type="checkbox" name="datevalidity" checked></td>
+				<th>Contrôle de validité des dates saisies</th>
+			  </tr>
+			</form>
+		</table>
+	-->
+		</section>
+		<section><h3 class="panelhead">Jour julien à 12 h UTC</h3>
+		<form name="daycounter">
+		  <table class="centered">
+			<tr>
+				<td><input name="julianday" type="number" size="24" min="-97559413" max="102440588" step="1" class="centered"></td>
+				<td><button class="textline" name="setday" value="julianday">Ok</button></td>
+			</tr>
+		  </table>
+		</form>
+	
+		</section>
+		<section><h3 class="panelhead">Affichage selon options</h3>
+			<section><h4 class="panelhead">Calendrier utilisateur (<span id="customcalname"></span>)</h4>
+				<span class="centered" id="CustomString"></span>
+			</section>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Options d'affichage</h2>
+		<section><h2 class="panelhead">Options d'affichage</h2>
+			<form name="LocaleOptions" method="post"> <!-- heavy form, hence post method -->
+			<table class="centered"> 
+				<tr>
+					<th>Format&nbsp;:</th>
+					<td>
+					<select name="DatePresentation" class="centered" size="1">
+						<option value="long">Texte complet</option>
+						<option value="standard" selected>Texte courant</option>
+						<option value="short">Texte abrégé</option>
+						<option value="narrow">Texte compact</option>
+						<option value="numeric">Numérique complet</option>
+						<option value="2-digit">Numérique compact</option>
+						<option value="year-2-digit">Année 2 chiffres</option>
+						<option value="none">Vide</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+			<table class="centered">
+			<tr>
+				<th>Code langue&nbsp;: </th>
+					<td>
+					<input name="Language" class="centered" type="text" autocomplete="language" size="5">
+					</td>
+					<th>Code effectif&nbsp;: </th><td id="langCode"></td>
+				</tr>
+			</table>
+			<div>Exemples&nbsp;: <code>en-GB</code> ou <code>en-US</code></div>
+			<div><button class="textline">Valider les options d'affichage</button></div>
+			</form>
+		</section>
+		<section><h3 class="panelhead">Liens utiles</h3>
+			<span><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Codes langues Unicode</a> - 
+				<a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Codes zones horaires</a>
+			</span>
+		</section>
+	</div>
+
+	<div class="centered"><h2 class="panelhead">Dates converties</h2>
+	<section class="outdisplay"><h3 class="milesianhead">Grégorien et dérivés</h3>
+	  <table class="centered">
+		<tr><th>Proleptique&nbsp;: </th><td class="calenddate" id="gregory"></td></tr>
+		<tr><th>Historique&nbsp;: </th><td class="calenddate" id="historic"></td></tr>
+		<tr><th>Thaï&nbsp;: </th><td class="calenddate" id="buddhist"></td></tr>
+		<tr><th>Japonais&nbsp;: </th><td class="calenddate" id="japanese"></td></tr>
+		<tr><th>Chinois moderne&nbsp;: </th><td class="calenddate" id="roc"></td></tr>
+	  </table>
+	</section>
+	<section class="outdisplay"><h3 class="milesianhead">Solaires en phase</h3>
+	  <table class="centered">
+		<tr><th>Milésien&nbsp;: </th><td class="calenddate" id="milesian"></td></tr>
+		<tr><th>Persan&nbsp;: </th><td class="calenddate" id="persian"></td></tr>
+		<tr><th>Indien moderne&nbsp;: </th><td class="calenddate" id="indian"></td></tr>
+		<tr><th>Révolutionnaire&nbsp;: </th><td class="calenddate" id="frenchrev"></td></tr>
+	  </table>
+	</section>
+	<section class="outdisplay"><h3 class="milesianhead">Julien, copte et éthiopiens</h3>
+	  <table class="centered">
+		<tr><th>Julien&nbsp;: </th><td class="calenddate" id="julian"></td></tr>
+		<tr><th>Copte&nbsp;: </th><td class="calenddate" id="coptic"></td></tr>
+		<tr><th>Ethiopien antique&nbsp;: </th><td class="calenddate" id="ethioaa"></td></tr>
+		<tr><th>Ethiopien chrétien&nbsp;: </th><td class="calenddate" id="ethiopic"></td></tr>
+	   </table>
+	</section>
+	<section class="outdisplay"><h3 class="milesianhead">Luni-solaires</h3>
+	  <table class="centered">
+		<tr><th>Hébraïque&nbsp;: </th><td class="calenddate" id="hebrew"></td></tr>
+		<tr><th>Chinois traditionnel&nbsp;: </th><td class="calenddate" id="chinese"></td></tr>
+		<tr><th>Coréen traditionnel&nbsp;: </th><td class="calenddate" id="dangi"></td></tr>
+	  </table>
+	</section>
+	<section class="outdisplay"><h3 class="milesianhead">Lunaires musulmans</h3>
+	  <table class="centered">
+		<tr><th>Standard&nbsp;: </th><td class="calenddate" id="islamic"></td></tr>
+		<tr><th>Umm al-Qura&nbsp;: </th><td class="calenddate" id="islamic-umalqura"></td></tr>
+		<tr><th>Tabulaire astronomique&nbsp;: </th><td class="calenddate" id="islamic-tbla"></td></tr>
+		<tr><th>Tabulaire civil&nbsp;: </th><td class="calenddate" id="islamic-civil"></td></tr>
+		<tr><th>Arabie saoudite&nbsp;: </th><td class="calenddate" id="islamic-rgsa"></td></tr>
+	  </table>
+	</section>
+	</div>
+	<footer>
+	<span>© 2016-2021 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></span>
+	</footer>
+</body>
+</html>
