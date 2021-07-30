@@ -13,7 +13,8 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	Not much code optimisation in this file. 
 */
-/* Version	M2021-08-07
+/* Version	M2021-08-09	update routines for yearly figures
+	M2021-08-07
 		Reorganise dial and display, simplify
 		split
 	M2021-07-22	
@@ -167,6 +168,11 @@ function setDateToNow(){ // set current target date new to current custom calend
 	targetDate = new modules.ExtDate(calendars[customCalIndex]); 
 	setDisplay ();
 }
+function setDateToToday() {	// similar to setDateToNow(), but set at 0 h UTC of today's date. For date converter.
+	setDateToNow();
+	targetDate.setUTCHours (0,0,0,0);
+	setDisplay ();
+}
 function calcCustomDate() {
 	customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);
 	var myFields = {
@@ -232,7 +238,7 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
 	if (isNaN (j)) alert ("Non numeric value" + ' "' + document.daycounter.julianday.value + '"')
 	else {
-		let jd = new modules.ExtCountDate ("julianDay","iso8601",0);
+		let jd = new modules.ExtCountDate (jdcounterselector,"iso8601",0);
 		jd.setFromCount(j);
 		if (isNaN(jd.valueOf())) alert ("Date out of range")
 		else {
@@ -269,105 +275,4 @@ function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
 		targetDate.setTime (testDate.valueOf());
 		setDisplay();
 	}
-}
-
-function compLocalePresentationCalendar() {	// Manage date string display parameters
-	var 
-		Locale = document.LocaleOptions.Language.value,
-		Calendar = document.LocaleOptions.Calendar.value,
-		timeZone = document.LocaleOptions.TimeZone.value,
-		testDTF;
-
-	// Negotiate effective language code and display 
-	// Test if passed language is OK
-	try {
-		testDTF = new modules.ExtDateTimeFormat (undef(Locale))
-	}
-	catch (e) {
-		alert (e);
-		document.LocaleOptions.Language.value = "";
-		return
-	}
-	Locale = testDTF.resolvedOptions().locale; 	// Here Locale is no longer an empty string
-	if (Locale.includes("-u-"))		// The Unicode extension ("-u-") is indicated in the specified locale, drop it
-	Locale = Locale.substring (0,Locale.indexOf("-u-"));
-
-	// Set presentation Options from one of the standard presentations listed.
-	switch (document.LocaleOptions.DatePresentation.value) {
-		case "long": 
-			Options = {weekday : "long", day : "numeric", month : "long", year : "numeric", era : "long", eraDisplay : "always"}; break;
-		case "standard":
-			Options = {weekday : "long", day : "numeric", month: "long", year : "numeric", era : "long", eraDisplay : "auto"}; break;
-		case "short":
-			Options = {weekday : "short", day : "numeric", month: "short", year : "numeric", era : "short"}; break;
-		case "narrow":
-			Options = {weekday : "narrow", day : "numeric", month: "narrow", year : "numeric", era : "narrow"}; break;	
-		case "numeric":
-			Options = {day : "numeric", month : "numeric", year : "numeric", era : "narrow"}; break;
-		case "2-digit":
-			Options = {day : "2-digit", month : "2-digit", year : "numeric"}; break;
-		case "year-2-digit":
-			Options = {day : "2-digit", month : "2-digit", year : "2-digit", eraDisplay : "never"}; break;
-		case "none": Options = {}
-		}
-	switch (document.LocaleOptions.TimePresentation.value) {
-		case "total": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; 
-			Options.fractionalSecond = 3; Options.timeZoneName = "short"; break;
-		case "detail": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; 
-			Options.timeZoneName = "long"; break;
-		case "second": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; break;
-		case "minute": Options.hour = "numeric"; Options.minute = "numeric"; break;
-		case "hour": Options.hour = "numeric"; break;
-		case "hmstz": Options.hour = "2-digit"; Options.minute = "2-digit"; Options.second = "2-digit"; 
-			Options.timeZoneName = "short"; break;
-		case "hm": Options.hour = "2-digit"; Options.minute = "2-digit"; break;
-		case "none": 
-	}
-	// Add Unicode calendar in options
-	if (Calendar != "") Options.calendar = Calendar; // No error expected, since calendar is picked up from a list
-
-	// Add time zone in Options
-	if (timeZone != "") 
-		Options.timeZone = timeZone ; 
-	// is timeZone valid ?
-	try {
-		testDTF = new Intl.DateTimeFormat (Locale, Options);
-		}
-	catch (e) {
-		alert (e);
-		delete Options.timeZone; // Delete property
-		document.LocaleOptions.TimeZone.value = "";
-		return
-	}
-	// Formater for Milesian clock.
-	clockFormat = new modules.ExtDateTimeFormat (Locale,{timeZone: undef(TZ),weekday:"long",day:"numeric",month:"long",year:"numeric"},milesian);
-
-	// Compute formater for custom calendar
-	askedOptions = new modules.ExtDateTimeFormat (undef(Locale),Options,calendars[customCalIndex]);
-	userOptions = askedOptions.resolvedOptions(); 
-
-	// Compute formater for Unicode. Used once, but computed options are useful
-	unicodeFormat = new modules.ExtDateTimeFormat (undef(Locale),Options);	// unicode calendar in Options.calendar
-	unicodeOptions = unicodeFormat.resolvedOptions();
-	
-	weekFormat = new modules.ExtDateTimeFormat (undef (Locale), {weekday : "long", timeZone : undef(TZ)}, calendars[customCalIndex]);
-
-	// Select calendar for astronomical data
-	switch (document.LocaleOptions.astrocalendar.value) {
-		case undefined : case "milesian" : astroCalend = milesian; break;
-		case "custom"	: astroCalend = calendars[customCalIndex]; break;
-		case "unicode"	: astroCalend = unicodeOptions.calendar; break; 
-		default : throw new RangeError ("Unexpected value for calendar choice option: " + document.LocaleOptions.astrocalendar.value);
-	}
-	// fix astro date formaters
-	DOWFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{ weekday : "long", calendar : "iso8601"});
-	romanDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{month : "short", day : "numeric", calendar : "iso8601" });
-	dracoDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{year : "numeric", month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
-	seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : undef (TZ) }, astroCalend);
-	lunarDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
 }
