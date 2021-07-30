@@ -1,0 +1,150 @@
+<!DOCTYPE html> 
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Caractéristiques de l'année tropique</title>
+<!-- Version - see GitHub
+	M2021-08-09: rebuilt
+-->
+<!-- Milesian yearly figures, by Louis A. de FOUQUIERES
+Use Milesian calendar functions and Unicode tools.
+Copyright Miletus 2017-2021 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sub-license, or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+
+Inquiries: www.calendriermilesien.org 
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Chiffre clé de chaque année tropique comptée selon l'ère de Dionysos, ou ère commune, ou ère chrétienne">
+	<meta name="keywords" content="Pâques, clavedi, nombre d'or, épacte, lettre dominicale, reliquat pascal, calendrier julien, calendrier grégorien">
+	<meta name="viewport" content="width=device-width">	
+
+<!-- Page environment -->
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="milesianclockinitiate.js"></script>
+	<script type="text/javascript" src="milesianclockutilities.js"></script>
+	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
+	<script type="text/javascript" src="yearsignatureonload.js"></script>
+	<style>
+		.panel {height: 410px;}
+	</style>
+
+</head>
+<body class="centered">
+	<section><h1 class="panelhead">Caractéristiques de l'année tropique</h1>
+	</section>
+
+	<div class="centered panel"><h2 class="panelhead">Chiffres clés calendaires</h2>
+	  <form name="yearglobal">
+		<table class="centered">
+		  <tr>
+			<th>Année &nbsp;: </th>
+			<td><input name="year" type="number" value="2000" min="-271820" max="275760" class="digit4 centered" value="0"></td>
+			<td><button class="textline" name="Compute">Ok</button></td>
+		  </tr>
+		</table>
+	<table class="centered">
+	<tr>
+      <th> +/- années&nbsp;: </th>
+	  <td><button type="button" name="minus" class="textline symbol">-</button></td>
+	  <td><input name="shift" type="number" class="digit2 centered" value="1" min="1" step="1"></td> 
+	  <td><button type="button" name="plus" class="textline symbol">+</button></td>
+    </tr>
+		  <tr>
+			<th colspan="2">Nombre d'or (1 à 19)&nbsp;: </th>
+			<td><input name="gold" class="digit2" value="0" disabled="disabled"></td>
+		  </tr>
+		</table>
+	  </form>
+	  <form name="details">
+		<table>
+			<tr><th colspan="2" class="onborder">Calendrier</th><th>Grégorien<br>et milésien</th><th>Julien</th></tr>
+			<tr><th class="onborder">Année</th><th class="onborder">romaine</th>
+				<td><input name="g_type" class="char8 centered" disabled="disabled"></td>
+				<td><input name="j_type" class="char8 centered" disabled="disabled"></td>
+			</tr>
+			<tr><th></th><th class="onborder">milésienne</th>
+				<td><input name="m_type" class="char8 centered" disabled="disabled"></td>
+				<td></td>
+			</tr>
+			<tr><th class="onborder" colspan="2">Clavedi</th>
+				<td><input name="g_day" class="char8 centered" disabled="disabled"></td>
+				<td><input name="j_day" class="char8 centered" disabled="disabled"></td>
+			</tr>
+			<tr><th class="onborder" colspan="2">Lettre dominicale</th>
+				<td><input name="g_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
+				<td><input name="j_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
+			</tr>
+			<tr><th class="onborder">Épacte</th><th class="onborder">1 jan.</th>
+				<td><input name="g_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th></th><th class="onborder">1 1m</th>
+				<td><input name="m_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td></td>
+				</tr>
+			<tr><th class="centered" colspan="4">Pâques</th></tr>
+			<tr><th class="onborder" colspan="2">Reliquat pascal</th>
+				<td><input name="g_residue" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_residue" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Quantième pascal</th>
+				<td><input name="g_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Chaque calendrier</th>
+				<td><input name="g_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
+				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Même calendrier</th>
+				<td><input name="g_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
+				<td><input name="j_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
+				</tr>
+		</table>
+	  </form>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Données de l'année tropique</h2>
+		<section><h3 class="panelhead">Composante quadratique de Delta T</h3>
+		<p>Temps UTC = Temps Terrestre - Delta T</p>
+		<span class="centered">
+			<span id="deltatsec"></span> s, soit&nbsp;
+			<span id="deltathms"></span>
+			</span>
+		</section>
+
+		<section><h3>Saisons boréales année <span id="seasonsyear"></span></h3>
+		<p>Dates et heures selon options d'affichage</p>
+		  <form name="seasons">
+			<table class="centered">
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
+				<tr><th>Équinoxe de printemps</th>	<td><input class="centered" disabled="disabled" size="24" name="spring" value=""></td></tr>
+				<tr><th>Solstice d'été</th>			<td><input class="centered" disabled="disabled" size="24" name="summer" value=""></td></tr>
+				<tr><th>Équinoxe d'automne</th>		<td><input class="centered" disabled="disabled" size="24" name="autumn" value=""></td></tr>
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter2" value=""></td></tr>
+			</table>
+		  </form>
+		</section>
+	</div>
+
+	<footer>
+	<span>© 2016-2021 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></span>
+	</footer>
+</body>
+</html>

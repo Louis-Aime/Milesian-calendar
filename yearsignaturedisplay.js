@@ -132,23 +132,27 @@ function computeSignature(year) {	// Formaters are external
 }
 function setYear(year) {
 	year = Math.round(year);	// Force to integer value
-	if (isNaN (year)) alert ("non Integer: " + '"' + document.control.year.value + '"')
+	if (isNaN (year)) alert ("non Integer: " + document.yearglobal.year.value)
 	else {
-		document.control.year.value = +year;
+		document.yearglobal.year.value = +year;
 		computeSignature (+year);
 		}
 }	
 function setYearOffset(shift) {
 	shift = Math.round(shift);	// Force to integer value
-	let year = Math.round(document.control.year.value) + Math.round(shift);
-	if (isNaN (year)) alert ("non Integer: " + '"' + document.control.shift.value + '" "' + document.control.year.value + '"')
+	let year = Math.round(document.yearglobal.year.value) + Math.round(shift);
+	if (year == NaN) alert ("non Integer: " + '"' + document.yearglobal.shift.value + '" "' + document.yearglobal.year.value + '"')
 	else if (year < -271820 || year > 275760) alert ("Year out of range")
 	else { 
-		document.control.year.value = year;
-		computeSignature (year);
+		document.yearglobal.year.value = +year;
+		// targetDate.setFromFields ({ year: year},"UTC");
+		computeSignature (+year);
 		}
 }
 function setYearToNow(myCalendar=milesian){ // Self explanatory
-    let targetDate = new modules.ExtDate(myCalendar); 
+    targetDate = new modules.ExtDate(myCalendar); 
+	// set to the middle of the year
+	targetDate.setUTCHours (0, 0, 0, 0);
+	targetDate.setFromFields ( { day: 1, month: 7 } ,"UTC"); 
 	setYear(targetDate.fullYear());
 }
