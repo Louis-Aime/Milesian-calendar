@@ -19,19 +19,15 @@ If installed on a separate domain, this domain's server should allow external GE
 	<meta name="viewport" content="width=device-width">
 
 	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="milesianclockinitiate.js"></script>
 
 <script type="text/javascript">
-var modules, milesian;
 (async function () {
-	modules = await import ('./calendrical-javascript/aggregate.js');
-	//let pldrString = await import ('./calendrical-javascript/pldr.js');
-	let	pldrDOM = await modules.fetchDOM ("https://louis-aime.github.io/Milesian-calendar/pldr.xml")
-			.then ( (pldrDOM) => pldrDOM ) // The pldr data used by the Milesian calendar (and possibly others).
-			.catch ( (error) => { return pldrString.default() } );	// if error (no XML file) take default pldr 
-	milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
+	loadComplete.then ( () => {
+	var milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 	document.getElementById("mdate").innerHTML = 
 		new modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},milesian).format(new  Date());
-	} () )
+	})} () )
 </script>
 
 </head>
