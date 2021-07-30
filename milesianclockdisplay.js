@@ -117,7 +117,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds");
 
 	// Julian Day and chronological fields
-	let JD = new modules.ExtCountDate ("julianDay","iso8601",targetDate.valueOf()).getCount();
+	let JD = new modules.ExtCountDate (jdcounterselector,"iso8601",targetDate.valueOf()).getCount();
 	document.daycounter.julianday.value = JD;
 		// = JD.toLocaleString(undefined,{maximumFractionDigits:8}); // JD.toLocaleString(undefined,{useGrouping:false, maximumFractionDigits:8})
 /*	if (document.daycounter.julianday.value == "") // Because bug in Chromium
