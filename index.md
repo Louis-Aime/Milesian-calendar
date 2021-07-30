@@ -3,12 +3,22 @@ The applications developped from the concept of Milesian calendar may be seen he
 In this version (30 Dec. 2020) there is only one milesian clock, and one test page for Unicode / ECMA new developements.
 
 ## The complete Milesian clock
-Read thereal  date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in Gregorian, Milesian and Julian calendars.
+Read the real date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in Gregorian, Milesian and Julian calendars.
 
 [Link to the Milesian clock](https://Louis-Aime.github.io/Milesian-calendar/milesianclock.html)
 
 ## Calendrical computations and Date object extension by Miletus
-This module is followed on another repository: Louis-Aime/calendrical-javascript.
+This module is followed on another repository: [Louis-Aime/calendrical-javascript](https://github.com/Louis-Aime/calendrical-javascript).
+
+## The date converter
+Convert from basic European calendars to any Unicode calendar.
+
+[The date converter](https://Louis-Aime.github.io/Milesian-calendar/converter.html)
+
+## Yearly figures
+Compute the yearly characteristics figures: seasons, Delta T, and calendrical basic data.
+
+[The yearly figures](https://Louis-Aime.github.io/Milesian-calendar/yearsignaturedisplay.html)
 
 ## The light Milesian clock
 
