@@ -34,7 +34,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-const
+var
 	jdcounterselector = "julianDayAtNight";	// for use with ExtCountDate
 
 var
@@ -107,7 +107,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 			day =  Math.round (event.srcElement.elements.day.value),
 			month = event.srcElement.elements.month.value,
 			year =  Math.round (event.srcElement.elements.year.value),
-			testDate = new modules.ExtDate (calendars.find(item => item.id == "gregorian"),modules.ExtDate.fullUTC(year, month, day)),
+			testDate = new modules.ExtDate (calendars.find(item => item.id == "iso_8601"),modules.ExtDate.fullUTC(year, month, day)),
 			index = calendars.findIndex (item => item.id == "historic");
 		if ( (testDate.valueOf() >= Date.UTC(1582,9,15,0,0,0,0)) && (testDate.day() == day) ) 
 			calendars[index] = new modules.WesternCalendar("historic", testDate.valueOf())
