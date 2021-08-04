@@ -18,23 +18,28 @@ If installed on a separate domain, this domain's server should allow external GE
 	<meta name="keywords" content="DOM, XML">
 	<meta name="viewport" content="width=device-width">
 
-	<link href="dialsandpanels.css" rel="stylesheet"/>
+<!-- Partie à reporter -->
+	<link href="dialswthtpanels.css" rel="stylesheet"/>
 	<script type="text/javascript" src="milesianclockinitiate.js"></script>
-
-<script type="text/javascript">
-(async function () {
-	loadComplete.then ( () => {
-	var milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
-	document.getElementById("mdate").innerHTML = 
-		new modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},milesian).format(new  Date());
-	})} () )
-</script>
+<!-- fin -->
 
 </head>
 <body>
-	<section class="centered"><h1>Chargement de pldr puis impression</h1>
-		<p id="mdate", class="centered">
-		</p>
-	</section>
+<section class="centered"><h1>Chargement de pldr puis impression</h1>
+
+<!-- Partie à reporter -->
+<span id="datetag">
+<script type="text/javascript">
+( async function () {
+	loadComplete.then ( () => {
+	document.getElementById ("datetag").innerHTML =  
+		new modules.ExtDateTimeFormat(undefined,{year:"numeric", month: "long", day:"numeric"},
+			new modules.MilesianCalendar ("milesian",pldrDOM)).format(new  Date());
+	})} () )
+</script>
+</span>
+<!-- fin -->
+
+</section>
 </body>
 </html>
