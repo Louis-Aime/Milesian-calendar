@@ -5,7 +5,8 @@ Required (directly)
 Contents
 	The externally used function is tropicEvent
 */
-/* Version	M2021-07-29 Adapt to calendrical-javascript
+/* Version	M2021-08-20 Hide internal functions and refer to DeltaT only
+	M2021-07-29 Adapt to calendrical-javascript
 	M2021-02-14	Use calendrical-javascript modules 
 	M2020-12-29 Adapted to new Chronos and Lunar
 	M2020-01-12 : strict mode implementation
@@ -37,29 +38,31 @@ The code derives from Fourmilab's astro.js file (2015)
 Code has been modified in order to conform with strict mode
 */
 "use strict";
-import { getDeltaT } from './aggregate-all.js';
-export const Seasons = {
+import { default as getDeltaT } from './deltat.js';
 	/* Part 1 - utilities
 	*/
-	LOWER_YEAR : -3000,	// The lower year for seasons' computations
-	UPPER_YEAR : +6000,	// The upper year for seasons' computations
+const
+	LOWER_YEAR = -3000,	// The lower year for seasons' computations
+	UPPER_YEAR = +6000;	// The upper year for seasons' computations
+
 	/** Convert degrees to radians
 	 * @param {number} an angle in degrees
 	 * @return {number} the corresponding angle in radians
 	*/
-	dtr(d) {return (d * Math.PI) / 180.0;},
+function dtr(d) {return (d * Math.PI) / 180.0;}
 
 	/** Cosinus of an angle in degrees
 	 * @param {number} the angle in degrees
 	 * @return {number} the cosinus of the angle
 	*/
-	dcos(d) {return Math.cos(this.dtr(d));},
-
+function dcos(d) {return Math.cos(dtr(d));}
+	
+export const Seasons = {
+	
 	/* Part 2 - Function equinox, implements Jean Meeus' method
 	for calculating equinox and solstices of a year
 	Extracted from Fourmilab astro functions
 	*/
-
 	/** The Julian Day of a tropical event (equinox or solstice) of a given year
 	 * @param {number} year: the Gregorian year
 	 * @param {number} which: 0->March, 1->June, 2->September, 3->December, any other value -> Error
@@ -110,7 +113,7 @@ export const Seasons = {
 		   new Array(2451900.05952, 365242.74049, -0.06223, -0.00823,  0.00032)
 							);
 		var deltaL, i, j, JDE0, JDE0tab, S, T, W, Y;
-		if (!Number.isInteger(which) || which < 0 || which > 3) throw "Invalid parameter";
+		if (!Number.isInteger(which) || which < 0 || which > 3) throw RangeError ("Invalid season parameter: " + which);
 
 		/*  Initialise terms for mean equinox and solstices.  
 		We have two sets: 
@@ -132,15 +135,16 @@ export const Seasons = {
 			   (JDE0tab[which][4] * Y * Y * Y * Y);
 		T = (JDE0 - 2451545.0) / 36525;	// JDE0 expressed in Julian centuries from 1/1/2000 - Meeus 13-1
 		W = (35999.373 * T) - 2.47;		// M, Mean solar anomaly, Meeus ch. 16, without 2nd order term
-		deltaL = 1 + (0.0334 * this.dcos(W)) + (0.0007 * this.dcos(2 * W));
+		deltaL = 1 + (0.0334 * dcos(W)) + (0.0007 * dcos(2 * W));
 		//  Sum the periodic terms for time T
 		S = 0;
 		for (i = j = 0; i < 24; i++) {
-			S += EquinoxpTerms[j] * this.dcos(EquinoxpTerms[j + 1] + (EquinoxpTerms[j + 2] * T));
+			S += EquinoxpTerms[j] * dcos(EquinoxpTerms[j + 1] + (EquinoxpTerms[j + 2] * T));
 			j += 3;
 		}
 		return JDE0 + ((S * 0.00001) / deltaL);
 	},
+	
 	/* Part 3 - the tropicEvent function: dates of solstices and equinoxes of a given year, from winter to winter.
 	*/
 	/** Compute the tropical event of a Milesian year, result as an modules.ExtDate element.
@@ -157,8 +161,8 @@ export const Seasons = {
 	*/
 	tropicEvent (year, which) {
 		var JDE;
-		if (!Number.isInteger(which) || which < 0 || which > 4) throw RangeError("Invalid value for season parameter");
-		if (year < this.LOWER_YEAR || year > this.UPPER_YEAR) throw RangeError ("Year outside seasons' computation capabilities");
+		if (!Number.isInteger(which) || which < 0 || which > 4) throw RangeError("Invalid value for season parameter" + which);
+		if (year < LOWER_YEAR || year > UPPER_YEAR) throw RangeError ("Year outside seasons' computation capabilities: " + year);
 		if (which == 0) JDE = this.equinox (year-1,3)
 			else JDE = this.equinox(year, which-1);
 		let wdate = new Date(Math.round((JDE - 2440587.5)*86400000));
