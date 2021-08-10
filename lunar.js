@@ -17,7 +17,8 @@ Contents:
 		getDraconiticNodes : dates in same year where sun is aligned or opposite with lunar nodes.
 		With AstroCalend, a setter function is provided. No other setter function is provided in this package.
 */
-/* Version	M2021-08-06	Tune Draco on a small sample of eclipses.
+/* Version	M2021-08-20	Refer to deltat instead of aggregate, isolate internal functions.
+	M2021-08-06	Tune Draco on a small sample of eclipses.
 	M2021-08-01 Group lunar data and organise Draconitic data, update comments
 	M2021-07-29 import getDeltaT (through aggregates)
 	M2021-07-26 adapt to new module architecture
@@ -66,10 +67,10 @@ Inquiries: www.calendriermilesien.org
 	getDeltaT function
 */
 "use strict";
-import { getDeltaT } from './aggregate-all.js';
-import {Cbcce, Milliseconds} from './aggregate-all.js';
-import {ExtDate} from './aggregate-all.js';
-import {MilesianCalendar} from './aggregate-all.js';
+import { default as getDeltaT } from './deltat.js';
+import {Cbcce, Milliseconds} from './aggregate-all.js';	// chronos.js
+import {ExtDate} from './aggregate-all.js';				// ExtDate.js
+import {MilesianCalendar} from './aggregate-all.js';	// calendars.js
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
@@ -207,24 +208,24 @@ const
 			{name : "milliseconds_in_day", init : 0},
 		]
 	};
-/*	3. The routine grouped in a single object that can become a module.
+/*	3. Class instantiations
 */
+const
+	TemperedCalend = new astroCalend (Tempered_year_params),	// Analyse an instant as coordinates on 
+	CEMoon = new astroCalend (CE_Moon_params), // Lunar year, month (1..12), decimal age.
+	CELunar = new astroCalend (CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
+	MoonPhase = new astroCalend (Moon_Phase_params), // Lunar month, moon phase in ms.
+	SolarDraco = new astroCalend (Solar_Draconitic_Params),
+	LunarCalend = new Cbcce (Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
+	DayMSCalend = new Cbcce (Day_milliseconds);	// Timestamp <> (Day;  ms)
+
+	/* 4. Exported functions
+	*/
 export const Lunar = {
-	/* 3.1. Class instantiations
-	*/
-	TemperedCalend : new astroCalend (Tempered_year_params),	// Analyse an instant as coordinates on 
-	CEMoon : new astroCalend (CE_Moon_params), // Lunar year, month (1..12), decimal age.
-	CELunar : new astroCalend (CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
-	MoonPhase : new astroCalend (Moon_Phase_params), // Lunar month, moon phase in ms.
-	SolarDraco : new astroCalend (Solar_Draconitic_Params),
-	LunarCalend : new Cbcce (Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
-	DayMSCalend : new Cbcce (Day_milliseconds),	// Timestamp <> (Day;  ms)
-	/* 3.2. User functions
-	*/
 	/** getTemperedDate: the date in the tempered cycle
 	*/
 	getTemperedDate (theDate) {	// this a totally astronomical concept, no TZ.
-		return this.TemperedCalend.astroDate (theDate);
+		return TemperedCalend.astroDate (theDate);
 	},
 	/** getCEMoonDate: The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin morning of 3 1m 000
@@ -233,7 +234,7 @@ export const Lunar = {
 	 * @return {{year: integer, month: integer, age: number}} age is a decimal figure
 	*/
 	getCEMoonDate (theDate, TZ) {	// This a calendar, result depends on TZ
-		return this.CEMoon.astroDate (theDate, TZ);
+		return CEMoon.astroDate (theDate, TZ);
 	},
 	/** The lunar Milesian era calendar date coordinate at this date, 0h UTC. First day of this calendar is 4 1m 000 
 	 * First day of this lunar calendar is on 4 1m 000, and is expressed day 1 month 1 year 0.
@@ -244,7 +245,7 @@ export const Lunar = {
 	getCELunarDate (theDate, TZ) {	// The lunar date coordinate at this date,
 		let refDate = new ExtDate ("iso8601", theDate.valueOf() - theDate.getRealTZmsOffset(TZ));
 		refDate.setUTCHours(0,0,0,0);	// Set to same UTC date at 0h
-		return this.CELunar.astroDate (refDate);
+		return CELunar.astroDate (refDate);
 	},
 	/** The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin evening of 25 7m 622
@@ -255,7 +256,7 @@ export const Lunar = {
 	getHegirianMoonDate (theDate, TZ) {
 		let moonDate = CEMoon.astroDate (theDate, TZ);
 		let age = moonDate.age ;
-		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
+		moonDate = LunarCalend.getObject (LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'age' : age};
 	},
 	/** The lunar "mean" Hegirian calendar date coordinate at this date, 0h UTC. 
@@ -268,7 +269,7 @@ export const Lunar = {
 	getHegirianLunarDate (theDate, TZ) { 
 		let moonDate = this.getCELunarDate (theDate, TZ); 
 		let lunarDay = moonDate.day;
-		moonDate = this.LunarCalend.getObject (this.LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
+		moonDate = LunarCalend.getObject (LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'day' : lunarDay}
 	},
 	/** getLunarTime was deprecated. Take time section of getLunarDateTime. is such that the moon is at the same place in the sky that the sun at this time, the same day; 
@@ -279,8 +280,8 @@ export const Lunar = {
 	*/
 	getLunarSunTimeAngle (theDate) {
 		let msOffset = 
-			- Math.round(Milliseconds.DAY_UNIT * this.MoonPhase.astroDate (theDate, "UTC").phase / MEAN_LUNAR_MONTH);
-		return this.DayMSCalend.getObject (msOffset).milliseconds_in_day ; 
+			- Math.round(Milliseconds.DAY_UNIT * MoonPhase.astroDate (theDate, "UTC").phase / MEAN_LUNAR_MONTH);
+		return DayMSCalend.getObject (msOffset).milliseconds_in_day ; 
 	},
 	/** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
 	 * the moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
@@ -306,15 +307,15 @@ export const Lunar = {
 	getDraconiticNodes (theDate) { // This a non-TZ concept. The date generated may be interpreted with a time-zone.
 		let 
 			milesianYear = new ExtDate(milesian, theDate.valueOf()).year("UTC") + 1,
-			draco = Lunar.SolarDraco.astroDate(theDate),	// date in TT, Draco cycle number + phase within cycle
+			draco = SolarDraco.astroDate(theDate),	// date in TT, Draco cycle number + phase within cycle
 			yearPhase = Math.floor (draco.phase * YEAR / DRACO_CYCLE),	// The phase of the Draco cycle expressed in a reference year cycle
-			caputDate = new ExtDate (milesian, this.TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+			caputDate = new ExtDate (milesian, TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
 		// caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));	// back to UTC scale.
 		// Now check which side and how far caputDate is from theDate, if necessary choose a more suitable.
 		let caputPos = caputDate.valueOf() - theDate.valueOf();
 		if (Math.abs (caputPos) > HALF_YEAR) {
 			milesianYear -= Math.sign (caputPos);	// find milesian year where caput is nearer to theDate
-			caputDate.setTime (this.TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+			caputDate.setTime (TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
 			// caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));
 			caputPos = caputDate.valueOf() - theDate.valueOf();
 		}
@@ -327,4 +328,3 @@ export const Lunar = {
 		return [ caputDate, caudaDate, eclipseSeason ]
 	}
 }
-
