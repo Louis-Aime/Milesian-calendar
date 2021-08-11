@@ -1,4 +1,4 @@
-/* Milesian-calendar: all external (and internal) entries collected and reexported from here */
+/* Milesian calendar: all permanent usage entries collected and reexported from here (except fetchDOM and pldr, which are for initialising) */
 /* set to github stable submodule architecture - on line is : https://louis-aime.github.io/calendrical-javascript/ */ 
 export * from "./calendrical-javascript/chronos.js";
 export { default as ExtDate } from "./calendrical-javascript/extdate.js";
