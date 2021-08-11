@@ -1,13 +1,14 @@
 /* Milesian Clock and converter functions - excluding initialisation and global variables.
 Character set is UTF-8.
 Associated with: 
-*	milesianClock.html
+*	converter.html
 */
 /*	Related
-	milesianclock.html
+	converter.html
 	milesianclockinitiate.js
 	yearsignaturedisplay.js
-	other modules listed in aggregate-all.js
+	converteronload.js
+	other modules have been made visible with the 'modules' object
 */
 /* Version notes
 	This .js file is highly related to the corresponding html code. 
