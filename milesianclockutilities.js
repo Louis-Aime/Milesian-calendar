@@ -7,7 +7,7 @@ Associated with:
 	milesianclock.html
 	milesianclockinitiate.js
 	yearsignaturedisplay.js
-	other modules listed in aggregate-all.js
+	other modules have been made visible with the 'modules' object
 */
 /* Version notes
 	This .js file is highly related to the corresponding html code. 
