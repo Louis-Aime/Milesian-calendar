@@ -68,9 +68,9 @@ Inquiries: www.calendriermilesien.org
 */
 "use strict";
 import { default as getDeltaT } from './deltat.js';
-import {Cbcce, Milliseconds} from './chronos.js';	// chronos.js
-import {default as ExtDate} from './ExtDate.js';				// ExtDate.js
-import {MilesianCalendar} from './calendars.js';	// calendars.js
+import {Cbcce, Milliseconds} from './chronos.js';
+import {default as ExtDate} from './extdate.js';
+import {MilesianCalendar} from './calendars.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
