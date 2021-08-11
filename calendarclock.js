@@ -48,8 +48,8 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { ExtDate } from './aggregate-all.js';
-import {MilesianCalendar} from './aggregate-all.js';
+import { default as ExtDate } from './extdate.js';
+import {MilesianCalendar} from './calendars.js';
 import { Seasons } from './seasons.js';
 const milesian = new MilesianCalendar ("seasmilesian");
 export class SolarClock {

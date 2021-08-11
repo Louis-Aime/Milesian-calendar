@@ -53,7 +53,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Cbcce } from './aggregate-all.js';
+import { Cbcce } from './chronos.js';
 const // Gregorian solar intercalation rule
 	gregCalend = new Cbcce (	
 		{ 	// Decompose a year of the Dionysos era
