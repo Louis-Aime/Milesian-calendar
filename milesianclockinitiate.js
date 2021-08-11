@@ -47,11 +47,10 @@ var	// global variables at document level.
 const // Promises of loading initial files.
 	modulesload = import ("./milesian_current_modules.js")
 		.then ( (modulesload) =>  { modules = modulesload } ),
-	pldrload  = import ("https://louis-aime.github.io/calendrical-javascript/fetchdom.js").then	// import pldr loader then standard pldr from xml
-		( (value) => value.default ("https://louis-aime.github.io/calendrical-javascript/pldr.xml", 1000), // success importing fetchDOM, see next .then
+	pldrload  = modulesload.then			// import ("https://louis-aime.github.io/calendrical-javascript/fetchdom.js").then	// import pldr loader then standard pldr from xml
+		( () => modules.fetchDOM ("https://louis-aime.github.io/calendrical-javascript/pldr.xml", 1000), // success importing fetchDOM, see next .then
 			(error) => {							// failure importing fetchDOM, error taken from next step
-				throw 'fetchdom module not available';
-				//return import (".pldr.js").then ( (value) => pldrDOM = value.default () ) // this is done next step
+				throw 'Error loading standard modules';
 			}
 		) .then (
 			(value) => { pldrDOM = value },			// fetching XML file has succeeded.
