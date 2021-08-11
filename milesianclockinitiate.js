@@ -45,15 +45,19 @@ var	// global variables at document level.
 
 
 const // Promises of loading initial files.
-	modulesload = import ("./aggregate-all.js")
+	modulesload = import ("./milesian_current_modules.js")
 		.then ( (modulesload) =>  { modules = modulesload } ),
-	pldrload  = import ("./calendrical-javascript/fetchdom.js").then	// should add a fallback with pldr.js
-		( (value) => value.default ('https://louis-aime.github.io/calendrical-javascript/pldr.xml', 1000) ) .then (
+	pldrload  = import ("https://louis-aime.github.io/calendrical-javascript/fetchdom.js").then	// import pldr loader then standard pldr from xml
+		( (value) => value.default ("https://louis-aime.github.io/calendrical-javascript/pldr.xml", 1000), // success importing fetchDOM, see next .then
+			(error) => {							// failure importing fetchDOM, error taken from next step
+				throw 'fetchdom module not available';
+				//return import (".pldr.js").then ( (value) => pldrDOM = value.default () ) // this is done next step
+			}
+		) .then (
 			(value) => { pldrDOM = value },			// fetching XML file has succeeded.
 			(error) => {							// fetching XML has failed, we use the fallback value
-				console.log ('pldrDOM not fetched from its repository, fetching pldr.js');
-				return import ("./calendrical-javascript/pldr.js").then 
-					( (value) => pldrDOM = value.default () ) 
+				console.log ('Error fetching pldrDOM: ' + error + '\nfetching pldr.js');
+				return import ("./pldr.js").then ( (value) => pldrDOM = value.default () ) 
 					}
 			),
 	loadComplete = Promise.all([modulesload, pldrload]);
