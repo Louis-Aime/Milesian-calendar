@@ -10,7 +10,8 @@ Associated with:
 	This file aims ar created an adequate environment for several milesian clock applications.. 
 	This part is especially for initialisation.
 */
-/* Version	M2021-08-07
+/* Version	M2021-08-22 prepare switch to new global names calendrical and loadCalendrical
+	M2021-08-07
 		Created from milesianclockdisplay.js
 
 */
@@ -41,10 +42,11 @@ var	// global variables at document level.
 	// all modules here once imported
 	// pldrDOM,		// imported PLDR
 	modules,	// imported modules
+	calendrical = {},	// alias name for modules
 	pldrDOM;	// pldrDOM,
 
 
-const // Promises of loading initial files.
+const // Promises of loading initial files. This a temporary version fills 'modules' and 'calendrical'
 	modulesload = import ("./milesian_current_modules.js")
 		.then ( (modulesload) =>  { modules = modulesload } ),
 	pldrload  = modulesload.then			// import ("https://louis-aime.github.io/calendrical-javascript/fetchdom.js").then	// import pldr loader then standard pldr from xml
@@ -53,12 +55,15 @@ const // Promises of loading initial files.
 				throw 'Error loading standard modules';
 			}
 		) .then (
-			(value) => { pldrDOM = value },			// fetching XML file has succeeded.
+			(value) => { calendrical.pldrDOM = value },			// fetching XML file has succeeded.
 			(error) => {							// fetching XML has failed, we use the fallback value
 				console.log ('Error fetching pldrDOM: ' + error + '\nfetching pldr.js');
-				return import ("./pldr.js").then ( (value) => pldrDOM = value.default () ) 
+				return import ("./pldr.js").then ( (value) => { calendrical.pldrDOM = value.default () } ) 
 					}
 			),
-	loadComplete = Promise.all([modulesload, pldrload]);
+	loadComplete = Promise.all([modulesload, pldrload]),
+	loadCalendrical = loadComplete;
+
+loadComplete.then ( () => { Object.assign (calendrical, modules); pldrDOM = calendrical.pldrDOM; calendrical.TimeUnits = calendrical.Milliseconds } );
 
 
