@@ -68,7 +68,8 @@ Inquiries: www.calendriermilesien.org
 */
 "use strict";
 import { default as getDeltaT } from './deltat.js';
-import {Cbcce, Milliseconds} from './chronos.js';
+import { default as Milliseconds } from './time-units.js';
+import {Cbcce} from './chronos.js';
 import {default as ExtDate} from './extdate.js';
 import {MilesianCalendar} from './calendars.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed

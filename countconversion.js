@@ -44,7 +44,7 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-import { Milliseconds } from './chronos.js';
+import { default as Milliseconds } from './time-units.js';
 import { default as ExtDate } from './extdate.js';
 /** Extend the ExtDate object to days counter with special behavior or contraints
  * @param {string} the desired counter, one of the following values
