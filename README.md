@@ -3,8 +3,6 @@ Computations and conversion routines using the Milesian calendar.
 
 Applications are usable through [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
 
-**Version note: this version uses Git submodules.**
-
 Reference:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
 
