@@ -17,7 +17,8 @@ Contents:
 		getDraconiticNodes : dates in same year where sun is aligned or opposite with lunar nodes.
 		With AstroCalend, a setter function is provided. No other setter function is provided in this package.
 */
-/* Version	M2021-08-20	Refer to deltat instead of aggregate, isolate internal functions.
+/* Version	M2021-08-26 Tune Draco parameters (probably not last attempt)
+	M2021-08-20	Refer to deltat instead of aggregate, isolate internal functions.
 	M2021-08-06	Tune Draco on a small sample of eclipses.
 	M2021-08-01 Group lunar data and organise Draconitic data, update comments
 	M2021-07-29 import getDeltaT (through aggregates)
@@ -103,9 +104,9 @@ const
 	MEAN_LUNAR_MONTH = 2551442875,	// the length of a mean lunar month.
 	MEAN_SIDERAL_MOON_MONTH = 2360594880,	// One mean sideral moon month (27,3217 days).
 	NEW_MOON_REF = -62167873955000,	// Mean new moon of 3 1m 0 at 10:07:25 Terrestrial Time.
-	CAPUT_DRACONIS_REF = 1298203200000,	// M2011-03-01 12h An approximate date of caput draconis at begin of cycle.
-	DRACO_CYCLE = 587350000000,	// Time for the dragon to make a complete revolution up to the same mean calendrical place. This is a compromise value.	// Initial is 587523584705.
-	DRACO_RADIUS = 18 * Milliseconds.DAY_UNIT,	// the half-length of each "eclipse season", 18 days each side of the caput or the cauda.
+	CAPUT_DRACONIS_REF = 1296388800000,	// M2011-02-11 12h An approximate date of caput draconis at begin of cycle.
+	DRACO_CYCLE = 587350000000,	// Time for the dragon to make a complete revolution up to the same mean calendrical place. Estimated from farest eclipses.
+	DRACO_RADIUS = 19 * Milliseconds.DAY_UNIT,	// the half-length of each "eclipse season", each side of the caput or the cauda.
 	/** CBCCE parameters for the time counter in year + phase. 
 	*/
 	Tempered_year_params = {
