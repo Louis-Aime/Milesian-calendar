@@ -17,7 +17,10 @@ Contents:
 		getDraconiticNodes : dates in same year where sun is aligned or opposite with lunar nodes.
 		With AstroCalend, a setter function is provided. No other setter function is provided in this package.
 */
-/* Version	M2021-08-26 Tune Draco parameters (probably not last attempt)
+/* Version	M2021-08-28: 
+		Correct usage of Delta T; was wrongly used/
+		Set Draco parameters after studying the referential of eclipses: no false negative.
+	M2021-08-26 Tune Draco parameters (probably not last attempt)
 	M2021-08-20	Refer to deltat instead of aggregate, isolate internal functions.
 	M2021-08-06	Tune Draco on a small sample of eclipses.
 	M2021-08-01 Group lunar data and organise Draconitic data, update comments
@@ -76,21 +79,22 @@ import {MilesianCalendar} from './calendars.js';
 const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
-class astroCalend {		// Calendrical computations with adjustement to Terrestrial Time (TT). 
-	// UTC time = Terrestrial Time - Delta TT
-	// astroDate gives the UTC date coordinate for an instant in TT, a result of "astronomical" time computations.
+class astroCalend {		// Computations of astronomical cycles using Terrestrial Time (TT) and conversion to UTC (Greenwich clock time) by Delta T adjustement. 
+	// UTC = TT - Delta T, and TT = UTC + Delta T
+	// astroCoordinates gives the astronomical coordinates at an UTC date. This date is first converted to a TT instant.
 	constructor (params) {
 		this.clockwork = new Cbcce ( params )
 	}
-	astroDate = function (theDate, TZ="UTC") {	// Normally, such coordinates do not depend on time zone, computation should be done in UTC only. 
-		var offset = theDate.getRealTZmsOffset(TZ)
-		return this.clockwork.getObject (theDate.getTime() - theDate.getRealTZmsOffset(TZ) - getDeltaT(theDate))
+	astroCoordinates = function (theDate, TZ="UTC") {
+		// Subtracting getRealTZmsOffset converts the wallclock time into UTC, in such a way that lunar dates change when dates change locally.
+		// theDate is an UTC date. It is converted into a TT date before decomposing into astronomical cycle.
+		return this.clockwork.getObject (theDate.getTime() - theDate.getRealTZmsOffset(TZ) + getDeltaT(theDate))
 	}
-	astroSetInstant = function (theFields, TZ="UTC") {
+	UTCDate = function (theFields, TZ="UTC") {
+		// The date of an astronominal event (lunar or other) is first computed as a TT instant, then converted into an UTC date-time, and finally shifted as local time if necessary.
 		let instant = this.clockwork.getNumber (theFields),
 			myDate = new ExtDate ("iso8601", instant);
-		
-		return instant 	- getDeltaT (myDate) + myDate.getRealTZmsOffset(TZ)
+		return new Date (instant - getDeltaT (myDate) + myDate.getRealTZmsOffset(TZ))
 	}
 }
 /*	2. Astronomical data used with the Cycle Based Calendar Computation Engine (CBCCE)
@@ -104,9 +108,9 @@ const
 	MEAN_LUNAR_MONTH = 2551442875,	// the length of a mean lunar month.
 	MEAN_SIDERAL_MOON_MONTH = 2360594880,	// One mean sideral moon month (27,3217 days).
 	NEW_MOON_REF = -62167873955000,	// Mean new moon of 3 1m 0 at 10:07:25 Terrestrial Time.
-	CAPUT_DRACONIS_REF = 1296388800000,	// M2011-02-11 12h An approximate date of caput draconis at begin of cycle.
-	DRACO_CYCLE = 587350000000,	// Time for the dragon to make a complete revolution up to the same mean calendrical place. Estimated from farest eclipses.
-	DRACO_RADIUS = 19 * Milliseconds.DAY_UNIT,	// the half-length of each "eclipse season", each side of the caput or the cauda.
+	CAPUT_DRACONIS_REF = 1297296000000,	// 22 2m 2011 00:00 UTC, date of caput draconis at begin of cycle, synchro at  the Gregorian year of origin 1 1m 2000.
+	DRACO_CYCLE = 587355840000,	// Time for the dragon to make a complete revolution up to the same mean Gregorian place. Estimated from farest eclipses to 6798,1 days.
+	DRACO_RADIUS = 21.1 * Milliseconds.DAY_UNIT,	// the half-length of each "eclipse season", each side of the caput or the cauda.
 	/** CBCCE parameters for the time counter in year + phase. 
 	*/
 	Tempered_year_params = {
@@ -189,7 +193,7 @@ const
 	Solar_Draconitic_Params = { 
 		timeepoch : CAPUT_DRACONIS_REF,
 		coeff : [
-			{cyclelength : DRACO_CYCLE, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "cycle"}, // one pseudo-saros or one cycle on the ecliptic		
+			{cyclelength : DRACO_CYCLE, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "cycle"}, // one cycle of Draco on the ecliptic		
 			{cyclelength : 1, ceiling : Infinity, subCycleShift : 0, multiplier : 1, target : "phase"} // one milliseconds		
 			],
 		canvas : [
@@ -213,11 +217,11 @@ const
 /*	3. Class instantiations
 */
 const
-	TemperedCalend = new astroCalend (Tempered_year_params),	// Analyse an instant as coordinates on 
+	TemperedCalend = new astroCalend (Tempered_year_params),	// Instant expressed in (tropical_year; ms)
 	CEMoon = new astroCalend (CE_Moon_params), // Lunar year, month (1..12), decimal age.
 	CELunar = new astroCalend (CE_Lunar_params), // Lunar year, month (1..12), day, time in day in ms.
 	MoonPhase = new astroCalend (Moon_Phase_params), // Lunar month, moon phase in ms.
-	SolarDraco = new astroCalend (Solar_Draconitic_Params),
+	SolarDraco = new astroCalend (Solar_Draconitic_Params),	// Number of draconitic cycles since CAPUT_DRACONIS_REF, phase in cycle in ms
 	LunarCalend = new Cbcce (Lunar_Year_Month_Params), // (Lunar_year; month) <> lunar_month
 	DayMSCalend = new Cbcce (Day_milliseconds);	// Timestamp <> (Day;  ms)
 
@@ -227,7 +231,7 @@ export const Lunar = {
 	/** getTemperedDate: the date in the tempered cycle
 	*/
 	getTemperedDate (theDate) {	// this a totally astronomical concept, no TZ.
-		return TemperedCalend.astroDate (theDate);
+		return TemperedCalend.astroCoordinates (theDate);
 	},
 	/** getCEMoonDate: The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin morning of 3 1m 000
@@ -236,7 +240,7 @@ export const Lunar = {
 	 * @return {{year: integer, month: integer, age: number}} age is a decimal figure
 	*/
 	getCEMoonDate (theDate, TZ) {	// This a calendar, result depends on TZ
-		return CEMoon.astroDate (theDate, TZ);
+		return CEMoon.astroCoordinates (theDate, TZ);
 	},
 	/** The lunar Milesian era calendar date coordinate at this date, 0h UTC. First day of this calendar is 4 1m 000 
 	 * First day of this lunar calendar is on 4 1m 000, and is expressed day 1 month 1 year 0.
@@ -247,7 +251,7 @@ export const Lunar = {
 	getCELunarDate (theDate, TZ) {	// The lunar date coordinate at this date,
 		let refDate = new ExtDate ("iso8601", theDate.valueOf() - theDate.getRealTZmsOffset(TZ));
 		refDate.setUTCHours(0,0,0,0);	// Set to same UTC date at 0h
-		return CELunar.astroDate (refDate);
+		return CELunar.astroCoordinates (refDate);
 	},
 	/** The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin evening of 25 7m 622
@@ -256,7 +260,7 @@ export const Lunar = {
 	 * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
 	*/
 	getHegirianMoonDate (theDate, TZ) {
-		let moonDate = CEMoon.astroDate (theDate, TZ);
+		let moonDate = CEMoon.astroCoordinates (theDate, TZ);
 		let age = moonDate.age ;
 		moonDate = LunarCalend.getObject (LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'age' : age};
@@ -282,25 +286,25 @@ export const Lunar = {
 	*/
 	getLunarSunTimeAngle (theDate) {
 		let msOffset = 
-			- Math.round(Milliseconds.DAY_UNIT * MoonPhase.astroDate (theDate, "UTC").phase / MEAN_LUNAR_MONTH);
+			- Math.round(Milliseconds.DAY_UNIT * MoonPhase.astroCoordinates (theDate, "UTC").phase / MEAN_LUNAR_MONTH);
 		return DayMSCalend.getObject (msOffset).milliseconds_in_day ; 
 	},
 	/** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
 	 * the moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
 	 * @method getLunarDateTime
-	 * @param (Date) UTC date of computation
-	 * @param {number} timeZoneOffset - Offset from UTC due to time zone, in milliseconds, by default system time zone offset
-	 * @return  {{month: number, date: number, hours: number, minutes: number, seconds: number}} Date + time corresponding to the Lunar date.
+	 * @param (Date) Instant of computation
+	 * @return (Date) Instant that corresponds to the Lunar date.
+	 * Note that the time of the returned instant is the lunar time. When getting this time, DST applies following lunar Date.
 	*/
-	getLunarDateTime (theDate, TZ) {
+	getLunarDateTime (theDate) {
 		// Each of the Sun's (mean) position on the Ecliptic circle is identified with the number of days since Winter solstice: 0 to 364.
 		let thisAge = this.getCEMoonDate(theDate, "UTC").age;
-		let dayOffset = (thisAge * YEAR / MEAN_SIDERAL_MOON_MONTH) % YEAR;	
-			// The number of days to add to the date of new moon, to obtain the date where the Sun shall be at the Moon's present position on the Ecliptic
-		let fakeDate = new ExtDate (milesian, theDate.getTime() + Math.round((dayOffset - thisAge) * Milliseconds.DAY_UNIT)).getFields("UTC");
-		let timeOffset = thisAge * Milliseconds.DAY_UNIT * Milliseconds.DAY_UNIT / MEAN_LUNAR_MONTH;
-		let fakeTime = new ExtDate (milesian, theDate.getTime() - timeOffset).getFields(TZ);
-		return {month: fakeDate.month, day: fakeDate.day, hours : fakeTime.hours, minutes : fakeTime.minutes, seconds : fakeTime.seconds};
+		// Date where the Sun shall be at the Moon's present position on the Ecliptic: add to the date of new moon a conversion of the age of moon to the SUN's cycle. 
+		let lunarDate = new Date (theDate.valueOf() + Math.round((((thisAge * YEAR / MEAN_SIDERAL_MOON_MONTH) % YEAR) - thisAge) * Milliseconds.DAY_UNIT));
+		// Lunar time: the time is shifted back by the moon's age, converted in the day cycle.
+		let lunarTime = new Date (theDate.valueOf() - thisAge * Milliseconds.DAY_UNIT * Milliseconds.DAY_UNIT / MEAN_LUNAR_MONTH);
+		lunarDate.setUTCHours (lunarTime.getUTCHours(), lunarTime.getUTCMinutes(), lunarTime.getUTCSeconds())
+		return lunarDate;
 	},
 	/** Estimate position of caput draconis at this date, and of cauda draconis, as two Milesian dates in same year (time of day is not estimated)
 	 * @param (Date) theDate: from where I want the estimate
@@ -308,23 +312,24 @@ export const Lunar = {
 	*/
 	getDraconiticNodes (theDate) { // This a non-TZ concept. The date generated may be interpreted with a time-zone.
 		let 
-			milesianYear = new ExtDate(milesian, theDate.valueOf()).year("UTC") + 1,
-			draco = SolarDraco.astroDate(theDate),	// date in TT, Draco cycle number + phase within cycle
+			dracoYear = theDate.getUTCFullYear() + 1, //new ExtDate(milesian, theDate.valueOf()).year("UTC") + 1,
+			draco = SolarDraco.astroCoordinates(theDate),	// Draco cycle number + phase within cycle at theDate
 			yearPhase = Math.floor (draco.phase * YEAR / DRACO_CYCLE),	// The phase of the Draco cycle expressed in a reference year cycle
-			caputDate = new ExtDate (milesian, TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+			caputDate = new Date ( TemperedCalend.UTCDate({year : dracoYear, phase : 0}).valueOf() - yearPhase );
+						// new ExtDate (milesian, TemperedCalend.UTCDate({year : dracoYear, phase : 0}) - yearPhase );
 		// caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));	// back to UTC scale.
 		// Now check which side and how far caputDate is from theDate, if necessary choose a more suitable.
 		let caputPos = caputDate.valueOf() - theDate.valueOf();
 		if (Math.abs (caputPos) > HALF_YEAR) {
-			milesianYear -= Math.sign (caputPos);	// find milesian year where caput is nearer to theDate
-			caputDate.setTime (TemperedCalend.astroSetInstant({year : milesianYear, phase : 0}) - yearPhase );
+			dracoYear -= Math.sign (caputPos);	// find year where caput is nearer to theDate
+			caputDate.setTime (TemperedCalend.UTCDate({year : dracoYear, phase : 0}).valueOf() - yearPhase );
 			// caputDate.setTime (caputDate.valueOf() - getDeltaT(caputDate));
 			caputPos = caputDate.valueOf() - theDate.valueOf();
 		}
 		// Choose a cauda that wraps theDate with caput
 		let 
 			caudaOffset = (caputPos < 0 ? HALF_YEAR : - HALF_YEAR),
-			caudaDate = new ExtDate (milesian, caputDate.valueOf() + caudaOffset),
+			caudaDate = new Date (caputDate.valueOf() + caudaOffset),
 			eclipseSeason = Math.abs(theDate.valueOf() - caputDate.valueOf()) <= DRACO_RADIUS 
 						|| Math.abs(theDate.valueOf() - caudaDate.valueOf()) <= DRACO_RADIUS;
 		return [ caputDate, caudaDate, eclipseSeason ]

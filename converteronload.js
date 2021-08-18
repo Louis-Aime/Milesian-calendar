@@ -42,7 +42,7 @@ var
 	calendars = [],	// an array (pointers to) calendar objects
 	targetDate = undefined, 	// new Date(),	// Reference UTC date
 	customCalIndex = 0,	// initialised and later changed.
-	switchingDate = { year : 1582, month : 12, day : 20 },
+	switchingDate = { year : 1582, month : 10, day : 15 },
 	TZ = "UTC", 	// time zone for specifying a date; "" means "system", only alternative value is "UTC". Only "UTC" used with converter.
 	TZOffset = 0,
 	// TZSettings : {mode : "", msoffset : 0},	// deprecate
@@ -171,9 +171,8 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 
 window.onload = function () {	// Initiate fields and set event listeners
 
-	document.gregorianswitch.day.value = switchingDate.day;
-	document.gregorianswitch.month.value = switchingDate.month;
-	document.gregorianswitch.year.value = switchingDate.year;
+	[ switchingDate.day, switchingDate.month, switchingDate.year ] 
+		= [ document.gregorianswitch.day.value, document.gregorianswitch.month.value, document.gregorianswitch.year.value ];
 
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);

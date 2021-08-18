@@ -56,18 +56,25 @@ export class SolarClock {
 	constructor (clock) {
 		this.clock = clock;	// The dial and the elements to be moved
 	}
-	/** Set the hands of a solar calendar clock, after the components of a milesian date.
-	 * @since M2021-08-02
+	/** Set the hands of a solar calendar clock, after a date that is read with the Milesian calendar.
+	 * @since M2021-08-27
 	 * @param {Object} clock - a graphical object that represents the clock, that the routine will set
 	 * if existing, these elements shall be set
 	 *   @member .yearDisplay where the year is displayed
 	 *   @member .clockhand.month a hand to be rotated, indicates the month
 	 *   @member .clockhand.day a hand to be rotated, indicates the day in month
 	 *   @member .clockhand.hour a hand to be rotated, indicates the hour (12 hours dial)
-	 *   @member .clockhand.minute a hand to be rotated, minutes
-	 *   @member .clockhand.seconds a hand to be rotated, seconds
-	 *   @member .clockhand.dragon a hand to be rotated, represents the dragon i.e. the lunar nodes. 
+	 *   @member .clockhand.minute a hand to be rotated, the minute of time
+	 *   @member .clockhand.second a hand to be rotated, the second of time
+	 *   @member .clockhand.dragon a hand to be rotated, represents the dragon i.e. the lunar nodes
 	 *   @member .ampm where "am" or "pm" shall be indicated
+	 * @param (Date) the date (UTC instant) to display
+	 * @param (TZ) the time zone, system time zone if not transmitted
+	 * @param (Date) a date that expressed the position of caput draconis
+	 * @param {boolean} continous - if set, day and month hands shall move continuously during the day, if unset (default), day, month and dragon hands move by one day quantum.
+	 * @return {number} number of half-days since beginning of year.
+	 
+	 
 	 * @param {number} year - year, displayed as is in .yearDisplay
 	 * @param {number} month - month, 1 (1m) by default
 	 * @param {number} day - date in month, 1 by default
@@ -76,15 +83,19 @@ export class SolarClock {
 	 * @param {number} second - second, 0 to 59, 0 by default
 	 * @param (number) dragonMonth - if defined, the month part of the dragon equivalent date.
 	 * @param (number) dragonDay -b if defined, the day part of the dragon equivalent date.
-	 * @param {boolean} continous - if set, day and month hands shall move continuously during the day, if unset (default), day, month and dragon hands move by one day quantum.
-	 * @return {number} number of half-days since beginning of year.
 	*/
-	setHands(year = undefined, month = 1, day = 1, hour = 24, minute = 0, second = 0, dragonMonth, dragonDay, continuous = false) { 
-		var timeUnits = ["month", "day", "hour", "minute", "second", "dragon"] ;	// the time units enumerated.
+	setHands (displayDate, TZ = "", caput = displayDate, continuous = false) {
+		// (year = undefined, month = 1, day = 1, hour = 24, minute = 0, second = 0, dragonMonth, dragonDay, continuous = false) 
+		const timeUnits = ["month", "day", "hour", "minute", "second", "dragon"] ;	// the time units enumerated.
+		var clockDate = new ExtDate (milesian, displayDate.valueOf()),
+			clockCaput = new ExtDate (milesian, caput.valueOf()),
+			dateFields = clockDate.getFields (TZ), dragonFields = clockCaput.getFields(TZ),
+			[ year, month, day, hour, minute, second ] 	// dragonMonth, dragonDay
+				= [ dateFields.year, dateFields.month, dateFields.day, dateFields.hours, dateFields.minutes, dateFields.seconds ];
 		let 	halfDays = 60*(--month) + 2*Math.floor(month/2) 
 					+ (continuous ? 2*(day-1) + (hour + minute/60 + second/3600)/12 : 2*day),
-				dragon = dragonMonth == undefined || dragonDay == undefined ? 0 :
-						(60 * (--dragonMonth) + 2*Math.floor(dragonMonth/2) + 2*dragonDay) * 360 / 732;
+				dragon = dragonFields.month == undefined || dragonFields.day == undefined ? 0 :
+						(60 * (--dragonFields.month) + 2*Math.floor(dragonFields.month/2) + 2*dragonFields.day) * 360 / 732; 
 		// Number of half-days since beginning of year, at beginning of day i.e. at THE END of that day if no hour specified.
 		let	angle =	{				// set of angle values
 			"month" : halfDays * 360 / 732, 			// Angle of month hand with respect to vertical upright
