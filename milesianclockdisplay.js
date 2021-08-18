@@ -175,10 +175,10 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
-	dateComponent = modules.Lunar.getLunarDateTime( targetDate, TZ );
-	document.moon.moondate.value = lunarDateFormat.format(targetDate);
-		// dateComponent.day + " " +  (dateComponent.month) + "m";
+
+	document.moon.moondate.value = lunarDateFormat.format(modules.Lunar.getLunarDateTime( targetDate ));
 	try {
+
 		document.moon.moontime.value = new Date(targetDate.valueOf() + modules.Lunar.getLunarSunTimeAngle(targetDate))
 						.toLocaleTimeString(undefined, {timeZone: undef(TZ)} );
 	}
@@ -213,15 +213,13 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			+ deltaTAbsDate.getUTCHours() + " h " + deltaTAbsDate.getUTCMinutes() + " min " + deltaTAbsDate.getUTCSeconds() + " s";
 	
 	// Yearly figures. Take milesian year.
-	let milesianYear = milDate.fullYear(TZ);
-	document.getElementById ("seasonsyear").innerHTML = milesianYear;
-	computeSignature(milesianYear);		// Recompute all year-specific elements
+	document.getElementById ("seasonsyear").innerHTML = mildateComponent.year;
+	computeSignature(mildateComponent.year);		// Recompute all year-specific elements
 
 	// Write Milesian date string near dial
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
 	myElement.innerHTML = clockFormat.format(targetDate);
 	// Finally update and display clock
-	milesianClock.setHands (milDate.year(TZ), milDate.month(TZ), milDate.day(TZ),
-		milDate.hours(TZ), milDate.minutes(TZ), milDate.seconds(TZ), caput.month(), caput.day() ); // Display date on clock.
-	milesianClock.setSeasons (milDate.year("UTC")); // Display also seasons.
+	milesianClock.setHands (targetDate, TZ, caput); // Display date on clock.
+	milesianClock.setSeasons (mildateComponent.year); // Display also seasons.
 }

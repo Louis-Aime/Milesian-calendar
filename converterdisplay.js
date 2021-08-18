@@ -214,8 +214,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
 	myElement.innerHTML = clockFormat.format(targetDate);
 	// Finally update and display clock
-	milesianClock.setHands (milDate.year(TZ), milDate.month(TZ), milDate.day(TZ),
-		milDate.hours(TZ), milDate.minutes(TZ), milDate.seconds(TZ) ); // Display date on clock.
+	milesianClock.setHands (milDate, TZ); // Display date on clock.
 	milesianClock.clock.querySelector(".moonage").innerHTML = modules.Lunar.getCELunarDate(targetDate, TZ).day;
 	milesianClock.setSeasons (milDate.year("UTC")); // Display also seasons.
 

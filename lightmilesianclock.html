@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Diem cognosce</title>
 <!-- 
-Versions	M2021-08-09 use common initialaser
+Versions	M2021-08-28	simplier calendarclock
+	M2021-08-09 use common initialiser
 	M2021-07-29 
 		fetchdom.js also a module
 		add seconds hand
@@ -39,8 +40,7 @@ Versions	M2021-08-09 use common initialaser
 		}
 	function setLightClockToNow() {	// Set clock to present date and time
 		lightClock.targetDate = new modules.ExtDate(lightClock.lightMilesian); // targeDate is today and now.	
-		lightClock.clockDial.setHands (lightClock.targetDate.year(), lightClock.targetDate.month(), lightClock.targetDate.day(),
-			lightClock.targetDate.getHours(), lightClock.targetDate.getMinutes(), lightClock.targetDate.getSeconds() ); // Display date on clock.
+		lightClock.clockDial.setHands (lightClock.targetDate); // Display date on clock.
 	}
 	</script>
 </head>
