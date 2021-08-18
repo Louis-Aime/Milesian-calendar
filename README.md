@@ -33,12 +33,13 @@ The referenced modules include:
 ## Complement around calendars
 Other modules enable Date computation in non-CLDR calendars, or other informations. 
 * Lunar data,
+* Prediction of eclipses: "seasons" where eclipses may occur,
 * Season computations: solstices and equinoxes,
 * Conversion to and from day counters,
-* Year signature : John Conway's doomsday, Gregorian epact, Easter in Julian and Gregorian calendars
+* Year signature : John Conway's doomsday, Gregorian epact, Easter in Julian and Gregorian calendars.
 
 ## Utilities for calendar and clock computations
- * calendarclock.js: handling a year clock
+ * calendarclock.js: handling a year clock.
  
 ## Demo pages
  * Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
