@@ -3,44 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-08-28	HTML initialises switching date and TZ
-	M2021-08-14 renamed gregorian calendar to iso_8601
-	M2021-08-05	
-		New dial with day length ratio
-		Separate Date-calendar from time and time zone
-		Astronomic dates may use any calendar
-		Split embedded code
-	M2021-08-01 caput and cauda draconis
-	M2021-07-29 Reorganise divisions
-	M2021-07-25	Control weeks data
-	M2021-07-11 Put a blank character in first box' title to avoid a "shifted" initial presentation
-	M2021-03-11 Enhance display of Delta T
-	M2021-02-14 semi-modular architecture of called routines
-	M2021-01-09 modular architecture of called routines
-	M2021-01-07 Adapt to newer Chronos
-	M2020-10-26
-		Add CalendricalBasics
-	M2020-10-11 Use conditionalEraFormat
-	M2020-07-01 IPAOO version
-		Suppress links to commonly loaded .js files
-	M2020-06-03 "min" instead of "mn"
-	M2020-04-16
-		Normalize head section
-		Link to a HD version of the Milesian clock dial
-	M2020-04-12 Avoid certain warnings by MS Edge
-	M2020-01-18 Enhance layout and display (time)
-	M2020-01-10 Use flexible display, change calendar list
-	M2019-12-23 Display seasons marks on clock dial, small presentation changes
-	M2019-12-15 Display timezone
-	M2019-08-06 Change clock display and references to clock elements, to facilitate multiple clocks
-	M2019-07-27 Add reference to getRealTZmsOffset method
-	M2019-06-10 Enhance display of non-valid dates and of ":"
-	M2019-06-08 Put Copyright in <footer>, initialisation in <body>, language in html
-	M2019-05-22 Add a <meta> at end of <head> to enhance display on most mobiles
-	M2019-05-13 Replace deprecated format attributes by CSS references
-	M2018-11-10 Add Julian calendar date display
-	M2018-11-09 continuous day shift value
-	M2018-11-07 insert js functions in relation with data entries  and clock run
+<!-- Version	M2021-08-29	see GitHub for details
 -->
 <!-- Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
@@ -642,11 +605,11 @@ Inquiries: www.calendriermilesien.org
 				<td><input name="g_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				<td><input name="j_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Chaque calendrier</th>
+			<tr><th class="onborder" colspan="2">Date / calendrier</th>
 				<td><input name="g_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Même calendrier</th>
+			<tr><th class="onborder" colspan="2">Date réelle</th>
 				<td><input name="g_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
 				<td><input name="j_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
 				</tr>
