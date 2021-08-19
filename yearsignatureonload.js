@@ -65,6 +65,10 @@ var
 	Locale,				// undefined on purpose - for now
 	milesianClock;
 
+function undef (param) {
+	return param == "" ? undefined : param
+}
+
 function displayDeltaT () {
 	let deltaT = modules.getDeltaT(targetDate)/modules.Milliseconds.SECOND_UNIT,
 		deltaTAbs = Math.abs(deltaT), deltaTSign = Math.sign(deltaT),
@@ -76,6 +80,18 @@ function displayDeltaT () {
 			+ deltaTAbsDate.getUTCHours() + " h " + deltaTAbsDate.getUTCMinutes() + " min " + deltaTAbsDate.getUTCSeconds() + " s";
 }
 
+function compLocalePresentationCalendar () {
+	astroCalend = calendars[customCalIndex];
+	DOWFormat = new modules.ExtDateTimeFormat (undef(Locale), 
+			{ weekday : "long", calendar : "iso8601"});
+	romanDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
+			{month : "short", day : "numeric", calendar : "iso8601" });
+	lunarDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
+			{month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
+	seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
+			{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : undef (TZ) }, astroCalend);
+}
+
 window.onload = function () {	// Initiate fields and set event listeners
 /*
 	document.gregorianswitch.day.value = switchingDate.day;
@@ -84,19 +100,15 @@ window.onload = function () {	// Initiate fields and set event listeners
 */
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
+		calendars.push (milesian);
+		calendars.push (new modules.GregorianCalendar ("iso_8601"));
+		calendars.push (new modules.JulianCalendar ("julian"));
+		calendars.push (new modules.FrenchRevCalendar ("frenchrev"));
+		customCalIndex = calendars.findIndex (item => item.id == document.details.calend.value);  // set initial custom calendar - but calendars must exist !
 		// targetDate = new modules.ExtDate(milesian);
 		// milesianClock = new modules.SolarClock( document.querySelector("#convclock") );
 		// compLocalePresentationCalendar();
-		calendars = [milesian];
-		astroCalend = milesian;
-		DOWFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-				{ weekday : "long", calendar : "iso8601"});
-		romanDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-				{month : "short", day : "numeric", calendar : "iso8601" });
-		lunarDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-				{month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
-		seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-				{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : undef (TZ) }, astroCalend);
+		compLocalePresentationCalendar ();
 		setYearToNow(milesian);
 		displayDeltaT();
 	});
@@ -125,14 +137,16 @@ window.onload = function () {	// Initiate fields and set event listeners
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		calcCustomDate()
 	})
-	document.custom.calend.addEventListener("blur", function (event) {
+*/
+	document.details.calend.addEventListener("blur", function (event) {
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);  // change custom calendar
-		targetDate = new modules.ExtDate(calendars[customCalIndex], targetDate.valueOf());	// set custom calendar if changed, and set date.
+		customCalIndex = calendars.findIndex (item => item.id == document.details.calend.value);  // change custom calendar
+		targetDate = new modules.ExtDate(calendars[customCalIndex], targetDate.valueOf());	// set custom calendar if changed, to current date.
 		compLocalePresentationCalendar();
-		setDisplay();
+		setYear (document.yearglobal.year.value);
+		displayDeltaT();
 	})
-
+/*
 	document.week.addEventListener("submit", function (event) {
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		calcWeek()

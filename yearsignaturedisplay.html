@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Caractéristiques de l'année tropique</title>
-<!-- Version - see GitHub
+<!-- Version - M2021-08-29 - see GitHub for details
 	M2021-08-09: rebuilt
 -->
 <!-- Milesian yearly figures, by Louis A. de FOUQUIERES
@@ -42,7 +42,7 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
 	<script type="text/javascript" src="yearsignatureonload.js"></script>
 	<style>
-		.panel {height: 410px;}
+		.panel {height: 420px;}
 	</style>
 
 </head>
@@ -108,11 +108,17 @@ Inquiries: www.calendriermilesien.org
 				<td><input name="g_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				<td><input name="j_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Chaque calendrier</th>
+			<tr><th class="onborder" colspan="2">Date / calendrier</th>
 				<td><input name="g_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				</tr>
-			<tr><th class="onborder" colspan="2">Même calendrier</th>
+			<tr><th class="onborder">Date </th>
+				<td><select name="calend" size="1" class="centered">
+					<option value="milesian" selected>milésien</option>
+					<option value="iso_8601">iso 8601</option>
+					<option value="julian">julien</option>
+					<option value="frenchrev">rév.</option>
+					</select></td>
 				<td><input name="g_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
 				<td><input name="j_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
 				</tr>
@@ -130,7 +136,7 @@ Inquiries: www.calendriermilesien.org
 		</section>
 
 		<section><h3>Saisons boréales année <span id="seasonsyear"></span></h3>
-		<p>Dates et heures selon options d'affichage</p>
+		<p>Dates et heures du fuseau horaire du terminal</p>
 		  <form name="seasons">
 			<table class="centered">
 				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
