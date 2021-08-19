@@ -115,6 +115,7 @@ function computeSignature(year) {	// Formaters are external
 	document.details.g_referdate.value = displayDateFrom21March (signature.easterOffset)
 			// milesianDateFrom30_3m(signature.easterOffset);
 	// Seasons
+	document.getElementById ("seasonsyear").innerHTML = year;
 	try {
 		document.seasons.winter1.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,0)); 
 		document.seasons.spring.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,1)); 

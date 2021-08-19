@@ -13,23 +13,7 @@ Associated with:
 	This .js file is highly related to the corresponding html code. 
 	Not much code optimisation in this file. 
 */
-/* Version	M2021-08-07
-		Reorganise dial and display, simplify
-		split
-	M2021-07-22	
-		External modules directly loaded from GitHub, not from local copy (this may be reverted)
-		Clock animated every 1s. 
-	M2021-07-18 Fix bug when computing from UTC date-time fields
-	M2021-07-09 Use IIFE for intial imports
-	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
-	M2021-03-11 Enhance display of Delta T
-	M2021-02-15	Use calendrical-javascript modules
-	M2021-01-15 Display seasons and year figures using timezone mode and system language
-	M2021-01-09 - Adapt to Chronos and new modules architecture
-		Use 11 dependant .js files instead of 14
-		Group year signature figures
-		Add wallclock indication
-(See former versions log on GitHub)
+/* Version	M2021-08-29 - see details on GitHub
 */
 /* Copyright Miletus 2017-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -213,7 +197,6 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			+ deltaTAbsDate.getUTCHours() + " h " + deltaTAbsDate.getUTCMinutes() + " min " + deltaTAbsDate.getUTCSeconds() + " s";
 	
 	// Yearly figures. Take milesian year.
-	document.getElementById ("seasonsyear").innerHTML = mildateComponent.year;
 	computeSignature(mildateComponent.year);		// Recompute all year-specific elements
 
 	// Write Milesian date string near dial
