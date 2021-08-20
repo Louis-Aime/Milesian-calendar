@@ -159,7 +159,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	dracoDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
 			{year : "numeric", month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
 	seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : undef (TZ) }, astroCalend);
+			{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : Options.timeZone }, astroCalend);
 	lunarDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
 			{month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
 }
