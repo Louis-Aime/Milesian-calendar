@@ -9,7 +9,8 @@ Associated with:
 	This file is highly related to the corresponding html code. 
 	This part is especially for setting the frame after HTML loading.
 */
-/* Version (see GitHub)
+/* Version M2021-08-30
+see GitHub for details
 */
 /* Copyright Miletus 2017-2021 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
@@ -175,7 +176,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 		calendars.push (new modules.GregorianCalendar ("iso_8601"));
 		calendars.push (new modules.JulianCalendar ("julian"));
 		calendars.push (new modules.WesternCalendar ("historic", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day)));
-		calendars.push (new modules.FrenchRevCalendar ("frenchrev"));
+		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);  // set initial custom calendar - but calendars must exist !
 		// targetDate = new modules.ExtDate(milesian);
 		milesianClock = new modules.SolarClock( document.querySelector("#mclock") );
