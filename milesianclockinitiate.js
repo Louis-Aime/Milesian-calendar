@@ -1,21 +1,35 @@
-/* Milesian Clock and converter functions - initiate part
-Character set is UTF-8.
+/** 
+ * @file Milesian Clock and converter functions - initiate part
 These functions are associated with the Milesian clock and converter html page: 
-They use the basic Milesian calendar functions, and the conversion functions of other calendar,
+They use the basic Milesian calendar functions, and the conversion functions of other calendar, 
 in order to display the Milesian on-line clock and to perform calendar conversion.
-Associated with: 
-*	MilesianClock.html
+ * @requires module:fetchdom
+ * @requires module:pldr
+ * @requires module:time-units
+ * @requires module:extdate
+ * @requires module:extdatetimeformat
+ * @requires module:calendars
+ * @requires module:deltat
+ * @requires module:seasons
+ * @requires module:calendarclock
+ * @requires module:countconversion
+ * @requires module:lunar
+ * @requires module:yearsignature
+ * @version M2021-08-22
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
 */
+// Character set is UTF-8.
 /* Version notes (follow GitHub)
 	This file aims ar created an adequate environment for several milesian clock applications.. 
 	This part is especially for initialisation.
 */
-/* Version	M2021-08-22 prepare switch to new global names calendrical and loadCalendrical
+/* Version	M2022-01-30 JSDoc
+	M2021-08-22 prepare switch to new global names calendrical and loadCalendrical
 	M2021-08-07
 		Created from milesianclockdisplay.js
-
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -34,8 +48,6 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 var	// global variables at document level.

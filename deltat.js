@@ -1,18 +1,23 @@
-/* Computation of an estimate of Delta T, for astronomical computations with calendars
-Character set is UTF-8
-Contents: 
-	getDeltaT : an estimate of DeltaT, defined as: 
-				UTC = TT - DeltaT. UTC is former GMT.
-		TT is Terrestrial Time, a uniform time scale defined with a second defined independently from Earth movements.
-		DeltaT is erratic and difficult to compute, however, the general trend of DeltaT is due to the braking  of the Earth's daily revolution.
-		This estimate of Delta T in seconds from the year expressed in Common Era is: -20 + 32 v², where v = (A – 1820) / 100.
-		In this version, Delta T is computed from a fractional value of the time. The result is rounded to the nearest second.
-*/
-/* Version	M2021-08-02	Recover comments describing Delta T that had been lost when splitting.
+/** Computation of an estimate of Delta_T, for astronomical computations with calendars.
+		Delta_T is defined in this way: UTC = TT - Delta_T, where UTC (formerly GMT) is the master time of all our clocks.
+		TT is Terrestrial Time, a uniform time scale defined independently from any Earth movements.
+		Delta_T is erratic and difficult to compute, however, the general trend of Delta_T is due to the braking  of the Earth's daily revolution.
+		This estimate of Deltta_T in seconds from the year expressed in Common Era is a quadratic function of the year.
+		The computation of the long-term Delta_T is after Morrison and Stephenson 2021.
+		In this version, the estimated Delta_T is smoothed over time. The result is rounded to the nearest second.
+ * @module 
+ * @version M2021-03-11
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+ */
+// Character set is UTF-8
+/* Version	M2022-01-17	Fix JSdoc
+	M2022-01-16 fix comments.
+	M2021-08-02	Recover comments describing Delta T that had been lost when splitting.
 	M2021-07-29 extracted and isolated from Lunar.js
 	M2021-03-11	Update formula for average Delta D after Morrison and Stephenson 2021
 */
-/* Copyright Miletus 2016-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -31,16 +36,14 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
-*/
-/* Requires: nothing
 */
 "use strict";
 	/** Compute an estimate of Delta T, defined as: UTC = TT - Delta T. The estimate is only the quadratic part of Delta T.
+	 * @static
 	 * @function getDeltaT
-	 * @param {Date} the date where Delta T is estimated (estimation is per exact date, not per year)
-	 * return {number} Delta T. Unit is milliseconds, result reflects an integer signed number of seconds
-	*/
+	 * @param {Date} theDate - date where Delta T is estimated (estimation is per exact date, not per year).
+	 * @return {number} Delta T, unit is milliseconds, result reflects an integer signed number of seconds.
+	 */
 export default function	getDeltaT (theDate) { 
 		const JULIAN_CENTURY_UNIT = 36525 * 86400000,
 			SECOND_UNIT = 1000, 	// used with legacy Date object

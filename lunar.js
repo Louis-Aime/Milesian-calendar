@@ -1,23 +1,15 @@
-/* Lunar computations for calendars
-Character set is UTF-8
-Lunar characteristics for calendrical clocks
-Contents: 
-	class astroCalend: a class of calendars that gives results in Terrestrial Time (TT), using the (imported) DeltaT function.
-	const AstroParam : a collection of constants and objects with constant values for the computations of this module.
-	const Lunar: a collection of function and object for computing lunar dates and simplified coordinates. Most often, parameter is a Date object.
-		getTemperedDate : the date expressed in mean calendar year + phase in ms. 
-		getCEMoonDate : the date expressed in mean Moon coordinates, i.e. lunar year, lunar month, decimal moon day, lunar hour shift.
-			Common Era Moon date year 0, month 0, age 0 is : 3 1m 0 at 10h 07 mn 25 s UTC. 
-		getCELunarDate: the Moon date at 0h UTC at this calendar date.
-		getHegirianMoonDate : same as above, with Hegirian epoch i.e. 6 8m 621 14h 7 mn 48s, so that first evening of first moon month of year 1 is 26 7m 622.
-		getHegirianLunarDate : the Hegirian date at 0h UTC at this calendar date. 
-		getLunarSunTimeAngle : angle between Sun and Moon, in order to compute a "Moon time"
-			At a given lunar time, the mean moon is at the same azimut as the sun at this (solar) time.
-		getLunarDateTime : date and time that correspond to the moon's position in the sky and with respect to the time zone
-		getDraconiticNodes : dates in same year where sun is aligned or opposite with lunar nodes.
-		With AstroCalend, a setter function is provided. No other setter function is provided in this package.
-*/
-/* Version	M2021-08-28: 
+/** Lunar computations for calendars
+ * @file
+ * @requires module:deltat
+ * @requires module:time-units.js
+ * @requires module:chronos
+ * @version M2022-02-03
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+ */
+// Character set is UTF-8
+/* Version	M2022-02-03 Suppress link to non-used modules, update JSdoc
+	M2021-08-28: 
 		Correct usage of Delta T; was wrongly used/
 		Set Draco parameters after studying the referential of eclipses: no false negative.
 	M2021-08-26 Tune Draco parameters (probably not last attempt)
@@ -42,7 +34,7 @@ Contents:
 	M2018-05-28 : enhanced comments and add a more lunar calendar functions
 	M2017-12-26 : replace names.
 */
-/* Copyright Miletus 2016-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -61,43 +53,53 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
 */
-/* Requires (imported): 
-	Milliseconds object,
-	class Cbcce, 
-	class ExtDate,
-	class MilesianCalendar,
-	getDeltaT function
-*/
+
 "use strict";
 import { default as getDeltaT } from './deltat.js';
 import { default as Milliseconds } from './time-units.js';
 import {Cbcce} from './chronos.js';
-import {default as ExtDate} from './extdate.js';
-import {MilesianCalendar} from './calendars.js';
-const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
+// import {default as ExtDate} from './extdate.js';
+// import {MilesianCalendar} from './calendars.js';
+// const milesian = new MilesianCalendar ("moonmilesian");	// no pldr needed
 /*	1. A class for computations using Terrestrial Time
 */
-class astroCalend {		// Computations of astronomical cycles using Terrestrial Time (TT) and conversion to UTC (Greenwich clock time) by Delta T adjustement. 
-	// UTC = TT - Delta T, and TT = UTC + Delta T
-	// astroCoordinates gives the astronomical coordinates at an UTC date. This date is first converted to a TT instant.
+
+/** Computations of astronomical cycles using Terrestrial Time (TT) and conversion to UTC through Delta_T adjustement. 
+ * UTC = TT - Delta T, and TT = UTC + Delta T.
+ * @private
+ * @class
+ * @param params - the object passed to Cbbcce representing the astronomical calendar, e.g. a calendar in moonmonths.
+ */
+class astroCalend {		// 
 	constructor (params) {
 		this.clockwork = new Cbcce ( params )
 	}
+	/** This function gives the astronomical coordinates at an UTC date. The date is first converted to a TT instant.
+	 * Using getRealTZmsOffset(TZ) converts the wallclock time into UTC, in such a way that lunar dates change when dates change locally.
+	 * @param {Date} theDate - UTC date for the astronomical event. It is converted into a TT date before decomposing into astronomical cycle.
+	 * @param {string} [TZ="UTC"] - Time zone code, if astronomical date is to be shifted to a wallclock time. Passed to getRealTZmsOffset(TZ).
+	 * @return  {Object} the date in astronomical units (e.g. in moonmonths and days) in the astronomical calendar.
+	 */
 	astroCoordinates = function (theDate, TZ="UTC") {
-		// Subtracting getRealTZmsOffset converts the wallclock time into UTC, in such a way that lunar dates change when dates change locally.
-		// theDate is an UTC date. It is converted into a TT date before decomposing into astronomical cycle.
+		// theDate is an UTC date. 
 		return this.clockwork.getObject (theDate.getTime() - theDate.getRealTZmsOffset(TZ) + getDeltaT(theDate))
 	}
+	/** This function gives the UTC date of an astronomical (lunar, ...), e.g. a moon month and the time since new moon. 
+	 * The date is first computed as a TT instant, then converted into an UTC date-time, and finally shifted as local time if necessary.
+	 * @param {Object} theFields - the TT date expressed in astronomical terms (e.g. moonmonth + time since new moon).
+	 * @param {String} [TZ="UTC"] - Time zone code, if Date to be shifted to a local wallclock time. Passed to getRealTZmsOffset(TZ).
+	 * @return {Date} Corresponding date in UTC scale, possibly shifted after TZ.
+	 */
 	UTCDate = function (theFields, TZ="UTC") {
-		// The date of an astronominal event (lunar or other) is first computed as a TT instant, then converted into an UTC date-time, and finally shifted as local time if necessary.
+		// The date of an astronominal event (lunar or other) 
 		let instant = this.clockwork.getNumber (theFields),
 			myDate = new ExtDate ("iso8601", instant);
 		return new Date (instant - getDeltaT (myDate) + myDate.getRealTZmsOffset(TZ))
 	}
 }
-/*	2. Astronomical data used with the Cycle Based Calendar Computation Engine (CBCCE)
+
+/*	 Astronomical data for calendrical computations.
 */
 const
 	HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET = 7688,
@@ -112,6 +114,7 @@ const
 	DRACO_CYCLE = 587355840000,	// Time for the dragon to make a complete revolution up to the same mean Gregorian place. Estimated from farest eclipses to 6798,1 days.
 	DRACO_RADIUS = 21.1 * Milliseconds.DAY_UNIT,	// the half-length of each "eclipse season", each side of the caput or the cauda.
 	/** CBCCE parameters for the time counter in year + phase. 
+	* @private
 	*/
 	Tempered_year_params = {
 		timeepoch : TEMPERED_YEAR_REF,
@@ -126,6 +129,7 @@ const
 	},
 	/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon years, moon months and fractional moon age.
 	* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
+	* @private
 	*/
 	CE_Moon_params = { // 
 		timeepoch : NEW_MOON_REF,
@@ -143,6 +147,7 @@ const
 	},
 	/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon years, moon months, integer moon age, and milliseconds
 	* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
+	* @private
 	*/
 	CE_Lunar_params = {
 		timeepoch : NEW_MOON_REF, 
@@ -161,6 +166,7 @@ const
 	} ,
 	/** CBCCE parameters to be used with a Unix timestamp in ms. Decompose into moon month, and phase in milliseconds
 	* Reference date is 3 1m 0 at 10:07:25 Terrestrial Time, using the quadratic estimation of Delta T.
+	* @private
 	*/
 	Moon_Phase_params = {
 		timeepoch : NEW_MOON_REF,
@@ -176,6 +182,7 @@ const
 	/** CBCCE parameters to be used in order to change lunar calendar epoch, without changing lunar age.
 	* Usage of this parameter set: change between Common Era and Hegirian moon calendar, 7688 lunar month offset.
 	* timeepoch base is 0.
+	* @private
 	*/
 	Lunar_Year_Month_Params = {
 		timeepoch : 0, 
@@ -188,7 +195,8 @@ const
 			{name : "month", init : 1}
 		]
 	}, 
-	/** CBCCE parameters for the Draconitic cycle with respect to the reference year
+	/** CBCCE parameters for the Draconitic cycle with respect to the reference year.
+	* @private
 	*/
 	Solar_Draconitic_Params = { 
 		timeepoch : CAPUT_DRACONIS_REF,
@@ -202,6 +210,7 @@ const
 			]
 	},
 	/** Conversion from Posix timestamp to days + milliseconds in day, and the reverse, with CBCCE
+	* @private
 	*/
 	Day_milliseconds = { 	// To convert a time or a duration to and from days + milliseconds in day.
 		timeepoch : 0, 
@@ -227,17 +236,23 @@ const
 
 	/* 4. Exported functions
 	*/
+/** A set of functions that give tropical, lunar and draconical coordinates at a given date.
+ * @interface
+ */
 export const Lunar = {
-	/** getTemperedDate: the date in the tempered cycle
+	/** The date in the tempered tropical year, i.e. the date from the instant of the last winter solstice.
+	* @param {Date} theDate - UTC date.
+	* @return {Object} Year and milliseconds in year.
 	*/
-	getTemperedDate (theDate) {	// this a totally astronomical concept, no TZ.
+	getTemperedDate (theDate) {
 		return TemperedCalend.astroCoordinates (theDate);
 	},
-	/** getCEMoonDate: The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
+	/** The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
 	 * Origin morning of 3 1m 000
 	 * an adjustement to Terrestrial Time (TT) is applied
-	 * @param (Date) UTC date of computation
-	 * @return {{year: integer, month: integer, age: number}} age is a decimal figure
+	 * @instance 
+	 * @param {Date} theDate - UTC date.
+	 * @return {Object} Lunar date with age as a decimal figure {year: integer, month: integer, age: decimal number}. 
 	*/
 	getCEMoonDate (theDate, TZ) {	// This a calendar, result depends on TZ
 		return CEMoon.astroCoordinates (theDate, TZ);
@@ -245,8 +260,8 @@ export const Lunar = {
 	/** The lunar Milesian era calendar date coordinate at this date, 0h UTC. First day of this calendar is 4 1m 000 
 	 * First day of this lunar calendar is on 4 1m 000, and is expressed day 1 month 1 year 0.
 	 * an adjustement to Terrestrial Time (TT) is applied
-	 * @param (Date) UTC date of computation
-	 * @return {{year: number, month: number, date: integer number (1 to 30), time: number of milliseconds}}
+	 * @param {Date} theDate - UTC date.
+	 * @return {Object} Lunar date {year: number, month: number, day: integer number (1 to 30) }.
 	*/
 	getCELunarDate (theDate, TZ) {	// The lunar date coordinate at this date,
 		let refDate = new ExtDate ("iso8601", theDate.valueOf() - theDate.getRealTZmsOffset(TZ));
@@ -254,10 +269,10 @@ export const Lunar = {
 		return CELunar.astroCoordinates (refDate);
 	},
 	/** The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. 
-	 * Origin evening of 25 7m 622
+	 * Origin is evening of 25 7m 622
 	 * an adjustment to Terrestrial Time (TT) is applied
-	 * @param (Date) UTC date of computation
-	 * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
+	 * @param {Date} theDate - UTC date.
+	 * @return {Object} Lunar date with age as a decimal figure {year: integer, month: integer, age: decimal number}. 
 	*/
 	getHegirianMoonDate (theDate, TZ) {
 		let moonDate = CEMoon.astroCoordinates (theDate, TZ);
@@ -269,8 +284,8 @@ export const Lunar = {
 	 * First day of this lunar calendar is on 26 7m 622, and is expressed day 1 month 1 year 1.
 	 * It corresponds to 1 9 641 of CE lunar calendar
 	 * an adjustment to Terrestrial Time (TT) is applied
-	 * @param (Date) UTC date of computation
-	 * @return {{year: number, month: number, date: number (1 to 30), time: number of milliseconds}}
+	 * @param {Date} theDate - UTC date.
+	 * @return {Object } Lunar date {{year: number, month: number, date: number (1 to 30)}
 	*/
 	getHegirianLunarDate (theDate, TZ) { 
 		let moonDate = this.getCELunarDate (theDate, TZ); 
@@ -278,10 +293,10 @@ export const Lunar = {
 		moonDate = LunarCalend.getObject (LunarCalend.getNumber (moonDate) - HEGIRIAN_TO_CE_LUNAR_MONTH_OFFSET);
 		return { 'year' : moonDate.year , 'month' : moonDate.month , 'day' : lunarDay}
 	},
-	/** getLunarTime was deprecated. Take time section of getLunarDateTime. is such that the moon is at the same place in the sky that the sun at this time, the same day; 
+	/* getLunarTime was deprecated. Take time section of getLunarDateTime. is such that the moon is at the same place in the sky that the sun at this time, the same day; 
 	*/
 	/** Angle between the moon position and the sun position.
-	 * @method LunarSunTimeAngle
+	 * @param {Date} theDate - UTC date.
 	 * @return {number} delay to add to current time in order to get lunar time
 	*/
 	getLunarSunTimeAngle (theDate) {
@@ -290,10 +305,9 @@ export const Lunar = {
 		return DayMSCalend.getObject (msOffset).milliseconds_in_day ; 
 	},
 	/** Lunar date and time is such that the moon is at the same place on the Ecliptic that the sun at that date and time.
-	 * the moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
-	 * @method getLunarDateTime
-	 * @param (Date) Instant of computation
-	 * @return (Date) Instant that corresponds to the Lunar date.
+	 * The moon is rising for lunar dates from 1 1m to 31 6m, falling for lunar dates from 1 7m to last day of the year.
+	 * @param {Date} theDate - UTC date.
+	 * @return {Date} Instant that corresponds to the Lunar date.
 	 * Note that the time of the returned instant is the lunar time. When getting this time, DST applies following lunar Date.
 	*/
 	getLunarDateTime (theDate) {
@@ -307,8 +321,8 @@ export const Lunar = {
 		return lunarDate;
 	},
 	/** Estimate position of caput draconis at this date, and of cauda draconis, as two Milesian dates in same year (time of day is not estimated)
-	 * @param (Date) theDate: from where I want the estimate
-	 * @return (Array) two dates, caput draconis and cauda draconis in same year.
+	 * @param {Date} theDate - UTC date.
+	 * @return {Array} two dates and a Boolean: caput draconis, cauda draconis (both within same year), and whether eclipse season is running.
 	*/
 	getDraconiticNodes (theDate) { // This a non-TZ concept. The date generated may be interpreted with a time-zone.
 		let 

@@ -1,6 +1,7 @@
 # The Milesian Calendar laboratory
 The applications developped from the concept of Milesian calendar may be seen here. All files are grouped in this sub-repertory.
-In this version (30 Dec. 2020) there is only one milesian clock, and one test page for Unicode / ECMA new developements.
+These applications use the calendrical-javascript package (see further).
+The JSDoc documentation is constructed in the same directory.
 
 ## The complete Milesian clock
 Read the real date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in Gregorian, Milesian and Julian calendars.
@@ -35,3 +36,8 @@ This page demonstrates the functionnalities of ExtDate, ExtDateTimeFormat and cu
 [Demonstrator on this repository](https://Louis-Aime.github.io/Milesian-calendar/calendrical-demo-fr.html).
 
 A more advanced version may be available on the [GitHub Page of calendrical-javascript](https://Louis-Aime.github.io/calendrical-javascript).
+
+## Comments and proposal
+ Use this repository's [issues](https://github.com/Louis-Aime/Milesian-calendar/issues).
+
+# JSDoc documentation

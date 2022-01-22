@@ -26,7 +26,7 @@ Contents
 	M2018-10-26: Enhance comments
 	M2017-01-09: Display Gold number 1 to 19, not 0 to 18.
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -45,7 +45,6 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 // These routines complement general display routines. Modules are loaded in "main" program under the "modules" wrapper.
@@ -67,7 +66,7 @@ function milesianDateFrom30_3m (offset) {
 		(offset <= 244 ? (offset - 214) + " 11m" :
 		(offset <= 274 ? (offset - 244) + " 12m" : ">30 12m" ))))))))))) ;
 }
-/** A "day-month" display function. Display DayMonth located offset day after 21 March, in any language and calendar. 
+/* A "day-month" display function. Display DayMonth located offset day after 21 March, in any language and calendar. 
 	If calendar is not provided, milesian is used.
 */
 function displayDateFrom21March (offset) {

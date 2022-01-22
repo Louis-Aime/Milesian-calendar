@@ -1,13 +1,21 @@
-/* Calendar clock handler
-	Character set is UTF-8
-	Operations on a solar calendar clock - set clock hands to angle corresponding to solar date in year
-		may handle month, day, hour, minute and second hands. All hands do not need to exist.
+/** Calendar clock handler.
+ Operations on a solar calendar clock - set clock hands to angle corresponding to solar date in year.
+ May handle month, day, hour, minute and second hands. All hands do not need to exist.
+ * @module
+ * @require module:extdate
+ * @require module:calendar
+ * @require module:seasons
+ * @version M2021-08-02
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+/*	Character set is UTF-8
 Contents
 	setSolarCalendarClockHands (since M2020-12-30)
 		setMilesianCalendarClockHands (deprecated)
 		setSolarYearClockHands (deprecated)
 */
-/* Version	M2021-08-02	Add a dragon hand
+/* Version	M2022-02-03	JSDoc
+	M2021-08-02	Add a dragon hand
 	M2021-07-29 adapt to calendrical Javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2020-12-30
@@ -26,7 +34,7 @@ Contents
 	M2017-12-26: add year indication, and change parameters list
 	M2017-11-07: add an "am/pm" indicator
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -45,44 +53,48 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 import { default as ExtDate } from './extdate.js';
 import {MilesianCalendar} from './calendars.js';
 import { Seasons } from './seasons.js';
 const milesian = new MilesianCalendar ("seasmilesian");
+/** Elements of any clock object. Missing elements shall not be used.
+ * @since M2021-08-27
+ * @typedef {Object} Clock
+ * @property {Element} yearDisplay 		- where the year shall be displayed.
+ * @property {Object} clockhand			- the hands of the clock. Any missing hand will not be used.
+ * @property {Element} clockhand.month 	- a hand to be rotated, indicates the month.
+ * @property {Element} clockhand.day 	- a hand to be rotated, indicates the day in month.
+ * @property {Element} clockhand.hour	- a hand to be rotated, indicates the hour (12 hours dial).
+ * @property {Element} clockhand.minute	- a hand to be rotated, the minute of time.
+ * @property {Element} clockhand.second	- a hand to be rotated, the second of time.
+ * @property {Element} clockhand.dragon	- a hand to be rotated, represents the dragon i.e. the lunar nodes.
+ * @property {Object} centre			- same elements as clockhand, the centre of the respective hands.
+ * @property {Element} ampm 			- where "am" or "pm" shall be indicated.
+ * @property {Object} seasonmark		- the season marks on the dial. The centre is centre.month.
+ * @property {Element} seasonmark.winter - the season mark for winter.
+ * @property {Element} seasonmark.spring - the season mark for spring.
+ * @property {Element} seasonmark.summer - the seasonmark for summer.
+ * @property {Element} seasonmark.autumn - the season mark for autumn.
+ * @property {Object} moon				- the moon elements.
+ * @property {Element} moon.moondisk	- a disk (centre and radius), the lit moon as in fullmoon.
+ * @property {Element} moon.moonphase	- a disk that represents the "path" shaded part on the moon.
+ */ 
+/**
+ @class
+ @param {Clock} clock - a graphical object as described in type section.
+ */
 export class SolarClock {
 	constructor (clock) {
 		this.clock = clock;	// The dial and the elements to be moved
 	}
-	/** Set the hands of a solar calendar clock, after a date that is read with the Milesian calendar.
-	 * @since M2021-08-27
-	 * @param {Object} clock - a graphical object that represents the clock, that the routine will set
-	 * if existing, these elements shall be set
-	 *   @member .yearDisplay where the year is displayed
-	 *   @member .clockhand.month a hand to be rotated, indicates the month
-	 *   @member .clockhand.day a hand to be rotated, indicates the day in month
-	 *   @member .clockhand.hour a hand to be rotated, indicates the hour (12 hours dial)
-	 *   @member .clockhand.minute a hand to be rotated, the minute of time
-	 *   @member .clockhand.second a hand to be rotated, the second of time
-	 *   @member .clockhand.dragon a hand to be rotated, represents the dragon i.e. the lunar nodes
-	 *   @member .ampm where "am" or "pm" shall be indicated
-	 * @param (Date) the date (UTC instant) to display
-	 * @param (TZ) the time zone, system time zone if not transmitted
-	 * @param (Date) a date that expressed the position of caput draconis
-	 * @param {boolean} continous - if set, day and month hands shall move continuously during the day, if unset (default), day, month and dragon hands move by one day quantum.
+/** Set hands on the clock.
+	 * @param {Date } displayDate	- the reference date (UTC instant).
+	 * @param {string} [TZ=""]		-  the time zone code, system time zone if not transmitted.
+	 * @param {Date} caputDate		- the date that caput dragonis hand should show.
+	 * @param {boolean} [continous=false] 	- if set, day and month hands shall move continuously during the day, if not, day, month and dragon hands move by one day quantum.
 	 * @return {number} number of half-days since beginning of year.
-	 
-	 
-	 * @param {number} year - year, displayed as is in .yearDisplay
-	 * @param {number} month - month, 1 (1m) by default
-	 * @param {number} day - date in month, 1 by default
-	 * @param {number} hour - hour, 0 to 24, 24 by default, which means end of day
-	 * @param {number} minute - minute, 0 to 59, 0 by default
-	 * @param {number} second - second, 0 to 59, 0 by default
-	 * @param (number) dragonMonth - if defined, the month part of the dragon equivalent date.
-	 * @param (number) dragonDay -b if defined, the day part of the dragon equivalent date.
 	*/
 	setHands (displayDate, TZ = "", caput = displayDate, continuous = false) {
 		// (year = undefined, month = 1, day = 1, hour = 24, minute = 0, second = 0, dragonMonth, dragonDay, continuous = false) 
@@ -120,15 +132,9 @@ export class SolarClock {
 			: "";
 		return halfDays;	// control the computation parameters with the return value
 	}
-	/** Mark the dates of solstices and equinox on the dial of the Milesian clock 
-	 * @since M2019-08-23 (revised for typos M2019-11-30
-	 * @param {Object} clock - a graphical object that represents the clock, that the routine will set
-	 * if existing, these elements shall be set
-	 *  @member .seasonmark.winter winter solstice
-	 *  @member .seasonmark.spring spring equinox
-	 *  @member .seasonmark.summer summer solstice
-	 *  @member .seasonmark.autumn autumn equinox
-	 * @param {number} year - year for which the seasons are set
+	/** Mark the dates of solstices and equinox on the dial of the clock.
+	 * @since M2019-08-23 (revised for typos M2019-11-30.
+	 * @param {number} year - year for which the seasons are set.
 	 * @return {boolean} true if seasons have been computed, false otherwise.
 	*/
 	setSeasons (year) {
@@ -159,9 +165,9 @@ export class SolarClock {
 		}
 		return success;
 	}
-	/** set SVG display as to Moon age.
-	 * @param {Object} moon - SVG object representing a moon defined with a lit image and a "path" shaded part
-	 * @param {number} phase - Phase, in radians (2 * PI is one lunar cycle)
+	/** Set SVG display as to Moon age.
+	 * @param {number} phase - phase, in radians (2 * PI is one lunar cycle).
+	 * @return {number} the return value of the setAttribute function applied to this.moon.moonphase.
 	*/
 	setMoonPhase (phase) {	// a "moon" object is a child of this.
 		let moon = this.clock.querySelector(".moon");

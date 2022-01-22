@@ -11,7 +11,7 @@ Associated with:
 */
 /* Version	M2021-08-29 - see GitHub for details
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -34,8 +34,6 @@ or the use or other dealings in the software.
 Inquiries: www.calendriermilesien.org
 */
 "use strict";
-/** A utility for the undefined fields
-*/
 
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 	

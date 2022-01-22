@@ -1,18 +1,16 @@
-/* Year Signature of Julian, Gregorian and Milesian calendars
-	Character set is UTF-8
-Required
-	Cbcce
-Each function returns a compound value with the yearly key figures for one calendar:
-	julianSignature: for the Julian calendar,
-	gregorianSignature: for the Gregorian calendar,
-	milesianSignature: for the Milesian calendar.
-Key figure include:
-	doomsday : the weekday number of "0th March" or "0th 1m", see this information on this method by John Conway.
-	easterResidue: number of days from 21st March (30th 3m for Milesian) to the computus Spring full moon.
-	eaterOffset: number of days from 21st March (30th 3m) to Easter Sunday.
-	epact: Julian / Gregorian computus epact, Milesian epact as converted from Gregorian epact
+/** Year Signature of Julian, Gregorian and Milesian calendars
+Each function returns a compound value with the yearly key figures for the Julian, Gregorian of Milesian  calendar.
+ * @module
+ * @version M2021-08-07
+ * @requires module:calendrical-javascript/chronos.Cbcce
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+ */
+//	Character set is UTF-8
+/* 
 */
-/* Version	M2021-08-07 Dominical letter for leap years
+/* Version	M2022-01-28	JSDoc
+	M2021-08-07 Dominical letter for leap years
 	M2021-08-07	Add dominical letter
 	M2021-07-29 Update external refs
 	M2021-07-26	Update comments and links
@@ -31,7 +29,7 @@ Key figure include:
 	M2017-12-26
 	M2017-06-04
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -50,7 +48,6 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 import { Cbcce } from './chronos.js';
@@ -72,14 +69,20 @@ const // Gregorian solar intercalation rule
 			]
 		}),
 	DominicalLetter = ['C','B','A','G','F','E','D'];	// Series of the Dominical Letter, index by Doomsday.
+/** Structure of the returned object.
+ * @typedef signature
+ * @property {number} doomsday 			- the index doomsday or "clavedi" for the year, i.e. the index of weekday of "0 March", 21 March and other pivotal dates.
+ * @property {string} dominicalLetter	- the key figure for weekday computations after the Roman method, corresponds to the day of the first Sunday in the year.
+ * @property {number} gold				- year modulo 19, a key figure for Moon and Easter computation, a 0-18 integer.
+ * @property {number} goldNumber		- the Gold Number, i.e. gold + 1.
+ * @property {number} epact 			- the age of the moon one day before first day of the year and also one day before 1 March, a 0-29 integer.
+ * @property {number} easterResidue 	- the number of days from 21st March to computus next full moon, a 0-29 integer.
+ * @property {number} easterOffset  	- the number of days from 21st March to Easter Sunday, result of Easter computation.
+ * @property {boolean} isLeap 			- whether this year is a leap year (366 days long).
+ */
 /** key figures of a year of the Julian calendar
- * @param {number} year of Dionysos era, integer number
- * @return {Object.<string, number>} signature
- * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
- * {number} signature.epact - the age of the moon one day before 1st January, following Julian computus, a 0-29 integer.
- * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
- * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
- * {boolean} signature.isLeap - whether this year is a leap year (366 days long).
+ * @param {number} year - Algebraic integer year of Dionysos era.
+ * @return {signature} key figures for the year.
 */
 export function julianSignature (year) {
 	const calend = new Cbcce (
@@ -115,13 +118,8 @@ export function julianSignature (year) {
 	return signature;
 }
 /** key figures of a year of the Gregorian calendar
- * @param {number} year of the Dionysos era (Anno Domini or Common Era)
- * @return {Object.<string, number>} signature
- * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer.
- * {number} signature.epact - the age of the moon one day before 1st January, following Gregorian computus, a 0-29 integer.
- * {number} signature.easterResidue - the number of days from 21st March to computus next full moon, a 0-29 integer.
- * {number} signature.easterOffset - the number of days from 21st March to Easter Sunday, result of Easter computation.
- * {boolean} signature.isLeap - whether this year is a leap year (366 days long).
+ * @param {number} year - Algebraic integer year of Dionysos era.
+ * @return {signature} key figures for the year.
 */
 export function gregorianSignature (year) {
 	var
@@ -152,13 +150,8 @@ export function gregorianSignature (year) {
 	return signature;
 }
 /** key figures of a year of the Milesian calendar. Mostly Gregorian figures.
- * @param {number} year of the Dionysos era
- * @return {Object.<string, number>} signature
- * {number} signature.doomsday - the doomsday or key day or "clavedi", key figure for weekday computations, a 0-7 integer (same as Gregorian).
- * {number} signature.epact - the age of the moon one day before 1 1m, following Gregorian computus, a 0-29 half-integer. It is a fixed offset from the Gregorian epact.
- * {number} signature.easterResidue - the number of days from 30 3m to computus next full moon, a 0-29 integer.
- * {number} signature.easterOffset - the number of days from 30 3m to Easter Sunday, result of Easter computation.
- * {boolean} signature.isLeap - whether this Milesian year is a leap year (366 days long).
+ * @param {number} year - Algebraic integer year of Dionysos era.
+ * @return {signature} key figures for the year.
 */
 export function milesianSignature (year) {
 	var

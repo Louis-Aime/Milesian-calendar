@@ -15,7 +15,7 @@ Associated with:
 */
 /* Version	M2021-08-29 - see details on GitHub
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -34,12 +34,8 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
-/** A utility for the undefined fields
-*/
 
 function setDisplay () {	// Disseminate targetDate and time on all display fields
 	
@@ -52,7 +48,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 		myCollection;	// Another work variable, used later
 	// Calendar specified via event listener
 	// TZ = Time zone mode specified. Compute effective time zone offset
-/** TZOffset is JS time zone offset in milliseconds (UTC - local time)
+/* TZOffset is JS time zone offset in milliseconds (UTC - local time)
  * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
 */
 	{

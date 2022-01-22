@@ -1,11 +1,16 @@
-/* Milesian Seasons - Dates of tropical events for a given Milesian year
-	Character set is UTF-8
-Required (directly)
-	getDeltaT
-Contents
-	The externally used function is tropicEvent
-*/
-/* Version	M2021-08-27 key figures as constants.
+/** Dates of tropical events for a given Milesian year.
+These functions implement Jean Meeus' method for computing tropical events.
+The code derives from Fourmilab's astro.js file (2015). 
+Code has been modified in order to conform with strict mode.
+ * @file
+ * @requires module:getdeltat
+ * @version M2021-08-20
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+ */
+//	Character set is UTF-8
+/* Version	M2022-02-03 JSDoc
+	M2021-08-27 key figures as constants.
 	M2021-08-20 Hide internal functions and refer to DeltaT only
 	M2021-07-29 Adapt to calendrical-javascript
 	M2021-02-14	Use calendrical-javascript modules 
@@ -13,12 +18,12 @@ Contents
 	M2020-01-12 : strict mode implementation
 	M2019-08-22: first version, extracted from a Fourmilab package
 */
-/* Copyright Miletus 2019-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
 without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
+distribute, sublicense, and/or sell copies of the Software, and to 
 permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
 1. The above copyright notice and this permission notice shall be included
@@ -32,44 +37,58 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
-
-These functions implement Jean Meeus' method for computing tropical events.
-The code derives from Fourmilab's astro.js file (2015)
-Code has been modified in order to conform with strict mode
 */
 "use strict";
-import { default as getDeltaT } from './deltat.js';
-	/* Part 1 - utilities
-	*/
-const
-	LOWER_YEAR = -3000,	// The lower year for seasons' computations
-	UPPER_YEAR = +6000;	// The upper year for seasons' computations
+/* Part 1 - utilities 	*/
 
-	/** Convert degrees to radians
-	 * @param {number} an angle in degrees
-	 * @return {number} the corresponding angle in radians
-	*/
+import { default as getDeltaT } from './deltat.js';
+
+/** The lower value for the year parameter
+ * @private
+ * @const
+ * @default -3000
+ */
+const
+	LOWER_YEAR = -3000;
+
+/** The highest value for the year parameter
+ * @private
+ * @const
+ * @default +6000
+ */
+const
+	UPPER_YEAR = +6000;
+
+/** Convert degrees to radians
+ * @private
+ * @param {number} d - an angle in degrees
+ * @return {number} the corresponding angle in radians
+ */
 function dtr(d) {return (d * Math.PI) / 180.0;}
 
-	/** Cosinus of an angle in degrees
-	 * @param {number} the angle in degrees
-	 * @return {number} the cosinus of the angle
-	*/
+/** Cosinus of an angle in degrees
+ * @private
+ * @param {number} d - an angle in degrees
+ * @return {number} the cosinus of the angle
+ */
 function dcos(d) {return Math.cos(dtr(d));}
-	
+
+/* Part 2 - Seasons, the interface object */ 
+/** interface object of two functions for computing equinoxes and solstices of a year.
+ * @interface
+ */
 export const Seasons = {
 	
-	/* Part 2 - Function equinox, implements Jean Meeus' method
-	for calculating equinox and solstices of a year
-	Extracted from Fourmilab astro functions
+	/** The Julian Day of a tropical event (equinox or solstice) of a given year.
+	This function implements Jean Meeus' method for calculating equinox and solstices dates of a given year.
+	This implementation is extracted from Fourmilab's astro functions (John Walker, http://www.fourmilab.ch/, September MIM)
+	 * @static
+	 * @function
+	 * @param {number} year - the Gregorian year.
+	 * @param {number} which - 0->March, 1->June, 2->September, 3->December, any other value -> Error.
+	 * @return {number} the date of the event in Julian Day, Terrestrial Time.
 	*/
-	/** The Julian Day of a tropical event (equinox or solstice) of a given year
-	 * @param {number} year: the Gregorian year
-	 * @param {number} which: 0->March, 1->June, 2->September, 3->December, any other value -> Error
-	 * @return {number} the date of the event in Julian Day, Terrestrial Time
-	*/
-  equinox(year, which) {
+ equinox (year, which) {
 		//  Periodic terms to obtain true time
 	const 
 		EquinoxpTerms = new Array(
@@ -142,22 +161,21 @@ export const Seasons = {
 	}
 	return JDE0 + ((S * 0.00001) / deltaL);
   },
-	
-	/* Part 3 - the tropicEvent function: dates of solstices and equinoxes of a given year, from winter to winter.
-	*/
-	/** Compute the tropical event of a Milesian year, result as an modules.ExtDate element.
-	by Milesian year, we mean: the year from nothern winter solstice to nothern winter solstice. No explicit date computation is performed.
-	 * @param {number} year: the Milesian year
-	 * @param {number} which: 
+
+	/** Compute a tropical event of a Milesian year, result as a Date.
+	Milesian year means the year beginning at a northern winter solstice and finishing at the next northern winter solstice.
+	 * @static
+	 * @param {number} year	- the Milesian year
+	 * @param {number} which - the season, coded as:  
 		0->Winter solstice at beginning of year, 
 		1->Spring equinox, 
 		2->Summer solstice, 
 		3->Autumn equinox, 
-		4->Winter solstice at end of year 
-		any other value -> Error
-	 * @return {Date} the date of the event (correction with a Delta T estimate).
+		4->Winter solstice at end of year, 
+		any other value -> Error.
+	 * @return {Date} the date of the event (correction with an estimate of Delta T).
 	*/
-  tropicEvent (year, which) {
+ tropicEvent (year, which) {
 	const PosixJD = 2440587.5, DayUnit = 86400000;
 	var JDE;
 	if (!Number.isInteger(which) || which < 0 || which > 4) throw RangeError("Invalid value for season parameter: " + which);
@@ -168,4 +186,3 @@ export const Seasons = {
 	return new Date (wdate.valueOf() - getDeltaT(wdate));
   }
 }
-

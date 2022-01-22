@@ -1,18 +1,18 @@
-/* Milesian Clock and converter utility functions - excluding initialisation and global variables.
-Character set is UTF-8.
-Associated with: 
-*	milesianClock.html
+/** 
+ * @file Milesian Clock and converter utility functions - excluding initialisation and global variables.
+ * To be used with suitable calendrical-demo-**.html file.
+ * contents: animation routines for the Milesian Clock html page.
+ * Required objects initiated by calendrical-init or equivalent. loadCalendrical: promise that modules are imported. Calendrical: prefix name for imported modules.
+ * @requires 	milesianclock.html
+ * @requires	milesianclockinitiate.js
+ * @requires	yearsignaturedisplay.js
+ * @requires	other modules have been made visible with the 'modules' object
+ * @version M2021-08-09
+ * @todo optimise
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
 */
-/*	Related
-	milesianclock.html
-	milesianclockinitiate.js
-	yearsignaturedisplay.js
-	other modules have been made visible with the 'modules' object
-*/
-/* Version notes
-	This .js file is highly related to the corresponding html code. 
-	Not much code optimisation in this file. 
-*/
+// Character set is UTF-8
 /* Version	M2021-08-09	update routines for yearly figures
 	M2021-08-07
 		Reorganise dial and display, simplify
@@ -32,7 +32,7 @@ Associated with:
 		Add wallclock indication
 (See former versions log on GitHub)
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2017-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -50,12 +50,12 @@ merchantability, fitness for a particular purpose and non-infringement.
 In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
-or the use or other dealings in the software.
-
-Inquiries: www.calendriermilesien.org
+or the use or other dealings in the software. 
 */
 "use strict";
 /** A utility for the undefined fields
+ * @param {any} param - any parameter that can be equated to a String.
+ * @return {any} undefined if param is blank or undefined, param otherwise.
 */
 function undef (param) {
 	return param == "" ? undefined : param
@@ -63,6 +63,7 @@ function undef (param) {
 // var declared in milesiandisplayinitiate.js
 
 /** clockAnimate : package for clock animation
+ * @interface
 */
 const clockAnimate = {
 		TICK_INTERVAL : 1000,		
@@ -138,10 +139,13 @@ const clockAnimate = {
 		}
 }
 /**	Time shift routines as a module (timeShift + myTimeShift)
-*/
+ * @class
+ */
 class timeShift {
 	constructor () {}
 	addedTime = 60000 // Time to add or substract, in milliseconds, initial value.
+	/** Change the quantum of added time after user input.
+	*/
 	changeAddTime() {
 		let msecs = +document.timeShift.shift.value; 
 		if (isNaN(msecs) || msecs <= 0) 
@@ -151,6 +155,9 @@ class timeShift {
 			document.timeShift.shift.value = this.addedTime = msecs; // Global variable and form updated
 			}
 		}
+	/** add or subtract a quantum of time to current date.
+	 * @param sign - +1 for add, -1 for subtract.
+	*/
 	addTime (sign = 1) { // addedTime ms is added or subtracted to or from the Timestamp.
 		// this.changeAddTime();	// Force a valid value in field -> no, do that in event listener function.
 		let testDate = new Date(targetDate.valueOf());
@@ -162,17 +169,25 @@ class timeShift {
 		}
 	}
 }
+/** The intantated timeShift class
+ * @interface
+ */
 const myTimeShift = new timeShift;
-
-function setDateToNow(){ // set current target date new to current custom calendar and to Now
+/** set current target date new to current custom calendar and to Now 
+ */
+function setDateToNow(){
 	targetDate = new modules.ExtDate(calendars[customCalIndex]); 
 	setDisplay ();
 }
-function setDateToToday() {	// similar to setDateToNow(), but set at 0 h UTC of today's date. For date converter.
+/** similar to setDateToNow(), but set at 0 h UTC of today's date. For date converter.
+ */
+function setDateToToday() {
 	setDateToNow();
 	targetDate.setUTCHours (0,0,0,0);
 	setDisplay ();
 }
+/** Set date following custom calendar
+ */
 function calcCustomDate() {
 	customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);
 	var myFields = {
@@ -203,6 +218,8 @@ function calcCustomDate() {
 		setDisplay();
 		}
 }
+/** Set date after week indication 
+ */
 function calcWeek() {
 	customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);
 	var myFields = {
@@ -233,7 +250,9 @@ function calcWeek() {
 		setDisplay();
 		}
 }
-function calcJulianDay(){ // here, Julian Day is specified as a decimal number. Insert with the suitable Date setter.
+/** Julian Day is specified as a decimal number. Insert with the suitable Date setter.
+ */
+function calcJulianDay(){
 	var j = (document.daycounter.julianday.value); // extract Julian Day, numeric value (not necessarily integer) expected.
 	j = j.replace(/\s/gi, ""); j = j.replace(/,/gi, "."); j = Number (j);
 	if (isNaN (j)) alert ("Non numeric value" + ' "' + document.daycounter.julianday.value + '"')
@@ -247,6 +266,8 @@ function calcJulianDay(){ // here, Julian Day is specified as a decimal number. 
 		}
 	}
 }
+/** Recompute date after time elements
+ */
 function calcTime() {
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), 
 		secs = Math.round (document.time.secs.value), ms = Math.round (document.time.ms.value);
@@ -266,7 +287,9 @@ function calcTime() {
 		}
 	}
 }	
-function setUTCHoursFixed (UTChours=0) { // set UTC time to the hours specified.
+/** Set UTC time to the hours specified.
+ */
+function setUTCHoursFixed (UTChours=0) {
 	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
 	let testDate = new Date (targetDate.valueOf());
 	testDate.setUTCHours(UTChours, 0, 0, 0);

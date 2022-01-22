@@ -1,15 +1,16 @@
-/* Chronological count conversion
-	Character set is UTF-8
-	This module converts a legacy date-time counter into several well-known day counters
-Contents
-	export class ExtCountDate with new methods
-		getCount ()
-		setFromCount (count)
-Required
-	Milliseconds
-	ExtDate
+/**
+ * Chronological count conversion: 
+	convert a legacy date-time counter into several well-known day counters
+ * @module
+ * @requires module:time-units
+ * @requires module:extdate
+ * @version M2021-07-29
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
 */
-/* Version	M2021-07-29	Adapt to calendrical-javascript
+//	Character set is UTF-8
+/* Version	M2022-01-30 JSdoc
+	M2021-07-29	Adapt to calendrical-javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-07 adapt to new chronos, propose a setFromCount method.
 	M2020-12-28	ExtCountDate as a class
@@ -22,7 +23,7 @@ Required
 	M2018-10-26 : Enhance comments
 	M2017-12-27 : Initial
 */
-/* Copyright Miletus 2017-2021 - Louis A. de Fouquières
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -41,20 +42,22 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 import { default as Milliseconds } from './time-units.js';
 import { default as ExtDate } from './extdate.js';
-/** Extend the ExtDate object to days counter with special behavior or contraints
- * @param {string} the desired counter, one of the following values
- * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC)
- *		"julianDayAtNight" : 0 on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC)
- *		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5
- *		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5
- *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets
- *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative.
- *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems
+/** Extend the ExtDate object to days counter with special behavior or contraints.
+ * @class
+ * @extends Date
+ * @param {string} countType	- the desired counter, one of the following values: 
+ * 		"julianDay" : 0 on M-004713-12-02T12:00:00Z (1 January -4712 at noon UTC);
+ *		"julianDayAtNight" : 0 on M-004713-12-02T00:00:00Z (1 January -4712 at midnight UTC);
+ *		"modifiedJulianDay" : 0 on M1858-11-27T00:00:00Z, i.e. : Julian Day - 2400000.5;
+ *		"nasaDay" : 0 on M1968-06-03T00:00:00Z, i.e. : Julian Day - 2440000.5;
+ *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets;
+ *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative;
+ *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems.
+ * @param {string | number[]} [...myArguments] the parameter or parameter list passed to Date. 
 */
 export class ExtCountDate extends ExtDate {
 	constructor (countType, ...myArguments) {
@@ -70,8 +73,7 @@ export class ExtCountDate extends ExtDate {
 			default : throw ExtDate.unimplementedOption;
  		}
 	}
-/** Give the decimal value of one the following chronological counters 
- * @method getCount
+/** Give the decimal value of the instantiated chronological counter
  * @return {number} The desired counter, in decimal value
 */
 	getCount = function () {
@@ -87,7 +89,6 @@ export class ExtCountDate extends ExtDate {
 		return count;
 	}
 /** Set ExtCountDate object to the value corresponding to the decimal value of the specified counters. For MSBase, if -1 < counter value < 0, returns NaN
- * @method setFromCount
  * @param (number) the (decimal) number of days to convert
  * @return {number} The result of setTime method.
 */
