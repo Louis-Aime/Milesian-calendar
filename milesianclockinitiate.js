@@ -1,8 +1,6 @@
 /** 
- * @file Milesian Clock and converter functions - initiate part
-These functions are associated with the Milesian clock and converter html page: 
-They use the basic Milesian calendar functions, and the conversion functions of other calendar, 
-in order to display the Milesian on-line clock and to perform calendar conversion.
+ * @file Milesian Clock and converter functions - launcher part.
+ * This routine loads the modules necessary for html applications.
  * @requires module:fetchdom
  * @requires module:pldr
  * @requires module:time-units
@@ -20,10 +18,6 @@ in order to display the Milesian on-line clock and to perform calendar conversio
  * @license MIT 2016-2022
 */
 // Character set is UTF-8.
-/* Version notes (follow GitHub)
-	This file aims ar created an adequate environment for several milesian clock applications.. 
-	This part is especially for initialisation.
-*/
 /* Version	M2022-01-30 JSDoc
 	M2021-08-22 prepare switch to new global names calendrical and loadCalendrical
 	M2021-08-07
