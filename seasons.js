@@ -2,14 +2,15 @@
 These functions implement Jean Meeus' method for computing tropical events.
 The code derives from Fourmilab's astro.js file (2015). 
 Code has been modified in order to conform with strict mode.
- * @file
+ * @module
  * @requires module:getdeltat
  * @version M2021-08-20
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
  */
 //	Character set is UTF-8
-/* Version	M2022-02-03 JSDoc
+/* Version	M2022-02-10	Export each function instead of an object
+	M2022-02-07 JSDoc
 	M2021-08-27 key figures as constants.
 	M2021-08-20 Hide internal functions and refer to DeltaT only
 	M2021-07-29 Adapt to calendrical-javascript
@@ -45,16 +46,14 @@ import { default as getDeltaT } from './deltat.js';
 
 /** The lower value for the year parameter
  * @private
- * @const
- * @default -3000
+ * @default
  */
 const
 	LOWER_YEAR = -3000;
 
 /** The highest value for the year parameter
  * @private
- * @const
- * @default +6000
+ * @default
  */
 const
 	UPPER_YEAR = +6000;
@@ -73,22 +72,16 @@ function dtr(d) {return (d * Math.PI) / 180.0;}
  */
 function dcos(d) {return Math.cos(dtr(d));}
 
-/* Part 2 - Seasons, the interface object */ 
-/** interface object of two functions for computing equinoxes and solstices of a year.
- * @interface
- */
-export const Seasons = {
-	
-	/** The Julian Day of a tropical event (equinox or solstice) of a given year.
-	This function implements Jean Meeus' method for calculating equinox and solstices dates of a given year.
-	This implementation is extracted from Fourmilab's astro functions (John Walker, http://www.fourmilab.ch/, September MIM)
-	 * @static
-	 * @function
-	 * @param {number} year - the Gregorian year.
-	 * @param {number} which - 0->March, 1->June, 2->September, 3->December, any other value -> Error.
-	 * @return {number} the date of the event in Julian Day, Terrestrial Time.
-	*/
- equinox (year, which) {
+/* Part 2 - the exported functions */ 
+
+/** The Julian Day of a tropical event (equinox or solstice) of a given year.
+ * This function implements Jean Meeus' method for calculating equinox and solstices dates of a given year.
+ * This implementation is extracted from Fourmilab's astro functions (John Walker, http://www.fourmilab.ch/, September MIM).
+ * @param {number} year - the Gregorian year.
+ * @param {number} which - 0->March, 1->June, 2->September, 3->December, any other value -> Error.
+ * @return {number} the date of the event in Julian Day, Terrestrial Time.
+*/
+export function equinox (year, which) {
 		//  Periodic terms to obtain true time
 	const 
 		EquinoxpTerms = new Array(
@@ -160,22 +153,21 @@ export const Seasons = {
 		j += 3;
 	}
 	return JDE0 + ((S * 0.00001) / deltaL);
-  },
+  }
 
-	/** Compute a tropical event of a Milesian year, result as a Date.
-	Milesian year means the year beginning at a northern winter solstice and finishing at the next northern winter solstice.
-	 * @static
-	 * @param {number} year	- the Milesian year
-	 * @param {number} which - the season, coded as:  
-		0->Winter solstice at beginning of year, 
-		1->Spring equinox, 
-		2->Summer solstice, 
-		3->Autumn equinox, 
-		4->Winter solstice at end of year, 
-		any other value -> Error.
-	 * @return {Date} the date of the event (correction with an estimate of Delta T).
-	*/
- tropicEvent (year, which) {
+/** Compute a tropical event of a Milesian year, result as a Date.
+ * Milesian year means the year beginning at a northern winter solstice and finishing at the next northern winter solstice.
+ * @param {number} year	- the Milesian year
+ * @param {number} which - the season, coded as:  
+	0->Winter solstice at beginning of year, 
+	1->Spring equinox, 
+	2->Summer solstice, 
+	3->Autumn equinox, 
+	4->Winter solstice at end of year, 
+	any other value -> Error.
+ * @return {Date} the date of the event (correction with an estimate of Delta T).
+*/
+export function tropicEvent (year, which) {
 	const PosixJD = 2440587.5, DayUnit = 86400000;
 	var JDE;
 	if (!Number.isInteger(which) || which < 0 || which > 4) throw RangeError("Invalid value for season parameter: " + which);
@@ -185,4 +177,4 @@ export const Seasons = {
 	let wdate = new Date(Math.round((JDE - PosixJD)*DayUnit));
 	return new Date (wdate.valueOf() - getDeltaT(wdate));
   }
-}
+
