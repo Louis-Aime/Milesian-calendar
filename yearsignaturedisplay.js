@@ -1,14 +1,17 @@
-/* Milesian Year Signature Display
-	Character set is UTF-8
-	This package displays annual figures, in relation with YearSignatureDisplay.html
-Required ((deemed imported)
-	yearsignature
-	seasons
-	ExtDateTimeFormat
-Contents
-	Functions called by the MilesianYearSignature.html
+/**
+ * @file Milesian Year Signature Display routines.
+ * This package displays annual figures, in relation with yearsignaturedisplay.html.
+ * imported routines are accessed through object 'modules'.
+ * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
+ * @see YearSignatureDisplay.html
+ * @version M2021-08-O6
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022 
 */
-/* Version	M2021-08-06	Display in different calendars / languages by using global level formatters
+//	Character set is UTF-8
+/* Version	M2022-02-10	Adapt to seasons and lunar modules
+	M2022-1-07 JSDoc
+	M2021-08-06	Display in different calendars / languages by using global level formatters
 	M2021-08-07	Add dominical letter
 	M2021-02-15	Use calendrical-javascript modules and application-specific modules
 	M2021-01-24 Missing year field in year panel
@@ -116,11 +119,11 @@ function computeSignature(year) {	// Formaters are external
 	// Seasons
 	document.getElementById ("seasonsyear").innerHTML = year;
 	try {
-		document.seasons.winter1.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,0)); 
-		document.seasons.spring.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,1)); 
-		document.seasons.summer.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,2)); 
-		document.seasons.autumn.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,3)); 
-		document.seasons.winter2.value = seasonDateFormat.format (modules.Seasons.tropicEvent(year,4)); 
+		document.seasons.winter1.value = seasonDateFormat.format (modules.tropicEvent(year,0)); 
+		document.seasons.spring.value = seasonDateFormat.format (modules.tropicEvent(year,1)); 
+		document.seasons.summer.value = seasonDateFormat.format (modules.tropicEvent(year,2)); 
+		document.seasons.autumn.value = seasonDateFormat.format (modules.tropicEvent(year,3)); 
+		document.seasons.winter2.value = seasonDateFormat.format (modules.tropicEvent(year,4)); 
 	}
 	catch (e) {		// seasons could not be computed, main reason is: year out of computational range
 		document.seasons.winter1.value = 

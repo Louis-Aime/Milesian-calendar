@@ -1,19 +1,21 @@
-/* Milesian Clock and converter functions - excluding initialisation and global variables.
-Character set is UTF-8.
-Associated with: 
-*	milesianClock.html
+/** 
+ * @file Milesian Clock and converter functions - excluding initialisation and global variables.
+ * These global routines are associated with milesianclock.html. 
+ * Other related global functions in milesianclockinitiate.js, yearsignaturedisplay.js.
+ * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
+ * @requires milesianclockinitiate
+ * @requires milesianclockonload
+ * @see milesianclock.html
+ * @version M2022-02-10
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
 */
-/*	Related
-	milesianclock.html
-	milesianclockinitiate.js
-	yearsignaturedisplay.js
-	other modules have been made visible with the 'modules' object
-*/
+//Character set is UTF-8.
 /* Version notes
 	This .js file is highly related to the corresponding html code. 
 	Not much code optimisation in this file. 
 */
-/* Version	M2021-08-29 - see details on GitHub
+/* Version	M2022-02-10	Adapt to seasons and lunar modules - see detail on GitHub
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -151,21 +153,21 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	// Lunar data frame
 
 	// Update lunar parameters
-	dateComponent = modules.Lunar.getCEMoonDate( targetDate );
+	dateComponent = modules.getCEMoonDate( targetDate );
 	milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
 	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
 	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
 
-	document.moon.moondate.value = lunarDateFormat.format(modules.Lunar.getLunarDateTime( targetDate ));
+	document.moon.moondate.value = lunarDateFormat.format(modules.getLunarDateTime( targetDate ));
 	try {
 
-		document.moon.moontime.value = new Date(targetDate.valueOf() + modules.Lunar.getLunarSunTimeAngle(targetDate))
+		document.moon.moontime.value = new Date(targetDate.valueOf() + modules.getLunarSunTimeAngle(targetDate))
 						.toLocaleTimeString(undefined, {timeZone: undef(TZ)} );
 	}
 	catch (error) {
 		document.moon.moontime.value = "--:--:--";
 	}
-		let [caput, cauda, eclipse] = modules.Lunar.getDraconiticNodes (targetDate);
+		let [caput, cauda, eclipse] = modules.getDraconiticNodes (targetDate);
 		document.moon.caput.value = dracoDateFormat.format (caput);
 		document.moon.cauda.value = dracoDateFormat.format (cauda);
 		myElement = document.getElementById("EclipseField");
@@ -173,11 +175,11 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 			else myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention",""));
 		document.moon.eclipseseason.value = eclipse;
 
-	dateComponent = modules.Lunar.getCELunarDate(targetDate, TZ);
+	dateComponent = modules.getCELunarDate(targetDate, TZ);
 	document.mooncalend.CElunardate.value = 	dateComponent.day;
 	document.mooncalend.CElunarmonth.value = 	dateComponent.month;
 	document.mooncalend.CElunaryear.value = 	dateComponent.year;
-	dateComponent = modules.Lunar.getHegirianLunarDate(targetDate, TZ);	
+	dateComponent = modules.getHegirianLunarDate(targetDate, TZ);	
 	document.mooncalend.hegiriandate.value = 	dateComponent.day;
 	document.mooncalend.hegirianmonth.value = dateComponent.month;
 	document.mooncalend.hegirianyear.value = 	dateComponent.year;

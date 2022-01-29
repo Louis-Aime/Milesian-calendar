@@ -1,15 +1,16 @@
-/* Milesian Clock and converter functions - excluding initialisation and global variables.
-Character set is UTF-8.
-Associated with: 
-*	converter.html
+/** Milesian Clock and converter functions - excluding initialisation and global variables.
+ * Associated with: converter.html.
+ * @file
+ * @requires milesianclockinitiate.
+ * @requires converteronload.js.
+ * other modules are made visible milesianclockinitiate.
+ * @see converter.html
+ * @version M2022-02-10
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
 */
-/*	Related
-	converter.html
-	milesianclockinitiate.js
-	converteronload.js
-	other modules have been made visible with the 'modules' object
-*/
-/* Version	M2021-08-29 - see GitHub for details
+// Character set is UTF-8.
+/* Version	M2022-02-10 - see GitHub for details
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -30,8 +31,6 @@ In no event shall the authors of copyright holders be liable for any
 claim, damages or other liability, whether in an action of contract,
 tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
-
-Inquiries: www.calendriermilesien.org
 */
 "use strict";
 
@@ -88,7 +87,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	myElement.innerHTML = clockFormat.format(targetDate);
 	// Finally update and display clock
 	milesianClock.setHands (milDate, TZ); // Display date on clock.
-	milesianClock.clock.querySelector(".moonage").innerHTML = modules.Lunar.getCELunarDate(targetDate, TZ).day;
+	milesianClock.clock.querySelector(".moonage").innerHTML = modules.getCELunarDate(targetDate, TZ).day;
 	milesianClock.setSeasons (milDate.year("UTC")); // Display also seasons.
 
 	//	Display dates in several calendars

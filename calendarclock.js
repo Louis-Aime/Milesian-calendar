@@ -5,16 +5,13 @@
  * @require module:extdate
  * @require module:calendar
  * @require module:seasons
- * @version M2021-08-02
+ * @version M2022-02-10
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
-/*	Character set is UTF-8
-Contents
-	setSolarCalendarClockHands (since M2020-12-30)
-		setMilesianCalendarClockHands (deprecated)
-		setSolarYearClockHands (deprecated)
-*/
-/* Version	M2022-02-03	JSDoc
+ */
+//	Character set is UTF-8
+/* Version	M2022-02-10	Adapt to seasons and lunar modules
+	M2022-02-03	JSDoc
 	M2021-08-02	Add a dragon hand
 	M2021-07-29 adapt to calendrical Javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
@@ -57,7 +54,7 @@ or the use or other dealings in the software.
 "use strict";
 import { default as ExtDate } from './extdate.js';
 import {MilesianCalendar} from './calendars.js';
-import { Seasons } from './seasons.js';
+import { tropicEvent } from './seasons.js';
 const milesian = new MilesianCalendar ("seasmilesian");
 /** Elements of any clock object. Missing elements shall not be used.
  * @since M2021-08-27
@@ -144,7 +141,7 @@ export class SolarClock {
 			success = true;
 		try {
 			for (let i = 0; i < markList.length ; i++) {
-				let wdate = new ExtDate (milesian,Seasons.tropicEvent(year,i));
+				let wdate = new ExtDate (milesian,tropicEvent(year,i));
 				let m = wdate.month()-1;
 				let theMark = this.clock.querySelector(".seasonmark."+markList[i]);
 				let angle = (m * 30 + Math.floor(m/2) + wdate.day()) * 60.0 / 61.0;
