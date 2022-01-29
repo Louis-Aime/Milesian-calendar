@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Interface: Lunar</title>
+    <title>JSDoc: Module: lunar</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Interface: Lunar</h1>
+    <h1 class="page-title">Module: lunar</h1>
 
     
 
@@ -28,7 +28,8 @@
 
 <header>
     
-        <h2>Lunar</h2>
+        
+            
         
     
 </header>
@@ -37,16 +38,31 @@
     <div class="container-overview">
     
         
-            <div class="description">A set of functions that give tropical, lunar and draconical coordinates at a given date.</div>
+            <div class="description">Lunar computations for calendars</div>
         
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
 
     
-
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>M2022-02-10</li></ul></dd>
     
 
     
@@ -64,7 +80,19 @@
     
 
     
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Louis A. de Fouquières https://github.com/Louis-Aime</li>
+        </ul>
+    </dd>
+    
 
+    
+
+    
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><ul class="dummy"><li>MIT 2016-2022</li></ul></dd>
     
 
     
@@ -72,7 +100,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line242">line 242</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -84,12 +112,42 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
 
     
 
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li><a href="module-deltat.html">module:deltat</a></li>
+        
+            <li>module:time-units.js</li>
+        
+            <li>module:chronos</li>
+        
+            <li>module:extdate</li>
+        </ul>
     
 
     
@@ -212,7 +270,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line266">line 266</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line262">line 262</a>
     </li></ul></dd>
     
 
@@ -270,7 +328,7 @@
     
 
     
-    <h4 class="name" id=".getDraconiticNodes"><span class="type-signature">(static) </span>getDraconiticNodes<span class="signature">(theDate)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".getCEMoonDate"><span class="type-signature">(static) </span>getCEMoonDate<span class="signature">(theDate)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -278,7 +336,7 @@
 
 
 <div class="description">
-    Estimate position of caput draconis at this date, and of cauda draconis, as two Milesian dates in same year (time of day is not estimated)
+    The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. Origin morning of 3 1m 000an adjustement to Terrestrial Time (TT) is applied
 </div>
 
 
@@ -371,7 +429,166 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line327">line 327</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line253">line 253</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Lunar date with age as a decimal figure {year: integer, month: integer, age: decimal number}.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getDraconiticNodes"><span class="type-signature">(static) </span>getDraconiticNodes<span class="signature">(theDate)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Estimate dates of caput draconis and of cauda draconis that wrap the given date.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>theDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">UTC date.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line323">line 323</a>
     </li></ul></dd>
     
 
@@ -530,7 +747,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line290">line 290</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line286">line 286</a>
     </li></ul></dd>
     
 
@@ -689,7 +906,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line277">line 277</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line273">line 273</a>
     </li></ul></dd>
     
 
@@ -848,7 +1065,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line313">line 313</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line309">line 309</a>
     </li></ul></dd>
     
 
@@ -1007,7 +1224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line302">line 302</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line298">line 298</a>
     </li></ul></dd>
     
 
@@ -1166,7 +1383,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line247">line 247</a>
+        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line243">line 243</a>
     </li></ul></dd>
     
 
@@ -1219,165 +1436,6 @@
 
 
         
-            
-
-    
-
-    
-    <h4 class="name" id="getCEMoonDate"><span class="type-signature"></span>getCEMoonDate<span class="signature">(theDate)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    The complete moon date coordinate at this date and time UTC. Moon age may change during a calendar day. Origin morning of 3 1m 000an adjustement to Terrestrial Time (TT) is applied
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>theDate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">UTC date.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lunar.js.html">lunar.js</a>, <a href="lunar.js.html#line257">line 257</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Lunar date with age as a decimal figure {year: integer, month: integer, age: decimal number}.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
     
 
     
@@ -1393,13 +1451,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-calendarclock.html">calendarclock</a></li><li><a href="module-countconversion.html">countconversion</a></li><li><a href="module-deltat.html">deltat</a></li><li><a href="module-yearsignature.html">yearsignature</a></li></ul><h3>Classes</h3><ul><li><a href="module-calendarclock.SolarClock.html">SolarClock</a></li><li><a href="module-countconversion.ExtCountDate.html">ExtCountDate</a></li><li><a href="timeShift.html">timeShift</a></li></ul><h3>Interfaces</h3><ul><li><a href="clockAnimate.html">clockAnimate</a></li><li><a href="Lunar.html">Lunar</a></li><li><a href="myTimeShift.html">myTimeShift</a></li><li><a href="Seasons.html">Seasons</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcCustomDate">calcCustomDate</a></li><li><a href="global.html#calcJulianDay">calcJulianDay</a></li><li><a href="global.html#calcTime">calcTime</a></li><li><a href="global.html#calcWeek">calcWeek</a></li><li><a href="global.html#setDateToNow">setDateToNow</a></li><li><a href="global.html#setDateToToday">setDateToToday</a></li><li><a href="global.html#setUTCHoursFixed">setUTCHoursFixed</a></li><li><a href="global.html#undef">undef</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-calendarclock.html">calendarclock</a></li><li><a href="module-countconversion.html">countconversion</a></li><li><a href="module-deltat.html">deltat</a></li><li><a href="module-lunar.html">lunar</a></li><li><a href="module-seasons.html">seasons</a></li><li><a href="module-yearsignature.html">yearsignature</a></li></ul><h3>Classes</h3><ul><li><a href="module-calendarclock.SolarClock.html">SolarClock</a></li><li><a href="module-countconversion.ExtCountDate.html">ExtCountDate</a></li><li><a href="timeShift.html">timeShift</a></li></ul><h3>Interfaces</h3><ul><li><a href="clockAnimate.html">clockAnimate</a></li><li><a href="myTimeShift.html">myTimeShift</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcCustomDate">calcCustomDate</a></li><li><a href="global.html#calcJulianDay">calcJulianDay</a></li><li><a href="global.html#calcTime">calcTime</a></li><li><a href="global.html#calcWeek">calcWeek</a></li><li><a href="global.html#setDateToNow">setDateToNow</a></li><li><a href="global.html#setDateToToday">setDateToToday</a></li><li><a href="global.html#setUTCHoursFixed">setUTCHoursFixed</a></li><li><a href="global.html#undef">undef</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Jan 22 2022 22:32:16 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Jan 29 2022 16:30:24 GMT+0100 (heure normale d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>

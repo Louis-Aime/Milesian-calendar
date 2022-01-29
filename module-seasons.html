@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Interface: Seasons</title>
+    <title>JSDoc: Module: seasons</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Interface: Seasons</h1>
+    <h1 class="page-title">Module: seasons</h1>
 
     
 
@@ -28,7 +28,8 @@
 
 <header>
     
-        <h2>Seasons</h2>
+        
+            
         
     
 </header>
@@ -37,16 +38,34 @@
     <div class="container-overview">
     
         
-            <div class="description">interface object of two functions for computing equinoxes and solstices of a year.</div>
+            <div class="description">Dates of tropical events for a given Milesian year.
+These functions implement Jean Meeus' method for computing tropical events.
+The code derives from Fourmilab's astro.js file (2015). 
+Code has been modified in order to conform with strict mode.</div>
         
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
 
     
-
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>M2021-08-20</li></ul></dd>
     
 
     
@@ -64,7 +83,19 @@
     
 
     
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Louis A. de Fouquières https://github.com/Louis-Aime</li>
+        </ul>
+    </dd>
+    
 
+    
+
+    
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><ul class="dummy"><li>MIT 2016-2022</li></ul></dd>
     
 
     
@@ -72,7 +103,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line80">line 80</a>
+        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -84,12 +115,36 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
 
     
 
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:getdeltat</li>
+        </ul>
     
 
     
@@ -119,9 +174,7 @@
 
 
 <div class="description">
-    The Julian Day of a tropical event (equinox or solstice) of a given year.
-	This function implements Jean Meeus' method for calculating equinox and solstices dates of a given year.
-	This implementation is extracted from Fourmilab's astro functions (John Walker, http://www.fourmilab.ch/, September MIM)
+    The Julian Day of a tropical event (equinox or solstice) of a given year.This function implements Jean Meeus' method for calculating equinox and solstices dates of a given year.This implementation is extracted from Fourmilab's astro functions (John Walker, http://www.fourmilab.ch/, September MIM).
 </div>
 
 
@@ -237,7 +290,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line91">line 91</a>
+        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -303,8 +356,7 @@
 
 
 <div class="description">
-    Compute a tropical event of a Milesian year, result as a Date.
-	Milesian year means the year beginning at a northern winter solstice and finishing at the next northern winter solstice.
+    Compute a tropical event of a Milesian year, result as a Date.Milesian year means the year beginning at a northern winter solstice and finishing at the next northern winter solstice.
 </div>
 
 
@@ -380,12 +432,12 @@
             
 
             <td class="description last">the season, coded as:  
-		0->Winter solstice at beginning of year, 
-		1->Spring equinox, 
-		2->Summer solstice, 
-		3->Autumn equinox, 
-		4->Winter solstice at end of year, 
-		any other value -> Error.</td>
+	0->Winter solstice at beginning of year, 
+	1->Spring equinox, 
+	2->Summer solstice, 
+	3->Autumn equinox, 
+	4->Winter solstice at end of year, 
+	any other value -> Error.</td>
         </tr>
 
     
@@ -426,7 +478,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line178">line 178</a>
+        <a href="seasons.js.html">seasons.js</a>, <a href="seasons.js.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -494,13 +546,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-calendarclock.html">calendarclock</a></li><li><a href="module-countconversion.html">countconversion</a></li><li><a href="module-deltat.html">deltat</a></li><li><a href="module-yearsignature.html">yearsignature</a></li></ul><h3>Classes</h3><ul><li><a href="module-calendarclock.SolarClock.html">SolarClock</a></li><li><a href="module-countconversion.ExtCountDate.html">ExtCountDate</a></li><li><a href="timeShift.html">timeShift</a></li></ul><h3>Interfaces</h3><ul><li><a href="clockAnimate.html">clockAnimate</a></li><li><a href="Lunar.html">Lunar</a></li><li><a href="myTimeShift.html">myTimeShift</a></li><li><a href="Seasons.html">Seasons</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcCustomDate">calcCustomDate</a></li><li><a href="global.html#calcJulianDay">calcJulianDay</a></li><li><a href="global.html#calcTime">calcTime</a></li><li><a href="global.html#calcWeek">calcWeek</a></li><li><a href="global.html#setDateToNow">setDateToNow</a></li><li><a href="global.html#setDateToToday">setDateToToday</a></li><li><a href="global.html#setUTCHoursFixed">setUTCHoursFixed</a></li><li><a href="global.html#undef">undef</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-calendarclock.html">calendarclock</a></li><li><a href="module-countconversion.html">countconversion</a></li><li><a href="module-deltat.html">deltat</a></li><li><a href="module-lunar.html">lunar</a></li><li><a href="module-seasons.html">seasons</a></li><li><a href="module-yearsignature.html">yearsignature</a></li></ul><h3>Classes</h3><ul><li><a href="module-calendarclock.SolarClock.html">SolarClock</a></li><li><a href="module-countconversion.ExtCountDate.html">ExtCountDate</a></li><li><a href="timeShift.html">timeShift</a></li></ul><h3>Interfaces</h3><ul><li><a href="clockAnimate.html">clockAnimate</a></li><li><a href="myTimeShift.html">myTimeShift</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcCustomDate">calcCustomDate</a></li><li><a href="global.html#calcJulianDay">calcJulianDay</a></li><li><a href="global.html#calcTime">calcTime</a></li><li><a href="global.html#calcWeek">calcWeek</a></li><li><a href="global.html#setDateToNow">setDateToNow</a></li><li><a href="global.html#setDateToToday">setDateToToday</a></li><li><a href="global.html#setUTCHoursFixed">setUTCHoursFixed</a></li><li><a href="global.html#undef">undef</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Jan 22 2022 22:32:17 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Jan 29 2022 16:30:24 GMT+0100 (heure normale d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>

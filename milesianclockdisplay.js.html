@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: milesianclockdisplay.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: milesianclockdisplay.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * @file Milesian Clock and converter functions - excluding initialisation and global variables.
+ * These global routines are associated with milesianclock.html. 
+ * Other related global functions in milesianclockinitiate.js, yearsignaturedisplay.js.
+ * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
+ * @requires milesianclockinitiate
+ * @requires milesianclockonload
+ * @see milesianclock.html
+ * @version M2022-02-10
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022
+*/
+//Character set is UTF-8.
+/* Version notes
+	This .js file is highly related to the corresponding html code. 
+	Not much code optimisation in this file. 
+*/
+/* Version	M2022-02-10	Adapt to seasons and lunar modules - see detail on GitHub
+*/
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sub-license, or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+*/
+"use strict";
+
+function setDisplay () {	// Disseminate targetDate and time on all display fields
+	
+	// establish variables used only for this display cycle
+	var
+		dateComponent = targetDate.getFields(TZ),
+		milDate = new modules.ExtDate (milesian, targetDate.valueOf()),
+		mildateComponent = milDate.getFields(TZ),	// Initiate a date decomposition in Milesian, to be used several times in subsequent code
+		myElement = document.querySelector("#mclock"),	// myElement is a work variable
+		myCollection;	// Another work variable, used later
+	// Calendar specified via event listener
+	// TZ = Time zone mode specified. Compute effective time zone offset
+/* TZOffset is JS time zone offset in milliseconds (UTC - local time)
+ * Note that getTimezoneOffset sometimes gives an integer number of minutes where a decimal number is expected
+*/
+	{
+		TZOffset = targetDate.getRealTZmsOffset().valueOf();
+		let
+			systemSign = (TZOffset > 0 ? -1 : 1), // invert sign because of JS convention for time zone
+			absoluteRealOffset = - systemSign * TZOffset,
+			absoluteTZmin = Math.floor (absoluteRealOffset / modules.Milliseconds.MINUTE_UNIT),
+			absoluteTZsec = Math.floor ((absoluteRealOffset - absoluteTZmin * modules.Milliseconds.MINUTE_UNIT) / modules.Milliseconds.SECOND_UNIT);
+
+		switch (TZ) {
+			case "UTC" : 
+				TZOffset = 0; // Set offset to 0, but leave time zone offset on display
+			case "" : 
+				document.querySelector("#realTZOffset").innerHTML = (systemSign == 1 ? "+ ":"- ") + absoluteTZmin + " min " + absoluteTZsec + " s";
+		}
+	}
+	// Formatting structures modifications are established at asynchronous init and by event. No recomputation here.
+
+	// Update local time fields - using	Date properties
+	document.time.hours.value = dateComponent.hours;
+	document.time.mins.value = dateComponent.minutes;
+	document.time.secs.value = dateComponent.seconds;
+	document.time.ms.value = dateComponent.milliseconds;
+
+    //  Update custom calendar
+
+    document.custom.year.value = dateComponent.fullYear;
+    document.custom.month.value = dateComponent.month;
+    document.custom.day.value = dateComponent.day;
+	document.week.weekyear.value = targetDate.weekYear(TZ); 
+	document.week.weeknumber.value = targetDate.weekNumber(TZ);
+	document.week.weekday.value = targetDate.weekday(TZ);
+	document.week.weeksinyear.value = targetDate.weeksInYear(TZ);
+	document.week.dayofweek.value = weekFormat.format(targetDate);
+
+	// Place marks that say that custom calendar was not valid
+	myElement = document.querySelector("#customline");
+	myCollection = myElement.getElementsByClassName("mutable");
+	// first remove marks from another display
+	for (let i = 0; i &lt; myCollection.length; i++)
+		myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
+	// Then check whether marks should be set
+	if (typeof calendars[customCalIndex].valid == "function" &amp;&amp; !calendars[customCalIndex].valid(dateComponent)) 
+		for (let i = 0; i &lt; myCollection.length; i++)
+			myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds","") + " outbounds");
+
+	// Julian Day and chronological fields
+	let JD = new modules.ExtCountDate (jdcounterselector,"iso8601",targetDate.valueOf()).getCount();
+	document.daycounter.julianday.value = JD;
+		// = JD.toLocaleString(undefined,{maximumFractionDigits:8}); // JD.toLocaleString(undefined,{useGrouping:false, maximumFractionDigits:8})
+/*	if (document.daycounter.julianday.value == "") // Because bug in Chromium
+		document.daycounter.julianday.value = Math.round(JD*10E7)/10E7;
+*/
+	document.querySelector("#unixCountDisplay").innerHTML = targetDate.valueOf().toLocaleString();
+	document.querySelector("#mjdDisplay").innerHTML = 
+		new modules.ExtCountDate ("modifiedJulianDay","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+	document.querySelector("#nasajdDisplay").innerHTML = 
+		new modules.ExtCountDate ("nasaDay","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+	document.querySelector("#spreadSheetsCountDisplay").innerHTML = 
+		new modules.ExtCountDate ("sheetsCount","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+	document.querySelector("#MicrosoftCountDisplay").innerHTML = 
+		new modules.ExtCountDate ("MSBase","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+	document.querySelector("#MacOSCountDisplay").innerHTML = 
+		new modules.ExtCountDate ("macOSCount","iso8601",targetDate.valueOf()).getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:8});
+	
+	// Display Locale (language code only) as obtained after negotiation process
+	document.querySelector("#langCode").innerHTML = userOptions.locale.includes("-u-") 
+		? userOptions.locale.substring (0,userOptions.locale.indexOf("-u-")) 
+		: userOptions.locale ;
+	document.querySelector("#CalendarCode").innerHTML = userOptions.calendar;	// Display calendar obtained after negotiation process
+	document.querySelector("#timeZone").innerHTML = userOptions.timeZone;	// Display time zone as obtained after negotiation process
+	
+	// Print Unicode string, following already computed options.
+ 	//	Write date string. Catch error if navigator fails to handle writing routine (MS Edge)
+	myElement = document.getElementById("UnicodeString");
+	try { myElement.innerHTML = unicodeFormat.format(targetDate); }
+	catch (e) { myElement.innerHTML = e.message; }
+	document.getElementById("unicodecalname").innerHTML = unicodeOptions.calendar;
+
+	//	Custom calendar date string following options. Catch error if navigator fails, in this case write without time part.
+	document.getElementById("customcalname").innerHTML = askedOptions.calendar.id;
+	myElement = document.getElementById("CustomString");
+	try	{ myElement.innerHTML = askedOptions.format(targetDate); } 
+	catch (e) { myElement.innerHTML = "ExtDateTimeFormat.format error: " + e; }
+/*	Week properties: already in controlled fields
+	//  Update week properties of custom calendar, using custom week properties
+	document.getElementById ("weekerror").innerHTML = ""; 
+	try {
+		let weekFields = targetDate.getWeekFields(userOptions.timeZone);
+		document.getElementById ("weekyear").innerHTML = weekFields.weekYear; 
+		document.getElementById ("yearweek").innerHTML = weekFields.weekNumber;
+		document.getElementById ("weekday").innerHTML = weekFields.weekday; 	// i'd prefer name
+		document.getElementById ("weeksinyear").innerHTML = "(" + weekFields.weeksInYear + ")";
+	}
+	catch (e) { 
+		document.getElementById ("weekerror").innerHTML = e; 
+	}
+*/
+	// Lunar data frame
+
+	// Update lunar parameters
+	dateComponent = modules.getCEMoonDate( targetDate );
+	milesianClock.setMoonPhase(dateComponent.age*Math.PI*2/29.5305888310185);
+	document.moon.age.value = dateComponent.age.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}); // age given as a decimal number
+	document.moon.residue.value = (29.5305888310185 - dateComponent.age).toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2});
+
+	document.moon.moondate.value = lunarDateFormat.format(modules.getLunarDateTime( targetDate ));
+	try {
+
+		document.moon.moontime.value = new Date(targetDate.valueOf() + modules.getLunarSunTimeAngle(targetDate))
+						.toLocaleTimeString(undefined, {timeZone: undef(TZ)} );
+	}
+	catch (error) {
+		document.moon.moontime.value = "--:--:--";
+	}
+		let [caput, cauda, eclipse] = modules.getDraconiticNodes (targetDate);
+		document.moon.caput.value = dracoDateFormat.format (caput);
+		document.moon.cauda.value = dracoDateFormat.format (cauda);
+		myElement = document.getElementById("EclipseField");
+		if (eclipse) myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention","") + " attention")
+			else myElement.setAttribute("class", myElement.getAttribute("class").replace(" attention",""));
+		document.moon.eclipseseason.value = eclipse;
+
+	dateComponent = modules.getCELunarDate(targetDate, TZ);
+	document.mooncalend.CElunardate.value = 	dateComponent.day;
+	document.mooncalend.CElunarmonth.value = 	dateComponent.month;
+	document.mooncalend.CElunaryear.value = 	dateComponent.year;
+	dateComponent = modules.getHegirianLunarDate(targetDate, TZ);	
+	document.mooncalend.hegiriandate.value = 	dateComponent.day;
+	document.mooncalend.hegirianmonth.value = dateComponent.month;
+	document.mooncalend.hegirianyear.value = 	dateComponent.year;
+	
+	// Update Delta T (seconds)
+	let deltaT = modules.getDeltaT(targetDate)/modules.Milliseconds.SECOND_UNIT,
+		deltaTAbs = Math.abs(deltaT), deltaTSign = Math.sign(deltaT),
+		deltaTAbsDate = new Date (deltaTAbs*1000),
+		deltaTDays = Math.floor (deltaTAbsDate.valueOf() / modules.Milliseconds.DAY_UNIT) ;
+	document.getElementById ("deltatsec").innerHTML = (deltaTSign == -1 ? "-" : "") + deltaTAbs.toLocaleString();
+	document.getElementById ("deltathms").innerHTML = (deltaTSign == -1 ? "-" : "") 
+			+ (deltaTDays >= 1 ? deltaTDays + " jours " : "")
+			+ deltaTAbsDate.getUTCHours() + " h " + deltaTAbsDate.getUTCMinutes() + " min " + deltaTAbsDate.getUTCSeconds() + " s";
+	
+	// Yearly figures. Take milesian year.
+	computeSignature(mildateComponent.year);		// Recompute all year-specific elements
+
+	// Write Milesian date string near dial
+	myElement = document.getElementById("clockmilesiandate"); 	// Milesian date element
+	myElement.innerHTML = clockFormat.format(targetDate);
+	// Finally update and display clock
+	milesianClock.setHands (targetDate, TZ, caput); // Display date on clock.
+	milesianClock.setSeasons (mildateComponent.year); // Display also seasons.
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-calendarclock.html">calendarclock</a></li><li><a href="module-countconversion.html">countconversion</a></li><li><a href="module-deltat.html">deltat</a></li><li><a href="module-lunar.html">lunar</a></li><li><a href="module-seasons.html">seasons</a></li><li><a href="module-yearsignature.html">yearsignature</a></li></ul><h3>Classes</h3><ul><li><a href="module-calendarclock.SolarClock.html">SolarClock</a></li><li><a href="module-countconversion.ExtCountDate.html">ExtCountDate</a></li><li><a href="timeShift.html">timeShift</a></li></ul><h3>Interfaces</h3><ul><li><a href="clockAnimate.html">clockAnimate</a></li><li><a href="myTimeShift.html">myTimeShift</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcCustomDate">calcCustomDate</a></li><li><a href="global.html#calcJulianDay">calcJulianDay</a></li><li><a href="global.html#calcTime">calcTime</a></li><li><a href="global.html#calcWeek">calcWeek</a></li><li><a href="global.html#setDateToNow">setDateToNow</a></li><li><a href="global.html#setDateToToday">setDateToToday</a></li><li><a href="global.html#setUTCHoursFixed">setUTCHoursFixed</a></li><li><a href="global.html#undef">undef</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Jan 29 2022 16:30:24 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
