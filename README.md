@@ -1,7 +1,7 @@
 # Milesian-calendar
 Computations and conversion routines using the Milesian calendar.
 
-Applications are usable through [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
+Applications are usable, and complete JSDoc documentation is available, from [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
 
 Reference:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html)
@@ -18,7 +18,7 @@ English readers are invited to read [The Milesian calendar in short](https://git
 You may download these files from the Release manager and test by launching any html file in any browser (except pldr_loader)
 
 ## Basic calendrical computations and calendar definitions
-The submodule calendrical-javascript is used, see calendrical-javascript.
+The submodule calendrical-javascript is used, see [calendrical-javascript](https://github.com/Louis-Aime/calendrical-javascript).
 
 The referenced modules include: 
  * a simple fetcher program: turns an XML file into a DOM: XMLHttpRequest wrapped in a Promise.
