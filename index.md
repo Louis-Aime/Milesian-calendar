@@ -1,7 +1,9 @@
 # The Milesian Calendar laboratory
 The applications developped from the concept of Milesian calendar may be seen here. All files are grouped in this sub-repertory.
 These applications use the calendrical-javascript package (see further).
-The JSDoc documentation is constructed in the same directory.
+The JSDoc documentation is constructed in Milesian-calendar
+
+## [See on GitHub](https://github.com/Louis-Aime/Milesian-calendar)
 
 ## The complete Milesian clock
 Read the real date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in Gregorian, Milesian and Julian calendars.
