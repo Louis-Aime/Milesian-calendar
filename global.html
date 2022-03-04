@@ -156,7 +156,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line191">line 191</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -244,7 +244,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line255">line 255</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -332,7 +332,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line271">line 271</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line274">line 274</a>
     </li></ul></dd>
     
 
@@ -420,7 +420,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line223">line 223</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line226">line 226</a>
     </li></ul></dd>
     
 
@@ -508,7 +508,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line178">line 178</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line179">line 179</a>
     </li></ul></dd>
     
 
@@ -544,7 +544,7 @@
     
 
     
-    <h4 class="name" id="setDateToToday"><span class="type-signature"></span>setDateToToday<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setDateToToday"><span class="type-signature"></span>setDateToToday<span class="signature">(TZ)</span><span class="type-signature"></span></h4>
     
 
     
@@ -552,7 +552,7 @@
 
 
 <div class="description">
-    similar to setDateToNow(), but set at 0 h UTC of today's date. For date converter.
+    Compute date of now, local or UTC; result is UTC date at 00:00. For date converter and yearly figures.
 </div>
 
 
@@ -561,6 +561,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>TZ</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">if unspecified, date is in local time zone. If "UTC", date is in Greenwich time zone.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -596,7 +645,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line184">line 184</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line186">line 186</a>
     </li></ul></dd>
     
 
@@ -632,7 +681,7 @@
     
 
     
-    <h4 class="name" id="setUTCHoursFixed"><span class="type-signature"></span>setUTCHoursFixed<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setUTCHoursFixed"><span class="type-signature"></span>setUTCHoursFixed<span class="signature">(UTChours)</span><span class="type-signature"></span></h4>
     
 
     
@@ -640,7 +689,7 @@
 
 
 <div class="description">
-    Set UTC time to the hours specified.
+    Set UTC time to the hours specified. Date is deemed in time zone specified in TZ global variable.
 </div>
 
 
@@ -649,6 +698,63 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>UTChours</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">The time (number of hours) in UTC time zone.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -684,7 +790,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line292">line 292</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line296">line 296</a>
     </li></ul></dd>
     
 
@@ -821,7 +927,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line60">line 60</a>
+        <a href="milesianclockutilities.js.html">milesianclockutilities.js</a>, <a href="milesianclockutilities.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -895,7 +1001,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Feb 04 2022 00:15:56 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Mar 05 2022 00:30:48 GMT+0100 (heure normale d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>
