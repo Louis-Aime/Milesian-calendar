@@ -7,13 +7,14 @@
  * @requires	milesianclockinitiate.js
  * @requires	yearsignaturedisplay.js
  * @requires	other modules have been made visible with the 'modules' object
- * @version M2021-08-09
+ * @version M2022-03-13
  * @todo optimise
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
 */
 // Character set is UTF-8
-/* Version	M2021-08-09	update routines for yearly figures
+/* Version	M2022-03-13 setDateToToday and setUTCHoursFixed: compute day following TZ and return same day at 00:00 UTC (or 12:00 UTC)
+	M2021-08-09	update routines for yearly figures
 	M2021-08-07
 		Reorganise dial and display, simplify
 		split
@@ -179,10 +180,11 @@ function setDateToNow(){
 	targetDate = new modules.ExtDate(calendars[customCalIndex]); 
 	setDisplay ();
 }
-/** similar to setDateToNow(), but set at 0 h UTC of today's date. For date converter.
+/** Compute date of now, local or UTC; result is UTC date at 00:00. For date converter and yearly figures.
  */
-function setDateToToday() {
+function setDateToToday (TZ = "") {
 	setDateToNow();
+	targetDate.setTime(targetDate.valueOf() - targetDate.getRealTZmsOffset(TZ));
 	targetDate.setUTCHours (0,0,0,0);
 	setDisplay ();
 }
@@ -291,7 +293,7 @@ function calcTime() {
  */
 function setUTCHoursFixed (UTChours=0) {
 	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
-	let testDate = new Date (targetDate.valueOf());
+	let testDate = new Date (targetDate.valueOf() - targetDate.getRealTZmsOffset(TZ));
 	testDate.setUTCHours(UTChours, 0, 0, 0);
 	if (isNaN(testDate.valueOf())) alert ("Out of range")
 	else {
