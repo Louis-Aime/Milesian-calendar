@@ -181,6 +181,7 @@ function setDateToNow(){
 	setDisplay ();
 }
 /** Compute date of now, local or UTC; result is UTC date at 00:00. For date converter and yearly figures.
+ * @param {string} TZ - if unspecified, date is in local time zone. If "UTC", date is in Greenwich time zone. 
  */
 function setDateToToday (TZ = "") {
 	setDateToNow();
@@ -289,7 +290,8 @@ function calcTime() {
 		}
 	}
 }	
-/** Set UTC time to the hours specified.
+/** Set UTC time to the hours specified. Date is deemed in time zone specified in TZ global variable.
+ * @param {number} UTChours - The time (number of hours) in UTC time zone.
  */
 function setUTCHoursFixed (UTChours=0) {
 	if (typeof UTChours == undefined)  UTChours = document.UTCset.Compute.value;
