@@ -55,9 +55,8 @@ or the use or other dealings in the software.
 function undef (param) {
 	return param == "" ? undefined : param
 }
-// var declared in milesiandisplayinitiate.js
 
-/** clockAnimate : package for clock animation
+/** clockAnimate : package for clock animation.
  * @interface
 */
 const clockAnimate = {
@@ -133,7 +132,7 @@ const clockAnimate = {
 			window.clearInterval(clockAnimate.clockPeriod);
 		}
 }
-/**	Time shift routines as a module (timeShift + myTimeShift)
+/**	Time shift routines defined as a class.
  * @class
  */
 class timeShift {
@@ -164,7 +163,7 @@ class timeShift {
 		}
 	}
 }
-/** The intantated timeShift class
+/** The intantated timeShift class.
  * @interface
  */
 const myTimeShift = new timeShift;
@@ -183,7 +182,7 @@ function setDateToToday (TZ = "") {
 	targetDate.setUTCHours (0,0,0,0);
 	setDisplay ();
 }
-/** Set date following custom calendar
+/** Set date following custom calendar.
  */
 function calcCustomDate() {
 	customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);
@@ -215,7 +214,7 @@ function calcCustomDate() {
 		setDisplay();
 		}
 }
-/** Set date after week indication 
+/** Set date after week indication.
  */
 function calcWeek() {
 	customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);
@@ -263,7 +262,7 @@ function calcJulianDay(){
 		}
 	}
 }
-/** Recompute date after time elements
+/** Recompute date after time elements.
  */
 function calcTime() {
 	var hours = Math.round (document.time.hours.value), mins = Math.round (document.time.mins.value), 
