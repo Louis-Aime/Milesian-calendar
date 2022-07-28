@@ -1,16 +1,10 @@
 /** 
- * @file Milesian Clock and converter utility functions - excluding initialisation and global variables.
- * To be used with suitable calendrical-demo-**.html file.
- * contents: animation routines for the Milesian Clock html page.
- * Required objects initiated by calendrical-init or equivalent. loadCalendrical: promise that modules are imported. Calendrical: prefix name for imported modules.
- * @requires 	milesianclock.html
- * @requires	milesianclockinitiate.js
- * @requires	yearsignaturedisplay.js
- * @requires	other modules have been made visible with the 'modules' object
- * @version M2022-03-13
- * @todo optimise
+ * @file Milesian Clock and converter utility functions for the Milesian clock and converter html applications.
+ * These objects are described in the Global section of the JSDoc generated documentation.
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @version M2022-08-07 JSDoc comments
  * @license MIT 2016-2022
+ * @todo optimise
 */
 // Character set is UTF-8
 /* Version	M2022-03-13 setDateToToday and setUTCHoursFixed: compute day following TZ and return same day at 00:00 UTC (or 12:00 UTC)
@@ -55,8 +49,8 @@ or the use or other dealings in the software.
 */
 "use strict";
 /** A utility for the undefined fields
- * @param {any} param - any parameter that can be equated to a String.
- * @return {any} undefined if param is blank or undefined, param otherwise.
+ * @param {String} param - any parameter that can be equated to a String.
+ * @return {any} undefined if param is blank string, param otherwise.
 */
 function undef (param) {
 	return param == "" ? undefined : param
