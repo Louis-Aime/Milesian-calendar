@@ -1,17 +1,14 @@
-/* Milesian yearly characteristics figures - on load part, end of HTML
-Character set is UTF-8.
-These functions are associated with the page of yearly characteristics figures: 
-They use the basic Milesian calendar functions, and the conversion functions of other calendar,
-in order to display the Milesian on-line clock and to perform calendar conversion.
-Associated with: 
-*	yearsignaturepanel.html
-/* Version notes
-	This file is highly related to the corresponding html code. 
-	This part is especially for setting the frame after HTML loading.
+/** Milesian yearly characteristics figures - on load part.
+ * These functions are associated with the page of yearly characteristics figures: 
+ * They use the basic Milesian calendar functions, and the conversion functions of other calendar,
+ * in order to display the Milesian on-line clock and to perform calendar conversion.
+ * @file 
+ * @version M2022-08-07 adapt to western calendar construction  
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022 
+ * @see yearsignaturepanel.html
 */
-/* Version M2021-08-30
-(see GitHub)
-*/
+//Character set is UTF-8.
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -49,13 +46,7 @@ var
 			hour : "numeric", minute : "numeric", second : "numeric"}, 	
 	askedOptions,	// for custom calendar
 	userOptions,	// 
-/*
-	unicodeFormat,	// for Unicode selected calendar
-	unicodeOptions,
-	clockFormat,
-	weekFormat,		// formater for day of week for current custom calendars
-	dracoDateFormat,	// year month day
-*/
+
 	astroCalend,
 	romanDateFormat,	// monthDay for julian and gregorian calendar
 	DOWFormat,		// formater for the traditional week day, used for the yearly figures
@@ -111,32 +102,6 @@ window.onload = function () {	// Initiate fields and set event listeners
 		setYearToNow(milesian);
 		displayDeltaT();
 	});
-/*
-	document.gregorianswitch.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		let 
-			day =  Math.round (event.srcElement.elements.day.value),
-			month = event.srcElement.elements.month.value,
-			year =  Math.round (event.srcElement.elements.year.value),
-			testDate = new modules.ExtDate (calendars.find(item => item.id == "iso_8601"),modules.ExtDate.fullUTC(year, month, day)),
-			index = calendars.findIndex (item => item.id == "historic");
-		if ( (testDate.valueOf() >= Date.UTC(1582,9,15,0,0,0,0)) && (testDate.day() == day) ) 
-			calendars[index] = new modules.WesternCalendar("historic", testDate.valueOf())
-		else alert ("Invalid switching date to Gregorian calendar: " + day + '/' + month + '/' + year );
-		// confirm current switching date
-		[document.gregorianswitch.day.value, document.gregorianswitch.month.value, document.gregorianswitch.year.value ]
-			= [ switchingDate.day, switchingDate.month, switchingDate.year ] = [ day, month, year ];
-		compLocalePresentationCalendar();	// because we changed one calendar, disseminate change.
-		if (calendars[customCalIndex].id == "historic") targetDate = new modules.ExtDate (calendars[index], targetDate.valueOf());	
-			// sweep former historic calendar out of current data
-		setDisplay();
-	})	
-
-	document.custom.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		calcCustomDate()
-	})
-*/
 	document.details.calend.addEventListener("blur", function (event) {
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		customCalIndex = calendars.findIndex (item => item.id == document.details.calend.value);  // change custom calendar
@@ -145,16 +110,6 @@ window.onload = function () {	// Initiate fields and set event listeners
 		setYear (document.yearglobal.year.value);
 		displayDeltaT();
 	})
-/*
-	document.week.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		calcWeek()
-	})
-	document.daycounter.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		calcJulianDay()
-	})
-*/
 	document.yearglobal.addEventListener("submit", function (event) {
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		setYear(event.srcElement.elements.year.value);
@@ -173,60 +128,4 @@ window.onload = function () {	// Initiate fields and set event listeners
 		targetDate.setFromFields ({ year: document.yearglobal.year.value},"UTC");
 		displayDeltaT();
 	})
-/*
-	document.control.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		clockAnimate.changeDayOffset()
-	})
-	document.control.now.addEventListener("click", function (event) {
-		setDateToToday()
-	})
-	document.control.minus.addEventListener("click", function (event) {
-		clockAnimate.setDayOffset(-1)
-	})
-	document.control.plus.addEventListener("click", function (event) {
-		clockAnimate.setDayOffset(+1)
-	})
-	document.time.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		calcTime()
-	})
-
-	document.timeShift.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		myTimeShift.changeAddTime()
-	})
-	document.timeShift.minus.addEventListener("click", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		clockAnimate.clockRun(0);
-		myTimeShift.changeAddTime()
-		myTimeShift.addTime(-1)
-	})
-	document.timeShift.plus.addEventListener("click", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		clockAnimate.clockRun(0);
-		myTimeShift.changeAddTime()
-		myTimeShift.addTime(+1)
-	}) 
-
-	document.TZmode.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		TZ = document.TZmode.TZcontrol.value;
-		setDisplay();
-	})
-
-	document.getElementById("h0").addEventListener("click", function (event) {
-		clockAnimate.clockRun(0);
-		setUTCHoursFixed(0)
-	})
-	document.getElementById("h12").addEventListener("click", function (event) {
-		clockAnimate.clockRun(0);
-		setUTCHoursFixed(12)
-	})
-	document.LocaleOptions.addEventListener ("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		compLocalePresentationCalendar();
-		setDisplay()
-	})
-*/
 }
