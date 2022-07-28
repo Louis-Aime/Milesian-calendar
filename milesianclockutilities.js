@@ -7,26 +7,6 @@
  * @todo optimise
 */
 // Character set is UTF-8
-/* Version	M2022-03-13 setDateToToday and setUTCHoursFixed: compute day following TZ and return same day at 00:00 UTC (or 12:00 UTC)
-	M2021-08-09	update routines for yearly figures
-	M2021-08-07
-		Reorganise dial and display, simplify
-		split
-	M2021-07-22	
-		External modules directly loaded from GitHub, not from local copy (this may be reverted)
-		Clock animated every 1s. 
-	M2021-07-18 Fix bug when computing from UTC date-time fields
-	M2021-07-09 Use IIFE for intial imports
-	M2021-05-09 Suppress filter for bad calendrical computation cases of M2019-12-23
-	M2021-03-11 Enhance display of Delta T
-	M2021-02-15	Use calendrical-javascript modules
-	M2021-01-15 Display seasons and year figures using timezone mode and system language
-	M2021-01-09 - Adapt to Chronos and new modules architecture
-		Use 11 dependant .js files instead of 14
-		Group year signature figures
-		Add wallclock indication
-(See former versions log on GitHub)
-*/
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2017-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
