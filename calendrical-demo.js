@@ -1,19 +1,13 @@
-/* JS routines for calendrical-demo: test custom calendars formatting capabilities. 
-To be used with suitable calendrical-demo-**.html file.
-Character set is UTF-8
-Contents: animtation routines for the html page.
-Required objects initiated by calendrical-init or equivalent
-	loadCalendrical: promise that modules are imported
-	calendrical: prefix name for imported modules
+/** JS routines for calendrical-demo: test custom calendars formatting capabilities. 
+ * To be used with suitable calendrical-demo-**.html file.
+ * Contents: animation routines for the html page.
+ * @file 
+ * @version M2022-08-07 adapt to western calendar construction  
+ * @author Louis A. de Fouquières https://github.com/Louis-Aime
+ * @license MIT 2016-2022 
+ * @see calendrical-demo-**.html.html
 */
-/* Version notes
-	This file is associated with calendrical-demo-**.html files.
-	The event listeners are designed as to follow forms value. A "refresh" action will set to value in forms. 
-	Control are done as to avoid changes to illegal values in forms (except dates that cab be balanced).
-*/
-/* Version:	M2021-08-30 French Rev with pldr
-(see GitHub)
-*/
+// Character set is UTF-8
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -35,10 +29,6 @@ tort or otherwise, arising from, out of or in connection with the software
 or the use or other dealings in the software.
 */
 "use strict";
-
-// global var calendrical is initiated as prefix name for user modules.
-// global const loadComplete is Promise object that all modules and data are imported.
-
 var 
 	switchingDate = { day : 15, month : 10, year : 1582 },
 	calendars = [],	// an array (pointers to) calendar objects
@@ -397,7 +387,7 @@ window.onload = function () {
 		calendars.push (new calendrical.MilesianCalendar ("milesian",calendrical.pldrDOM));
 		calendars.push (new calendrical.GregorianCalendar ("iso_8601"));
 		calendars.push (new calendrical.JulianCalendar ("julian"));
-		calendars.push (new calendrical.WesternCalendar ("historic", calendrical.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day)));
+		calendars.push (new calendrical.WesternCalendar ("historic", calendrical.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
 		calendars.push (new calendrical.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);  // set initial custom calendar - but calendars must exist !
 		getMode();
@@ -417,7 +407,7 @@ window.onload = function () {
 			testDate = new calendrical.ExtDate (calendars.find(item => item.id == "iso_8601"),calendrical.ExtDate.fullUTC(year, month, day)),
 			index = calendars.findIndex (item => item.id == "historic");
 		if ( (testDate.valueOf() >= Date.UTC(1582,9,15,0,0,0,0)) && (testDate.day() == day) ) {
-			calendars[index] = new calendrical.WesternCalendar("historic", testDate.valueOf());
+			calendars[index] = new calendrical.WesternCalendar("historic", testDate.valueOf(), pldrDOM);
 			[document.gregorianswitch.day.value, document.gregorianswitch.month.value, document.gregorianswitch.year.value ]
 				= [ switchingDate.day, switchingDate.month, switchingDate.year ] = [ day, month, year ];
 			compLocalePresentationCalendar();	// because we changed one calendar, disseminate change.

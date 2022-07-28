@@ -1,24 +1,17 @@
-/**
- * @file Milesian Clock and converter functions, onload part. 
- * These functions are associated with the Milesian clock and converter html page: 
+/** Milesian Clock functions, onload part. 
+ * These functions are associated with the Milesian clock html page: 
  * They use the basic Milesian calendar functions, and the conversion functions of other calendar,
  * in order to display the Milesian on-line clock and to perform calendar conversion.
  * This code is strongly tight with milesianclock.html. 
  * Here the general framework and the event listeners are set.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
- * @see milesianclock.html
- * @version M2021-08-30
+ * @file 
+ * @version M2022-08-07 adapt to western calendar construction  
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022 
+ * @see milesianclock.html
 */
 // Character set is UTF-8.
-/* Version notes
-	This file is highly related to the corresponding html code. 
-	This part is especially for setting the frame after HTML loading.
-*/
-/* Version M2022-02-07	JSDocs
-see GitHub for details
-*/
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -180,7 +173,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 		calendars.push (milesian);
 		calendars.push (new modules.GregorianCalendar ("iso_8601"));
 		calendars.push (new modules.JulianCalendar ("julian"));
-		calendars.push (new modules.WesternCalendar ("historic", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day)));
+		calendars.push (new modules.WesternCalendar ("historic", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);  // set initial custom calendar - but calendars must exist !
 		// targetDate = new modules.ExtDate(milesian);
@@ -198,7 +191,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 			testDate = new modules.ExtDate (calendars.find(item => item.id == "iso_8601"),modules.ExtDate.fullUTC(year, month, day)),
 			index = calendars.findIndex (item => item.id == "historic");
 		if ( (testDate.valueOf() >= Date.UTC(1582,9,15,0,0,0,0)) && (testDate.day() == day) ) 
-			calendars[index] = new modules.WesternCalendar("historic", testDate.valueOf())
+			calendars[index] = new modules.WesternCalendar("historic", testDate.valueOf(), pldrDOM)
 		else alert ("Invalid switching date to Gregorian calendar: " + day + '/' + month + '/' + year );
 		// confirm current switching date
 		[document.gregorianswitch.day.value, document.gregorianswitch.month.value, document.gregorianswitch.year.value ]
