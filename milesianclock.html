@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2021-09-11	see GitHub for details
+<!-- Version	M2022-09-12	see GitHub for details
 -->
 <!-- Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
@@ -180,10 +180,10 @@ Inquiries: www.calendriermilesien.org
 			  <form name="custom">
 			  <tr id="customline">
 				<td><select name="calend" size="1" class="centered">
-					<option value="milesian" selected>milésien</option>
+					<option value="milesian">milésien</option>
 					<option value="iso_8601">iso 8601</option>
 					<option value="julian">julien</option>
-					<option value="historic">historique</option>
+					<option value="historic" selected>historique</option>
 					<option value="frenchrev">révolutionnaire</option>
 					</select></td>
 				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable"> </td>
@@ -452,8 +452,8 @@ Inquiries: www.calendriermilesien.org
 			<section><h3 class="panelhead">Affichage des données astronomiques</h3>
 				<div class="centered">
 					<select name="astrocalendar" size="1" class="centered">
-						<option value="milesian" selected>calendrier milésien</option>
-						<option value="custom">calendrier utilisateur sélectionné</option>
+						<option value="milesian">calendrier milésien</option>
+						<option value="custom" selected>calendrier utilisateur sélectionné</option>
 						<option value="unicode">calendrier Unicode sélectionné</option>
 					</select>
 				</div>
