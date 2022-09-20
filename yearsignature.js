@@ -1,34 +1,19 @@
 /** Year Signature of Julian, Gregorian and Milesian calendars
 Each function returns a compound value with the yearly key figures for the Julian, Gregorian of Milesian  calendar.
  * @module
- * @version M2021-08-07
+ * @version M2022-09-30
  * @requires module:calendrical-javascript/chronos.Cbcce
+ * @requires module:calendrical-javascript/calendars.JulianCalendar
+ * @requires module:calendrical-javascript/calendars.GregorianCalendar
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
  */
 //	Character set is UTF-8
 /* 
 */
-/* Version	M2022-01-28	JSDoc
-	M2021-08-07 Dominical letter for leap years
-	M2021-08-07	Add dominical letter
-	M2021-07-29 Update external refs
-	M2021-07-26	Update comments and links
-	M2021-02-15	Use as module, with calendrical-javascript modules
-	M2020-12-29 
-		Use Cbcce.mod
-		Derive Milesian signature from Gregorian figures, no more half-integer epact.
-	M2020-01-12 : strict mode
-	M2019-10-10: Reduced milesian epact is never 29.5, but rather 0.0
-	M2019-07-27: Update dependencies, no new code
-	M2019-06-28: Enhance Milesian epact computation, shall depend on UTC time only.
-	M2019-05-12: Add the the milesiancomputusepact i.e. epact of the gregorian computus one day before 1 1m (not to be recommended)
-	M2019-01-13: Milesian intercalation is same as Gregorian
-	M2018-11-13: JSDoc comments
-	M2018-10-26: enhance comments
-	M2017-12-26
-	M2017-06-04
-*/
+/* Version	M2022-09-30	Give also the complete Easter date for the year and the calendar
+see GitHub for former versions
+/
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -51,6 +36,7 @@ or the use or other dealings in the software.
 */
 "use strict";
 import { Cbcce } from './chronos.js';
+import { JulianCalendar, GregorianCalendar } from './calendars.js';
 const // Gregorian solar intercalation rule
 	gregCalend = new Cbcce (	
 		{ 	// Decompose a year of the Dionysos era
@@ -68,7 +54,9 @@ const // Gregorian solar intercalation rule
 				{name : "annum", init : 0}
 			]
 		}),
-	DominicalLetter = ['C','B','A','G','F','E','D'];	// Series of the Dominical Letter, index by Doomsday.
+	DominicalLetter = ['C','B','A','G','F','E','D'],	// Series of the Dominical Letter, index by Doomsday.
+	julian = new JulianCalendar ("easterJulian"),	// Instatiate a calendar in order to compute date of easter in Julian.
+	gregorian = new GregorianCalendar ("easterGregorian"); 
 /** Structure of the returned object.
  * @typedef signature
  * @property {number} doomsday 			- the index doomsday or "clavedi" for the year, i.e. the index of weekday of "0 March", 21 March and other pivotal dates.
@@ -79,6 +67,7 @@ const // Gregorian solar intercalation rule
  * @property {number} easterResidue 	- the number of days from 21st March to computus next full moon, a 0-29 integer.
  * @property {number} easterOffset  	- the number of days from 21st March to Easter Sunday, result of Easter computation.
  * @property {boolean} isLeap 			- whether this year is a leap year (366 days long).
+ * @property {Object} easterDate		- the complete Easter date for that year.
  */
 /** key figures of a year of the Julian calendar
  * @param {number} year - Algebraic integer year of Dionysos era.
@@ -115,6 +104,7 @@ export function julianSignature (year) {
 	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold, 30);
 	signature.epact = Cbcce.mod (23 - signature.easterResidue, 30);
 	signature.easterOffset = 1 + signature.easterResidue + Cbcce.mod(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.easterDate = new Date ( julian.counterFromFields ({ year : year, month : 3, day : 21 + signature.easterOffset }));
 	return signature;
 }
 /** key figures of a year of the Gregorian calendar
@@ -147,6 +137,7 @@ export function gregorianSignature (year) {
 	// signature.milesiancomputusepact = Cbcce.mod (12 - signature.easterResidue, 30);
 	signature.easterResidue -= Math.floor( (signature.gold + 11*signature.easterResidue) / 319 );
 	signature.easterOffset = 1 + signature.easterResidue + Cbcce.mod(6 - signature.easterResidue - signature.doomsday, 7);
+	signature.easterDate = new Date ( gregorian.counterFromFields ({ year : year, month : 3, day : 21 + signature.easterOffset }));
 	return signature;
 }
 /** key figures of a year of the Milesian calendar. Mostly Gregorian figures.
