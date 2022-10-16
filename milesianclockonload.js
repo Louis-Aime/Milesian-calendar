@@ -6,12 +6,13 @@
  * Here the general framework and the event listeners are set.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
  * @file 
- * @version M2022-08-07 adapt to western calendar construction  
+ * @version M2022-10-26
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022 
  * @see milesianclock.html
 */
 // Character set is UTF-8.
+/* Version M2022-10-26 fix day offset field setting  
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -235,11 +236,15 @@ window.onload = function () {	// Initiate fields and set event listeners
 		setDateToNow()
 	})
 	document.control.minus.addEventListener("click", function (event) {
+		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		clockAnimate.clockRun(0);
+		clockAnimate.changeDayOffset()
 		clockAnimate.setDayOffset(-1)
 	})
 	document.control.plus.addEventListener("click", function (event) {
+		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
 		clockAnimate.clockRun(0);
+		clockAnimate.changeDayOffset()
 		clockAnimate.setDayOffset(+1)
 	})
 
