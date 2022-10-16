@@ -13,15 +13,12 @@
  * @requires module:countconversion
  * @requires module:lunar
  * @requires module:yearsignature
- * @version M2021-08-22
+ * @version M2022-10-26
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
 */
 // Character set is UTF-8.
-/* Version	M2022-01-30 JSDoc
-	M2021-08-22 prepare switch to new global names calendrical and loadCalendrical
-	M2021-08-07
-		Created from milesianclockdisplay.js
+/* Version	M2022-10-26 10 s timeout for loading XML file
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -55,7 +52,7 @@ const // Promises of loading initial files. This a temporary version fills 'modu
 	calendrical = {},
 	loadCalendrical = Promise.all([
 		import ('./fetchdom.js').then (
-			(value) => value.default ('https://louis-aime.github.io/calendrical-javascript/pldr.xml', 1000),
+			(value) => value.default ('https://louis-aime.github.io/calendrical-javascript/pldr.xml', 10000),
 			(error) => { throw 'Error loading standard modules' }		// failure fetching pldr as XML file, fallback in next step
 			).then (
 				(value) => { pldrDOM = calendrical.pldrDOM = value },			// fetching XML file has succeeded.
