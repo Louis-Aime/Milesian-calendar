@@ -12,7 +12,8 @@
  * @see milesianclock.html
 */
 // Character set is UTF-8.
-/* Version M2022-10-26 fix day offset field setting  
+/* Version M2022-10-26 fix day offset field setting 
+*/ 
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
