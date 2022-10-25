@@ -87,9 +87,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.week.weeksinyear.value = targetDate.weeksInYear(TZ);
 	document.week.dayofweek.value = weekFormat.format(targetDate);
 
-	// Place marks that say that custom calendar was not valid
-	myElement = document.querySelector("#customline");
-	myCollection = myElement.getElementsByClassName("mutable");
+	// Place marks on all mutable elements, expressing that custom calendar is not valid at displayed date.
+	//	myElement = document.querySelector("#customline"); // older version, when only one line should be tested
+	myCollection = document.getElementsByClassName("mutable");
 	// first remove marks from another display
 	for (let i = 0; i < myCollection.length; i++)
 		myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))

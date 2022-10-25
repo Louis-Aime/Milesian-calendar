@@ -197,9 +197,9 @@ Inquiries: www.calendriermilesien.org
 			  <tr>
 				<form name="week">
 				<th>Semaines</th>
-				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2 datelement"> </td>
-				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2 datelement"></td>
-				<td><input name="weekyear" type="number" class="centered digit4 datelement"></td>
+				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2 mutable datelement"> </td>
+				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2 mutable datelement"></td>
+				<td><input name="weekyear" type="number" class="centered digit4 mutable datelement"></td>
 				<td><button class="textline">Ok</button></td>
 			  </tr>
 			 </table>
@@ -264,7 +264,7 @@ Inquiries: www.calendriermilesien.org
 		</section>
 		<section><h3 class="panelhead">Affichage selon options</h3>
 			<section><h4 class="panelhead">Calendrier utilisateur (<span id="customcalname"></span>)</h4>
-				<span class="centered" id="CustomString"></span>
+				<span class="centered mutable" id="CustomString"></span>
 			</section>
 			<section><h4 class="panelhead">Calendrier Unicode (<span id="unicodecalname"></span>)</h4>
 			<span class="centered" id="UnicodeString"></span>
@@ -488,7 +488,7 @@ Inquiries: www.calendriermilesien.org
 		<tr><th>Heure lunaire<br>(marées)</th><th>Date lunaire<br>(hauteur de lune)</th></tr>
 		<tr>
 			<td><input name="moontime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
-			<td><input name="moondate" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
+			<td><input name="moondate" value="" type="text" class="centered mutable" disabled="disabled" size="12"> </td>
 		</tr>
 	 </table>
 	 </section>
@@ -496,8 +496,8 @@ Inquiries: www.calendriermilesien.org
 	 <table class="centered">
 		<tr><th>Caput</th><th>Cauda</th><th>Saison d'éclipses</th></tr>
 		<tr>
-			<td><input name="caput" value="" type="text" class="centered" disabled="disabled" size="12"></td>
-			<td><input name="cauda" value="" type="text" class="centered" disabled="disabled" size="12"></td>
+			<td><input name="caput" value="" type="text" class="centered mutable" disabled="disabled" size="12"></td>
+			<td><input name="cauda" value="" type="text" class="centered mutable" disabled="disabled" size="12"></td>
 			<td id="EclipseField" class="mutable"><select name="eclipseseason" class="centered" disabled="disabled">
 				<option value="false" selected>fermée</option>
 				<option value="true">ouverte</option>
@@ -546,11 +546,11 @@ Inquiries: www.calendriermilesien.org
 		<p>Dates et heures selon options d'affichage</p>
 		  <form name="seasons">
 			<table class="centered">
-				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter1" value=""></td></tr>
-				<tr><th>Équinoxe de printemps</th>	<td><input class="centered" disabled="disabled" size="24" name="spring" value=""></td></tr>
-				<tr><th>Solstice d'été</th>			<td><input class="centered" disabled="disabled" size="24" name="summer" value=""></td></tr>
-				<tr><th>Équinoxe d'automne</th>		<td><input class="centered" disabled="disabled" size="24" name="autumn" value=""></td></tr>
-				<tr><th>Solstice d'hiver</th>		<td><input class="centered" disabled="disabled" size="24" name="winter2" value=""></td></tr>
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="winter1" value=""></td></tr>
+				<tr><th>Équinoxe de printemps</th>	<td><input class="centered mutable" disabled="disabled" size="24" name="spring" value=""></td></tr>
+				<tr><th>Solstice d'été</th>			<td><input class="centered mutable" disabled="disabled" size="24" name="summer" value=""></td></tr>
+				<tr><th>Équinoxe d'automne</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="autumn" value=""></td></tr>
+				<tr><th>Solstice d'hiver</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="winter2" value=""></td></tr>
 			</table>
 		  </form>
 		</section>
@@ -610,8 +610,8 @@ Inquiries: www.calendriermilesien.org
 				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
 				</tr>
 			<tr><th class="onborder" colspan="2">Date réelle</th>
-				<td><input name="g_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
-				<td><input name="j_referdate" class="char8 centered" disabled="disabled" size="8" value="1 4m"></td>
+				<td><input name="g_referdate" class="char8 centered mutable" disabled="disabled" size="8" value="1 4m"></td>
+				<td><input name="j_referdate" class="char8 centered mutable" disabled="disabled" size="8" value="1 4m"></td>
 				</tr>
 		</table>
 	  </form>
