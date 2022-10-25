@@ -73,7 +73,7 @@ input[disabled], select[disabled] {
 	outline-style: solid;
 	outline-width: thin;
 }
-.outbounds {
+.outbounds, input.outbounds, select.outbounds {
 	color : antiquewhite;
 	background : firebrick;
 }
