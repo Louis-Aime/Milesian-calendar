@@ -4,20 +4,14 @@ The code derives from Fourmilab's astro.js file (2015).
 Code has been modified in order to conform with strict mode.
  * @module
  * @requires module:getdeltat
- * @version M2021-08-20
+ * @version M2022-11-04
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
  */
 //	Character set is UTF-8
-/* Version	M2022-02-10	Export each function instead of an object
-	M2022-02-07 JSDoc
-	M2021-08-27 key figures as constants.
-	M2021-08-20 Hide internal functions and refer to DeltaT only
-	M2021-07-29 Adapt to calendrical-javascript
-	M2021-02-14	Use calendrical-javascript modules 
-	M2020-12-29 Adapted to new Chronos and Lunar
-	M2020-01-12 : strict mode implementation
-	M2019-08-22: first version, extracted from a Fourmilab package
+/* Version	M2022-11-04	Fix tropicEvent: suppress an inadequate reference to "this".
+	M2022-02-10	Export each function instead of an object
+	See history on GitHub
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -172,8 +166,8 @@ export function tropicEvent (year, which) {
 	var JDE;
 	if (!Number.isInteger(which) || which < 0 || which > 4) throw RangeError("Invalid value for season parameter: " + which);
 	if (year < LOWER_YEAR || year > UPPER_YEAR) throw RangeError ("Year outside seasons' computation capabilities: " + year);
-	if (which == 0) JDE = this.equinox (year-1,3)
-		else JDE = this.equinox(year, which-1);
+	if (which == 0) JDE = equinox (year-1,3)
+		else JDE = equinox(year, which-1);
 	let wdate = new Date(Math.round((JDE - PosixJD)*DayUnit));
 	return new Date (wdate.valueOf() - getDeltaT(wdate));
   }
