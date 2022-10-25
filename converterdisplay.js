@@ -5,12 +5,13 @@
  * @requires converteronload.js.
  * other modules are made visible milesianclockinitiate.
  * @see converter.html
- * @version M2022-02-10
+ * @version M2022-11-04
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
 */
 // Character set is UTF-8.
-/* Version	M2022-02-10 - see GitHub for details
+/* Version	M2022-11-04	Enhance management of mark for non-valid calendars
+see GitHub for details
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -55,9 +56,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.week.weeksinyear.value = targetDate.weeksInYear(TZ);
 	document.week.dayofweek.value = weekFormat.format(targetDate);
 
-	// Place marks that say that custom calendar was not valid
-	myElement = document.querySelector("#customline");
-	myCollection = myElement.getElementsByClassName("mutable");
+	// Place marks on all mutable elements, expressing that custom calendar is not valid at displayed date.
+	//	myElement = document.querySelector("#customline"); // older version, when only one line should be tested
+	myCollection = document.getElementsByClassName("mutable");
 	// first remove marks from another display
 	for (let i = 0; i < myCollection.length; i++)
 		myCollection[i].setAttribute("class", myCollection[i].getAttribute("class").replace(" outbounds",""))
