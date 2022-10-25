@@ -2,7 +2,7 @@
  * @file Milesian Clock and converter utility functions for the Milesian clock and converter html applications.
  * These objects are described in the Global section of the JSDoc generated documentation.
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @version M2022-08-07 JSDoc comments
+ * @version M2022-11-04 Shade fields that change quickly when clock is animated
  * @license MIT 2016-2022
  * @todo optimise
 */
@@ -77,12 +77,15 @@ const clockAnimate = {
 			clockAnimate.clockRun (2);
 			},
 		clockRun : function(runSwitch = 0) { // Start or stop automatic clock run
-			 // Begin with setting everything to off
+			 // Set all buttons to off
 			clockAnimate.off();
 			document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("seton","textline"));
 			document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("seton","textline"));
 			document.run.back.setAttribute("class", document.run.back.getAttribute("class").replace("seton","textline"));
-			document.run.forw.setAttribute("class", document.run.forw.getAttribute("class").replace("seton","textline"))
+			document.run.forw.setAttribute("class", document.run.forw.getAttribute("class").replace("seton","textline"));
+			// Disable all sensitive fields; they shall be reset if clock is stopped.
+			var dateElements = document.querySelectorAll(".datelement");
+			dateElements.forEach ( (item, index, list) => {item.setAttribute("disabled","disabled") } );
 			switch (runSwitch) {
 				case 2 : // quick runabout mode
 					// Set the runabout to desired speed
@@ -98,6 +101,7 @@ const clockAnimate = {
 					document.run.on.setAttribute("class", document.run.on.getAttribute("class").replace("textline","seton"));
 					break;
 				case 0 : // keep stopped
+					dateElements.forEach ( (item, index, list) => {item.removeAttribute("disabled") } );
 					document.run.off.setAttribute("class", document.run.off.getAttribute("class").replace("textline","seton"));
 					break; 
 				default : throw new Error ("Invalid option " + runSwitch);
