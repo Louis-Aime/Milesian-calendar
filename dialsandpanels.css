@@ -3,7 +3,8 @@ Main characteristics:
 - items grouped in panels, arrange the size in order to hold on a smartphone
 - most items centered
 - use standard style of a CMS etc.  */
-/* Version	M2021-01-11	Add a 'seton' class (aimed at buttons)
+/* Version	M2022-11-04	Improve definition for .outbounds
+	M2021-01-11	Add a 'seton' class (aimed at buttons)
 	M2020-01-09 - Add .onborder, set default height 360 for square panels
 	M2020-12-15 Set panel for command and outdisplay for results
 	M2020-11-21 Created after milesian clocks
