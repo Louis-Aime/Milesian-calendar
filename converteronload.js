@@ -5,12 +5,12 @@
  * Here the general framework and the event listeners are set.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
  * @file 
- * @version M2022-10-26
+ * @version M2022-11-10
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022 
  * @see converter.html
 */ 
-/* Version M2022-10-26 fix day offset field setting
+/* Version M2022-11-10 Updated calendar names
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -176,9 +176,9 @@ window.onload = function () {	// Initiate fields and set event listeners
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 		calendars.push (milesian);
-		calendars.push (new modules.GregorianCalendar ("iso_8601"));
+		calendars.push (new modules.ProlepticGregorianCalendar ("iso_8601"));
 		calendars.push (new modules.JulianCalendar ("julian"));
-		calendars.push (new modules.WesternCalendar ("historic", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
+		calendars.push (new modules.GregorianCalendar ("gregorian", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.custom.calend.value);  // set initial custom calendar - but calendars must exist !
 		// targetDate = new modules.ExtDate(milesian);
@@ -194,16 +194,16 @@ window.onload = function () {	// Initiate fields and set event listeners
 			month = event.srcElement.elements.month.value,
 			year =  Math.round (event.srcElement.elements.year.value),
 			testDate = new modules.ExtDate (calendars.find(item => item.id == "iso_8601"),modules.ExtDate.fullUTC(year, month, day)),
-			index = calendars.findIndex (item => item.id == "historic");
+			index = calendars.findIndex (item => item.id == "gregorian");
 		if ( (testDate.valueOf() >= Date.UTC(1582,9,15,0,0,0,0)) && (testDate.day() == day) ) 
-			calendars[index] = new modules.WesternCalendar("historic", testDate.valueOf(), pldrDOM)
+			calendars[index] = new modules.GregorianCalendar("gregorian", testDate.valueOf(), pldrDOM)
 		else alert ("Invalid switching date to Gregorian calendar: " + day + '/' + month + '/' + year );
 		// confirm current switching date
 		[document.gregorianswitch.day.value, document.gregorianswitch.month.value, document.gregorianswitch.year.value ]
 			= [ switchingDate.day, switchingDate.month, switchingDate.year ] = [ day, month, year ];
 		compLocalePresentationCalendar();	// because we changed one calendar, disseminate change.
-		if (calendars[customCalIndex].id == "historic") targetDate = new modules.ExtDate (calendars[index], targetDate.valueOf());	
-			// sweep former historic calendar out of current data
+		if (calendars[customCalIndex].id == "gregorian") targetDate = new modules.ExtDate (calendars[index], targetDate.valueOf());	
+			// sweep former gregorian calendar out of current data
 		setDisplay();
 	})	
 		
