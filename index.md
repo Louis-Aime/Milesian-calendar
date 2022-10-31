@@ -33,11 +33,8 @@ Write today's date in Milesian, after fetching the modules and the pldr.xml file
 [Today's date in Milesian](./load-modules-and-write.html).
 
 ## Calendrical computations and Date object extension
-This page demonstrates the functionnalities of ExtDate, ExtDateTimeFormat and custom calendars built with the Cycle Based Calendar Computation Engine - CBCCE.
 
-[The demonstrator for the calendrical-javascript submodule](./calendrical-demo-fr.html).
-
-A more advanced version may be available on the [GitHub Page of calendrical-javascript](https://Louis-Aime.github.io/calendrical-javascript).
+The most advanced version of this submodule may be found at [GitHub Page of calendrical-javascript](https://Louis-Aime.github.io/calendrical-javascript).
 
 ## Comments and proposal
  Use this repository's [issues](https://github.com/Louis-Aime/Milesian-calendar/issues).
