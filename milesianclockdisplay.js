@@ -6,16 +6,15 @@
  * @requires milesianclockinitiate
  * @requires milesianclockonload
  * @see milesianclock.html
- * @version M2022-02-10
+ * @version M2022-11-15
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
 */
 //Character set is UTF-8.
 /* Version notes
-	This .js file is highly related to the corresponding html code. 
-	Not much code optimisation in this file. 
+	This .js file is highly related to the corresponding html code, with no optimisation 
 */
-/* Version	M2022-02-10	Adapt to seasons and lunar modules - see detail on GitHub
+/* Version	M2022-11-15	Bug displaying calendar selected for Unicode
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -121,7 +120,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.querySelector("#langCode").innerHTML = userOptions.locale.includes("-u-") 
 		? userOptions.locale.substring (0,userOptions.locale.indexOf("-u-")) 
 		: userOptions.locale ;
-	document.querySelector("#CalendarCode").innerHTML = userOptions.calendar;	// Display calendar obtained after negotiation process
+	document.querySelector("#CalendarCode").innerHTML = unicodeOptions.calendar;	// Display calendar obtained after negotiation process
 	document.querySelector("#timeZone").innerHTML = userOptions.timeZone;	// Display time zone as obtained after negotiation process
 	
 	// Print Unicode string, following already computed options.
