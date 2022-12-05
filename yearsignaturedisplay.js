@@ -4,12 +4,12 @@
  * imported routines are accessed through object 'modules'.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
  * @see yearsignaturedisplay.html
- * @version M2022-09-30
+ * @version M2022-12-15
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022 
 */
 //	Character set is UTF-8
-/* Version	M2022-09-30 Fix Easter date display for multiple calendars
+/* Version	M2022-12-15 Display 22 March epact
 See GitHub for former versions
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
@@ -58,6 +58,7 @@ function computeSignature(year) {	// Formaters are external
 	document.details.j_day.value = displayDOW (signature.doomsday);
 	document.details.j_dlet.value = signature.dominicalLetter;
 	document.details.j_epact.value = signature.epact;
+	document.details.j_epactMar22.value = signature.epactMar22;
 	document.details.j_residue.value = signature.easterResidue;
 	document.details.j_daynumber.value = signature.easterOffset;
 	document.details.j_romandate.value = romanDateFrom21March(signature.easterOffset);
