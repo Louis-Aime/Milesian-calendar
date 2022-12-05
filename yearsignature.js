@@ -1,7 +1,7 @@
 /** Year Signature of Julian, Gregorian and Milesian calendars
 Each function returns a compound value with the yearly key figures for the Julian, Gregorian of Milesian  calendar.
  * @module
- * @version M2022-09-30
+ * @version M2022-12-15
  * @requires module:calendrical-javascript/chronos.Cbcce
  * @requires module:calendrical-javascript/calendars.JulianCalendar
  * @requires module:calendrical-javascript/calendars.GregorianCalendar
@@ -11,7 +11,7 @@ Each function returns a compound value with the yearly key figures for the Julia
 //	Character set is UTF-8
 /* 
 */
-/* Version	M2022-09-30	Give also the complete Easter date for the year and the calendar
+/* Version	M2022-12-15	Fix dominical letter of leap years, display old epact (i.e. moon age on 22 March)
 see GitHub for former versions
 /
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
@@ -94,15 +94,17 @@ export function julianSignature (year) {
 			dominicalLetter : "",
 			gold : Cbcce.mod (year, 19),	// This figure is the modulo i.e. 0 to 18
 			goldNumber : 1,					// The displayed gold number, 1..19, computed later
+			epactMar22 : 0,					// Moon age on 22 March
 			epact : 0, 		// Julian computus moon age one day before 1st January, after Dionysos' computus
 			easterResidue : 0, 	// Number of days from 21st March to computus 14th moon day.
 			easterOffset : 0, 	// Number of days from 21st March to Easter Sunday.
 			isLeap : yearCoeff.annum == 0	// whether this year is 366 days long
 		};
-	signature.dominicalLetter = DominicalLetter[signature.doomsday] + (signature.isLeap ? DominicalLetter[(signature.doomsday+6) % 7] : "");
+	signature.dominicalLetter = (signature.isLeap ? DominicalLetter[(signature.doomsday+6) % 7] : "") + DominicalLetter[signature.doomsday] ;
 	signature.goldNumber += signature.gold;
-	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold, 30);
-	signature.epact = Cbcce.mod (23 - signature.easterResidue, 30);
+	signature.epactMar22 = Cbcce.mod (11*signature.gold, 30);
+	signature.easterResidue = Cbcce.mod (15 - signature.epactMar22, 30);
+	signature.epact = Cbcce.mod (8 + signature.epactMar22, 30);
 	signature.easterOffset = 1 + signature.easterResidue + Cbcce.mod(6 - signature.easterResidue - signature.doomsday, 7);
 	signature.easterDate = new Date ( julian.counterFromFields ({ year : year, month : 3, day : 21 + signature.easterOffset }));
 	return signature;
@@ -127,7 +129,7 @@ export function gregorianSignature (year) {
 			easterOffset : 0,	 // Number of days from 21st March to Easter Sunday.
 			isLeap : yearCoeff.annum == 0 && (yearCoeff.quadriannum != 0 || yearCoeff.saeculum == 0)	// whether this year is 366 days long
 		};
-	signature.dominicalLetter = DominicalLetter[signature.doomsday] + (signature.isLeap ? DominicalLetter[(signature.doomsday+6) % 7] : "");
+	signature.dominicalLetter = (signature.isLeap ? DominicalLetter[(signature.doomsday+6) % 7] : "") + DominicalLetter[signature.doomsday] ;
 	signature.goldNumber += signature.gold;
 	signature.easterResidue = Cbcce.mod (15 + 19*signature.gold 	// Julian element
 		+ 3*yearCoeff.quadrisaeculum + yearCoeff.saeculum 	// Metemptose
