@@ -3,7 +3,7 @@
  * They use the basic Milesian calendar functions, and the conversion functions of other calendar,
  * in order to display the Milesian on-line clock and to perform calendar conversion.
  * @file 
- * @version M2022-08-07 adapt to western calendar construction  
+ * @version M2023-08-04 fix definition of 'iso_8601' calendar
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022 
  * @see yearsignaturepanel.html
@@ -91,7 +91,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 		calendars.push (milesian);
-		calendars.push (new modules.GregorianCalendar ("iso_8601"));
+		calendars.push (new modules.ProlepticGregorianCalendar ("iso_8601"));
 		calendars.push (new modules.JulianCalendar ("julian"));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.details.calend.value);  // set initial custom calendar - but calendars must exist !
