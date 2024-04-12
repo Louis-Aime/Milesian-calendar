@@ -59,7 +59,7 @@ import { default as ExtDate } from './extdate.js';
  *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets;
  *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative;
  *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems.
- *		"SQLdays" : 0 on M0000-01-11, i.e. on ISO 0000-01-01. The count is the integer part (floor) of the result in days.
+ *		"SQLdays" : 0 on M0000-01-11, i.e. on ISO 0000-01-01. The count is the integer part (floor) of the result in days. Values 0-59 are considered invalid.
  * @param {string | number[]} [...myArguments] the parameter or parameter list passed to Date. 
 */
 export class ExtCountDate extends ExtDate {
@@ -78,7 +78,7 @@ export class ExtCountDate extends ExtDate {
  		}
 	}
 /** Give the decimal value of the instantiated chronological counter
- * @return {number} The desired counter, in decimal value
+ * @return {number} The desired counter, in decimal value, or NaN if no value is available for this date (including erroneous dates)
 */
 	getCount = function () {
 		// 	Compute return value, and set to NaN if outside known bounds
@@ -88,7 +88,7 @@ export class ExtCountDate extends ExtDate {
 			case "nasaDay" : if (count < -32767 || count > 32767) return NaN; break;
 			case "macOSCount" : if (count <= -657435 || count >=	2957004) return NaN; break ;
 			case "MSBase" : if (count <= -657435 || count >= 2958466) return NaN; break;
-			case "SQLdays" : count = Math.floor(count); if (count < 60) return NaN;  break; // {count = Math.floor(count); if (count < 60) return NaN;}
+			case "SQLdays" : count = Math.floor(count); if (count < 60) return NaN;  break; // 0 to 59 correspond to erroneous dates in SQL
 			default : 
 		}
 		return count;
