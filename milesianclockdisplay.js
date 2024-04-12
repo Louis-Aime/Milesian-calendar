@@ -6,7 +6,7 @@
  * @requires milesianclockinitiate
  * @requires milesianclockonload
  * @see milesianclock.html
- * @version M2022-11-15
+ * @version M2024-04-22
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2022
 */
@@ -14,7 +14,7 @@
 /* Version notes
 	This .js file is highly related to the corresponding html code, with no optimisation 
 */
-/* Version	M2022-11-15	Bug displaying calendar selected for Unicode
+/* Version	See GitHub
 */
 /* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
 Permission is hereby granted, free of charge, to any person obtaining
@@ -114,7 +114,9 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	document.querySelector("#MicrosoftCountDisplay").innerHTML = 
 		new modules.ExtCountDate ("MSBase","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	document.querySelector("#MacOSCountDisplay").innerHTML = 
-		new modules.ExtCountDate ("macOSCount","iso8601",targetDate.valueOf()).getCount("macOSCount").toLocaleString(undefined,{maximumFractionDigits:8});
+		new modules.ExtCountDate ("macOSCount","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
+	document.querySelector("#SQLDaysDisplay").innerHTML = 
+		new modules.ExtCountDate ("SQLdays","iso8601",targetDate.valueOf()).getCount().toLocaleString(undefined,{maximumFractionDigits:8});
 	
 	// Display Locale (language code only) as obtained after negotiation process
 	document.querySelector("#langCode").innerHTML = userOptions.locale.includes("-u-") 

@@ -4,12 +4,14 @@
  * @module
  * @requires module:time-units
  * @requires module:extdate
- * @version M2021-07-29
+ * @version M2024-04-22
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @license MIT 2016-2022
+ * @license MIT 2016-2024
 */
 //	Character set is UTF-8
-/* Version	M2022-01-30 JSdoc
+/* Version (see also GitHub)
+	M2024-04-22	Add SQL count of DAYS used in FROM_DAYS() and TO_DAYS() functions
+	M2022-01-30 JSdoc
 	M2021-07-29	Adapt to calendrical-javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
 	M2021-01-07 adapt to new chronos, propose a setFromCount method.
@@ -23,7 +25,7 @@
 	M2018-10-26 : Enhance comments
 	M2017-12-27 : Initial
 */
-/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2024
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -57,6 +59,7 @@ import { default as ExtDate } from './extdate.js';
  *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets;
  *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative;
  *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems.
+ *		"SQLdays" : 0 on M0000-01-11, i.e. on ISO 0000-01-01. The count is the integer part (floor) of the result in days.
  * @param {string | number[]} [...myArguments] the parameter or parameter list passed to Date. 
 */
 export class ExtCountDate extends ExtDate {
@@ -70,20 +73,22 @@ export class ExtCountDate extends ExtDate {
 			case "nasaDay" : this.countOffset = 50716800000; break;
 			case "sheetsCount" : case "MSBase"  : this.countOffset = 2209161600000; break;
 			case "macOSCount" :  this.countOffset = 2082844800000; break;
-			default : throw ExtDate.unimplementedOption;
+			case "SQLdays" : this.countOffset = 62167219200000; break;
+			default : throw new RangeError("Unimplemented option: " + countType);
  		}
 	}
 /** Give the decimal value of the instantiated chronological counter
  * @return {number} The desired counter, in decimal value
 */
 	getCount = function () {
-		// 2. Compute return value, and set to NaN if outside known bounds
+		// 	Compute return value, and set to NaN if outside known bounds
 		let count = (this.valueOf() + this.countOffset) / Milliseconds.DAY_UNIT;
 		count = ((this.countType == "MSBase" && count < 0) || (this.countType == "macOSCount" && count < -1462 )) ? 2 * Math.floor(count) - count : count;
 		switch (this.countType) {
 			case "nasaDay" : if (count < -32767 || count > 32767) return NaN; break;
-			case "macOSCount" : if (count <= -657435|| count >=	2957004) return NaN; break ;
+			case "macOSCount" : if (count <= -657435 || count >=	2957004) return NaN; break ;
 			case "MSBase" : if (count <= -657435 || count >= 2958466) return NaN; break;
+			case "SQLdays" : count = Math.floor(count); if (count < 60) return NaN;  break; // {count = Math.floor(count); if (count < 60) return NaN;}
 			default : 
 		}
 		return count;
@@ -93,11 +98,12 @@ export class ExtCountDate extends ExtDate {
  * @return {number} The result of setTime method.
 */
 	setFromCount = function (count) {
-		if (isNaN (count)) throw ExtDate.notANumber;
+		if (isNaN (count)) throw new TypeError ("A number is expected: " + count);
 		let countType = this.countType;
 		if (countType == "macOSCount") {count += 1462; countType = "MSBase"};	// switch to MSBase for a simplier resolution
 		if (countType == "MSBase") count =  count <= -1 ? 2 * Math.ceil(count) - count : ( count < 0 ? NaN : count );
 		if (this.countType == "macOSCount") count -= 1462;	// back to original figure
-		return this.setTime( Math.round(count * Milliseconds.DAY_UNIT)  - this.countOffset )
+		if (countType == "SQLdays" && !Number.isInteger (count)) throw new TypeError ("An integer is expected: " + count);
+		return this.setTime( Math.round(count * Milliseconds.DAY_UNIT) - this.countOffset );
 	}
 }
