@@ -4,13 +4,13 @@
  * @module
  * @requires module:time-units
  * @requires module:extdate
- * @version M2024-04-22
+ * @version M2024-04-25
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
  * @license MIT 2016-2024
 */
 //	Character set is UTF-8
 /* Version (see also GitHub)
-	M2024-04-22	Add SQL count of DAYS used in FROM_DAYS() and TO_DAYS() functions
+	M2024-04-25	Add SQL count of DAYS used in FROM_DAYS() and TO_DAYS() functions
 	M2022-01-30 JSdoc
 	M2021-07-29	Adapt to calendrical-javascript
 	M2021-02-15	Use as module, with calendrical-javascript modules
@@ -59,7 +59,9 @@ import { default as ExtDate } from './extdate.js';
  *		"sheetsCount" (or "windowsCount") : 0 on M1900-01-10T00:00:00Z, i.e. on 1899-12-30Y00:00:00Z, used on most spreadsheets;
  *		"MSBase" : Microsoft date baseline. Same as above, except that the time part is negative when the whole timestamp is negative;
  *		"macOSCount" : 0 on M1904-01-11T00:00:00Z, used on MacOS systems.
- *		"SQLdays" : 0 on M0000-01-11, i.e. on ISO 0000-01-01. The count is the integer part (floor) of the result in days. Values 0-59 are considered invalid.
+ *		"SQLdays" : 0 on M0000-01-11, i.e. on ISO 0000-01-01. The count is the integer part (floor) of the result in days. 
+			Values < 60 are considered invalid as long as SQL calendar is erroneous before 0000-03-01. 
+			Values > 3_652_424 are considered invalid since SQL does not consider dates above 9999-12-31
  * @param {string | number[]} [...myArguments] the parameter or parameter list passed to Date. 
 */
 export class ExtCountDate extends ExtDate {
@@ -88,7 +90,7 @@ export class ExtCountDate extends ExtDate {
 			case "nasaDay" : if (count < -32767 || count > 32767) return NaN; break;
 			case "macOSCount" : if (count <= -657435 || count >=	2957004) return NaN; break ;
 			case "MSBase" : if (count <= -657435 || count >= 2958466) return NaN; break;
-			case "SQLdays" : count = Math.floor(count); if (count < 60) return NaN;  break; // 0 to 59 correspond to erroneous dates in SQL
+			case "SQLdays" : count = Math.floor(count); if (count < 60 || count > 3652424) return NaN;  break; 
 			default : 
 		}
 		return count;
