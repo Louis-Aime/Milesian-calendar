@@ -1,9 +1,9 @@
 # The Milesian Calendar laboratory
-The applications developped from the concept of Milesian calendar may be seen here. All files are grouped in this sub-repertory.
+The applications developped starting from the concept of Milesian calendar may be seen here. 
+Software and JSDoc documentation files are grouped in this repository.
 These applications use the calendrical-javascript package (see further).
-The JSDoc documentation is constructed in Milesian-calendar
 
-## [See on GitHub](https://github.com/Louis-Aime/Milesian-calendar)
+## [GitHub repository](https://github.com/Louis-Aime/Milesian-calendar)
 
 ## The complete Milesian clock
 Read the real date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in historical Gregorian, ISO 8601, Julian and Milesian calendars.
@@ -26,7 +26,7 @@ This simple clocks sticks to the system's time and gives the date on a Milesian 
 
 [The light Milesian clock](./lightmilesianclock.html).
 
-## Just display the date in your current Locale
+## Just display today's date in Milesian using your current Locale
 
 Write today's date in Milesian, after fetching the modules and the pldr.xml file:
 

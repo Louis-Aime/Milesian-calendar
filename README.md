@@ -1,8 +1,10 @@
 # Milesian-calendar
 Calendar computations, display and conversion routines. 
-Use julian and gregorian calendars, as well as the French republic calendar and the Milesian calendar. 
+Use Julian, Gregorian, iso 8601 and Persian calendars, as well as the French republic calendar, the Milesian calendar, and the Julian Day.
+Dates may be read in all calendars and languages managed by Unicode, and also in various day numbering systems.
+Lunar data, solstices and equinoxes, eclipse forecast, week and Easter date computation keys are also given.
 
-JSDoc documentation and application are available from [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
+JSDoc documentation and application are available on-line from [these GitHub pages](https://louis-aime.github.io/Milesian-calendar/).
 
 References:
 [*L'Heure milésienne*, by Louis-Aimé de Fouquières (Edilivre)](http://www.calendriermilesien.org/l-heure-milesienne.html).
@@ -28,6 +30,9 @@ Other modules enable Date computation in non-CLDR calendars, or other informatio
  - calendarclock.js: handling a year clock.
  
 ## Demo pages
+Each demonstration page is made of an HTML page that uses the modules.
  - Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
- - Light Milesian clock: a tiny version
- - load-modules-and-write: test pages for extension of JS tools.
+ - Date converter: convert any date into any language and calendar managed by Unicode.
+ - Light Milesian clock: a tiny version of the Milesian clock, without command.
+ - Yearly figures: John Conway's doomsday, Gregorian epact, Seasons, Easter.
+ - Simple Milesian date display: today's date in Milesian in your language.
