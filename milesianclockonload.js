@@ -6,15 +6,13 @@
  * Here the general framework and the event listeners are set.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
  * @file 
- * @version M2022-11-10
+ * @version M2025-08-12 fix definition of romanDateFormat with respect to 'gregory' instead of 'iso8601'
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @license MIT 2016-2022 
+ * @license MIT 2016-2025 
  * @see milesianclock.html
 */
 // Character set is UTF-8.
-/* Version M2022-11-10 Updated calendar names
-*/ 
-/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2025
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -155,7 +153,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	DOWFormat = new modules.ExtDateTimeFormat (undef(Locale), 
 			{ weekday : "long", calendar : "iso8601"});
 	romanDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{month : "short", day : "numeric", calendar : "iso8601" });
+			{month : "short", day : "numeric", calendar : "gregory" });
 	dracoDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
 			{year : "numeric", month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
 	seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
@@ -173,7 +171,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 		calendars.push (milesian);
-		calendars.push (new modules.ProlepticGregorianCalendar ("iso_8601"));
+		calendars.push (new modules.ISO8601Calendar ("iso_8601"));
 		calendars.push (new modules.JulianCalendar ("julian"));
 		calendars.push (new modules.GregorianCalendar ("gregorian", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
