@@ -5,15 +5,12 @@
  * @requires converteronload.js.
  * other modules are made visible milesianclockinitiate.
  * @see converter.html
- * @version M2022-11-04
+ * @version M2025-08-12 specific display for Unicode's 'iso8601' (differs from the standard and among browsers)
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @license MIT 2016-2022
+ * @license MIT 2016-2025
 */
 // Character set is UTF-8.
-/* Version	M2022-11-04	Enhance management of mark for non-valid calendars
-see GitHub for details
-*/
-/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2025
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -94,7 +91,7 @@ function setDisplay () {	// Disseminate targetDate and time on all display field
 	//	Display dates in several calendars
 	myCollection = document.getElementsByClassName('calenddate'); 	// List of date elements to be computed
 	for (let i = 0; i < myCollection.length; i++) {
-		// myCollection[i].id is the the name of the calendar, either Unicode or custom. select the calendar object among calendar list.
+		// myCollection[i].id is the name of the calendar, either Unicode or custom. select the calendar object among calendar list.
 		let myCalendar = calendars.find ( (item) => (item.id == myCollection[i].id)  );	// case the calendar is among the custom calendars.
 		if (myCalendar == undefined) myCalendar = myCollection[i].id;	// if not found, it should be a built-in one.
 		let myOptions = {...userOptions}	// a copy, since passed options are changed. (bug to be addressed)
