@@ -1,0 +1,629 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Milesian clock</title>
+<!-- Version	M2025-08-13	see GitHub for details
+-->
+<!-- Milesian clock page (english version), by Louis A. de FOUQUIERES
+Use Milesian calendar functions and Unicode tools.
+Copyright Miletus 2017-2025 - Louis A. de Fouquières
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sub-license, or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+1. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+2. Changes with respect to any former version shall be documented.
+
+The software is provided "as is", without warranty of any kind,
+express of implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
+In no event shall the authors of copyright holders be liable for any
+claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software
+or the use or other dealings in the software.
+
+Inquiries: www.calendriermilesien.org 
+-->
+	<meta name="creator" content="Louis-Aimé de Fouquières">
+	<meta name="description" content="Horloge milésienne, 
+	représentation de la date selon plusieurs calendriers dont le calendrier milésien et des calendriers utilisateurs,
+	conversion entre calendriers et en jour julien, 
+	représentation de l'heure selon les fuseaux horaires ,
+	restitution de la date et de l'heure milésienne selon des options d'affichage avancées,
+	prédiction d'éclipses">
+	<meta name="keywords" content="Horloge milésienne, conversion de calendrier, jour julien, lune, prédiction d'éclipses, calendrier milésien">
+	<meta name="viewport" content="width=device-width">	
+
+<!-- Page environment -->
+	<link href="dialsandpanels.css" rel="stylesheet"/>
+	<script type="text/javascript" src="milesianclockinitiate.js"></script>
+	<script type="text/javascript" src="milesianclockutilities.js"></script>
+	<script type="text/javascript" src="milesianclockdisplay.js"></script>
+	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
+	<script type="text/javascript" src="milesianclockonload.js"></script>
+	<style>
+		.panel {height: 420px;}
+	</style>
+
+</head>
+<body class="centered">
+	<section><h1 class="panelhead">Milesian clock</h1>
+	</section>
+	<div class="panel"><h2 class="panelhead" id="clockmilesiandate" >&nbsp;</h2>	<!-- The string of the Milesian date is inserted here -->
+		<!-- put svg code inline -->
+		<!-- Scalable viewbox, centered in the middle -->
+		<section>
+		<svg width="300" height="100%" xml:lang="fr" 
+		viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet"
+		xmlns="http://www.w3.org/2000/svg" 
+		xmlns:xlink="http://www.w3.org/1999/xlink">
+		<g id="mclock">
+		<!-- the dial -->
+		<image href="https://louis-aime.github.io/Milesian-calendar/milesian_dial.jpg" x="-300" y ="-300" width="600" height="599" />
+		<!-- the motto on the dial -->
+		<text class="motto" x="0" y="-90" >CERTUM MONSTRAT DIEM</text> 
+		<!-- main dial: month, day; the rect enables to fetch the center of the dial -->
+		<rect class="center dragon month day" x="0" y="0" width="0" height="0" />
+		<!-- the year field -->
+		  <text class="clock yeardisplay"
+			x="0" y="+100"></text>
+		<!-- seasons' marks -->
+			<g class="seasonmark winter" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark spring" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark summer" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+			<g class="seasonmark autumn" transform="rotate(0)"> <polygon points="0,-300 6,-300 6,-284 0,-278 -6,-284 -6,-300" /> </g>
+		<!-- center circle -->
+		<circle class="clockhand" r="9" />
+		<!-- set the secondary time dial which should appear under the month-day hands -->
+		<!-- Hour clock centered at x=-120, y=0 -->
+		  <g class="timeDial"> <!-- set a container for the time dial -->
+			<circle cx="-120" cy="0" r="60" fill="none" stroke="black" />
+			<rect class="center hour minute second" x="-120" y="0" width="0" height="0" /> <!-- center of the time dial -->
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(30,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(60,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(90,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(120,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(150,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(180,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(210,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(240,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(270,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(300,-120,0)" />
+			<line x1="-120" x2="-120" y1="-53" y2="-60" stroke="black" stroke-width="6px" transform="rotate(330,-120,0)" />
+		  </g> <!-- end of timeDial -->
+		<!-- am/pm indicator -->
+		  <text class="clock ampm"
+			x="-120" y="30">am</text>
+		<!-- hours and minutes hands -->
+		  <g class="clockhand hour" transform="rotate(0)">
+			<line x1="-120" x2="-120" y1="0" y2="-40"  />
+		  </g>
+		  <g class="clockhand minute" transform="rotate(0)">
+			<line x1="-120" x2="-120" y1="0" y2="-50"  />
+		  </g>
+		  <g class="clockhand second" transform="rotate(0)">
+			<line stroke-width="1px" x1="-120" x2="-120" y1="0" y2="-55" />
+		  </g>
+		<!-- moon element -->
+		<g class="moon" >
+		<!-- the moon circle  clipping device, (cx;cy) are coordinates of the center of the moon circle -->
+		 <defs> <clipPath id="moonclip60"> <!-- id used in this file, only once per web site -->
+		  <circle class="moondisk" cx="120" cy="0" r="60" />
+		 </clipPath></defs>
+		<!-- moon picture, x and y should be shifted after moonclip60.cx and .cy-->
+		<image href="https://louis-aime.github.io/Milesian-calendar/lunar_disk.jpg" x="59" y ="-62" width="124" height="124" clip-path="url(#moonclip60)" />
+		<!-- Draw the phase limit M x-begin y-begin a radius radius x-axis-rotation(0) large-arc-flag(0) sweep-flag(0: to left, 1: to right) dx dy -->
+		<!-- 
+		radius: 2x same, bigger than circle radius
+		x-axis-rotation : leave 0 (rotate total moon)
+		large-arc-flag : leave 0
+		sweep-flag of 1st arc: 0: round part on left, 1: round part on right
+		sweep-flag of 2nd arc: 0: filled part on right, 1: filled part on left
+		order of sweep-flag (arc is sunny part): 1 0 - 0 0 - 1 1 - 0 1
+		-->
+		  <path class="shaded moonphase" d="M 120 -60 a 60 60 0 0 0 0 140 a 60 60 0 0 1 0 20 z" />
+		</g>
+		<!-- dragon, month and day hands are set at the end, in order to be above the rest of the clock -->
+		<!-- the dragon hand -->
+		  <g class="clockhand dragon" transform="rotate(0)"
+		  opacity="0.6">										
+			<polygon points="10,0 12,-20 70,-180 0,-195 -70,-180 -12,-20 -10,0" />
+			<polygon points="10,0 12,20 70,180 0,165 -70,180 -12,20 -10,0" />
+		  </g>
+		<!-- the month hand -->
+		  <g class="clockhand month" transform="rotate(0)"
+		  opacity="0.8">										
+			<polygon points="0,0 12,-20 10,-185 0,-195 -10,-185 -12,-20" />
+		  </g>
+		<!-- the day hand -->
+		  <g class="clockhand day" transform="rotate(0)"
+		  opacity="0.8" >									
+			<polygon points="0,0 11,-20 8,-260 0,-270 -8,-260 -11,-20" />
+		  </g>
+		</g>
+		</svg>
+		</section>
+		<section class="centered">
+		<form name="run">
+			<table class="centered">
+				<tr>
+					<td><button name="back" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(-1)">&lt;&lt;</button></td>
+					<td><button name="off" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(0)">■</button></td>
+					<td><button name="on" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockRun(1)">►</button></td>
+					<td><button name="forw" type="button" class="textline symbol" onclick="javascript:clockAnimate.clockSet(1)">&gt;&gt;</button></td>
+				</tr> 
+				<tr>
+					<td colspan="4"><input name="speed" type="range" min="10" max="200" onchange="javascript:clockAnimate.clockRun(2)"></td>
+				</tr>
+			</table>
+		</form>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Date and calendar</h2>
+
+		<section><h3 class="panelhead">Dates with algebraic years</h3>
+			<table class="centered">
+			  <tr>
+				<th><button id="customCalend" class="textline">Calendar</button></th>
+				<th>Day</th>
+				<th>Month</th>
+				<th>Year</th>
+				<th> </th>
+			  </tr>
+			  <form name="custom">
+			  <tr id="customline">
+				<td><select name="calend" size="1" class="centered">
+					<option value="milesian">Milesian</option>
+					<option value="iso_8601">ISO 8601</option>
+					<option value="julian">Julian</option>
+					<option value="gregorian" selected>Gregorian</option>
+					<option value="frenchrev">French republic</option>
+					</select></td>
+				<td><input name="day" type="number" min="1" max="31" class="centered digit2 mutable datelement"> </td>
+				<td><input name="month" type="number" min="1" max="13" class="centered digit2 mutable datelement"></td>
+				<td><input name="year" type="number" class="centered digit4 mutable datelement"> </td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+			</table>
+			<table class="centered">
+			  <tr>
+				<form name="week">
+				<th>Weeks</th>
+				<td><input name="weekday" type="number" min="0" max="30" class="centered digit2 mutable datelement"> </td>
+				<td><input name="weeknumber" type="number" min="0" max="56" class="centered digit2 mutable datelement"></td>
+				<td><input name="weekyear" type="number" class="centered digit4 mutable datelement"></td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			 </table>
+			<table class="centered">
+			  <tr>
+				<td>Day of week</td>
+				<td><input name="dayofweek" type="text" class="centered" size="12" disabled="disabled" /></td>
+				<td>Weeks in year</td>
+				<td><input name="weeksinyear" type="number" min="0" max="56" class="centered digit2" disabled="disabled"></td>
+			  </tr>
+			</form>
+			</table>
+		</section>
+		<section><!-- now, day navigation -->
+		<form name="control">
+		 <table class="centered">
+		  <tr>
+			<td><button name="now" class="textline" type="button">Now</button></td>
+				<th>+/- days: </th>
+				<td><button name="minus" type="button" class="textline symbol">-</button></td>
+				<td><input name="shift" type="number" value="1" min="0" step="any" class="centered digit4"></td> 
+				<td><button name="plus" type="button" class="textline symbol">+</button></td>
+		  </tr>
+		 </table>
+		</form>
+		</section>
+		<section><h3 class="panelhead">Switchover to Gregorian</h3>
+			<table class="centered">
+			 <form name="gregorianswitch">
+			  <tr>
+				<td><input name="day" type="number" value="15" min="1" max="31" class="centered digit2"></td>
+				<td>
+				<select name="month" size="1" class="centered">
+				<option value="1">Jan.</option>
+				<option value="2">Feb.</option>
+				<option value="3">March</option>
+				<option value="4">Apr.</option>
+				<option value="5">May</option>
+				<option value="6">June</option>
+				<option value="7">July</option>
+				<option value="8">Aug.</option>
+				<option value="9" selected>Sept.</option>
+				<option value="10">Oct.</option>
+				<option value="11">Nov.</option>
+				<option value="12">Dec.</option>
+				</select> </td>
+				<td><input name="year" type="number" value="1752" min="1582" max="275760" class="centered digit4"></td>
+				<td><button class="textline">Ok</button></td>
+			  </tr>
+			</form>
+		</table>
+	<!-- Date validity control (not used)
+		<table class="centered">
+			<form name="controloptions">
+			  <tr>
+				<td><input type="checkbox" name="datevalidity" checked></td>
+				<th>Contrôle de validité des dates saisies</th>
+			  </tr>
+			</form>
+		</table>
+	-->
+		</section>
+		<section><h3 class="panelhead">Display after options</h3>
+			<section><h4 class="panelhead">Custom calendar (<span id="customcalname"></span>)</h4>
+				<span class="centered mutable" id="CustomString"></span>
+			</section>
+			<section><h4 class="panelhead">Unicode calendar (<span id="unicodecalname"></span>)</h4>
+			<span class="centered" id="UnicodeString"></span>
+			</section>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Local and UTC time, instant</h2>
+	
+			<section class="centered"><h3 class="panelhead">Time and local/UTC mode</h3>
+		  <form name="time" autocomplete="off">
+			<table class="centered">
+			   <tr>
+				 <td><input name="hours" type="number" min="0" max="23" class="centered digit2 datelement">h</td>
+				 <td><input name="mins" type="number" min="0" max="59" class="centered digit2 datelement">min</td>
+				 <td><input name="secs" type="number" min="0" max="59" class="centered digit2 datelement">s</td>
+				 <td><input name="ms" type="number" min="0" max="999" class="centered digit4 datelement">ms</td>
+				 <td><button class="textline">Ok</button></td>
+			  </tr>
+			</table>
+		  </form>
+		</section>
+		<section class="centered"><!-- time navigation -->
+		  <form name="timeShift">
+			<table class="centered"> 
+			  <tr>
+				<td>+/- ms</td>
+				<td><button name="minus" type="button" class="textline symbol">-</button></td>
+				<td><input name="shift" type="number" value="60000" min="1" class="centered char8"></td>
+				<td><button name="plus" type="button" class="textline symbol">+</button></td>
+			  </tr>
+			</table>
+		  </form>
+		</section>
+		<section class="centered"><!-- time zone option -->
+		  <form name="TZmode">
+			<table class="centered">
+					<tr><th>Mode&nbsp;: </th>
+						<td>
+							<select name="TZcontrol" size="1" class="centered">
+							<option value="UTC">UTC</option>
+							<option value="" selected>System time zone</option>
+							</select></td>
+						<td><button class="textline">Ok</button></td>
+					</tr>
+			</table>
+			<table class="centered">
+					<tr>
+						<th>Real time zone offset (local - UTC): </th> 
+						<td id="realTZOffset"></td>
+					</tr>
+			</table>
+		  </form>
+		</section>
+		<section class="centered"><!-- setting preselected time -->
+			  <table class="centered">
+			  <tr>
+				<th>Same date at</th>
+				<td><button id="h0" class="textline" type="button">0 h</button></td>
+				<td><button id="h12" class="textline" type="button">12 h</button></td>
+				<th>UTC</th>
+			  </tr>
+			 </table>
+		</section>
+	<section class="centered"> <h3 class="panelhead">Chronological instant after epoch</h3>
+		<form name="daycounter">
+		  <table class="centered">
+			<tr><th colspan="2">Julian Day</th>
+				<td><input name="julianday" type="number" size="24" min="-97559413" max="102440588" step="any" class="centered datelement"></td>
+				<td><button class="textline" name="setday" value="julianday">Ok</button></td>
+			</tr>
+		  </table>
+		</form>
+		<table class="centered">
+			<tr>
+				<th>Modified Julian Day: </th>
+				<td id="mjdDisplay"></td>
+			</tr>
+			<tr>
+				<th>NASA Julian Day: </th>
+				<td id="nasajdDisplay"></td>
+			</tr>
+			<tr>
+				<th>Spreadsheet instant: </th>
+				<td id="spreadSheetsCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>Microsoft instant: </th>
+				<td id="MicrosoftCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>MacOS (1904) instant: </th>
+				<td id="MacOSCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>Unix/Posix instant: </th>
+				<td id="unixCountDisplay"></td>
+			</tr>
+			<tr>
+				<th>SQL Day: </th>
+				<td id="SQLDaysDisplay"></td>
+			</tr>
+		</table>
+	</section>	
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Display options</h2>
+		<section>
+			<form name="LocaleOptions" method="post"> <!-- heavy form, hence post method -->
+			<table class="centered"> 
+				<tr><th>Date</th><th>Time</th></tr>
+				<tr>
+					<td>
+					<select name="DatePresentation" class="centered" size="1">
+						<option value="long">Full text</option>
+						<option value="standard" selected>Common text</option>
+						<option value="short">Abridged text</option>
+						<option value="narrow">Compact text</option>
+						<option value="numeric">Full digital</option>
+						<option value="2-digit">Compact digital</option>
+						<option value="year-2-digit">2-digit year</option>
+						<option value="none">Void</option>
+					</select>
+					</td>
+					<td>
+					<select name="TimePresentation" class="centered" size="1">
+						<option value="total">Complete</option>
+						<option value="detail">Detailed</option>
+						<option value="second">Second</option>
+						<option value="minute" selected>Minute</option>
+						<option value="hour">Hour</option>
+						<option value="hmstz">H:M:S TZ</option>
+						<option value="hm">H:M</option>
+						<option value="none">Void</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+			<table class="centered">
+			<tr>
+				<th>Language tag&nbsp;: </th>
+					<td>
+					<input name="Language" class="centered" type="text" autocomplete="language" size="20">
+					</td>
+				</tr><tr>
+					<th>Effective tag&nbsp;: </th><td id="langCode"></td>
+				</tr>
+			</table>
+			<div>Examples&nbsp;: <code>en-GB</code> or <code>en-US</code></div>
+
+			<table class="centered">
+				<tr>
+					<th>Calendar&nbsp;: </th>
+					<td>
+					<select name="Calendar" size="1" class="centered">
+						<option value="">default</option>
+						<option value="buddhist">Buddhist (Thailand)</option>
+						<option value="chinese">luni-solar Chinese</option>
+						<option value="coptic">Coptic</option>
+						<option value="dangi">luni-solar Dangi (Korea)</option>
+						<option value="ethioaa">Ethiopic, Anno Mundi base</option>
+						<option value="ethiopic">Ethiopic, Incarnation base</option>
+						<option value="gregory">(proleptic) Gregorian</option>
+						<option value="hebrew">Hebrew</option>
+						<option value="indian">Indian (1957)</option>
+						<option value="islamic">Islamic standard</option>
+						<option value="islamic-umalqura">Islamic, Umm al-Qura</option>
+						<option value="islamic-tbla">Islamic astronomical tabular</option>
+						<option value="islamic-civil">Islamic civil tabular</option>
+						<option value="islamic-rgsa">Islamic, Saudi Arabia</option>
+						<option value="iso8601">ISO 8601</option>
+						<option value="japanese">imperial Japanese</option>
+						<option value="persian">Persian</option>
+						<option value="roc">People's Republic of China</option>
+					</select> 
+					</td>
+				</tr>
+			</table>
+			<table class="centered">
+				<tr><th>Effective calendar code: </th><td id="CalendarCode"></td></tr>
+			</table>
+			<table class="centered">
+				<tr><th>Time zone: </th>
+				<td><input name="TimeZone" type="text" autocomplete="country" class="centered" size="20"> </td>
+				</tr>
+				<tr><th>Effective time zone: </th><td id="timeZone"></td></tr>
+			</table>
+			<div>Examples&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code></div>
+			<table class="centered">
+				<tr><th>Astronomical data display</th></tr>
+				<tr><td>
+					<select name="astrocalendar" size="1" class="centered">
+						<option value="milesian">Milesian calendar</option>
+						<option value="custom" selected>selected custom calendar</option>
+						<option value="unicode">selected Unicode calendar</option>
+					</select>
+				</td></tr>
+			</table>
+			<div><button class="textline">Set display options</button></div>
+			</form>
+		</section>
+		<section><h3 class="panelhead">Reference links</h3>
+			<span><a target="_blank" href="http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">Langage tags</a> - 
+				<a target="_blank" href="http://twiki.org/cgi-bin/xtra/tzdatepick.html">Time zone codes</a>
+			</span>
+		</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Lunar data</h2>
+	<span>Lunar time and lunar calendar after system/UTC mode,
+		display after display options.</span>
+
+
+	<form name="moon">
+	<section><h3 class="panelhead">Compensated mean moon</h3>
+	 <table class="centered">
+		<tr>
+			<th>&nbsp;Lunar age&nbsp;</th>	<th>&nbsp;Remainder&nbsp;</th> 
+		 </tr>
+		 <tr>
+			<td><input name="age" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
+			<td><input name="residue" value="" type="text" class="centered" disabled="disabled" size="5"> </td>
+		</tr>
+	 </table>
+	 <table class="centered">
+		<tr><th>Lunar time<br>(tides)</th><th>Lunar date<br>(Moon height)</th></tr>
+		<tr>
+			<td><input name="moontime" value="" type="text" class="centered" disabled="disabled" size="12"> </td>
+			<td><input name="moondate" value="" type="text" class="centered mutable" disabled="disabled" size="12"> </td>
+		</tr>
+	 </table>
+	 </section>
+	<section><h3 class="panelhead">Draconitic data (eclipses)</h3>
+	 <table class="centered">
+		<tr><th>Caput</th><th>Cauda</th><th>Eclipse season</th></tr>
+		<tr>
+			<td><input name="caput" value="" type="text" class="centered mutable" disabled="disabled" size="12"></td>
+			<td><input name="cauda" value="" type="text" class="centered mutable" disabled="disabled" size="12"></td>
+			<td id="EclipseField" class="mutable"><select name="eclipseseason" class="centered" disabled="disabled">
+				<option value="false" selected>closed</option>
+				<option value="true">open</option>
+				</select>
+			</td>
+		</tr>
+	 </table>
+	 </section>
+	 </form>
+	<section><h3 class="panelhead">Virtual lunar calendar</h3>
+	<form name="mooncalend">
+	 <table class="centered">
+		  <tr>
+			<th>Epoch</th>
+			<th>Day</th>
+			<th>Month</th>
+			<th>Lunar year</th>
+		  </tr>
+		<tr>
+		 <th>Year 0&nbsp;: </th>
+		 <td><input name="CElunardate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="CElunarmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="CElunaryear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
+		</tr>
+		<tr>
+		 <th>Hegira&nbsp;: </th>
+		 <td><input name="hegiriandate" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="hegirianmonth" value="" type="text" class="centered" disabled="disabled" size="2"></td>
+		 <td><input name="hegirianyear" value="" type="text" class="centered" disabled="disabled" size="6"></td>
+		</tr>
+	 </table> 
+	</form>
+	</section>
+	</div>
+
+	<div class="panel autoscroll"><h2 class="panelhead">Tropical year data</h2>
+		<section><h3 class="panelhead">Quadratic component for Delta T</h3>
+		<p>UTC = Terrestrial Time - Delta T</p>
+		<span class="centered">
+			<span id="deltatsec"></span> s, i.e.&nbsp;
+			<span id="deltathms"></span>
+			</span>
+		</section>
+
+		<section><h3>Northern seasons, year <span id="seasonsyear"></span></h3>
+		<p>Date and time after display options</p>
+		  <form name="seasons">
+			<table class="centered">
+				<tr><th>Winter solstice</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="winter1" value=""></td></tr>
+				<tr><th>Spring equinox</th>	<td><input class="centered mutable" disabled="disabled" size="24" name="spring" value=""></td></tr>
+				<tr><th>Summer Solstice</th>			<td><input class="centered mutable" disabled="disabled" size="24" name="summer" value=""></td></tr>
+				<tr><th>Autumn equinox</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="autumn" value=""></td></tr>
+				<tr><th>Winter solstice</th>		<td><input class="centered mutable" disabled="disabled" size="24" name="winter2" value=""></td></tr>
+			</table>
+		  </form>
+		</section>
+	</div>
+
+	<div class="centered panel"><h2 class="panelhead">Yearly key figures</h2>
+	  <form name="yearglobal">
+		<table class="centered">
+		  <tr>
+			<th>Current Milesian year: </th>
+			<td><input name="year" type="number" class="digit4 centered" value="0" disabled="disabled"></td>
+		  </tr>
+		  <tr>
+			<th>Gold number (1 to 19)&nbsp;: </th>
+			<td><input name="gold" class="digit2" value="0" disabled="disabled"></td>
+		  </tr>
+		</table>
+	  </form>
+	  <form name="details">
+		<table>
+			<tr><th colspan="2" class="onborder">Calendar</th><th>Gregorian<br>& Milesian</th><th>Julian</th></tr>
+			<tr><th class="onborder">Year</th><th class="onborder">Roman</th>
+				<td><input name="g_type" class="char8 centered" disabled="disabled"></td>
+				<td><input name="j_type" class="char8 centered" disabled="disabled"></td>
+			</tr>
+			<tr><th></th><th class="onborder">Milesian</th>
+				<td><input name="m_type" class="char8 centered" disabled="disabled"></td>
+				<td></td>
+			</tr>
+			<tr><th class="onborder" colspan="2">Doomsday</th>
+				<td><input name="g_day" class="char8 centered" disabled="disabled"></td>
+				<td><input name="j_day" class="char8 centered" disabled="disabled"></td>
+			</tr>
+			<tr><th class="onborder" colspan="2">Dominical letter</th>
+				<td><input name="g_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
+				<td><input name="j_dlet" class="char8 centered" disabled="disabled" size="5" value=""></td>
+			</tr>
+			<tr><th class="onborder">Epact</th><th class="onborder">1 Jan.</th>
+				<td><input name="g_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th colspan="2" class="onborder">Ep. 1 1m | 22 March</th>
+				<td><input name="m_epact" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_epactMar22" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th class="centered" colspan="4">Easter</th></tr>
+			<tr><th class="onborder" colspan="2">Easter remainder</th>
+				<td><input name="g_residue" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_residue" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Easter offset</th>
+				<td><input name="g_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				<td><input name="j_daynumber" class="char8 centered" disabled="disabled" size="5" value="0"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Date in calendar</th>
+				<td><input name="g_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
+				<td><input name="j_romandate" class="char8 centered" disabled="disabled" size="8" value="22/03"></td>
+				</tr>
+			<tr><th class="onborder" colspan="2">Real date</th>
+				<td><input name="g_referdate" class="char8 centered mutable" disabled="disabled" size="8" value="1 4m"></td>
+				<td><input name="j_referdate" class="char8 centered mutable" disabled="disabled" size="8" value="1 4m"></td>
+				</tr>
+		</table>
+	  </form>
+	</div>
+
+	<footer>
+	<span>© 2016-2025 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></span>
+	</footer>
+</body>
+</html>
