@@ -3,11 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Horloge milésienne</title>
-<!-- Version	M2024-04-22	see GitHub for details
+<!-- Version	M2025-08-13	see GitHub for details
 -->
 <!-- Milesian clock page, by Louis A. de FOUQUIERES
 Use Milesian calendar functions and Unicode tools.
-Copyright Miletus 2017-2022 - Louis A. de Fouquières
+Copyright Miletus 2017-2025 - Louis A. de Fouquières
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -47,7 +47,7 @@ Inquiries: www.calendriermilesien.org
 	<script type="text/javascript" src="yearsignaturedisplay.js"></script>
 	<script type="text/javascript" src="milesianclockonload.js"></script>
 	<style>
-		.panel {height: 410px;}
+		.panel {height: 420px;}
 	</style>
 
 </head>
@@ -226,7 +226,7 @@ Inquiries: www.calendriermilesien.org
 		 </table>
 		</form>
 		</section>
-		<section><h4 class="panelhead">Calendrier historique&nbsp;: passage au grégorien</h4>
+		<section><h3 class="panelhead">Passage au comptage grégorien</h3>
 			<table class="centered">
 			 <form name="gregorianswitch">
 			  <tr>
@@ -453,15 +453,16 @@ Inquiries: www.calendriermilesien.org
 				<tr><th>Fuseau effectif&nbsp;: </th><td id="timeZone"></td></tr>
 			</table>
 			<div>Exemples&nbsp;: <code>UTC</code> ou <code>Etc/GMT-1</code></div>
-			<section><h3 class="panelhead">Affichage des données astronomiques</h3>
-				<div class="centered">
+			<table class="centered">
+				<tr><th>Affichage des données astronomiques</th></tr>
+				<tr><td>
 					<select name="astrocalendar" size="1" class="centered">
 						<option value="milesian">calendrier milésien</option>
 						<option value="custom" selected>calendrier utilisateur sélectionné</option>
 						<option value="unicode">calendrier Unicode sélectionné</option>
 					</select>
-				</div>
-			</section>
+				</td></tr>
+			</table>
 			<div><button class="textline">Valider les options d'affichage</button></div>
 			</form>
 		</section>
@@ -560,7 +561,7 @@ Inquiries: www.calendriermilesien.org
 		</section>
 	</div>
 
-	<div class="centered panel"><h2 class="panelhead">Chiffres clés calendaires</h2>
+	<div class="centered panel"><h2 class="panelhead">Chiffres clés annuels</h2>
 	  <form name="yearglobal">
 		<table class="centered">
 		  <tr>
@@ -622,7 +623,7 @@ Inquiries: www.calendriermilesien.org
 	</div>
 
 	<footer>
-	<span>© 2016-2021 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></span>
+	<span>© 2016-2025 <a target="_blank" href="http://www.calendriermilesien.org">www.calendriermilesien.org</a></span>
 	</footer>
 </body>
 </html>
