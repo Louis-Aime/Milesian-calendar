@@ -3,7 +3,8 @@ Main characteristics:
 - items grouped in panels, arrange the size in order to hold on a smartphone
 - most items centered
 - use standard style of a CMS etc.  */
-/* Version	M2022-11-04	Improve definition for .outbounds
+/* Version	M2025-08-13 height of panels
+	M2022-11-04	Improve definition for .outbounds
 	M2021-01-11	Add a 'seton' class (aimed at buttons)
 	M2020-01-09 - Add .onborder, set default height 360 for square panels
 	M2020-12-15 Set panel for command and outdisplay for results
@@ -26,7 +27,7 @@ table.centered {
 }
 .panel {
 	width: 360px;
-	height: 360px;
+	height: 420px;
 	/* these commands to be avoided:  overflow : auto; justify-content: center; */
 	display: inline-table; /* ou inline-table ou table-cell; */  
 		/* inline-block aligne à la même hauteur le DERNIER titre de tous les blocs, et non le PREMIER.
@@ -43,7 +44,7 @@ table.centered {
 }
 .outdisplay {
 	width: 360px;
-	height: 200px;
+	height: 216px;
 	display: inline-table;
 	outline: double;
 	text-align: center;
