@@ -8,29 +8,30 @@ These applications use the calendrical-javascript package (see further).
 ## The complete Milesian clock
 Read the real date and the time, convert from and to custom calendars, display custom and Unicode calendars get the mean moon's coordinates, the seasons, and the yearly main figures in historical Gregorian, ISO 8601, Julian and Milesian calendars.
 
-[The Milesian clock](./milesianclock.html).
+ * [The Milesian clock](./milesianclock.html).
+ * [The Milesian clock (English version)](./milesianclock-en.html).
 
 ## The date converter
 Convert from basic European calendars to any Unicode calendar.
 
-[The date converter](./converter.html).
+ * [The date converter](./converter.html).
 
 ## Yearly figures
 Compute the yearly characteristics figures: seasons, Delta T, and calendrical basic data.
 
-[The yearly figures](./yearsignaturedisplay.html).
+ * [The yearly figures](./yearsignaturedisplay.html).
 
 ## The light Milesian clock
 
 This simple clocks sticks to the system's time and gives the date on a Milesian dial.
 
-[The light Milesian clock](./lightmilesianclock.html).
+ * [The light Milesian clock](./lightmilesianclock.html).
 
 ## Just display today's date in Milesian using your current Locale
 
 Write today's date in Milesian, after fetching the modules and the pldr.xml file:
 
-[Today's date in Milesian](./load-modules-and-write.html).
+ * [Today's date in Milesian](./load-modules-and-write.html).
 
 ## Calendrical computations and Date object extension
 
