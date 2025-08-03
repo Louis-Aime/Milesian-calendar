@@ -91,7 +91,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 		calendars.push (milesian);
-		calendars.push (new modules.ProlepticGregorianCalendar ("iso_8601"));
+		calendars.push (new modules.ProlepticGregorianCalendar ("gregoprolep"));
 		calendars.push (new modules.JulianCalendar ("julian"));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
 		customCalIndex = calendars.findIndex (item => item.id == document.details.calend.value);  // set initial custom calendar - but calendars must exist !
