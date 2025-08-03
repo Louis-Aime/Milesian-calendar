@@ -31,6 +31,7 @@ Other modules enable Date computation in non-CLDR calendars, or other informatio
  
 ## Demo pages
 Each demonstration page is made of an HTML page that uses the modules.
+The pages are in French. However an English version of the Milesian clock is also provided.
  - Milesian clock: reading today's date in Milesian and other calendars all around the world, converting to other calendars and languages.
  - Date converter: convert any date into any language and calendar managed by Unicode.
  - Light Milesian clock: a tiny version of the Milesian clock, without command.
