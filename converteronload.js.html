@@ -33,14 +33,12 @@
  * Here the general framework and the event listeners are set.
  * Only a few implementation comments are given here, since this code is mainly for demonstration purposes.
  * @file 
- * @version M2022-11-10
+ * @version M2025-08-12 specific display for Unicode's 'iso8601' (differs from the standard and among browsers)
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @license MIT 2016-2022 
+ * @license MIT 2016-2025 
  * @see converter.html
 */ 
-/* Version M2022-11-10 Updated calendar names
-*/
-/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2022
+/* Copyright Louis A. de Fouquières https://github.com/Louis-Aime 2016-2025
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including
@@ -129,38 +127,8 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 		case "none": Options = {}
 		}
 /*
-	switch (document.LocaleOptions.TimePresentation.value) {
-		case "total": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; 
-			Options.fractionalSecond = 3; Options.timeZoneName = "short"; break;
-		case "detail": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; 
-			Options.timeZoneName = "long"; break;
-		case "second": Options.hour = "numeric"; Options.minute = "numeric"; Options.second = "numeric"; break;
-		case "minute": Options.hour = "numeric"; Options.minute = "numeric"; break;
-		case "hour": Options.hour = "numeric"; break;
-		case "hmstz": Options.hour = "2-digit"; Options.minute = "2-digit"; Options.second = "2-digit"; 
-			Options.timeZoneName = "short"; break;
-		case "hm": Options.hour = "2-digit"; Options.minute = "2-digit"; break;
-		case "none": 
-	}
+	Time presentation option are not handled for this date converter.
 */
-	/*
-	// Add Unicode calendar in options
-	if (Calendar != "") Options.calendar = Calendar; // No error expected, since calendar is picked up from a list
-
-	// Add time zone in Options
-	if (timeZone != "") 
-		Options.timeZone = timeZone ; 
-	// is timeZone valid ?
-	try {
-		testDTF = new Intl.DateTimeFormat (Locale, Options);
-		}
-	catch (e) {
-		alert (e);
-		delete Options.timeZone; // Delete property
-		document.LocaleOptions.TimeZone.value = "";
-		return
-	}
-	*/
 	// Formater for Milesian clock.
 	clockFormat = new modules.ExtDateTimeFormat (Locale,{timeZone: undef(TZ),weekday:"long",day:"numeric",month:"long",year:"numeric"},milesian);
 
@@ -175,24 +143,7 @@ function compLocalePresentationCalendar() {	// Manage date string display parame
 	weekFormat = new modules.ExtDateTimeFormat (undef (Locale), {weekday : "long", timeZone : undef(TZ)}, calendars[customCalIndex]);
 
 /*
-	// Select calendar for astronomical data
-	switch (document.LocaleOptions.astrocalendar.value) {
-		case undefined : case "milesian" : astroCalend = milesian; break;
-		case "custom"	: astroCalend = calendars[customCalIndex]; break;
-		case "unicode"	: astroCalend = unicodeOptions.calendar; break; 
-		default : throw new RangeError ("Unexpected value for calendar choice option: " + document.LocaleOptions.astrocalendar.value);
-	}
-	// fix astro date formaters
-	DOWFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{ weekday : "long", calendar : "iso8601"});
-	romanDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{month : "short", day : "numeric", calendar : "iso8601" });
-	dracoDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{year : "numeric", month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
-	seasonDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{year : "numeric", month : "short", day : "numeric", hour : "numeric", minute : "numeric", timeZone : undef (TZ) }, astroCalend);
-	lunarDateFormat = new modules.ExtDateTimeFormat (undef(Locale), 
-			{month : "short", day : "numeric", timeZone : undef (TZ) }, astroCalend);
+	No astronomical data
 */
 }
 
@@ -204,7 +155,8 @@ window.onload = function () {	// Initiate fields and set event listeners
 	loadComplete.then (() => {
 		milesian = new modules.MilesianCalendar ("milesian",pldrDOM);
 		calendars.push (milesian);
-		calendars.push (new modules.ProlepticGregorianCalendar ("iso_8601"));
+		calendars.push (new modules.ISO8601Calendar ("iso_8601"));
+		calendars.push (new modules.ProlepticGregorianCalendar ("prolepgreg"));
 		calendars.push (new modules.JulianCalendar ("julian"));
 		calendars.push (new modules.GregorianCalendar ("gregorian", modules.ExtDate.fullUTC(switchingDate.year, switchingDate.month, switchingDate.day), pldrDOM));
 		calendars.push (new modules.FrenchRevCalendar ("frenchrev",pldrDOM));
@@ -274,42 +226,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 		clockAnimate.setDayOffset(+1)
 	})
 /*
-	document.time.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		calcTime()
-	})
-
-	document.timeShift.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		myTimeShift.changeAddTime()
-	})
-	document.timeShift.minus.addEventListener("click", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		clockAnimate.clockRun(0);
-		myTimeShift.changeAddTime()
-		myTimeShift.addTime(-1)
-	})
-	document.timeShift.plus.addEventListener("click", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		clockAnimate.clockRun(0);
-		myTimeShift.changeAddTime()
-		myTimeShift.addTime(+1)
-	}) 
-
-	document.TZmode.addEventListener("submit", function (event) {
-		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
-		TZ = document.TZmode.TZcontrol.value;
-		setDisplay();
-	})
-
-	document.getElementById("h0").addEventListener("click", function (event) {
-		clockAnimate.clockRun(0);
-		setUTCHoursFixed(0)
-	})
-	document.getElementById("h12").addEventListener("click", function (event) {
-		clockAnimate.clockRun(0);
-		setUTCHoursFixed(12)
-	})
+	No time-related event listener
 */
 	document.LocaleOptions.addEventListener ("submit", function (event) {
 		event.preventDefault();		// necessary to avoid re-loading with multi-fields forms especially when fields are fetched from event.
@@ -333,7 +250,7 @@ window.onload = function () {	// Initiate fields and set event listeners
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Feb 25 2025 23:19:52 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Sun Aug 03 2025 11:21:59 GMT+0200 (heure d’été d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>
