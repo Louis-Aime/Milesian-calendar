@@ -3,7 +3,9 @@ The applications developped starting from the concept of Milesian calendar.
 
 This GitHub-pages site gives access to the software documentation, generated with JSDoc.
 
-These applications use the [calendrical-javascript package](https://github.com/Louis-Aime/Milesian-calendar).
+[View on GitHub](https://github.com/Louis-Aime/Milesian-calendar)
+
+These applications use the [calendrical-javascript package](https://github.com/Louis-Aime/calendrical-javascript).
 
 ## Demonstrators
 All applications of this package may be run on-line available from [Louis-Aimé's calendar showroom site](https://louis-aime.github.io/calendar-showroom).
