@@ -13,9 +13,9 @@
  * @requires module:countconversion
  * @requires module:lunar
  * @requires module:yearsignature
- * @version M2022-10-26
+ * @version M2026-03-14
  * @author Louis A. de Fouquières https://github.com/Louis-Aime
- * @license MIT 2016-2022
+ * @license MIT 2016-2026
 */
 // Character set is UTF-8.
 /* Version	M2022-10-26 10 s timeout for loading XML file
