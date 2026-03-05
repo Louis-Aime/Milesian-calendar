@@ -52,7 +52,7 @@ const // Promises of loading initial files. This a temporary version fills 'modu
 	calendrical = {},
 	loadCalendrical = Promise.all([
 		import ('./fetchdom.js').then (
-			(value) => value.default ('https://louis-aime.github.io/calendrical-javascript/pldr.xml', 10000),
+			(value) => value.default ('https://louis-aime.github.io/calendar-showroom/pldr.xml', 10000),
 			(error) => { throw 'Error loading standard modules' }		// failure fetching pldr as XML file, fallback in next step
 			).then (
 				(value) => { pldrDOM = calendrical.pldrDOM = value },			// fetching XML file has succeeded.
